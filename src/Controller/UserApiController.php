@@ -1,15 +1,16 @@
 <?php
 namespace App\Controller;
 
-use App\Service\UserPasswordHashService;
 use App\Entity\User;
+use App\Service\JWTService;
+use App\Service\UserPasswordHashService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class  UserPasswordHashController extends AbstractController
+class  UserApiController extends AbstractController
 {
     private $userPasswordHashService;
     private $entityManager;
@@ -17,7 +18,7 @@ class  UserPasswordHashController extends AbstractController
     public function __construct(UserPasswordHashService $userPasswordHashService, EntityManagerInterface $entityManager)
     {
         $this->userPasswordHashService = $userPasswordHashService;
-        $this->entityManager = $entityManager;  // Inyectamos EntityManager
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/register', name: 'user_register', methods: ['POST'])]
@@ -37,7 +38,32 @@ class  UserPasswordHashController extends AbstractController
         return new JsonResponse(['message' => 'User created successfully'], 201);
     }
 
-    #[Route('/user/{id}', name: 'get_user', methods: ['GET'])]
+    #[Route('/login', name: 'user_login', methods:['POST'])]
+    public function login(Request $request, JWTService $jwtService):JsonResponse
+    {
+      $data = json_decode($request->getContent(),true);
+
+      $email = $data['email'] ?? '';
+      $password = $data['password'] ?? '';
+
+      $user = $this->entityManager->getRepository(User::class)->findOneBy(['email'=>$email]);
+
+      if(!$user || !password_verify($password,$user->getPassword())){
+        return new JsonResponse(['error'=>'Invalid crendentials'],401);
+      }
+
+      $payload = [
+        'user_id' => $user->getId(),
+        'email' => $user->getEmail(),
+        'roles' => $user->getRoles(),
+       ];
+
+       $token = $jwtService->generateToken($payload);
+
+      return new JsonResponse(['token' => $token]);
+    }
+
+    #[Route('api/user/{id}', name: 'get_user', methods: ['GET'])]
     public function getUserById(int $id): JsonResponse
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
@@ -54,7 +80,7 @@ class  UserPasswordHashController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}', name: 'update_user', methods: ['PATCH'])]
+    #[Route('api/user/{id}', name: 'update_user', methods: ['PATCH'])]
     public function updateUser(Request $request, int $id): JsonResponse
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
@@ -83,7 +109,7 @@ class  UserPasswordHashController extends AbstractController
         return new JsonResponse(['message' => 'User updated successfully'], 200);
     }
 
-    #[Route('/user/{id}', name:'delete_user', methods:['DELETE'])]
+    #[Route('api/user/{id}', name:'delete_user', methods:['DELETE'])]
     public function deleteUser($id): JsonResponse
     {
       $user = $this->entityManager->getRepository(User::class)->find($id);
@@ -98,7 +124,7 @@ class  UserPasswordHashController extends AbstractController
       return new JsonResponse(['message'=>'User deleted successfully'],200);
     }
 
-    #[Route('/users', name: 'get_all_users', methods: ['GET'])]
+    #[Route('api/users', name: 'get_all_users', methods: ['GET'])]
     public function getAllUsers(): JsonResponse
     {
         $users = $this->entityManager->getRepository(User::class)->findAll();
