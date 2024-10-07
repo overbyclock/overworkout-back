@@ -18,6 +18,9 @@ class UserPasswordHashService
   }
   public function createUser(string $nick, string $email, string $plainPassword): User
   {
+    if(!$this->isPasswordValid($plainPassword)){
+      throw new \InvalidArgumentException('The password is weak. It needs to be at least 6 characters long and must include at least one uppercase letter, one lowercase letter, and one number.');
+    }
     $user = new User();
     $user->setNick($nick);
     $user->setEmail($email);
@@ -38,5 +41,14 @@ class UserPasswordHashService
     return $this->passwordHasher->hashPassword($user,$plainPassword);
   }
 
+  public function isPasswordValid(string $password):bool
+  {
+     // La contraseña debe tener al menos 6 caracteres,
+    // incluir al menos una letra mayúscula, una letra minúscula y un número.
+    $pattern = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/';
+
+    return preg_match($pattern,$password);
+    
+  }
 }
 
