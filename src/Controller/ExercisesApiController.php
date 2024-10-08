@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Enum\Levels;
 use App\Entity\Exercises;
-use App\Enum\Level;
 use App\Enum\MuscleGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,7 +138,7 @@ class ExercisesApiController extends AbstractController
     }
     if(isset($data['level'])){
       try {
-        $level = Level::from($data['level']);
+        $level = Levels::from($data['level']);
         $exercise->setLevel($level);
       } catch (\ValueError $e) {
         return new JsonResponse(['error'=>'Invalid value for level']);
