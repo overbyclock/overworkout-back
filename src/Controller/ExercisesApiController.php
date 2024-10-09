@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Enum\Levels;
 use App\Entity\Exercises;
+use App\Entity\Equipments;
 use App\Enum\MuscleGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +28,23 @@ class ExercisesApiController extends AbstractController
     $responseData = [];
 
     foreach ($exercises as $exercise) {
+      $equipmentData = null;
+
+      if($exercise->getEquipment()){
+        $equipment = $exercise->getEquipment();
+        $equipmentData = [
+          'id' => $equipment->getId(),
+          'name' => $equipment->getName(),
+          'image' => $equipment->getImage(),
+        ];
+      }
       $responseData[]=[
         'id' => $exercise->getId(),
         'name' => $exercise->getName(),
         'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup(),
         'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup(),
         'level' => $exercise->getLevel(),
-        'requireEquipment' => $exercise->isRequireEquipment(),
+        'equipment' => $equipmentData,
         'media' => $exercise->getMedia()
       ];
     }
@@ -47,13 +58,25 @@ class ExercisesApiController extends AbstractController
     if(!$exercise){
       return new JsonResponse(['error'=>'Exercise not found']);
     }
+
+    $equipmentData = null;
+
+    if($exercise->getEquipment()){
+      $equipment = $exercise->getEquipment();
+      $equipmentData=[
+        'id' => $equipment->getId(),
+        'name' => $equipment->getName(),
+        'image' => $equipment->getImage(),
+      ];
+    }
+
     return new JsonResponse([
       'id' => $exercise->getId(),
       'name' => $exercise->getName(),
       'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup(),
       'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup(),
       'level' => $exercise->getLevel(),
-      'requireEquipment' => $exercise->isRequireEquipment(),
+      'equipment' => $equipmentData,
       'media' => $exercise->getMedia()
     ]);
   }
@@ -73,8 +96,16 @@ class ExercisesApiController extends AbstractController
     $primaryMuscleGroup = $data['primaryMuscleGroup'] ?? null;
     $secondaryMuscleGroup = $data['secondaryMuscleGroup'] ?? null;
     $level = $data['level'] ?? null;
-    $requireEquipment = $data['requireEquipment'] ?? false;
+    $equipmentId = $data['equipment'] ?? null;
     $media = $data['media'] ?? null;
+
+    $equipment = null;
+    if($equipmentId){
+      $equipment = $this->entityManager->getRepository(Equipments::class)->find($equipmentId);
+      if(!$equipment){
+        return new JsonResponse(['error'=>'Equipment not found'],404);
+      }
+    }
 
     if(!$name || !$primaryMuscleGroup || !$secondaryMuscleGroup || !$level){
       return new JsonResponse(['error'=>'Required fields: name, primaryMuscleGroup and level'],400);
@@ -93,10 +124,8 @@ class ExercisesApiController extends AbstractController
     $exercise->setPrimaryMuscleGroup($primaryMuscleGroup);
     $exercise->setSecondaryMuscleGroup($secondaryMuscleGroup);
     $exercise->setLevel($level);
-    $exercise->setRequireEquipment($requireEquipment);
+    $exercise->setEquipment($equipment);
     $exercise->setMedia($media);
-
-    $this->entityManager->persist($exercise);
     $this->entityManager->flush();
 
     return new JsonResponse(['message' => 'Exercise created susccessfully'],201);
@@ -145,8 +174,14 @@ class ExercisesApiController extends AbstractController
       }
     }
 
-    if(isset($data['requireEquipment'])){
-      $exercise->setRequireEquipment((bool)$data['requireEquipment']);
+    if(isset($data['equipment'])){
+      $equipmentId = $data['equipment'];
+      $equipment = $this->entityManager->getRepository(Equipments::class)->find($equipmentId);
+      if($equipment){
+        $exercise->setEquipment($equipment);
+      }else{
+        return new JsonResponse(['error'=>'Equipment not found'],404);
+      }
     }
 
     if(isset($data['media'])){

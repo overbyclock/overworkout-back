@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Enum\Levels;
 use App\Enum\MuscleGroup;
+use App\Entity\Equipments;
 use App\Repository\ExercisesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,8 +29,9 @@ class Exercises
     #[ORM\Column(enumType: Levels::class)]
     private ?Levels $level = null;
 
-    #[ORM\Column]
-    private ?bool $requireEquipment = null;
+    #[ORM\JoinColumn(nullable:true)]
+    #[ORM\ManyToOne(targetEntity: Equipments::class)]
+    private ?bool $equipment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
@@ -87,14 +89,14 @@ class Exercises
         return $this;
     }
 
-    public function isRequireEquipment(): ?bool
+    public function getEquipment(): ?bool
     {
-        return $this->requireEquipment;
+        return $this->equipment;
     }
 
-    public function setRequireEquipment(bool $requireEquipment): static
+    public function setEquipment(?Equipments $equipment): self
     {
-        $this->requireEquipment = $requireEquipment;
+        $this->equipment = $equipment;
 
         return $this;
     }
