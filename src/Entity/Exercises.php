@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Enum\Levels;
 use App\Enum\MuscleGroup;
 use App\Entity\Equipments;
 use App\Repository\ExercisesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExercisesRepository::class)]
@@ -35,6 +36,17 @@ class Exercises
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
+
+    /**
+     * @var Collection<int, TrainingExcerciseConfiguration>
+     */
+    #[ORM\OneToMany(targetEntity: TrainingExerciseConfiguration::class, mappedBy: 'exercise')]
+    private Collection $trainingExcerciseConfigurations;
+
+    public function __construct()
+    {
+        $this->trainingExcerciseConfigurations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,6 +121,36 @@ class Exercises
     public function setMedia(?string $media): static
     {
         $this->media = $media;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TrainingExcerciseConfiguration>
+     */
+    public function getTrainingExcerciseConfigurations(): Collection
+    {
+        return $this->trainingExcerciseConfigurations;
+    }
+
+    public function addTrainingExcerciseConfiguration(TrainingExerciseConfiguration $trainingExcerciseConfiguration): static
+    {
+        if (!$this->trainingExcerciseConfigurations->contains($trainingExcerciseConfiguration)) {
+            $this->trainingExcerciseConfigurations->add($trainingExcerciseConfiguration);
+            $trainingExcerciseConfiguration->setExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrainingExcerciseConfiguration(TrainingExerciseConfiguration $trainingExcerciseConfiguration): static
+    {
+        if ($this->trainingExcerciseConfigurations->removeElement($trainingExcerciseConfiguration)) {
+            // set the owning side to null (unless already changed)
+            if ($trainingExcerciseConfiguration->getExercise() === $this) {
+                $trainingExcerciseConfiguration->setExercise(null);
+            }
+        }
 
         return $this;
     }
