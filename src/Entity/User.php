@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +38,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
+
+    /**
+     * @var Collection<int, Training>
+     */
+    #[ORM\OneToMany(targetEntity: Training::class, mappedBy: 'trainingUser')]
+    private Collection $trainings;
+
+    public function __construct()
+    {
+        $this->trainings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -138,5 +151,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
       $this->avatar = $avatar;
       return $this;
+    }
+
+    /**
+     * @return Collection<int, Training>
+     */
+    public function getTrainings(): Collection
+    {
+        return $this->trainings;
+    }
+
+    public function addTraining(Training $training): static
+    {
+        if (!$this->trainings->contains($training)) {
+            $this->trainings->add($training);
+            $training->setTrainingUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTraining(Training $training): static
+    {
+        if ($this->trainings->removeElement($training)) {
+            // set the owning side to null (unless already changed)
+            if ($training->getTrainingUser() === $this) {
+                $training->setTrainingUser(null);
+            }
+        }
+
+        return $this;
     }
 }

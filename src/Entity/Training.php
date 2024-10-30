@@ -35,6 +35,12 @@ class Training
     #[ORM\OneToMany(targetEntity: TrainingRound::class, mappedBy: 'training')]
     private Collection $trainingRounds;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'trainings')]
+    private ?User $trainingUser = null;
+
     public function __construct()
     {
         $this->trainingRounds = new ArrayCollection();
@@ -120,6 +126,30 @@ class Training
                 $trainingRound->setTraining(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTrainingUser(): ?User
+    {
+        return $this->trainingUser;
+    }
+
+    public function setTrainingUser(?User $trainingUser): static
+    {
+        $this->trainingUser = $trainingUser;
 
         return $this;
     }

@@ -56,7 +56,7 @@ class ExercisesApiController extends AbstractController
   {
     $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
     if(!$exercise){
-      return new JsonResponse(['error'=>'Exercise not found']);
+      return new JsonResponse(['error'=>'Exercise not found'],404);
     }
 
     $equipmentData = null;
