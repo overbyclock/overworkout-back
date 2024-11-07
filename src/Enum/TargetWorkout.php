@@ -2,9 +2,9 @@
 
 namespace App\Enum;
 
-enum TargetWorkout: string 
+enum TargetWorkout: string
 {
-  case STRONG = 'strong';
+  case STRENGTH = 'strength';
   case FATBURNING = 'fatburning';
   case REPBUILDING = 'repbuilding';
   case WARMUP = 'warmup';

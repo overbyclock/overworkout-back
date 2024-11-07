@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\TrainingExcerciseConfigurationRepository;
+use App\Repository\TrainingExerciseConfigurationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: TrainingExcerciseConfigurationRepository::class)]
+#[ORM\Entity(repositoryClass: TrainingExerciseConfigurationRepository::class)]
 class TrainingExerciseConfiguration
 {
   #[ORM\Id]
@@ -14,7 +14,7 @@ class TrainingExerciseConfiguration
   #[ORM\Column]
   private ?int $id = null;
 
-  #[ORM\ManyToOne(inversedBy: 'trainingExcerciseConfigurations')]
+  #[ORM\ManyToOne(inversedBy: 'trainingExerciseConfigurations')]
   private ?Exercises $exercise = null;
 
   #[ORM\Column(nullable: true)]
@@ -136,6 +136,10 @@ class TrainingExerciseConfiguration
   #[ORM\ManyToOne(targetEntity: TrainingRound::class, inversedBy: 'trainingExerciseConfigurations')]
   private ?TrainingRound $trainingRound = null;
 
+  #[ORM\Column(nullable: true)]
+  #[Assert\Positive(message: 'The rest between sets must be a positive value.')]
+  private ?int $restBetweenExercises = null;
+
   public function getTrainingRound(): ?TrainingRound
   {
     return $this->trainingRound;
@@ -144,6 +148,21 @@ class TrainingExerciseConfiguration
   public function setTrainingRound(?TrainingRound $trainingRound): static
   {
     $this->trainingRound = $trainingRound;
+    return $this;
+  }
+
+  public function getRestBetweenExercises(): ?int
+  {
+    return $this->restBetweenExercises;
+  }
+
+  public function setRestBetweenExercises(?int $restBetweenExercises): static
+  {
+    if ($restBetweenExercises !== null && $restBetweenExercises <= 0) {
+      throw new \InvalidArgumentException('The rest between exercises must be a positive value.');
+    }
+    $this->restBetweenExercises = $restBetweenExercises;
+
     return $this;
   }
 }

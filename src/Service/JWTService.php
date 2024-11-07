@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use Firebase\JWT\JWT;
@@ -13,16 +14,16 @@ class JWTService
     $this->secretKey = $secretKey;
   }
 
-  public function generateToken(array $payload):string
+  public function generateToken(array $payload): string
   {
-    $payload['exp'] = time() + 3600;
-    return JWT::encode($payload,$this->secretKey,'HS256');
+    $payload['exp'] = time() + (24 * 60 * 60);
+    return JWT::encode($payload, $this->secretKey, 'HS256');
   }
 
   public function validateToken(string $token): bool
   {
     try {
-      JWT::decode($token, new Key($this->secretKey,'HS256'));
+      JWT::decode($token, new Key($this->secretKey, 'HS256'));
       return true;
     } catch (\Exception $e) {
       return false;
@@ -31,8 +32,6 @@ class JWTService
 
   public function getPayload(string $token): array
   {
-    return(array) JWT::decode($token, new Key($this->secretKey,'HS256'));
+    return (array) JWT::decode($token, new Key($this->secretKey, 'HS256'));
   }
 }
-
-
