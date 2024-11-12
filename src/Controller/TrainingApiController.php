@@ -291,37 +291,43 @@ class TrainingApiController extends AbstractController
     return new JsonResponse(['message' => 'Training deleted successfully'], 200);
   }
 
-  private function getTrainingData($training)
+  private function getTrainingData($training): array
   {
-    $trainingData = [
-      'id' => $training->getId(),
-      'name' => $training->getName(),
-      'discipline' => $training->getDiscipline(),
-      'target' => $training->getTarget(),
-      'createdAt' => $training->getCreatedAt(),
-      'rounds' => [],
-    ];
-
+    $roundsData = [];
     foreach ($training->getTrainingRounds() as $round) {
-      $roundData = [
-        'round' => $round->getRound(),
-        'restBetweenRounds' => $round->getRestBetweenRounds(),
-        'exercises' => []
-      ];
+      $exercisesData = [];
 
       foreach ($round->getTrainingExerciseConfigurations() as $exerciseConfig) {
-        $roundData['exercises'][] = [
-          'exercise' => $exerciseConfig->getExercise()->getName(),
-          'reps' => $exerciseConfig->getReps(),
-          'sets' => $exerciseConfig->getSets(),
+        $exercisesData[] = [
+          "id" => $exerciseConfig->getId(),
+          "exercise_id" => $exerciseConfig->getExercise()->getId(),
+          "exercise" => $exerciseConfig->getExercise()->getName(),
+          "reps" => $exerciseConfig->getReps(),
+          "setsForExercise" => $exerciseConfig->getSets(),
           'restBetweenExercises' => $exerciseConfig->getRestBetweenExercises(),
           'restBetweenSets' => $exerciseConfig->getRestBetweenSets(),
           'maxTimeForReps' => $exerciseConfig->getMaxTimeForReps(),
           'weight' => $exerciseConfig->getWeight(),
         ];
       }
-      $trainingData['rounds'][] = $roundData;
+
+      $roundsData[] = [
+        'id' => $round->getId(),
+        'setsForRound' => $round->getRound(),
+        'restBetweenRounds' => $round->getRestBetweenRounds(),
+        'exercises' => $exercisesData
+      ];
     }
-    return $trainingData;
+
+    return [
+      'id' => $training->getId(),
+      'discipline' => $training->getDiscipline()->value,
+      'target' => $training->getTarget()->value,
+      'name' => $training->getName(),
+      'cratedAt' => $training->getCreatedAt()->format('d-m-Y H:i:s'),
+      'userCreator' => $training->getTrainingUser() ? $training->getTrainingUser()->getId() : null,
+      'userCreatorNick' => $training->getTrainingUser() ? $training->getTrainingUser()->getNick() : null,
+      'rounds' => $roundsData
+    ];
   }
 }

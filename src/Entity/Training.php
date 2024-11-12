@@ -39,6 +39,7 @@ class Training
   private ?string $name = null;
 
   #[ORM\ManyToOne(inversedBy: 'trainings')]
+  #[ORM\JoinColumn(name: "training_user_id", referencedColumnName: "id", nullable: true)]
   private ?User $trainingUser = null;
 
   public function __construct()

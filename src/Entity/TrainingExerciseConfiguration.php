@@ -15,6 +15,7 @@ class TrainingExerciseConfiguration
   private ?int $id = null;
 
   #[ORM\ManyToOne(inversedBy: 'trainingExerciseConfigurations')]
+  #[ORM\JoinColumn(nullable: true)]
   private ?Exercises $exercise = null;
 
   #[ORM\Column(nullable: true)]
@@ -25,7 +26,7 @@ class TrainingExerciseConfiguration
 
   #[ORM\Column]
   #[Assert\Positive(message: 'Sets must be a positive value.')]
-  private ?int $sets = null;
+  private ?int $setsForExercise = null;
 
   #[ORM\Column]
   #[Assert\Positive(message: 'The rest between sets must be a positive value.')]
@@ -68,15 +69,15 @@ class TrainingExerciseConfiguration
 
   public function getSets(): ?int
   {
-    return $this->sets;
+    return $this->setsForExercise;
   }
 
-  public function setSets(int $sets): static
+  public function setSets(int $setsForExercise): static
   {
-    if ($sets !== null && $sets <= 0) {
+    if ($setsForExercise !== null && $setsForExercise <= 0) {
       throw new \InvalidArgumentException('Sets must be a positive value');
     }
-    $this->sets = $sets;
+    $this->setsForExercise = $setsForExercise;
 
     return $this;
   }
@@ -134,6 +135,7 @@ class TrainingExerciseConfiguration
     }
   }
   #[ORM\ManyToOne(targetEntity: TrainingRound::class, inversedBy: 'trainingExerciseConfigurations')]
+  #[ORM\JoinColumn(nullable: true)]
   private ?TrainingRound $trainingRound = null;
 
   #[ORM\Column(nullable: true)]

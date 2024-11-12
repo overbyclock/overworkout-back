@@ -22,13 +22,14 @@ class TrainingRound
     max: 100,
     notInRangeMessage: 'The round must be between {{ min }} and {{ max }}.',
   )]
-  private ?int $round = null;
+  private ?int $setsForRound = null;
 
   #[ORM\Column]
   #[Assert\Positive(message: 'The rest between rounds must be a positive value.')]
   private ?int $restBetweenRounds = null;
 
   #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
+  #[ORM\JoinColumn(name: "training_id", referencedColumnName: "id")]
   private ?Training $training = null;
 
   public function getId(): ?int
@@ -39,15 +40,15 @@ class TrainingRound
   public function getRound(): ?int
   {
 
-    return $this->round;
+    return $this->setsForRound;
   }
 
-  public function setRound(int $round): static
+  public function setRound(int $setsForRound): static
   {
-    if ($round < 1 || $round > 100) {
+    if ($setsForRound < 1 || $setsForRound > 100) {
       throw new \InvalidArgumentException('The round must between 1 and 100');
     }
-    $this->round = $round;
+    $this->setsForRound = $setsForRound;
 
     return $this;
   }
