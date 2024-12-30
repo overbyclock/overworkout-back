@@ -14,10 +14,15 @@ class JWTService
     $this->secretKey = $secretKey;
   }
 
-  public function generateToken(array $payload): string
+  public function generateToken(array $payload): array
   {
-    $payload['exp'] = time() + (24 * 60 * 60);
-    return JWT::encode($payload, $this->secretKey, 'HS256');
+    $expirationTime = time() + (24 * 60 * 60);
+    $payload['exp'] = $expirationTime;
+    $token = JWT::encode($payload, $this->secretKey, 'HS256');
+    return [
+      'token' => $token,
+      'expiresAt' => $expirationTime
+    ];
   }
 
   public function validateToken(string $token): bool

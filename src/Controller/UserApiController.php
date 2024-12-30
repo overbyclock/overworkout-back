@@ -22,6 +22,16 @@ class  UserApiController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
+  private function normalizeRoles(array $roles): array
+  {
+    return array_map(function ($role) {
+      if (is_object($role)) {
+        return $role->getName();
+      }
+      return $role;
+    }, $roles);
+  }
+
   #[Route('/register', name: 'user_register', methods: ['POST'])]
   public function register(Request $request): JsonResponse
   {
@@ -64,12 +74,17 @@ class  UserApiController extends AbstractController
     $payload = [
       'user_id' => $user->getId(),
       'email' => $user->getEmail(),
-      'roles' => $user->getRoles(),
+      'roles' => $this->normalizeRoles($user->getRoles()),
     ];
 
-    $token = $jwtService->generateToken($payload);
+    $tokenData = $jwtService->generateToken($payload);
 
-    return new JsonResponse(['token' => $token]);
+    return new JsonResponse([
+      'token' => $tokenData['token'],
+      'userId' => $user->getId(),
+      'roles' => $this->normalizeRoles($user->getRoles()),
+      'expiresAt' => $tokenData['expiresAt']
+    ]);
   }
 
   #[Route('api/user/{id}', name: 'get_user', methods: ['GET'])]
@@ -95,7 +110,7 @@ class  UserApiController extends AbstractController
       'nick' => $user->getNick(),
       'email' => $user->getEmail(),
       'createdAt' => $user->getCreatedAt()->format('d-m-Y H:i:s'),
-      'roles' => $user->getRoles(),
+      'roles' => $this->normalizeRoles($user->getRoles()),
       'avatar' => $user->getAvatar(),
     ]);
   }
@@ -193,7 +208,8 @@ class  UserApiController extends AbstractController
         'nick' => $user->getNick(),
         'email' => $user->getEmail(),
         'createdAt' => $user->getCreatedAt()->format('d-m-Y H:i:s'),
-        'roles' => $user->getRoles(),
+        'lastlogin' => $user->getLastLogin() ? $user->getLastLogin()->format('d-m-Y H:i:s') : null,
+        'roles' => $this->normalizeRoles($user->getRoles()),
         'avatar' => $user->getAvatar()
       ];
     }
