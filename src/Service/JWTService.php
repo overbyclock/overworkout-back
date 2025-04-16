@@ -9,6 +9,8 @@ class JWTService
 {
   private string $secretKey;
 
+  private const ACCESS_TOKEN_LIFETIME = 86400; // 24 horas 
+
   public function __construct(string $secretKey)
   {
     $this->secretKey = $secretKey;
@@ -16,19 +18,32 @@ class JWTService
 
   public function generateToken(array $payload): array
   {
-    $expirationTime = time() + (24 * 60 * 60);
-    $payload['exp'] = $expirationTime;
-    $token = JWT::encode($payload, $this->secretKey, 'HS256');
+    $expiresAt = time()+self::ACCESS_TOKEN_LIFETIME;
+    $payload['exp'] = $expiresAt;
+    $payload['type'] = 'access';
+    $token = JWT::encode($payload,$this->secretKey,'HS256');
+
     return [
       'token' => $token,
-      'expiresAt' => $expirationTime
+      'expiresAt' => $expiresAt
     ];
   }
 
-  public function validateToken(string $token): bool
+  public function validateToken(string $token, string $type = 'access'): bool
   {
     try {
-      JWT::decode($token, new Key($this->secretKey, 'HS256'));
+      $decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
+      
+      // Verificar tipo de token
+      if ($decoded->type !== $type) {
+        return false;
+      }
+
+      // Verificar expiración
+      if (isset($decoded->exp) && $decoded->exp < time()) {
+        return false;
+      }
+
       return true;
     } catch (\Exception $e) {
       return false;
@@ -37,6 +52,7 @@ class JWTService
 
   public function getPayload(string $token): array
   {
-    return (array) JWT::decode($token, new Key($this->secretKey, 'HS256'));
-  }
+    $decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
+    return json_decode(json_encode($decoded),true);
+  }  
 }
