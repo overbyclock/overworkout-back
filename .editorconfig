@@ -1,0 +1,24 @@
+# Configuración base para todos los archivos
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# PHP files (API Platform)
+[*.php]
+indent_size = 4
+indent_style = space
+
+# JavaScript/TypeScript/Vue (si hay algún archivo frontend en el backend)
+[*.{js,ts,vue}]
+indent_size = 2
+
+# YAML configuration files
+[*.{yaml,yml}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
