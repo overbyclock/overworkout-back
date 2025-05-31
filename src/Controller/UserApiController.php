@@ -109,10 +109,15 @@ class UserApiController extends AbstractController
         ];
 
         $tokenData = $this->jwtService->generateToken($payload);
+        $user->setLastLogin(new \DateTime());
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return new JsonResponse([
             'token' => $tokenData['token'],
             'userId' => $user->getId(),
+            'nick' => $user->getNick(),
+            'avatar' => $user->getAvatar(),
             'roles' => $this->normalizeRoles($user->getRoles()),
             'expiresAt' => $tokenData['expiresAt']
         ]);
