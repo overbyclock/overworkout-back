@@ -41,9 +41,12 @@ class ExercisesApiController extends AbstractController
       $responseData[] = [
         'id' => $exercise->getId(),
         'name' => $exercise->getName(),
-        'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup(),
-        'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup(),
-        'level' => $exercise->getLevel(),
+        'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup()?->value,
+        'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup()?->value,
+        'level' => $exercise->getLevel()?->value,
+        'difficultyRating' => $exercise->getDifficultyRating(),
+        'description' => $exercise->getDescription(),
+        'disciplines' => $exercise->getDisciplines(),
         'equipment' => $equipmentData,
         'media' => $exercise->getMedia()
       ];
@@ -75,7 +78,10 @@ class ExercisesApiController extends AbstractController
       'name' => $exercise->getName(),
       'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup(),
       'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup(),
-      'level' => $exercise->getLevel(),
+      'level' => $exercise->getLevel()?->value,
+      'difficultyRating' => $exercise->getDifficultyRating(),
+      'description' => $exercise->getDescription(),
+      'disciplines' => $exercise->getDisciplines(),
       'equipment' => $equipmentData,
       'media' => $exercise->getMedia()
     ]);
@@ -98,6 +104,9 @@ class ExercisesApiController extends AbstractController
     $level = $data['level'] ?? null;
     $equipmentId = $data['equipment'] ?? null;
     $media = $data['media'] ?? null;
+    $difficultyRating = $data['difficultyRating'] ?? 1;
+    $description = $data['description'] ?? null;
+    $disciplines = $data['disciplines'] ?? ['calisthenics'];
 
     $equipment = null;
     if ($equipmentId) {
@@ -126,6 +135,9 @@ class ExercisesApiController extends AbstractController
     $exercise->setLevel($level);
     $exercise->setEquipment($equipment);
     $exercise->setMedia($media);
+    $exercise->setDifficultyRating($difficultyRating);
+    $exercise->setDescription($description);
+    $exercise->setDisciplines($disciplines);
 
     $this->entityManager->persist($exercise);
     $this->entityManager->flush();
@@ -175,6 +187,15 @@ class ExercisesApiController extends AbstractController
         return new JsonResponse(['error' => 'Invalid value for level']);
       }
     }
+    if (isset($data['difficultyRating'])) {
+      $exercise->setDifficultyRating($data['difficultyRating']);
+    }
+    if (isset($data['description'])) {
+      $exercise->setDescription($data['description']);
+    }
+    if (isset($data['disciplines'])) {
+      $exercise->setDisciplines($data['disciplines']);
+    }
 
     if (isset($data['equipment'])) {
       $equipmentId = $data['equipment'];
@@ -213,3 +234,5 @@ class ExercisesApiController extends AbstractController
     return new JsonResponse(['message' => 'Exercise deleted successfully'], 200);
   }
 }
+
+

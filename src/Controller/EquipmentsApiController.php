@@ -29,6 +29,10 @@ class EquipmentsApiController extends AbstractController
         'id' => $equipment->getId(),
         'name' => $equipment->getName(),
         'image' => $equipment->getImage(),
+        'description' => $equipment->getDescription(),
+        'category' => $equipment->getCategory(),
+        'icon' => $equipment->getIcon(),
+        'weight' => $equipment->getWeight(),
       ];
     }
 
@@ -48,6 +52,10 @@ class EquipmentsApiController extends AbstractController
       'id' => $equipment->getId(),
       'name' => $equipment->getName(),
       'image' => $equipment->getImage(),
+      'description' => $equipment->getDescription(),
+      'category' => $equipment->getCategory(),
+      'icon' => $equipment->getIcon(),
+      'weight' => $equipment->getWeight(),
     ]);
   }
 
@@ -64,6 +72,10 @@ class EquipmentsApiController extends AbstractController
 
     $name = $data['name'] ?? null;
     $image = $data['image'] ?? null;
+    $description = $data['description'] ?? null;
+    $category = $data['category'] ?? null;
+    $icon = $data['icon'] ?? null;
+    $weight = $data['weight'] ?? null;
 
     if (!$name) {
       return new JsonResponse(['error' => 'Required field name'], 400);
@@ -72,6 +84,10 @@ class EquipmentsApiController extends AbstractController
     $equipment = new Equipments();
     $equipment->setName($name);
     $equipment->setImage($image);
+    $equipment->setDescription($description);
+    $equipment->setCategory($category);
+    $equipment->setIcon($icon);
+    $equipment->setWeight($weight);
     $equipment->setCreatedAt(new \DateTimeImmutable());
 
     $this->entityManager->persist($equipment);
@@ -100,6 +116,22 @@ class EquipmentsApiController extends AbstractController
 
     if (isset($data['image'])) {
       $equipment->setImage($data['image']);
+    }
+
+    if (isset($data['description'])) {
+      $equipment->setDescription($data['description']);
+    }
+
+    if (isset($data['category'])) {
+      $equipment->setCategory($data['category']);
+    }
+
+    if (isset($data['icon'])) {
+      $equipment->setIcon($data['icon']);
+    }
+
+    if (isset($data['weight'])) {
+      $equipment->setWeight($data['weight']);
     }
 
     $this->entityManager->flush();

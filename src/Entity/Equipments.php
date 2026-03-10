@@ -22,6 +22,18 @@ class Equipments
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $category = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $icon = null;
+
+    #[ORM\Column(type: 'decimal', precision: 8, scale: 2, nullable: true)]
+    private ?float $weight = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +72,50 @@ class Equipments
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): static
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): static
+    {
+        $this->icon = $icon;
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?float $weight): static
+    {
+        $this->weight = $weight;
         return $this;
     }
 }

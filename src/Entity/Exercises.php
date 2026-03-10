@@ -37,13 +37,55 @@ class Exercises
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $media = null;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $difficultyRating = 1;
+
+  #[ORM\Column(type: 'text', nullable: true)]
+  private ?string $description = null;
+
+  #[ORM\Column(type: 'json', nullable: true)]
+  private ?array $disciplines = [];
+
   /**
    * @var Collection<int, TrainingExerciseConfiguration>
    */
   #[ORM\OneToMany(targetEntity: TrainingExerciseConfiguration::class, mappedBy: 'exercise')]
   private Collection $trainingExerciseConfigurations;
 
-  public function __construct()
+  public function getDifficultyRating(): ?int
+    {
+        return $this->difficultyRating;
+    }
+
+    public function setDifficultyRating(?int $difficultyRating): static
+    {
+        $this->difficultyRating = $difficultyRating;
+        return $this;
+    }
+
+  public function getDescription(): ?string
+  {
+    return $this->description;
+  }
+
+  public function setDescription(?string $description): static
+  {
+    $this->description = $description;
+    return $this;
+  }
+
+  public function getDisciplines(): ?array
+  {
+    return $this->disciplines ?? [];
+  }
+
+  public function setDisciplines(?array $disciplines): static
+  {
+    $this->disciplines = $disciplines;
+    return $this;
+  }
+
+    public function __construct()
   {
     $this->trainingExerciseConfigurations = new ArrayCollection();
   }
