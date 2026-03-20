@@ -24,7 +24,7 @@ class Exercises
   #[ORM\Column(enumType: MuscleGroup::class)]
   private ?MuscleGroup $primaryMuscleGroup = null;
 
-  #[ORM\Column(enumType: MuscleGroup::class)]
+  #[ORM\Column(enumType: MuscleGroup::class, nullable: true)]
   private ?MuscleGroup $secondaryMuscleGroup = null;
 
   #[ORM\Column(enumType: Levels::class)]

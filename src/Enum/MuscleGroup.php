@@ -12,6 +12,7 @@ enum MuscleGroup: string
   case CALVES = 'calves';
   case ADDUCTORS = 'adductors';
   case SHOULDERS = 'shoulders';
+  case TRAPS = 'traps';
   case BICEPS = 'biceps';
   case TRICEPS = 'triceps';
   case FOREARMS = 'forearms';
