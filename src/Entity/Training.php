@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Enum\Discipline;
 use App\Enum\TargetWorkout;
 use App\Repository\TrainingRepository;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrainingRepository::class)]
+#[ApiResource]
 class Training
 {
   #[ORM\Id]
@@ -20,7 +22,7 @@ class Training
   #[ORM\Column(enumType: Discipline::class)]
   private ?Discipline $discipline = null;
 
-  #[ORM\Column(enumType: TargetWorkout::class)]
+  #[ORM\Column(enumType: TargetWorkout::class, nullable: true)]
   private ?TargetWorkout $target = null;
 
   #[ORM\Column]
@@ -37,6 +39,30 @@ class Training
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $name = null;
+
+  #[ORM\Column(nullable: true)]
+  private ?bool $isBenchmark = null;
+
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $benchmarkType = null;
+
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $rxWeightMale = null;
+
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $rxWeightFemale = null;
+
+  #[ORM\Column(length: 20, nullable: true)]
+  private ?string $eliteTime = null;
+
+  #[ORM\Column(length: 20, nullable: true)]
+  private ?string $advancedTime = null;
+
+  #[ORM\Column(length: 20, nullable: true)]
+  private ?string $intermediateTime = null;
+
+  #[ORM\Column(length: 20, nullable: true)]
+  private ?string $beginnerTime = null;
 
   #[ORM\ManyToOne(inversedBy: 'trainings')]
   #[ORM\JoinColumn(name: "training_user_id", referencedColumnName: "id", nullable: true)]
@@ -152,6 +178,94 @@ class Training
   {
     $this->trainingUser = $trainingUser;
 
+    return $this;
+  }
+
+  public function isBenchmark(): ?bool
+  {
+    return $this->isBenchmark;
+  }
+
+  public function setIsBenchmark(?bool $isBenchmark): static
+  {
+    $this->isBenchmark = $isBenchmark;
+    return $this;
+  }
+
+  public function getBenchmarkType(): ?string
+  {
+    return $this->benchmarkType;
+  }
+
+  public function setBenchmarkType(?string $benchmarkType): static
+  {
+    $this->benchmarkType = $benchmarkType;
+    return $this;
+  }
+
+  public function getRxWeightMale(): ?string
+  {
+    return $this->rxWeightMale;
+  }
+
+  public function setRxWeightMale(?string $rxWeightMale): static
+  {
+    $this->rxWeightMale = $rxWeightMale;
+    return $this;
+  }
+
+  public function getRxWeightFemale(): ?string
+  {
+    return $this->rxWeightFemale;
+  }
+
+  public function setRxWeightFemale(?string $rxWeightFemale): static
+  {
+    $this->rxWeightFemale = $rxWeightFemale;
+    return $this;
+  }
+
+  public function getEliteTime(): ?string
+  {
+    return $this->eliteTime;
+  }
+
+  public function setEliteTime(?string $eliteTime): static
+  {
+    $this->eliteTime = $eliteTime;
+    return $this;
+  }
+
+  public function getAdvancedTime(): ?string
+  {
+    return $this->advancedTime;
+  }
+
+  public function setAdvancedTime(?string $advancedTime): static
+  {
+    $this->advancedTime = $advancedTime;
+    return $this;
+  }
+
+  public function getIntermediateTime(): ?string
+  {
+    return $this->intermediateTime;
+  }
+
+  public function setIntermediateTime(?string $intermediateTime): static
+  {
+    $this->intermediateTime = $intermediateTime;
+    return $this;
+  }
+
+  public function getBeginnerTime(): ?string
+  {
+    return $this->beginnerTime;
+  }
+
+  public function setBeginnerTime(?string $beginnerTime): static
+  {
+    $this->beginnerTime = $beginnerTime;
     return $this;
   }
 }
