@@ -43,6 +43,9 @@ class Training
   #[ORM\Column(nullable: true)]
   private ?bool $isBenchmark = null;
 
+  #[ORM\Column(nullable: true)]
+  private ?bool $isCircuit = false;
+
   #[ORM\Column(length: 50, nullable: true)]
   private ?string $benchmarkType = null;
 
@@ -189,6 +192,17 @@ class Training
   public function setIsBenchmark(?bool $isBenchmark): static
   {
     $this->isBenchmark = $isBenchmark;
+    return $this;
+  }
+
+  public function isCircuit(): ?bool
+  {
+    return $this->isCircuit ?? false;
+  }
+
+  public function setIsCircuit(?bool $isCircuit): static
+  {
+    $this->isCircuit = $isCircuit;
     return $this;
   }
 
