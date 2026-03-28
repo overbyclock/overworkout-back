@@ -1,7 +1,10 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
-$conn = DriverManager::getConnection(['driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,'user'=>'juan','password'=>'1234','dbname'=>'overworkout']);
+
+$conn = DriverManager::getConnection(['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306, 'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout']);
 
 // Mover ejercicios de aductores
 $conn->executeStatement("UPDATE exercises SET primary_muscle_group = 'adductors', secondary_muscle_group = 'legs' WHERE name = 'Side Lunge'");
@@ -19,13 +22,13 @@ $newAdductors = [
 
 echo "Añadiendo ejercicios de ADUCTORES:\n";
 foreach ($newAdductors as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'fitness']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
         echo "  ✅ {$ex[0]}\n";
     } else {

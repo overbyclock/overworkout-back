@@ -12,15 +12,18 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * Tests CRUD de Training
- * 
+ * Tests CRUD de Training.
+ *
  * Verifica que los usuarios pueden crear, leer, actualizar y eliminar sus entrenamientos.
  */
 class TrainingCrudTest extends WebTestCase
 {
     private ?EntityManagerInterface $entityManager;
+
     private ?UserPasswordHasherInterface $passwordHasher;
+
     private ?string $authToken = null;
+
     private ?User $testUser = null;
 
     protected function setUp(): void
@@ -28,7 +31,7 @@ class TrainingCrudTest extends WebTestCase
         self::bootKernel();
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $this->passwordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
-        
+
         // Crear usuario de test y obtener token
         $this->createTestUserAndLogin();
     }
@@ -47,7 +50,7 @@ class TrainingCrudTest extends WebTestCase
         $this->testUser->setEmail('training@test.com');
         $this->testUser->setPassword($this->passwordHasher->hashPassword($this->testUser, 'Test123!'));
         $this->testUser->setRoles(['ROLE_USER']);
-        
+
         $this->entityManager->persist($this->testUser);
         $this->entityManager->flush();
 
@@ -74,7 +77,7 @@ class TrainingCrudTest extends WebTestCase
         // Eliminar trainings del usuario de test
         $trainings = $this->entityManager->getRepository(Training::class)
             ->findBy(['user' => $this->testUser]);
-        
+
         foreach ($trainings as $training) {
             $this->entityManager->remove($training);
         }
@@ -83,12 +86,12 @@ class TrainingCrudTest extends WebTestCase
         if ($this->testUser) {
             $this->entityManager->remove($this->testUser);
         }
-        
+
         $this->entityManager->flush();
     }
 
     /**
-     * Test: Crear un nuevo training
+     * Test: Crear un nuevo training.
      */
     public function testCreateTraining(): void
     {
@@ -100,7 +103,7 @@ class TrainingCrudTest extends WebTestCase
             [],
             [
                 'CONTENT_TYPE' => 'application/json',
-                'HTTP_AUTHORIZATION' => 'Bearer ' . $this->authToken,
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
             ],
             json_encode([
                 'name' => 'Test Training',
@@ -110,16 +113,16 @@ class TrainingCrudTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         $this->assertSame(201, $response->getStatusCode());
-        
+
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('id', $data);
         $this->assertSame('Test Training', $data['name']);
     }
 
     /**
-     * Test: Listar trainings del usuario
+     * Test: Listar trainings del usuario.
      */
     public function testListTrainings(): void
     {
@@ -129,7 +132,7 @@ class TrainingCrudTest extends WebTestCase
         $training->setDiscipline(Discipline::CALISTHENICS);
         $training->setUser($this->testUser);
         $training->setTarget('strength');
-        
+
         $this->entityManager->persist($training);
         $this->entityManager->flush();
 
@@ -140,20 +143,20 @@ class TrainingCrudTest extends WebTestCase
             '/api/trainings',
             [],
             [],
-            ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->authToken]
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
         $response = $client->getResponse();
-        
+
         $this->assertSame(200, $response->getStatusCode());
-        
+
         $data = json_decode($response->getContent(), true);
         $this->assertIsArray($data);
         $this->assertCount(1, $data); // Solo debe ver su propio training
     }
 
     /**
-     * Test: Usuario no puede ver trainings de otro usuario
+     * Test: Usuario no puede ver trainings de otro usuario.
      */
     public function testUserCannotSeeOtherUserTrainings(): void
     {
@@ -162,15 +165,15 @@ class TrainingCrudTest extends WebTestCase
         $otherUser->setNick('otheruser');
         $otherUser->setEmail('other@test.com');
         $otherUser->setPassword($this->passwordHasher->hashPassword($otherUser, 'Test123!'));
-        
+
         $this->entityManager->persist($otherUser);
-        
+
         $otherTraining = new Training();
         $otherTraining->setName('Other Training');
         $otherTraining->setDiscipline(Discipline::FITNESS);
         $otherTraining->setUser($otherUser);
         $otherTraining->setTarget('cardio');
-        
+
         $this->entityManager->persist($otherTraining);
         $this->entityManager->flush();
 
@@ -181,17 +184,17 @@ class TrainingCrudTest extends WebTestCase
             '/api/trainings',
             [],
             [],
-            ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->authToken]
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
         $response = $client->getResponse();
         $data = json_decode($response->getContent(), true);
-        
+
         // No debe ver el training del otro usuario
         foreach ($data as $training) {
             $this->assertNotSame('Other Training', $training['name']);
         }
-        
+
         // Cleanup
         $this->entityManager->remove($otherTraining);
         $this->entityManager->remove($otherUser);
@@ -199,7 +202,7 @@ class TrainingCrudTest extends WebTestCase
     }
 
     /**
-     * Test: Actualizar un training propio
+     * Test: Actualizar un training propio.
      */
     public function testUpdateOwnTraining(): void
     {
@@ -209,10 +212,10 @@ class TrainingCrudTest extends WebTestCase
         $training->setDiscipline(Discipline::CALISTHENICS);
         $training->setUser($this->testUser);
         $training->setTarget('strength');
-        
+
         $this->entityManager->persist($training);
         $this->entityManager->flush();
-        
+
         $trainingId = $training->getId();
 
         // Actualizar
@@ -224,7 +227,7 @@ class TrainingCrudTest extends WebTestCase
             [],
             [
                 'CONTENT_TYPE' => 'application/merge-patch+json',
-                'HTTP_AUTHORIZATION' => 'Bearer ' . $this->authToken,
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
             ],
             json_encode([
                 'name' => 'Updated Name',
@@ -232,15 +235,15 @@ class TrainingCrudTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         $this->assertSame(200, $response->getStatusCode());
-        
+
         $data = json_decode($response->getContent(), true);
         $this->assertSame('Updated Name', $data['name']);
     }
 
     /**
-     * Test: Eliminar un training propio
+     * Test: Eliminar un training propio.
      */
     public function testDeleteOwnTraining(): void
     {
@@ -250,10 +253,10 @@ class TrainingCrudTest extends WebTestCase
         $training->setDiscipline(Discipline::CROSSFIT);
         $training->setUser($this->testUser);
         $training->setTarget('hiit');
-        
+
         $this->entityManager->persist($training);
         $this->entityManager->flush();
-        
+
         $trainingId = $training->getId();
 
         // Eliminar
@@ -263,13 +266,13 @@ class TrainingCrudTest extends WebTestCase
             "/api/trainings/{$trainingId}",
             [],
             [],
-            ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->authToken]
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
         $response = $client->getResponse();
-        
+
         $this->assertSame(204, $response->getStatusCode());
-        
+
         // Verificar que ya no existe
         $deletedTraining = $this->entityManager->getRepository(Training::class)->find($trainingId);
         $this->assertNull($deletedTraining);

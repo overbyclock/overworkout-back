@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -73,6 +75,7 @@ class Achievement
     public function setCode(string $code): static
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class Achievement
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -95,6 +99,7 @@ class Achievement
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -106,6 +111,7 @@ class Achievement
     public function setCategory(string $category): static
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -117,6 +123,7 @@ class Achievement
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
         return $this;
     }
 
@@ -128,6 +135,7 @@ class Achievement
     public function setColor(?string $color): static
     {
         $this->color = $color;
+
         return $this;
     }
 
@@ -139,6 +147,7 @@ class Achievement
     public function setXpReward(int $xpReward): static
     {
         $this->xpReward = $xpReward;
+
         return $this;
     }
 
@@ -150,6 +159,7 @@ class Achievement
     public function setRequirementType(?string $requirementType): static
     {
         $this->requirementType = $requirementType;
+
         return $this;
     }
 
@@ -161,6 +171,7 @@ class Achievement
     public function setRequirementValue(?int $requirementValue): static
     {
         $this->requirementValue = $requirementValue;
+
         return $this;
     }
 
@@ -172,6 +183,7 @@ class Achievement
     public function setIsSecret(bool $isSecret): static
     {
         $this->isSecret = $isSecret;
+
         return $this;
     }
 

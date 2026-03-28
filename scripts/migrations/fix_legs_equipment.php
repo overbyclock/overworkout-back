@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 // Corregir equipamiento de ejercicios existentes
@@ -16,7 +18,7 @@ $updates = [
     ['Glute Ham Raise Negative', 'barras'],
     ['Nordic Curl', 'barras'],
     ['Glute Ham Raise', 'barras'],
-    
+
     // Bancos
     ['Box Squat', 'bancos_soportes'],
     ['Bulgarian Split Squat', 'bancos_soportes'],
@@ -28,22 +30,22 @@ $updates = [
     ['Single Leg Box Jump', 'bancos_soportes'],
     ['Pistol Squat to Box', 'bancos_soportes'],
     ['Elevated Pistol Squat', 'bancos_soportes'],
-    
+
     // Bandas
     ['Nordic Curl with Band', 'bandas'],
-    
+
     // Anillas
     ['Hamstring Curl on Rings', 'anillas'],
 ];
 
 echo "=== CORRIGIENDO EQUIPAMIENTO ===\n";
 foreach ($updates as $upd) {
-    $conn->executeStatement("
+    $conn->executeStatement('
         UPDATE exercises e 
         JOIN equipments eq ON eq.name = ?
         SET e.equipment_id = eq.id 
         WHERE e.name = ?
-    ", [$upd[1], $upd[0]]);
+    ', [$upd[1], $upd[0]]);
     echo "✅ {$upd[0]} → {$upd[1]}\n";
 }
 
@@ -74,13 +76,13 @@ $beginner3fire = [
 ];
 
 foreach ($beginner3fire as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'crossfit', 'fitness', 'powerlifting']);
-        $conn->executeStatement("
+        $conn->executeStatement('
             INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)
-        ", [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]);
+        ', [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]);
         echo "✅ Nuevo: {$ex[0]} ({$ex[6]})\n";
     } else {
         echo "ℹ️ Ya existe: {$ex[0]}\n";

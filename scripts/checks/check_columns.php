@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
@@ -14,5 +16,5 @@ $conn = DriverManager::getConnection([
 
 $columns = $conn->fetchAllAssociative('DESCRIBE equipments');
 foreach ($columns as $col) {
-    echo $col['Field'] . ' - ' . $col['Type'] . PHP_EOL;
+    echo $col['Field'].' - '.$col['Type'].PHP_EOL;
 }

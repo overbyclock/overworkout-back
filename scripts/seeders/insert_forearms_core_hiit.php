@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== ANTEBRAZOS ===\n";
@@ -28,15 +30,16 @@ $forearms = [
 
 $count = 0;
 foreach ($forearms as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'climbing', 'fitness']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
-        echo "  ✅ {$ex[0]}\n"; $count++;
+        echo "  ✅ {$ex[0]}\n";
+        ++$count;
     } else {
         echo "  ℹ️ Ya existe: {$ex[0]}\n";
     }
@@ -79,15 +82,16 @@ $core = [
 
 $count = 0;
 foreach ($core as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'fitness', 'yoga']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
-        echo "  ✅ {$ex[0]}\n"; $count++;
+        echo "  ✅ {$ex[0]}\n";
+        ++$count;
     } else {
         echo "  ℹ️ Ya existe: {$ex[0]}\n";
     }
@@ -131,15 +135,16 @@ $hiit = [
 
 $count = 0;
 foreach ($hiit as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['hiit', 'crossfit', 'cardio']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
-        echo "  ✅ {$ex[0]}\n"; $count++;
+        echo "  ✅ {$ex[0]}\n";
+        ++$count;
     } else {
         echo "  ℹ️ Ya existe: {$ex[0]}\n";
     }
@@ -147,12 +152,12 @@ foreach ($hiit as $ex) {
 echo "HIIT añadidos: $count\n\n";
 
 echo "=== RESUMEN FINAL ===\n";
-$summary = $conn->fetchAllAssociative("
+$summary = $conn->fetchAllAssociative('
     SELECT primary_muscle_group, COUNT(*) as count 
     FROM exercises 
     GROUP BY primary_muscle_group
     ORDER BY count DESC
-");
+');
 
 foreach ($summary as $s) {
     echo "{$s['primary_muscle_group']}: {$s['count']}\n";

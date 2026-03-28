@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\BenchmarkRepository;
@@ -81,6 +83,7 @@ class Benchmark
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -92,6 +95,7 @@ class Benchmark
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -103,6 +107,7 @@ class Benchmark
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -114,6 +119,7 @@ class Benchmark
     public function setRxWeightMale(?string $rxWeightMale): static
     {
         $this->rxWeightMale = $rxWeightMale;
+
         return $this;
     }
 
@@ -125,6 +131,7 @@ class Benchmark
     public function setRxWeightFemale(?string $rxWeightFemale): static
     {
         $this->rxWeightFemale = $rxWeightFemale;
+
         return $this;
     }
 
@@ -136,6 +143,7 @@ class Benchmark
     public function setMovements(?array $movements): static
     {
         $this->movements = $movements;
+
         return $this;
     }
 
@@ -147,6 +155,7 @@ class Benchmark
     public function setEliteTimeMale(?string $eliteTimeMale): static
     {
         $this->eliteTimeMale = $eliteTimeMale;
+
         return $this;
     }
 
@@ -158,6 +167,7 @@ class Benchmark
     public function setEliteTimeFemale(?string $eliteTimeFemale): static
     {
         $this->eliteTimeFemale = $eliteTimeFemale;
+
         return $this;
     }
 
@@ -169,6 +179,7 @@ class Benchmark
     public function setAdvancedTimeMale(?string $advancedTimeMale): static
     {
         $this->advancedTimeMale = $advancedTimeMale;
+
         return $this;
     }
 
@@ -180,6 +191,7 @@ class Benchmark
     public function setAdvancedTimeFemale(?string $advancedTimeFemale): static
     {
         $this->advancedTimeFemale = $advancedTimeFemale;
+
         return $this;
     }
 
@@ -191,6 +203,7 @@ class Benchmark
     public function setIntermediateTimeMale(?string $intermediateTimeMale): static
     {
         $this->intermediateTimeMale = $intermediateTimeMale;
+
         return $this;
     }
 
@@ -202,6 +215,7 @@ class Benchmark
     public function setIntermediateTimeFemale(?string $intermediateTimeFemale): static
     {
         $this->intermediateTimeFemale = $intermediateTimeFemale;
+
         return $this;
     }
 
@@ -213,6 +227,7 @@ class Benchmark
     public function setBeginnerTimeMale(?string $beginnerTimeMale): static
     {
         $this->beginnerTimeMale = $beginnerTimeMale;
+
         return $this;
     }
 
@@ -224,6 +239,7 @@ class Benchmark
     public function setBeginnerTimeFemale(?string $beginnerTimeFemale): static
     {
         $this->beginnerTimeFemale = $beginnerTimeFemale;
+
         return $this;
     }
 
@@ -235,6 +251,7 @@ class Benchmark
     public function setScalingOptions(?string $scalingOptions): static
     {
         $this->scalingOptions = $scalingOptions;
+
         return $this;
     }
 
@@ -246,6 +263,7 @@ class Benchmark
     public function setVideoUrl(?string $videoUrl): static
     {
         $this->videoUrl = $videoUrl;
+
         return $this;
     }
 }

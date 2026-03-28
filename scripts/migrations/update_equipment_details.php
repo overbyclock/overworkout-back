@@ -1,20 +1,22 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
 
 $connectionParams = [
-    'driver'   => 'pdo_mysql',
-    'host'     => '127.0.0.1',
-    'port'     => 3306,
-    'user'     => 'juan',
+    'driver' => 'pdo_mysql',
+    'host' => '127.0.0.1',
+    'port' => 3306,
+    'user' => 'juan',
     'password' => '1234',
-    'dbname'   => 'overworkout',
+    'dbname' => 'overworkout',
 ];
 
 try {
     $conn = DriverManager::getConnection($connectionParams);
-    
+
     // Actualizar equipos con descripciones y categorías
     $updates = [
         ['Barra de dominadas', 'Barra fija para realizar dominadas, muscle ups y ejercicios de suspensión. Esencial para entrenamiento de espalda.', 'calisthenics', 'sports_gymnastics', null],
@@ -30,25 +32,25 @@ try {
         ['pull-up bars', 'Barras para dominadas', 'calisthenics', 'sports_gymnastics', null],
         ['dip bars', 'Barras paralelas para fondos', 'calisthenics', 'horizontal_rule', null],
     ];
-    
+
     foreach ($updates as $update) {
         $conn->executeStatement(
-            "UPDATE equipments SET description = ?, category = ?, icon = ?, weight = ? WHERE name = ?",
+            'UPDATE equipments SET description = ?, category = ?, icon = ?, weight = ? WHERE name = ?',
             [$update[1], $update[2], $update[3], $update[4], $update[0]]
         );
         echo "✅ Actualizado: {$update[0]}\n";
     }
-    
+
     echo "\n🎉 ¡Equipamiento actualizado!\n\n";
-    
+
     // Mostrar equipos
     $allEquipments = $conn->fetchAllAssociative('SELECT name, category, description FROM equipments ORDER BY id');
     echo "📋 Equipos en BD:\n";
     foreach ($allEquipments as $e) {
-        $desc = $e['description'] ? substr($e['description'], 0, 40) . '...' : 'Sin descripción';
+        $desc = $e['description'] ? substr($e['description'], 0, 40).'...' : 'Sin descripción';
         echo "  - {$e['name']} ({$e['category']})\n";
     }
-    
+
 } catch (Exception $e) {
-    echo "❌ Error: " . $e->getMessage() . "\n";
+    echo '❌ Error: '.$e->getMessage()."\n";
 }

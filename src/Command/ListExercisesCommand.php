@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Exercises;
@@ -26,36 +28,36 @@ class ListExercisesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $exercises = $this->entityManager->getRepository(Exercises::class)->findAll();
-        
+
         $output->writeln("=== EJERCICIOS EN LA BASE DE DATOS ===\n");
-        $output->writeln(sprintf("%-5s | %-40s | %-15s | %-20s", "ID", "Nombre", "Nivel", "Grupo Muscular"));
-        $output->writeln(str_repeat("-", 90));
-        
+        $output->writeln(\sprintf('%-5s | %-40s | %-15s | %-20s', 'ID', 'Nombre', 'Nivel', 'Grupo Muscular'));
+        $output->writeln(str_repeat('-', 90));
+
         foreach ($exercises as $ex) {
-            $output->writeln(sprintf(
-                "%-5s | %-40s | %-15s | %-20s",
+            $output->writeln(\sprintf(
+                '%-5s | %-40s | %-15s | %-20s',
                 $ex->getId(),
                 substr($ex->getName(), 0, 38),
                 $ex->getLevel()?->value ?? 'N/A',
                 $ex->getPrimaryMuscleGroup()?->value ?? 'N/A'
             ));
         }
-        
-        $output->writeln("\n=== TOTAL: " . count($exercises) . " ejercicios ===");
-        
+
+        $output->writeln("\n=== TOTAL: ".\count($exercises).' ejercicios ===');
+
         // Filtrar por nivel BEGINNER
-        $beginnerExercises = array_filter($exercises, fn($ex) => $ex->getLevel()?->value === 'beginner');
-        $output->writeln("\n=== EJERCICIOS NIVEL BEGINNER (" . count($beginnerExercises) . ") ===\n");
-        
+        $beginnerExercises = array_filter($exercises, fn ($ex) => 'beginner' === $ex->getLevel()?->value);
+        $output->writeln("\n=== EJERCICIOS NIVEL BEGINNER (".\count($beginnerExercises).") ===\n");
+
         foreach ($beginnerExercises as $ex) {
-            $output->writeln(sprintf(
-                "ID: %-5s | %-40s | %s",
+            $output->writeln(\sprintf(
+                'ID: %-5s | %-40s | %s',
                 $ex->getId(),
                 $ex->getName(),
                 $ex->getPrimaryMuscleGroup()?->value ?? 'N/A'
             ));
         }
-        
+
         return Command::SUCCESS;
     }
 }

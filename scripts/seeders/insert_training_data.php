@@ -1,14 +1,16 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql',
-    'host'=>'127.0.0.1',
-    'port'=>3306,
-    'user'=>'juan',
-    'password'=>'1234',
-    'dbname'=>'overworkout'
+    'driver' => 'pdo_mysql',
+    'host' => '127.0.0.1',
+    'port' => 3306,
+    'user' => 'juan',
+    'password' => '1234',
+    'dbname' => 'overworkout',
 ]);
 
 echo "=== INSERTANDO DATOS DE ENTRENAMIENTO ===\n\n";
@@ -21,8 +23,8 @@ if ($exists) {
 } else {
     // Insertar Programa
     $conn->executeStatement(
-        "INSERT INTO training_programs (name, slug, description, discipline, total_levels, difficulty, image_url) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)",
+        'INSERT INTO training_programs (name, slug, description, discipline, total_levels, difficulty, image_url) 
+         VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
             'Calistenia Master',
             'calisthenia-master',
@@ -30,7 +32,7 @@ if ($exists) {
             'calisthenics',
             12,
             'mixed',
-            '/images/programs/calisthenia-master.jpg'
+            '/images/programs/calisthenia-master.jpg',
         ]
     );
     $programId = $conn->lastInsertId();
@@ -38,7 +40,7 @@ if ($exists) {
 }
 
 // Verificar si ya hay niveles
-$levelCount = $conn->fetchOne("SELECT COUNT(*) FROM training_levels WHERE program_id = ?", [$programId]);
+$levelCount = $conn->fetchOne('SELECT COUNT(*) FROM training_levels WHERE program_id = ?', [$programId]);
 if ($levelCount > 0) {
     echo "Ya existen $levelCount niveles para este programa\n";
 } else {
@@ -60,8 +62,8 @@ if ($levelCount > 0) {
 
     foreach ($levels as $level) {
         $conn->executeStatement(
-            "INSERT INTO training_levels (program_id, level_number, name, title, objective, estimated_duration_weeks, difficulty_rating, color, icon) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            'INSERT INTO training_levels (program_id, level_number, name, title, objective, estimated_duration_weeks, difficulty_rating, color, icon) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [$programId, $level[0], $level[1], $level[2], $level[3], $level[4], $level[5], $level[6], $level[7]]
         );
     }
@@ -69,13 +71,13 @@ if ($levelCount > 0) {
 }
 
 // Insertar skills
-$skillCount = $conn->fetchOne("SELECT COUNT(*) FROM training_skills WHERE program_id = ?", [$programId]);
+$skillCount = $conn->fetchOne('SELECT COUNT(*) FROM training_skills WHERE program_id = ?', [$programId]);
 if ($skillCount > 0) {
     echo "Ya existen $skillCount skills\n";
 } else {
     // Obtener IDs de niveles
     $levelIds = [];
-    $rows = $conn->fetchAllAssociative("SELECT id, level_number FROM training_levels WHERE program_id = ?", [$programId]);
+    $rows = $conn->fetchAllAssociative('SELECT id, level_number FROM training_levels WHERE program_id = ?', [$programId]);
     foreach ($rows as $row) {
         $levelIds[$row['level_number']] = $row['id'];
     }
@@ -103,12 +105,12 @@ if ($skillCount > 0) {
 
     foreach ($skills as $skill) {
         $conn->executeStatement(
-            "INSERT INTO training_skills (program_id, level_id, name, family, description, unlock_at_level, mastery_at_level, is_key_skill) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            'INSERT INTO training_skills (program_id, level_id, name, family, description, unlock_at_level, mastery_at_level, is_key_skill) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [$programId, $skill[0], $skill[1], $skill[2], $skill[3], $skill[4], $skill[5], true]
         );
     }
-    echo count($skills) . " skills insertados\n";
+    echo count($skills)." skills insertados\n";
 }
 
 echo "\n✅ DATOS INSERTADOS CORRECTAMENTE\n";

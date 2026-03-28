@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordHashService
 {
     private $passwordHasher;
+
     private $entityManager;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager)

@@ -1,20 +1,22 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
 
 $connectionParams = [
-    'driver'   => 'pdo_mysql',
-    'host'     => '127.0.0.1',
-    'port'     => 3306,
-    'user'     => 'juan',
+    'driver' => 'pdo_mysql',
+    'host' => '127.0.0.1',
+    'port' => 3306,
+    'user' => 'juan',
     'password' => '1234',
-    'dbname'   => 'overworkout',
+    'dbname' => 'overworkout',
 ];
 
 try {
     $conn = DriverManager::getConnection($connectionParams);
-    
+
     // Asignar disciplinas a los ejercicios
     $disciplinesMap = [
         // Push Ups - principalmente calistenia pero también crossfit y fitness
@@ -28,7 +30,7 @@ try {
         'Plyometric Push Up' => ['calisthenics', 'crossfit'],
         'Spiderman Push Up' => ['calisthenics', 'crossfit'],
         'One-Arm Push Up' => ['calisthenics'],
-        
+
         // Pull Ups - universales
         'Australian Pull Up' => ['calisthenics', 'crossfit', 'fitness'],
         'Negative Pull Up' => ['calisthenics', 'crossfit', 'fitness'],
@@ -41,7 +43,7 @@ try {
         'L-Sit Pull Up' => ['calisthenics', 'crossfit'],
         'Muscle Up' => ['calisthenics', 'crossfit'],
         'One-Arm Pull Up' => ['calisthenics'],
-        
+
         // Hombros - mayormente calistenia
         'Pike Push Up' => ['calisthenics', 'fitness'],
         'Wall Handstand Hold' => ['calisthenics'],
@@ -54,18 +56,18 @@ try {
         'Planche Push Up' => ['calisthenics'],
         'One-Arm Handstand Push Up' => ['calisthenics'],
     ];
-    
+
     foreach ($disciplinesMap as $name => $disciplines) {
         $json = json_encode($disciplines);
         $conn->executeStatement(
-            "UPDATE exercises SET disciplines = ? WHERE name = ?",
+            'UPDATE exercises SET disciplines = ? WHERE name = ?',
             [$json, $name]
         );
-        echo "✅ {$name} → " . implode(', ', $disciplines) . "\n";
+        echo "✅ {$name} → ".implode(', ', $disciplines)."\n";
     }
-    
+
     echo "\n🎉 ¡Disciplinas actualizadas!\n";
-    
+
 } catch (Exception $e) {
-    echo "❌ Error: " . $e->getMessage() . "\n";
+    echo '❌ Error: '.$e->getMessage()."\n";
 }

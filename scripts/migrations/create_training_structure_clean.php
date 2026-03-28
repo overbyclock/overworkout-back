@@ -1,19 +1,21 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== CREANDO ESTRUCTURA DE ENTRENAMIENTOS ===\n\n";
 
 // 1. Tabla de Programas
-$conn->executeStatement("DROP TABLE IF EXISTS training_levels");
-$conn->executeStatement("DROP TABLE IF EXISTS training_programs");
+$conn->executeStatement('DROP TABLE IF EXISTS training_levels');
+$conn->executeStatement('DROP TABLE IF EXISTS training_programs');
 
-$conn->executeStatement("CREATE TABLE training_programs (
+$conn->executeStatement('CREATE TABLE training_programs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
@@ -27,12 +29,12 @@ $conn->executeStatement("CREATE TABLE training_programs (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_discipline (discipline),
     INDEX idx_active (is_active)
-) ENGINE=InnoDB");
+) ENGINE=InnoDB');
 
 echo "Tabla training_programs creada\n";
 
 // 2. Tabla de Niveles
-$conn->executeStatement("CREATE TABLE training_levels (
+$conn->executeStatement('CREATE TABLE training_levels (
     id INT AUTO_INCREMENT PRIMARY KEY,
     program_id INT NOT NULL,
     level_number INT NOT NULL,
@@ -49,13 +51,13 @@ $conn->executeStatement("CREATE TABLE training_levels (
     FOREIGN KEY (program_id) REFERENCES training_programs(id) ON DELETE CASCADE,
     UNIQUE KEY unique_program_level (program_id, level_number),
     INDEX idx_level_number (level_number)
-) ENGINE=InnoDB");
+) ENGINE=InnoDB');
 
 echo "Tabla training_levels creada\n";
 
 // 3. Tabla de Skills
-$conn->executeStatement("DROP TABLE IF EXISTS training_skills");
-$conn->executeStatement("CREATE TABLE training_skills (
+$conn->executeStatement('DROP TABLE IF EXISTS training_skills');
+$conn->executeStatement('CREATE TABLE training_skills (
     id INT AUTO_INCREMENT PRIMARY KEY,
     program_id INT NOT NULL,
     level_id INT NOT NULL,
@@ -72,12 +74,12 @@ $conn->executeStatement("CREATE TABLE training_skills (
     FOREIGN KEY (level_id) REFERENCES training_levels(id) ON DELETE CASCADE,
     INDEX idx_family (family),
     INDEX idx_unlock (unlock_at_level)
-) ENGINE=InnoDB");
+) ENGINE=InnoDB');
 
 echo "Tabla training_skills creada\n";
 
 // 4. Tabla de Requisitos
-$conn->executeStatement("DROP TABLE IF EXISTS level_requirements");
+$conn->executeStatement('DROP TABLE IF EXISTS level_requirements');
 $conn->executeStatement("CREATE TABLE level_requirements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     level_id INT NOT NULL,
@@ -99,7 +101,7 @@ $conn->executeStatement("CREATE TABLE level_requirements (
 echo "Tabla level_requirements creada\n";
 
 // 5. Tabla de Progreso de Usuario
-$conn->executeStatement("DROP TABLE IF EXISTS user_training_progress");
+$conn->executeStatement('DROP TABLE IF EXISTS user_training_progress');
 $conn->executeStatement("CREATE TABLE user_training_progress (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -136,7 +138,7 @@ $conn->executeStatement("CREATE TABLE user_training_progress (
 echo "Tabla user_training_progress creada\n";
 
 // 6. Tabla de Skills desbloqueados por usuario
-$conn->executeStatement("DROP TABLE IF EXISTS user_skills");
+$conn->executeStatement('DROP TABLE IF EXISTS user_skills');
 $conn->executeStatement("CREATE TABLE user_skills (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -166,7 +168,7 @@ $conn->executeStatement("CREATE TABLE user_skills (
 echo "Tabla user_skills creada\n";
 
 // 7. Tabla de Evaluaciones
-$conn->executeStatement("DROP TABLE IF EXISTS user_assessments");
+$conn->executeStatement('DROP TABLE IF EXISTS user_assessments');
 $conn->executeStatement("CREATE TABLE user_assessments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -196,8 +198,8 @@ echo "\n=== INSERTANDO DATOS BASE ===\n\n";
 
 // Insertar Programa
 $conn->executeStatement(
-    "INSERT INTO training_programs (name, slug, description, discipline, total_levels, difficulty, image_url) 
-     VALUES (?, ?, ?, ?, ?, ?, ?)",
+    'INSERT INTO training_programs (name, slug, description, discipline, total_levels, difficulty, image_url) 
+     VALUES (?, ?, ?, ?, ?, ?, ?)',
     [
         'Calistenia Master',
         'calisthenia-master',
@@ -205,7 +207,7 @@ $conn->executeStatement(
         'calisthenics',
         12,
         'mixed',
-        '/images/programs/calisthenia-master.jpg'
+        '/images/programs/calisthenia-master.jpg',
     ]
 );
 $programId = $conn->lastInsertId();
@@ -230,8 +232,8 @@ $levels = [
 $levelIds = [];
 foreach ($levels as $level) {
     $conn->executeStatement(
-        "INSERT INTO training_levels (program_id, level_number, name, title, objective, estimated_duration_weeks, difficulty_rating, color, icon) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        'INSERT INTO training_levels (program_id, level_number, name, title, objective, estimated_duration_weeks, difficulty_rating, color, icon) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [$programId, $level[0], $level[1], $level[2], $level[3], $level[4], $level[5], $level[6], $level[7]]
     );
     $levelIds[$level[0]] = $conn->lastInsertId();
@@ -262,8 +264,8 @@ $skills = [
 
 foreach ($skills as $skill) {
     $conn->executeStatement(
-        "INSERT INTO training_skills (program_id, level_id, name, family, description, unlock_at_level, mastery_at_level, is_key_skill) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        'INSERT INTO training_skills (program_id, level_id, name, family, description, unlock_at_level, mastery_at_level, is_key_skill) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         [$programId, $skill[0], $skill[1], $skill[2], $skill[3], $skill[4], $skill[5], true]
     );
 }

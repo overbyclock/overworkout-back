@@ -10,7 +10,5 @@ parameters:
         - src/Command
         - tests/bootstrap.php
     symfony:
-        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     ignoreErrors:
-        # Ignorar errores comunes en proyectos Symfony que no son críticos
-        - '#Call to an undefined method Symfony\\Component\\HttpFoundation\\Request::getContentTypeFormat#'

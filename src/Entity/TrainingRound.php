@@ -1,121 +1,131 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrainingRoundRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrainingRoundRepository::class)]
 class TrainingRound
 {
-  #[ORM\Id]
-  #[ORM\GeneratedValue]
-  #[ORM\Column]
-  private ?int $id = null;
+    public const GROUP_READ = 'training_round:read';
 
-  #[ORM\Column]
-  #[Assert\Range(
-    min: 1,
-    max: 100,
-    notInRangeMessage: 'The round must be between {{ min }} and {{ max }}.',
-  )]
-  private ?int $setsForRound = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?int $id = null;
 
-  #[ORM\Column]
-  #[Assert\Positive(message: 'The rest between rounds must be a positive value.')]
-  private ?int $restBetweenRounds = null;
+    #[ORM\Column]
+    #[Assert\Range(
+        min: 1,
+        max: 100,
+        notInRangeMessage: 'The round must be between {{ min }} and {{ max }}.',
+    )]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?int $setsForRound = null;
 
-  #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
-  #[ORM\JoinColumn(name: "training_id", referencedColumnName: "id")]
-  private ?Training $training = null;
+    #[ORM\Column]
+    #[Assert\Positive(message: 'The rest between rounds must be a positive value.')]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?int $restBetweenRounds = null;
 
-  public function getId(): ?int
-  {
-    return $this->id;
-  }
+    #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
+    #[ORM\JoinColumn(name: 'training_id', referencedColumnName: 'id')]
+    private ?Training $training = null;
 
-  public function getRound(): ?int
-  {
-
-    return $this->setsForRound;
-  }
-
-  public function setRound(int $setsForRound): static
-  {
-    if ($setsForRound < 1 || $setsForRound > 100) {
-      throw new \InvalidArgumentException('The round must between 1 and 100');
+    public function getId(): ?int
+    {
+        return $this->id;
     }
-    $this->setsForRound = $setsForRound;
 
-    return $this;
-  }
+    public function getRound(): ?int
+    {
 
-  public function getRestBetweenRounds(): ?int
-  {
-    return $this->restBetweenRounds;
-  }
-
-  public function setRestBetweenRounds(int $restBetweenRounds): static
-  {
-    if ($restBetweenRounds <= 0) {
-      throw new \InvalidArgumentException('The rest between rounds must be a positive value');
+        return $this->setsForRound;
     }
-    $this->restBetweenRounds = $restBetweenRounds;
 
-    return $this;
-  }
+    public function setRound(int $setsForRound): static
+    {
+        if ($setsForRound < 1 || $setsForRound > 100) {
+            throw new \InvalidArgumentException('The round must between 1 and 100');
+        }
+        $this->setsForRound = $setsForRound;
 
-  public function getTraining(): ?Training
-  {
-    return $this->training;
-  }
-
-  public function setTraining(?Training $training): static
-  {
-    $this->training = $training;
-
-    return $this;
-  }
-
-  /**
-   * @var Collection<int, TrainingExerciseConfiguration>
-   */
-  #[ORM\OneToMany(targetEntity: TrainingExerciseConfiguration::class, mappedBy: 'trainingRound', cascade: ['persist', 'remove'])]
-  private Collection $trainingExerciseConfigurations;
-
-  public function __construct()
-  {
-    $this->trainingExerciseConfigurations = new ArrayCollection();
-  }
-
-  /**
-   * @return Collection<int, TrainingExerciseConfigurarion>
-   */
-
-  public function getTrainingExerciseConfigurations(): Collection
-  {
-    return $this->trainingExerciseConfigurations;
-  }
-
-  public function addTrainingExerciseConfiguration(TrainingExerciseConfiguration $exerciseConfig): static
-  {
-    if (!$this->trainingExerciseConfigurations->contains($exerciseConfig)) {
-      $this->trainingExerciseConfigurations->add($exerciseConfig);
-      $exerciseConfig->setTrainingRound($this);
+        return $this;
     }
-    return $this;
-  }
 
-  public function removeTrainingExerciseConfiguration(TrainingExerciseConfiguration $exerciseConfig): static
-  {
-    if ($this->trainingExerciseConfigurations->removeElement($exerciseConfig)) {
-      if ($exerciseConfig->getTrainingRound() === $this) {
-        $exerciseConfig->setTrainingRound(null);
-      }
+    public function getRestBetweenRounds(): ?int
+    {
+        return $this->restBetweenRounds;
     }
-    return $this;
-  }
+
+    public function setRestBetweenRounds(int $restBetweenRounds): static
+    {
+        if ($restBetweenRounds <= 0) {
+            throw new \InvalidArgumentException('The rest between rounds must be a positive value');
+        }
+        $this->restBetweenRounds = $restBetweenRounds;
+
+        return $this;
+    }
+
+    public function getTraining(): ?Training
+    {
+        return $this->training;
+    }
+
+    public function setTraining(?Training $training): static
+    {
+        $this->training = $training;
+
+        return $this;
+    }
+
+    /**
+     * @var Collection<int, TrainingExerciseConfiguration>
+     */
+    #[ORM\OneToMany(targetEntity: TrainingExerciseConfiguration::class, mappedBy: 'trainingRound', cascade: ['persist', 'remove'])]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private Collection $trainingExerciseConfigurations;
+
+    public function __construct()
+    {
+        $this->trainingExerciseConfigurations = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, TrainingExerciseConfigurarion>
+     */
+    public function getTrainingExerciseConfigurations(): Collection
+    {
+        return $this->trainingExerciseConfigurations;
+    }
+
+    public function addTrainingExerciseConfiguration(TrainingExerciseConfiguration $exerciseConfig): static
+    {
+        if (!$this->trainingExerciseConfigurations->contains($exerciseConfig)) {
+            $this->trainingExerciseConfigurations->add($exerciseConfig);
+            $exerciseConfig->setTrainingRound($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrainingExerciseConfiguration(TrainingExerciseConfiguration $exerciseConfig): static
+    {
+        if ($this->trainingExerciseConfigurations->removeElement($exerciseConfig)) {
+            if ($exerciseConfig->getTrainingRound() === $this) {
+                $exerciseConfig->setTrainingRound(null);
+            }
+        }
+
+        return $this;
+    }
 }

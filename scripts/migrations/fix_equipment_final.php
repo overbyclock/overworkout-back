@@ -1,17 +1,19 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== CORRIGIENDO EQUIPAMIENTO ===\n\n";
 
 // Obtener IDs de equipamientos
 $equipments = [];
-$eqRows = $conn->fetchAllAssociative("SELECT id, name FROM equipments");
+$eqRows = $conn->fetchAllAssociative('SELECT id, name FROM equipments');
 foreach ($eqRows as $eq) {
     $equipments[$eq['name']] = $eq['id'];
 }
@@ -25,13 +27,13 @@ $exerciseEquipment = [
     'Barbell Squat' => 'Barra olímpica',
     'Front Squat' => 'Barra olímpica',
     'Trap Bar Deadlift' => 'Barra olímpica',
-    
+
     // Nordic curl usa barra de dominadas para anclar pies
     'Nordic Curl Negative' => 'Barra de dominadas',
     'Glute Ham Raise Negative' => 'Barra de dominadas',
     'Nordic Curl' => 'Barra de dominadas',
     'Glute Ham Raise' => 'Barra de dominadas',
-    
+
     // BANCOS
     'Box Squat' => 'Banco',
     'Bulgarian Split Squat' => 'Banco',
@@ -44,13 +46,13 @@ $exerciseEquipment = [
     'Pistol Squat to Box' => 'Banco',
     'Elevated Pistol Squat' => 'Banco',
     'Deficit Reverse Lunge' => 'Banco',
-    
+
     // BANDAS
     'Nordic Curl with Band' => 'Banda elástica',
-    
+
     // ANILLAS
     'Hamstring Curl on Rings' => 'Anillas',
-    
+
     // MANCUERNAS
     'Dumbbell Squat' => 'Mancuernas',
     'Dumbbell Lunge' => 'Mancuernas',
@@ -59,14 +61,14 @@ $exerciseEquipment = [
     'Dumbbell Romanian Deadlift' => 'Mancuernas',
     'Weighted Wall Sit' => 'Mancuernas',
     'Weighted Pistol Squat' => 'Mancuernas',
-    
+
     // KETTLEBELLS
     'Goblet Squat' => 'Kettlebell',
     'Kettlebell Swing' => 'Kettlebell',
     'Kettlebell Goblet Lunge' => 'Kettlebell',
     'Kettlebell Step Up' => 'Kettlebell',
     'Kettlebell Deadlift' => 'Kettlebell',
-    
+
     // MÁQUINAS ESPECÍFICAS
     'Leg Press Machine' => 'Prensa de piernas',
     'Hack Squat Machine' => 'Hack squat',
@@ -79,19 +81,20 @@ $fixed = 0;
 foreach ($exerciseEquipment as $exerciseName => $equipmentName) {
     if (!isset($equipments[$equipmentName])) {
         echo "❌ Equipamiento no encontrado: $equipmentName\n";
+
         continue;
     }
-    
+
     $equipmentId = $equipments[$equipmentName];
-    
+
     $result = $conn->executeStatement(
-        "UPDATE exercises SET equipment_id = ? WHERE name = ?",
+        'UPDATE exercises SET equipment_id = ? WHERE name = ?',
         [$equipmentId, $exerciseName]
     );
-    
+
     if ($result > 0) {
         echo "✅ $exerciseName → $equipmentName\n";
-        $fixed++;
+        ++$fixed;
     } else {
         echo "ℹ️ No encontrado o ya actualizado: $exerciseName\n";
     }
@@ -114,4 +117,4 @@ $nordic = $conn->fetchAssociative("
     LEFT JOIN equipments eq ON e.equipment_id = eq.id 
     WHERE e.name = 'Nordic Curl with Band'
 ");
-echo "\nNordic Curl with Band: " . ($nordic['equipment_name'] ?: 'SIN EQUIPAMIENTO') . "\n";
+echo "\nNordic Curl with Band: ".($nordic['equipment_name'] ?: 'SIN EQUIPAMIENTO')."\n";

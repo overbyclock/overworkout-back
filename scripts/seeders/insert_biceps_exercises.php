@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== AÑADIENDO EJERCICIOS DE BÍCEPS ===\n\n";
@@ -17,7 +19,7 @@ $exercises = [
     ['Band Bicep Curl', 'beginner', 1, 'biceps', 'core', 'Curl con banda elástica. Pie sobre banda, curl de bíceps clásico con resistencia progresiva.', 'bandas'],
     ['Door Frame Curl', 'beginner', 1, 'biceps', 'back', 'Curl en marco de puerta. Agarrar marco con agarre supino, inclinar atrás y hacer curl con peso corporal.', null],
     ['Towel Curl', 'beginner', 2, 'biceps', 'core', 'Curl con toalla. Envolver toalla alrededor de poste/barra, agarre supino, inclinar atrás y hacer curl. Resistencia ajustable.', null],
-    
+
     // === INTERMEDIO - Dominadas específicas para bíceps ===
     ['Chin Up Hold', 'intermediate', 2, 'biceps', 'back', 'Isométrico en chin up. Mantenerse arriba de chin up (90° o arriba) el máximo tiempo. Máxima contracción bíceps.', 'barras'],
     ['Chin Up Negative', 'intermediate', 2, 'biceps', 'back', 'Chin up excéntrico. Subir de cualquier forma, bajar en 3-5 segundos controlado. Fuerza bíceps en fase negativa.', 'barras'],
@@ -29,7 +31,7 @@ $exercises = [
     ['Pelican Curl', 'intermediate', 3, 'biceps', 'core', 'Curl pelícano con anillas. Brazos extendidos atrás, flexionar codos trayendo anillas a frente. Estiramiento profundo + contracción.', 'anillas'],
     ['TRX Bicep Curl', 'intermediate', 2, 'biceps', 'core', 'Curl con TRX. Suspensión, codos altos, flexionar trayendo manos a frente. Control corporal + bíceps.', 'trx'],
     ['Inverted Row Curl', 'intermediate', 2, 'biceps', 'back', 'Curl en remo invertida. Posición de remo, pero hacer movimiento de curl flexionando solo codos.', 'barras'],
-    
+
     // === EXPERTO - Dominadas avanzadas y one arm ===
     ['One Arm Chin Up', 'expert', 4, 'biceps', 'back', 'Dominada una mano supino. El santo grial del bíceps en calistenia. Máxima fuerza de bíceps y agarre.', 'barras'],
     ['One Arm Chin Up Negative', 'expert', 3, 'biceps', 'back', 'One arm chin up excéntrico. Bajar desde arriba controladamente con una mano. Progresión a completo.', 'barras'],
@@ -41,7 +43,7 @@ $exercises = [
     ['Typewriter Chin Up', 'expert', 3, 'biceps', 'back', 'Chin up máquina de escribir. Arriba de chin up, moverse lateralmente extendiendo un brazo. Tiempo bajo tensión.', 'barras'],
     ['Archer Chin Up', 'expert', 3, 'biceps', 'back', 'Chin up arquero. Un brazo extendido lateralmente, el otro hace el trabajo. Progresión a one arm.', 'barras'],
     ['90 Degree Hold to Chin Up', 'expert', 3, 'biceps', 'back', 'Isométrico 90° a chin up. Mantener 90°, subir, bajar a 90°. Control en rango medio.', 'barras'],
-    
+
     // === CON EQUIPAMIENTO ===
     ['Barbell Curl', 'beginner', 2, 'biceps', 'core', 'Curl con barra. Pie a ancho de hombros, barra con agarre supino, curl clásico. El básico de gimnasio.', 'barras'],
     ['Dumbbell Curl', 'beginner', 1, 'biceps', 'core', 'Curl con mancuernas. Una en cada mano, agarre supino, curl alterno o simultáneo.', 'mancuernas'],
@@ -57,16 +59,16 @@ $exercises = [
 
 $added = 0;
 foreach ($exercises as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'crossfit', 'fitness', 'bodybuilding']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
         echo "✅ {$ex[0]}\n";
-        $added++;
+        ++$added;
     } else {
         echo "ℹ️ Ya existe: {$ex[0]}\n";
     }

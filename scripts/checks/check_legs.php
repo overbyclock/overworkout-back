@@ -1,14 +1,16 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql',
-    'host'=>'127.0.0.1',
-    'port'=>3306,
-    'user'=>'juan',
-    'password'=>'1234',
-    'dbname'=>'overworkout'
+    'driver' => 'pdo_mysql',
+    'host' => '127.0.0.1',
+    'port' => 3306,
+    'user' => 'juan',
+    'password' => '1234',
+    'dbname' => 'overworkout',
 ]);
 
 $rows = $conn->fetchAllAssociative("
@@ -29,16 +31,16 @@ foreach ($rows as $row) {
     $rating = $row['difficulty_rating'];
     $fires = str_repeat('🔥', $rating);
     $eq = $row['equipment_name'] ?: 'Sin equipo';
-    
+
     if ($level !== $currentLevel) {
         echo "\n--- $level ---\n";
         $currentLevel = $level;
     }
-    
+
     echo "$fires {$row['name']} ($eq)\n";
 }
 
-echo "\n\nTotal: " . count($rows) . " ejercicios\n";
+echo "\n\nTotal: ".count($rows)." ejercicios\n";
 
 echo "\n=== RESUMEN POR DIFICULTAD ===\n";
 $summary = $conn->fetchAllAssociative("

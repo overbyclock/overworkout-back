@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -70,6 +72,7 @@ class MobilityExercise
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -81,6 +84,7 @@ class MobilityExercise
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -92,6 +96,7 @@ class MobilityExercise
     public function setCategory(string $category): static
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -103,6 +108,7 @@ class MobilityExercise
     public function setDuration(?string $duration): static
     {
         $this->duration = $duration;
+
         return $this;
     }
 
@@ -114,6 +120,7 @@ class MobilityExercise
     public function setMuscleGroup(?string $muscleGroup): static
     {
         $this->muscleGroup = $muscleGroup;
+
         return $this;
     }
 
@@ -125,6 +132,7 @@ class MobilityExercise
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -136,6 +144,7 @@ class MobilityExercise
     public function setEquipment(?Equipments $equipment): static
     {
         $this->equipment = $equipment;
+
         return $this;
     }
 
@@ -147,6 +156,7 @@ class MobilityExercise
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -158,6 +168,7 @@ class MobilityExercise
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 }

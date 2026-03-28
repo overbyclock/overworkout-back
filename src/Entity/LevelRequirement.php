@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\LevelRequirementRepository;
@@ -54,6 +56,7 @@ class LevelRequirement
     public function setLevel(?TrainingLevel $level): static
     {
         $this->level = $level;
+
         return $this;
     }
 
@@ -65,6 +68,7 @@ class LevelRequirement
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -76,6 +80,7 @@ class LevelRequirement
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -87,6 +92,7 @@ class LevelRequirement
     public function setMinValue(?int $minValue): static
     {
         $this->minValue = $minValue;
+
         return $this;
     }
 
@@ -98,6 +104,7 @@ class LevelRequirement
     public function setMaxValue(?int $maxValue): static
     {
         $this->maxValue = $maxValue;
+
         return $this;
     }
 
@@ -109,6 +116,7 @@ class LevelRequirement
     public function setTargetValue(?int $targetValue): static
     {
         $this->targetValue = $targetValue;
+
         return $this;
     }
 
@@ -120,6 +128,7 @@ class LevelRequirement
     public function setUnit(?string $unit): static
     {
         $this->unit = $unit;
+
         return $this;
     }
 
@@ -131,6 +140,7 @@ class LevelRequirement
     public function setOrderIndex(?int $orderIndex): static
     {
         $this->orderIndex = $orderIndex;
+
         return $this;
     }
 
@@ -142,6 +152,7 @@ class LevelRequirement
     public function setIsRequired(bool $isRequired): static
     {
         $this->isRequired = $isRequired;
+
         return $this;
     }
 }

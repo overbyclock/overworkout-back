@@ -10,13 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * Tests de Autenticación JWT
- * 
+ * Tests de Autenticación JWT.
+ *
  * Verifica que el login y registro funcionan correctamente.
  */
 class AuthenticationTest extends WebTestCase
 {
     private ?EntityManagerInterface $entityManager;
+
     private ?UserPasswordHasherInterface $passwordHasher;
 
     protected function setUp(): void
@@ -24,7 +25,7 @@ class AuthenticationTest extends WebTestCase
         self::bootKernel();
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $this->passwordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
-        
+
         // Limpiar usuarios de test antes de cada test
         $this->cleanTestUsers();
     }
@@ -39,7 +40,7 @@ class AuthenticationTest extends WebTestCase
     {
         $users = $this->entityManager->getRepository(User::class)
             ->findBy(['nick' => 'testuser']);
-        
+
         foreach ($users as $user) {
             $this->entityManager->remove($user);
         }
@@ -47,7 +48,7 @@ class AuthenticationTest extends WebTestCase
     }
 
     /**
-     * Test: Login con credenciales válidas
+     * Test: Login con credenciales válidas.
      */
     public function testLoginWithValidCredentials(): void
     {
@@ -57,7 +58,7 @@ class AuthenticationTest extends WebTestCase
         $user->setEmail('test@example.com');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'Test123!'));
         $user->setRoles(['ROLE_USER']);
-        
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -76,10 +77,10 @@ class AuthenticationTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         // Verificar respuesta exitosa
         $this->assertSame(200, $response->getStatusCode());
-        
+
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $data);
         $this->assertArrayHasKey('userId', $data);
@@ -88,7 +89,7 @@ class AuthenticationTest extends WebTestCase
     }
 
     /**
-     * Test: Login con credenciales inválidas
+     * Test: Login con credenciales inválidas.
      */
     public function testLoginWithInvalidCredentials(): void
     {
@@ -106,13 +107,13 @@ class AuthenticationTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         // Debe devolver 401 Unauthorized
         $this->assertSame(401, $response->getStatusCode());
     }
 
     /**
-     * Test: Acceso a endpoint protegido sin token
+     * Test: Acceso a endpoint protegido sin token.
      */
     public function testAccessProtectedEndpointWithoutToken(): void
     {
@@ -120,13 +121,13 @@ class AuthenticationTest extends WebTestCase
         $client->request('GET', '/api/trainings');
 
         $response = $client->getResponse();
-        
+
         // Debe devolver 401 Unauthorized
         $this->assertSame(401, $response->getStatusCode());
     }
 
     /**
-     * Test: Registro de nuevo usuario
+     * Test: Registro de nuevo usuario.
      */
     public function testRegisterNewUser(): void
     {
@@ -145,16 +146,16 @@ class AuthenticationTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         $this->assertSame(201, $response->getStatusCode());
-        
+
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('user', $data);
     }
 
     /**
-     * Test: Registro con datos inválidos
+     * Test: Registro con datos inválidos.
      */
     public function testRegisterWithInvalidData(): void
     {
@@ -173,7 +174,7 @@ class AuthenticationTest extends WebTestCase
         );
 
         $response = $client->getResponse();
-        
+
         // Debe devolver 400 Bad Request
         $this->assertSame(400, $response->getStatusCode());
     }

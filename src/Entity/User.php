@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -7,36 +9,48 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const GROUP_READ = 'user:read';
+    public const GROUP_READ_ADMIN = 'user:read:admin';
+    public const GROUP_WRITE = 'user:write';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN, self::GROUP_WRITE])]
     private ?string $nick = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN, self::GROUP_WRITE])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN])]
     private array $roles = ['ROLE_USER'];
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
+    #[Groups([self::GROUP_READ_ADMIN])]
     private ?\DateTimeInterface $lastlogin = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN, self::GROUP_WRITE])]
     private ?string $avatar = null;
 
     /**
@@ -117,17 +131,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-      
+
     }
 
     public function getSalt(): ?string
     {
-      return null;
+        return null;
     }
 
     public function getUserIdentifier(): string
     {
-      return $this->email;
+        return $this->email;
     }
 
     public function getLastlogin(): ?\DateTimeInterface
@@ -144,13 +158,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAvatar(): ?string
     {
-      return $this->avatar;
+        return $this->avatar;
     }
 
     public function setAvatar(?string $avatar): self
     {
-      $this->avatar = $avatar;
-      return $this;
+        $this->avatar = $avatar;
+
+        return $this;
     }
 
     /**

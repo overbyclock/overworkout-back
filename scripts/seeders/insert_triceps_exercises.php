@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== AÑADIENDO EJERCICIOS DE TRÍCEPS ===\n\n";
@@ -20,7 +22,7 @@ $exercises = [
     ['Wall Triceps Extension', 'beginner', 1, 'triceps', 'core', 'Extensión de tríceps en pared. Manos en pared, flexionar y extender codos. Muy básico.', null],
     ['Band Triceps Pushdown', 'beginner', 1, 'triceps', 'core', 'Pushdown con banda. Banda alta, empujar hacia abajo extendiendo codos. Aislamiento básico.', 'bandas'],
     ['Band Overhead Extension', 'beginner', 1, 'triceps', 'core', 'Extensión por encima con banda. Banda detrás de espalda, extender brazos arriba. Cabeza larga.', 'bandas'],
-    
+
     // === INTERMEDIO - Fondos completos y variaciones ===
     ['Parallel Bar Dips', 'intermediate', 2, 'triceps', 'chest', 'Fondos en paralelas. Cuerpo vertical, bajar hasta 90°, subir. El clásico tríceps.', 'barras'],
     ['Ring Dips', 'intermediate', 2, 'triceps', 'chest', 'Fondos en anillas. Mayor estabilidad requerida, más trabajo de tríceps por control.', 'anillas'],
@@ -32,14 +34,14 @@ $exercises = [
     ['Explosive Dips', 'intermediate', 3, 'triceps', 'chest', 'Fondos explosivos. Bajar controlado, subir con explosión. Potencia.', 'barras'],
     ['L-Sit Dips', 'intermediate', 3, 'triceps', 'core', 'Fondos en L. Piernas extendidas horizontalmente durante fondos. Core + tríceps.', 'barras'],
     ['Weighted Dips', 'intermediate', 3, 'triceps', 'chest', 'Fondos con peso. Lastre colgado del cinturón, aumentar progresivamente.', 'barras'],
-    
+
     // === INTERMEDIO - Flexiones avanzadas de tríceps ===
     ['Triceps Push Up', 'intermediate', 2, 'triceps', 'chest', 'Flexión de tríceps. Codos cerca del cuerpo, bajar en línea recta. Enfoque tríceps.', null],
     ['Pseudo Planche Push Up', 'intermediate', 3, 'triceps', 'shoulders', 'Flexión pseudo plancha. Manos a altura de cadera, codo hacia atrás. Planche preparation.', null],
     ['Tiger Bend Push Up', 'intermediate', 3, 'triceps', 'chest', 'Flexión tiger bend. De rodillas o pie, bajar sobre antebrazos y subir extendiendo. Prensa francesa.', null],
     ['Bodyweight Skull Crusher', 'intermediate', 2, 'triceps', 'core', 'Skull crusher con peso corporal. En barra baja, cabeza bajo barra, extender codos. Aislamiento.', 'barras'],
     ['Reverse Grip Push Up', 'intermediate', 2, 'triceps', 'chest', 'Flexión agarre inverso. Manos giradas hacia afuera, subir con tríceps.', null],
-    
+
     // === EXPERTO - Fondos avanzados ===
     ['Single Bar Dip', 'expert', 3, 'triceps', 'chest', 'Fondos en una barra. Solo una barra, control extremo de equilibrio. Máxima estabilidad.', 'barras'],
     ['Ring Turn Out Dips', 'expert', 3, 'triceps', 'shoulders', 'Fondos en anillas con giro. Arriba girar anillas hacia afuera (RTO). Máxima dificultad anillas.', 'anillas'],
@@ -50,7 +52,7 @@ $exercises = [
     ['Handstand Push Up', 'expert', 3, 'triceps', 'shoulders', 'Flexión en pino. Desde pino contra pared, bajar cabeza y subir. Hombros + tríceps.', null],
     ['Deficit Handstand Push Up', 'expert', 4, 'triceps', 'shoulders', 'Flexión en pino con déficit. Manos elevadas, mayor rango. Máxima dificultad.', 'bancos_soportes'],
     ['Tiger Bend Handstand', 'expert', 4, 'triceps', 'shoulders', 'Pino tiger bend. Bajar de pino a soporte en antebrazos y subir. Fuerza extrema tríceps.', null],
-    
+
     // === CON EQUIPAMIENTO ===
     ['Triceps Extension Bar', 'beginner', 2, 'triceps', 'chest', 'Extensión de tríceps con barra. Tumbado, barra por encima, flexionar y extender codos. Skull crusher.', 'barras'],
     ['Dumbbell Triceps Extension', 'beginner', 2, 'triceps', 'core', 'Extensión de tríceps con mancuerna. Por encima de cabeza o tumbado, extender codo.', 'mancuernas'],
@@ -66,16 +68,16 @@ $exercises = [
 
 $added = 0;
 foreach ($exercises as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['calisthenics', 'crossfit', 'fitness', 'bodybuilding']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
         echo "✅ {$ex[0]}\n";
-        $added++;
+        ++$added;
     } else {
         echo "ℹ️ Ya existe: {$ex[0]}\n";
     }

@@ -1,333 +1,163 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Dto\Request\TrainingCreateDto;
+use App\Dto\Request\TrainingUpdateDto;
 use App\Entity\Training;
-use App\Entity\TrainingRound;
-use App\Entity\TrainingExerciseConfiguration;
-use App\Entity\Exercises;
 use App\Entity\User;
-use App\Enum\Discipline;
-use App\Enum\TargetWorkout;
+use App\Mapper\TrainingMapper;
+use App\Security\Voter\TrainingVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+#[Route('/api')]
 class TrainingApiController extends AbstractController
 {
-  private EntityManagerInterface $entityManager;
-
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
-
-  #[Route('api/trainings', name: 'get_all_trainings', methods: ['GET'])]
-  public function getAllTrainings(): JsonResponse
-  {
-    $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-    $trainings = $this->entityManager->getRepository(Training::class)->findAll();
-    $responseData = [];
-
-    foreach ($trainings as $training) {
-      $responseData[] = $this->getTrainingData($training);
-    }
-    return new JsonResponse($responseData);
-  }
-
-  #[Route('api/trainings/public', name: 'get_public_trainings', methods: ['GET'])]
-  public function getPublicTrainings(): JsonResponse
-  {
-    $publicTrainings = $this->entityManager->getRepository(Training::class)->findBy(['trainingUser' => null]);
-    $responseData = [];
-
-    foreach ($publicTrainings as $training) {
-      $responseData[] = $this->getTrainingData($training);
-    }
-    return new JsonResponse($responseData);
-  }
-
-  #[Route('api/trainings/user/{userId}', name: 'get_user_trainings', methods: ['GET'])]
-  public function getUserTrainings(int $userId): JsonResponse
-  {
-    $authenticatedUser = $this->getUser();
-
-    if (!$authenticatedUser instanceof User) {
-      return new JsonResponse(['error' => 'User not authenticated'], 403);
-    }
-
-    if (!$this->isGranted('ROLE_ADMIN') && $authenticatedUser->getId() !== $userId) {
-      return new JsonResponse(['error' => 'Access denied'], 403);
-    }
-
-    $userTrainings = $this->entityManager->getRepository(Training::class)->findBy(['trainingUser' => $userId]);
-
-    $responseData = [];
-
-    foreach ($userTrainings as $training) {
-      $responseData[] = $this->getTrainingData($training);
-    }
-    return new JsonResponse($responseData);
-  }
-
-  #[Route('api/trainings/{id}', name: 'get_training', methods: ['GET'])]
-  public function getTraining(int $id): JsonResponse
-  {
-    $training = $this->entityManager->getRepository(Training::class)->find($id);
-
-    if (!$training) {
-      return new JsonResponse(['error' => 'Training not found'], 404);
-    }
-
-    $authenticatedUser = $this->getUser();
-    if (!$authenticatedUser instanceof User) {
-      return new JsonResponse(['error' => 'User not authenticated'], 403);
-    }
-
-    if (
-      $training->getTrainingUser() !== null &&
-      $training->getTrainingUser()->getId() !== $authenticatedUser->getid() &&
-      !$this->isGranted('ROLE_ADMIN')
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TrainingMapper $trainingMapper,
+        private readonly NormalizerInterface $normalizer
     ) {
-      return new JsonResponse(['error' => 'Access denied: You do not have permission to view this training'], 403);
-    }
-    return new JsonResponse($this->getTrainingData($training));
-  }
-
-  #[Route('api/trainings', name: 'create_training', methods: ['POST'])]
-  public function createTraining(Request $request): JsonResponse
-  {
-    $authenticatedUser = $this->getUser();
-    if (!$authenticatedUser instanceof User) {
-      return new JsonResponse(['error' => 'User not authenticated'], 403);
     }
 
-    $data = json_decode($request->getContent(), true);
+    #[Route('/trainings', name: 'get_all_trainings', methods: ['GET'])]
+    public function getAllTrainings(): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(TrainingVoter::LIST_ALL);
 
-    if (!$data && json_last_error() !== JSON_ERROR_NONE) {
-      return new JsonResponse(['error' => 'Invalid JSON format'], 400);
+        $trainings = $this->entityManager->getRepository(Training::class)->findAll();
+
+        return $this->json(
+            $this->normalizer->normalize($trainings, null, ['groups' => [Training::GROUP_READ]])
+        );
     }
 
-    $discipline = $data['discipline'] ?? null;
-    $target = $data['target'] ?? null;
-    $rounds = $data['rounds'] ?? null;
-    $name = $data['name'] ?? null;
+    #[Route('/trainings/public', name: 'get_public_trainings', methods: ['GET'])]
+    public function getPublicTrainings(): JsonResponse
+    {
+        $publicTrainings = $this->entityManager->getRepository(Training::class)
+            ->findBy(['trainingUser' => null]);
 
-    if (!($discipline || !$target || !is_array($rounds))) {
-      return new JsonResponse(['error' => 'Invalid training data: discipline, target, and rounds are required'], 400);
+        return $this->json(
+            $this->normalizer->normalize($publicTrainings, null, [
+                'groups' => [Training::GROUP_READ_DETAIL],
+            ])
+        );
     }
 
-    $training = new Training();
-    $training->setDiscipline(Discipline::from($discipline));
-    $training->setTarget(TargetWorkout::from($target));
-    $training->setName($name);
-    $training->setCreatedAt(new \DateTimeImmutable());
+    #[Route('/trainings/user/{userId}', name: 'get_user_trainings', methods: ['GET'])]
+    public function getUserTrainings(int $userId): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(TrainingVoter::LIST_USER, $userId);
 
-    if (!$this->isGranted('ROLE_ADMIN')) {
-      $training->setTrainingUser($authenticatedUser);
+        $userTrainings = $this->entityManager->getRepository(Training::class)
+            ->findBy(['trainingUser' => $userId]);
+
+        return $this->json(
+            $this->normalizer->normalize($userTrainings, null, [
+                'groups' => [Training::GROUP_READ],
+            ])
+        );
     }
 
-    $this->entityManager->persist($training);
+    #[Route('/trainings/{id}', name: 'get_training', methods: ['GET'])]
+    public function getTraining(int $id): JsonResponse
+    {
+        $training = $this->entityManager->getRepository(Training::class)->find($id);
 
-    foreach ($rounds as $roundData) {
-      $round = new TrainingRound();
-
-      $round->setRound($roundData['round'] ?? 1);
-      $round->setRestBetweenRounds($roundData['rest_between_rounds'] ?? 60);
-      $round->setTraining($training);
-
-      foreach ($roundData['exercises'] as $exerciseData) {
-        $exerciseConfig = new TrainingExerciseConfiguration();
-        $exercise = $this->entityManager->getRepository(Exercises::class)->find($exerciseData['exercise_id']);
-
-        if (!$exercise) {
-          return new JsonResponse(['error' => 'Invalid exercise ID: ' . $exerciseData['exercise_id']], 400);
+        if (null === $training) {
+            return $this->json(['error' => 'Training not found'], 404);
         }
 
-        $exerciseConfig->setExercise($exercise);
-        $exerciseConfig->setReps($exerciseData['reps'] ?? null);
-        $exerciseConfig->setSets($exerciseData['sets'  ?? 1]);
-        $exerciseConfig->setRestBetweenSets($exerciseData['rest_between_sets'] ?? 30);
-        $exerciseConfig->setRestBetweenExercises($exerciseData['rest_between_exercises'] ?? 15);
-        $exerciseConfig->setMaxTimeForReps($exerciseData['max_time_for_reps'] ?? null);
-        $exerciseConfig->setWeight($exerciseData['weight'] ?? null);
+        $this->denyAccessUnlessGranted(TrainingVoter::VIEW, $training);
 
-        $this->entityManager->persist($exerciseConfig);
-        $round->addTrainingExerciseConfiguration($exerciseConfig);
-      }
-
-      $this->entityManager->persist($round);
-      $training->addTrainingRound($round);
+        return $this->json(
+            $this->normalizer->normalize($training, null, [
+                'groups' => [Training::GROUP_READ_DETAIL],
+            ])
+        );
     }
 
-    $this->entityManager->flush();
+    #[Route('/trainings', name: 'create_training', methods: ['POST'])]
+    public function createTraining(
+        #[MapRequestPayload] TrainingCreateDto $dto
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(TrainingVoter::CREATE);
 
-    return new JsonResponse(['message' => 'Training created successfully'], 201);
-  }
+        /** @var User $user */
+        $user = $this->getUser();
 
-  #[Route('api/trainings/{id}', name: 'update_training', methods: ['PATCH'])]
-  public function updateTraining(int $id, Request $request): JsonResponse
-  {
-    $training = $this->entityManager->getRepository(Training::class)->find($id);
+        $training = $this->trainingMapper->fromCreateDto($dto, $user);
 
-    if (!$training) {
-      return new JsonResponse(['error' => 'Training not found'], 404);
-    }
-
-    $authenticatedUser = $this->getUser();
-
-    if (!$this->isGranted('ROLE_ADMIN') && $training->getTrainingUser() !== $authenticatedUser) {
-      return new JsonResponse(['error' => 'You are not authorized to update this training'], 403);
-    }
-
-    $data = json_decode($request->getContent(), true);
-
-    if (!$data || json_last_error() !== JSON_ERROR_NONE) {
-      return new JsonResponse(['error' => 'Invalid JSON format'], 400);
-    }
-
-    if (isset($data['discipline'])) {
-      $training->setDiscipline(Discipline::from($data['discipline']));
-    }
-
-    if (isset($data['target'])) {
-      $training->setTarget(TargetWorkout::from($data['target']));
-    }
-
-    if (isset($data['name'])) {
-      $training->setName($data['name']);
-    }
-
-    if (isset($data['rounds']) && is_array($data['rounds'])) {
-      foreach ($data['rounds'] as $roundData) {
-        $round = $this->entityManager->getRepository(TrainingRound::class)->find($roundData['id'] ?? null);
-
-        if ($round && $round->getTraining() === $training) {
-          $round->setRound($roundData['round'] ?? $round->getRound());
-          $round->setRestBetweenRounds($roundData['rest_between_rounds'] ?? $round->getRestBetweenRounds());
-        } else {
-
-          $round = new TrainingRound();
-          $round->setRound($roundData['round'] ?? 1);
-          $round->setRestBetweenRounds($roundData['rest_between_rounds'] ?? 60);
-          $round->setTraining($training);
-          $training->addTrainingRound($round);
+        // Si no es admin, asignar el usuario actual
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $training->setTrainingUser($user);
         }
 
-        if (isset($roundData['exercises']) && is_array($roundData['exercises'])) {
-          foreach ($roundData['exercises'] as $exerciseData) {
-            $exerciseConfig = $this->entityManager->getRepository(TrainingExerciseConfiguration::class)
-              ->find($exerciseData['id'] ?? null);
+        $this->entityManager->persist($training);
+        $this->entityManager->flush();
 
-            if ($exerciseConfig && $exerciseConfig->getTrainingRound() === $round) {
+        return $this->json([
+            'message' => 'Training created successfully',
+            'training' => $this->normalizer->normalize($training, null, [
+                'groups' => [Training::GROUP_READ_DETAIL],
+            ]),
+        ], 201);
+    }
 
-              $exerciseConfig->setReps($exerciseData['reps'] ?? $exerciseConfig->getReps());
-              $exerciseConfig->setSets($exerciseData['sets'] ?? $exerciseConfig->getSets());
-              $exerciseConfig->setRestBetweenSets($exerciseData['rest_between_sets'] ?? $exerciseConfig->getRestBetweenSets());
-              $exerciseConfig->setRestBetweenExercises($exerciseData['rest_between_exercises'] ?? $exerciseConfig->getRestBetweenExercises());
-              $exerciseConfig->setMaxTimeForReps($exerciseData['max_time_for_reps'] ?? $exerciseConfig->getMaxTimeForReps());
-              $exerciseConfig->setWeight($exerciseData['weight'] ?? $exerciseConfig->getWeight());
-            } else {
+    #[Route('/trainings/{id}', name: 'update_training', methods: ['PATCH'])]
+    public function updateTraining(
+        int $id,
+        #[MapRequestPayload] TrainingUpdateDto $dto
+    ): JsonResponse {
+        $training = $this->entityManager->getRepository(Training::class)->find($id);
 
-              $exercise = $this->entityManager->getRepository(Exercises::class)->find($exerciseData['exercise_id']);
-
-              if (!$exercise) {
-                return new JsonResponse(['error' => 'Invalid exercise ID: ' . $exerciseData['exercise_id']], 400);
-              }
-
-              $exerciseConfig = new TrainingExerciseConfiguration();
-              $exerciseConfig->setExercise($exercise);
-              $exerciseConfig->setReps($exerciseData['reps'] ?? null);
-              $exerciseConfig->setSets($exerciseData['sets'] ?? 1);
-              $exerciseConfig->setRestBetweenSets($exerciseData['rest_between_sets'] ?? 30);
-              $exerciseConfig->setRestBetweenExercises($exerciseData['rest_between_exercises'] ?? 15);
-              $exerciseConfig->setMaxTimeForReps($exerciseData['max_time_for_reps'] ?? null);
-              $exerciseConfig->setWeight($exerciseData['weight'] ?? null);
-
-              $this->entityManager->persist($exerciseConfig);
-              $round->addTrainingExerciseConfiguration($exerciseConfig);
-            }
-          }
+        if (null === $training) {
+            return $this->json(['error' => 'Training not found'], 404);
         }
 
-        $this->entityManager->persist($round);
-      }
+        $this->denyAccessUnlessGranted(TrainingVoter::EDIT, $training);
+
+        if (!$dto->hasChanges()) {
+            return $this->json(['message' => 'No changes provided'], 400);
+        }
+
+        try {
+            $this->trainingMapper->updateFromDto($training, $dto);
+            $this->entityManager->flush();
+
+            return $this->json([
+                'message' => 'Training updated successfully',
+                'training' => $this->normalizer->normalize($training, null, [
+                    'groups' => [Training::GROUP_READ_DETAIL],
+                ]),
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    $this->entityManager->flush();
+    #[Route('/trainings/{id}', name: 'delete_training', methods: ['DELETE'])]
+    public function deleteTraining(int $id): JsonResponse
+    {
+        $training = $this->entityManager->getRepository(Training::class)->find($id);
 
-    return new JsonResponse(['message' => 'Training updated successfully'], 200);
-  }
+        if (null === $training) {
+            return $this->json(['error' => 'Training not found'], 404);
+        }
 
+        $this->denyAccessUnlessGranted(TrainingVoter::DELETE, $training);
 
-  #[Route('api/trainings/{id}', name: 'delete_training', methods: ['DELETE'])]
-  public function deleteTraining(int $id): JsonResponse
-  {
-    $authenticatedUser = $this->getUser();
+        $this->entityManager->remove($training);
+        $this->entityManager->flush();
 
-    if (!$authenticatedUser instanceof User) {
-      return new JsonResponse(['error' => 'User not authenticated'], 403);
+        return $this->json(['message' => 'Training deleted successfully']);
     }
-
-    $training = $this->entityManager->getRepository(Training::class)->find($id);
-
-    if (!$training) {
-      return new JsonResponse(['error' => 'Training not found'], 404);
-    }
-
-    if (
-      $authenticatedUser->getId() !== $training->getTrainingUser()?->getId() &&
-      !$this->isGranted('ROLE_ADMIN')
-    ) {
-      return new JsonResponse(['error' => 'Access denied: You can only delete your own training or be an admin'], 403);
-    }
-
-    $this->entityManager->remove($training);
-    $this->entityManager->flush();
-
-    return new JsonResponse(['message' => 'Training deleted successfully'], 200);
-  }
-
-  private function getTrainingData($training): array
-  {
-    $roundsData = [];
-    foreach ($training->getTrainingRounds() as $round) {
-      $exercisesData = [];
-
-      foreach ($round->getTrainingExerciseConfigurations() as $exerciseConfig) {
-        $exercisesData[] = [
-          "id" => $exerciseConfig->getId(),
-          "exercise_id" => $exerciseConfig->getExercise()->getId(),
-          "exercise" => $exerciseConfig->getExercise()->getName(),
-          "reps" => $exerciseConfig->getReps(),
-          "setsForExercise" => $exerciseConfig->getSets(),
-          'restBetweenExercises' => $exerciseConfig->getRestBetweenExercises(),
-          'restBetweenSets' => $exerciseConfig->getRestBetweenSets(),
-          'maxTimeForReps' => $exerciseConfig->getMaxTimeForReps(),
-          'weight' => $exerciseConfig->getWeight(),
-        ];
-      }
-
-      $roundsData[] = [
-        'id' => $round->getId(),
-        'setsForRound' => $round->getRound(),
-        'restBetweenRounds' => $round->getRestBetweenRounds(),
-        'exercises' => $exercisesData
-      ];
-    }
-
-    return [
-      'id' => $training->getId(),
-      'discipline' => $training->getDiscipline()->value,
-      'target' => $training->getTarget()->value,
-      'name' => $training->getName(),
-      'createdAt' => $training->getCreatedAt()->format('d-m-Y H:i:s'),
-      'userCreator' => $training->getTrainingUser() ? $training->getTrainingUser()->getId() : null,
-      'userCreatorNick' => $training->getTrainingUser() ? $training->getTrainingUser()->getNick() : null,
-      'rounds' => $roundsData
-    ];
-  }
 }

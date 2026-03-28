@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Delete;
 use App\Repository\CommunityPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -91,6 +93,7 @@ class CommunityPost
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -102,6 +105,7 @@ class CommunityPost
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -113,6 +117,7 @@ class CommunityPost
     public function setContent(string $content): static
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -124,6 +129,7 @@ class CommunityPost
     public function setMediaUrls(?array $mediaUrls): static
     {
         $this->mediaUrls = $mediaUrls;
+
         return $this;
     }
 
@@ -135,6 +141,7 @@ class CommunityPost
     public function setAchievement(?Achievement $achievement): static
     {
         $this->achievement = $achievement;
+
         return $this;
     }
 
@@ -146,6 +153,7 @@ class CommunityPost
     public function setLevelReached(?int $levelReached): static
     {
         $this->levelReached = $levelReached;
+
         return $this;
     }
 
@@ -157,6 +165,7 @@ class CommunityPost
     public function setSkillUnlocked(?TrainingSkill $skillUnlocked): static
     {
         $this->skillUnlocked = $skillUnlocked;
+
         return $this;
     }
 
@@ -168,6 +177,7 @@ class CommunityPost
     public function setPrExercise(?string $prExercise): static
     {
         $this->prExercise = $prExercise;
+
         return $this;
     }
 
@@ -179,6 +189,7 @@ class CommunityPost
     public function setPrValue(?string $prValue): static
     {
         $this->prValue = $prValue;
+
         return $this;
     }
 
@@ -190,6 +201,7 @@ class CommunityPost
     public function setIsPublic(bool $isPublic): static
     {
         $this->isPublic = $isPublic;
+
         return $this;
     }
 
@@ -201,6 +213,7 @@ class CommunityPost
     public function setLikesCount(int $likesCount): static
     {
         $this->likesCount = $likesCount;
+
         return $this;
     }
 
@@ -212,6 +225,7 @@ class CommunityPost
     public function setCommentsCount(int $commentsCount): static
     {
         $this->commentsCount = $commentsCount;
+
         return $this;
     }
 

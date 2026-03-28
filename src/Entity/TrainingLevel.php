@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -91,6 +93,7 @@ class TrainingLevel
     public function setProgram(?TrainingProgram $program): static
     {
         $this->program = $program;
+
         return $this;
     }
 
@@ -102,6 +105,7 @@ class TrainingLevel
     public function setLevelNumber(int $levelNumber): static
     {
         $this->levelNumber = $levelNumber;
+
         return $this;
     }
 
@@ -113,6 +117,7 @@ class TrainingLevel
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -124,6 +129,7 @@ class TrainingLevel
     public function setTitle(?string $title): static
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -135,6 +141,7 @@ class TrainingLevel
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -146,6 +153,7 @@ class TrainingLevel
     public function setObjective(?string $objective): static
     {
         $this->objective = $objective;
+
         return $this;
     }
 
@@ -157,6 +165,7 @@ class TrainingLevel
     public function setEstimatedDurationWeeks(?int $estimatedDurationWeeks): static
     {
         $this->estimatedDurationWeeks = $estimatedDurationWeeks;
+
         return $this;
     }
 
@@ -168,6 +177,7 @@ class TrainingLevel
     public function setDifficultyRating(?int $difficultyRating): static
     {
         $this->difficultyRating = $difficultyRating;
+
         return $this;
     }
 
@@ -179,6 +189,7 @@ class TrainingLevel
     public function setColor(?string $color): static
     {
         $this->color = $color;
+
         return $this;
     }
 
@@ -190,6 +201,7 @@ class TrainingLevel
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
         return $this;
     }
 
@@ -201,6 +213,7 @@ class TrainingLevel
     public function setRequirementsSummary(?string $requirementsSummary): static
     {
         $this->requirementsSummary = $requirementsSummary;
+
         return $this;
     }
 
@@ -212,6 +225,7 @@ class TrainingLevel
     public function setIsLockedByDefault(bool $isLockedByDefault): static
     {
         $this->isLockedByDefault = $isLockedByDefault;
+
         return $this;
     }
 
@@ -245,6 +259,7 @@ class TrainingLevel
             $this->trainings->add($training);
             $training->setTrainingLevel($this);
         }
+
         return $this;
     }
 
@@ -255,6 +270,7 @@ class TrainingLevel
                 $training->setTrainingLevel(null);
             }
         }
+
         return $this;
     }
 }

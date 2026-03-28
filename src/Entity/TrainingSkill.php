@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -70,6 +72,7 @@ class TrainingSkill
     public function setProgram(?TrainingProgram $program): static
     {
         $this->program = $program;
+
         return $this;
     }
 
@@ -81,6 +84,7 @@ class TrainingSkill
     public function setLevel(?TrainingLevel $level): static
     {
         $this->level = $level;
+
         return $this;
     }
 
@@ -92,6 +96,7 @@ class TrainingSkill
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -103,6 +108,7 @@ class TrainingSkill
     public function setFamily(string $family): static
     {
         $this->family = $family;
+
         return $this;
     }
 
@@ -114,6 +120,7 @@ class TrainingSkill
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -125,6 +132,7 @@ class TrainingSkill
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
         return $this;
     }
 
@@ -136,6 +144,7 @@ class TrainingSkill
     public function setUnlockAtLevel(int $unlockAtLevel): static
     {
         $this->unlockAtLevel = $unlockAtLevel;
+
         return $this;
     }
 
@@ -147,6 +156,7 @@ class TrainingSkill
     public function setMasteryAtLevel(?int $masteryAtLevel): static
     {
         $this->masteryAtLevel = $masteryAtLevel;
+
         return $this;
     }
 
@@ -158,6 +168,7 @@ class TrainingSkill
     public function setVideoTutorialUrl(?string $videoTutorialUrl): static
     {
         $this->videoTutorialUrl = $videoTutorialUrl;
+
         return $this;
     }
 
@@ -169,6 +180,7 @@ class TrainingSkill
     public function setDifficultyScore(?int $difficultyScore): static
     {
         $this->difficultyScore = $difficultyScore;
+
         return $this;
     }
 
@@ -180,6 +192,7 @@ class TrainingSkill
     public function setIsKeySkill(bool $isKeySkill): static
     {
         $this->isKeySkill = $isKeySkill;
+
         return $this;
     }
 }

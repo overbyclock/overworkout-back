@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -78,6 +80,7 @@ class TrainingProgram
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -89,6 +92,7 @@ class TrainingProgram
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -100,6 +104,7 @@ class TrainingProgram
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -111,6 +116,7 @@ class TrainingProgram
     public function setDiscipline(string $discipline): static
     {
         $this->discipline = $discipline;
+
         return $this;
     }
 
@@ -122,6 +128,7 @@ class TrainingProgram
     public function setTotalLevels(int $totalLevels): static
     {
         $this->totalLevels = $totalLevels;
+
         return $this;
     }
 
@@ -133,6 +140,7 @@ class TrainingProgram
     public function setEstimatedDurationWeeks(?int $estimatedDurationWeeks): static
     {
         $this->estimatedDurationWeeks = $estimatedDurationWeeks;
+
         return $this;
     }
 
@@ -144,6 +152,7 @@ class TrainingProgram
     public function setDifficulty(string $difficulty): static
     {
         $this->difficulty = $difficulty;
+
         return $this;
     }
 
@@ -155,6 +164,7 @@ class TrainingProgram
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
         return $this;
     }
 
@@ -166,6 +176,7 @@ class TrainingProgram
     public function setImageUrl(?string $imageUrl): static
     {
         $this->imageUrl = $imageUrl;
+
         return $this;
     }
 
@@ -188,6 +199,7 @@ class TrainingProgram
             $this->levels->add($level);
             $level->setProgram($this);
         }
+
         return $this;
     }
 }

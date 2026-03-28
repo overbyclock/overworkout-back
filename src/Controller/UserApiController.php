@@ -1,259 +1,168 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Dto\Request\LoginDto;
+use App\Dto\Request\UserRegistrationDto;
+use App\Dto\Request\UserUpdateDto;
 use App\Entity\User;
+use App\Mapper\UserMapper;
+use App\Security\Voter\UserVoter;
+use App\Service\JWTService;
 use App\Service\UserPasswordHashService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\JWTService;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+#[Route('/api')]
 class UserApiController extends AbstractController
 {
-    private $userPasswordHashService;
-    private $entityManager;
-    private $jwtService;
-
-    public function __construct(UserPasswordHashService $userPasswordHashService, EntityManagerInterface $entityManager, JWTService $jwtService)
-    {
-        $this->userPasswordHashService = $userPasswordHashService;
-        $this->entityManager = $entityManager;
-        $this->jwtService = $jwtService;
-    }
-
-    private function normalizeRoles(array $roles): array
-    {
-        return array_map(function ($role) {
-            if (is_object($role)) {
-                return $role->getName();
-            }
-            return $role;
-        }, $roles);
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserPasswordHashService $passwordHashService,
+        private readonly JWTService $jwtService,
+        private readonly UserMapper $userMapper,
+        private readonly NormalizerInterface $normalizer
+    ) {
     }
 
     #[Route('/register', name: 'user_register', methods: ['POST'])]
-    public function register(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    public function register(
+        #[MapRequestPayload] UserRegistrationDto $dto
+    ): JsonResponse {
+        // Verificar si el email ya existe
+        $existingUser = $this->entityManager->getRepository(User::class)
+            ->findOneBy(['email' => $dto->email]);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['error' => 'Invalid JSON format: ' . json_last_error_msg()], 400);
+        if (null !== $existingUser) {
+            return $this->json(['error' => 'Email already registered'], 400);
         }
 
-        $nick = $data['nick'] ?? null;
-        $email = $data['email'] ?? null;
-        $avatar = $data['avatar'] ?? null;
-        $plainPassword = $data['password'] ?? null;
+        // Crear usuario
+        $user = $this->userMapper->fromRegistrationDto($dto);
 
-        if (!$nick || !$email || !$plainPassword) {
-            return new JsonResponse(['error' => 'Invalid data'], 400);
-        }
-
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-
-        if ($user) {
-            return new JsonResponse(['error' => 'Email already registered'], 400);
-        }
-
-        $user = $this->userPasswordHashService->createUser(
-            $nick,
-            $email,
-            $avatar,
-            $plainPassword
-        );
+        // Hashear contraseña
+        $hashedPassword = $this->passwordHashService->hashPassword($user, $dto->password);
+        $user->setPassword($hashedPassword);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return new JsonResponse([
+        return $this->json([
             'message' => 'User registered successfully',
-            'user' => [
-                'id' => $user->getId(),
-                'nick' => $user->getNick(),
-                'email' => $user->getEmail(),
-                'roles' => $this->normalizeRoles($user->getRoles())
-            ]
+            'user' => $this->normalizer->normalize($user, null, ['groups' => [User::GROUP_READ]]),
         ], 201);
     }
 
     #[Route('/login', name: 'user_login', methods: ['POST'])]
-    public function login(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['error' => 'Invalid JSON format: ' . json_last_error_msg()], 400);
-        }
-
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
-
-        if (!$email || !$password) {
-            return new JsonResponse(['error' => 'Invalid credentials'], 400);
-        }
-
+    public function login(
+        #[MapRequestPayload] LoginDto $dto
+    ): JsonResponse {
         $user = $this->entityManager->getRepository(User::class)
-            ->findOneBy(['email' => $email]);
+            ->findOneBy(['email' => $dto->email]);
 
-        if (!$user || !$this->userPasswordHashService->verifyPassword($user, $password)) {
-            return new JsonResponse(['error' => 'Invalid credentials'], 401);
+        if (null === $user || !$this->passwordHashService->verifyPassword($user, $dto->password)) {
+            return $this->json(['error' => 'Invalid credentials'], 401);
         }
 
+        // Generar token JWT
         $payload = [
             'user_id' => $user->getId(),
             'email' => $user->getEmail(),
-            'roles' => $this->normalizeRoles($user->getRoles()),
+            'roles' => $user->getRoles(),
         ];
 
         $tokenData = $this->jwtService->generateToken($payload);
-        $user->setLastLogin(new \DateTime());
-        $this->entityManager->persist($user);
+
+        // Actualizar último login
+        $user->setLastlogin(new \DateTime());
         $this->entityManager->flush();
 
-        return new JsonResponse([
+        return $this->json([
             'token' => $tokenData['token'],
-            'userId' => $user->getId(),
-            'nick' => $user->getNick(),
-            'avatar' => $user->getAvatar(),
-            'roles' => $this->normalizeRoles($user->getRoles()),
-            'expiresAt' => $tokenData['expiresAt']
+            'user' => $this->normalizer->normalize($user, null, ['groups' => [User::GROUP_READ]]),
+            'expiresAt' => $tokenData['expiresAt'],
         ]);
     }
 
-    #[Route('api/user/{id}', name: 'get_user', methods: ['GET'])]
+    #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
+    #[IsGranted(UserVoter::VIEW, subject: 'id')]
     public function getUserById(int $id): JsonResponse
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
-        if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], 404);
+        if (null === $user) {
+            return $this->json(['error' => 'User not found'], 404);
         }
 
-        $authenticatedUser = $this->getUser();
+        // Verificar acceso con voter
+        $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
 
-        if (!$authenticatedUser instanceof User) {
-            return new JsonResponse(['error' => 'User not authenticated'], 403);
+        $groups = $this->isGranted('ROLE_ADMIN') ? [User::GROUP_READ_ADMIN] : [User::GROUP_READ];
+
+        return $this->json($this->normalizer->normalize($user, null, ['groups' => $groups]));
+    }
+
+    #[Route('/users/{id}', name: 'update_user', methods: ['PATCH'])]
+    public function updateUser(
+        int $id,
+        Request $request,
+        #[MapRequestPayload] UserUpdateDto $dto
+    ): JsonResponse {
+        $user = $this->entityManager->getRepository(User::class)->find($id);
+
+        if (null === $user) {
+            return $this->json(['error' => 'User not found'], 404);
         }
 
-        if ($authenticatedUser->getId() !== $user->getId() && !$this->isGranted('ROLE_ADMIN')) {
-            return new JsonResponse(['error' => 'Action not allowed'], 403);
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
+
+        if (!$dto->hasChanges()) {
+            return $this->json(['message' => 'No changes provided'], 400);
         }
 
-        return new JsonResponse([
-            'nick' => $user->getNick(),
-            'email' => $user->getEmail(),
-            'createdAt' => $user->getCreatedAt()->format('d-m-Y H:i:s'),
-            'roles' => $this->normalizeRoles($user->getRoles()),
-            'avatar' => $user->getAvatar(),
+        $this->userMapper->updateFromDto($user, $dto);
+        $this->entityManager->flush();
+
+        return $this->json([
+            'message' => 'User updated successfully',
+            'user' => $this->normalizer->normalize($user, null, ['groups' => [User::GROUP_READ]]),
         ]);
     }
 
-    #[Route('api/user/{id}', name: 'update_user', methods: ['PATCH'])]
-    public function updateUser(Request $request, int $id): JsonResponse
+    #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
+    public function deleteUser(int $id): JsonResponse
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
-        if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], 400);
+        if (null === $user) {
+            return $this->json(['error' => 'User not found'], 404);
         }
 
-        $data = json_decode($request->getContent(), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new JsonResponse(['error' => 'Invalid JSON format: ' . json_last_error_msg()], 400);
-        }
-
-        $authenticatedUser = $this->getUser();
-
-        if (!$authenticatedUser instanceof User) {
-            return new JsonResponse(['error' => 'User not authenticated'], 403);
-        }
-
-        if (!in_array('ROLE_ADMIN', $authenticatedUser->getRoles()) && !$this->isGranted('ROLE_ADMIN')) {
-            return new JsonResponse(['error' => 'Action not Allowed'], 403);
-        }
-
-        if (isset($data['nick'])) {
-            $user->setNick($data['nick']);
-        }
-
-        if (isset($data['email'])) {
-            $user->setEmail($data['email']);
-        }
-
-        if (isset($data['avatar'])) {
-            $user->setAvatar($data['avatar']);
-        }
-
-        if (isset($data['password'])) {
-            if (!$this->userPasswordHashService->isPasswordValid($data['password'])) {
-                return new JsonResponse(['error' => 'The password is weak. It needs to be at least 6 characters long and must include at least one uppercase letter, one lowercase letter, and one number.'], 400);
-            }
-            $hashedPassword = $this->userPasswordHashService->hashPassword($user, $data['password']);
-            $user->setPassword($hashedPassword);
-        }
-
-        $this->entityManager->flush();
-
-        return new JsonResponse(['message' => 'User updated successfully'], 200);
-    }
-
-    #[Route('api/user/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function deleteUser($id): JsonResponse
-    {
-        $user = $this->entityManager->getRepository(User::class)->find($id);
-
-        if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], 404);
-        }
-
-        $authenticatedUser = $this->getUser();
-
-        if (!$authenticatedUser instanceof User) {
-            return new JsonResponse(['error' => 'User not authenticated'], 403);
-        }
-
-        if ($authenticatedUser->getId() !== $user->getId() && !$this->isGranted('ROLE_ADMIN')) {
-            return new JsonResponse(['error' => 'Action not allowed'], 403);
-        }
+        $this->denyAccessUnlessGranted(UserVoter::DELETE, $user);
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 
-        return new JsonResponse(['message' => 'User deleted successfully'], 200);
+        return $this->json(['message' => 'User deleted successfully']);
     }
 
-    #[Route('api/users', name: 'get_all_users', methods: ['GET'])]
+    #[Route('/users', name: 'get_all_users', methods: ['GET'])]
     public function getAllUsers(): JsonResponse
     {
-        $authenticatedUser = $this->getUser();
-
-        if (!$authenticatedUser instanceof User) {
-            return new JsonResponse(['error' => 'User not authenticated'], 403);
-        }
-
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return new JsonResponse(['error' => 'Action not allowed'], 403);
-        }
+        $this->denyAccessUnlessGranted(UserVoter::LIST_ALL);
 
         $users = $this->entityManager->getRepository(User::class)->findAll();
-        $responseData = [];
 
-        foreach ($users as $user) {
-            $responseData[] = [
-                'avatar' => $user->getAvatar(),
-                'id' => $user->getId(),
-                'nick' => $user->getNick(),
-                'email' => $user->getEmail(),
-                'createdAt' => $user->getCreatedAt()->format('d-m-Y H:i:s'),
-                'lastlogin' => $user->getLastLogin() ? $user->getLastLogin()->format('d-m-Y H:i:s') : null,
-                'roles' => $this->normalizeRoles($user->getRoles()),
-            ];
-        }
-
-        return new JsonResponse($responseData);
+        return $this->json(
+            $this->normalizer->normalize($users, null, ['groups' => [User::GROUP_READ_ADMIN]])
+        );
     }
 }

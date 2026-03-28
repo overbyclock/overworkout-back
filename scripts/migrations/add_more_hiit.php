@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 require_once __DIR__.'/vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 
 $conn = DriverManager::getConnection([
-    'driver'=>'pdo_mysql','host'=>'127.0.0.1','port'=>3306,
-    'user'=>'juan','password'=>'1234','dbname'=>'overworkout'
+    'driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 3306,
+    'user' => 'juan', 'password' => '1234', 'dbname' => 'overworkout',
 ]);
 
 echo "=== AÑADIENDO MÁS EJERCICIOS HIIT ===\n\n";
@@ -26,7 +28,7 @@ $hiit = [
     ['Fast Feet', 'beginner', 1, 'full_body', 'core', 'Pies rápidos. Posición baja, pies moviéndose rápido sin desplazamiento. Cardio rápido.', null],
     ['Ladder Drills', 'beginner', 2, 'full_body', 'legs', 'Ejercicios en escalera de agilidad. In-in-out, lateral, carioca. Coordinación.', null],
     ['Cone Drills', 'beginner', 2, 'full_body', 'legs', 'Ejercicios en conos. Slalom, cinco diez cinco, T-drill. Agilidad y cambios dirección.', null],
-    
+
     // Más con equipamiento
     ['SkiErg Sprint', 'intermediate', 3, 'full_body', 'back', 'Sprint en SkiErg. Remar sentado máxima intensidad. Cardio brazos y core.', 'maquinas'],
     ['Air Bike Tabata', 'intermediate', 4, 'full_body', 'core', 'Tabata en air bike. 20 segundos máxima intensidad, 10 descanso, x8. Brutal.', 'maquinas'],
@@ -44,7 +46,7 @@ $hiit = [
     ['Tire Flip', 'intermediate', 3, 'full_body', 'legs', 'Vuelco de neumático. Levantar y voltear neumático pesado. Strongman cardio.', null],
     ['Parallette Burpee', 'intermediate', 3, 'full_body', 'chest', 'Burpee en paralelas. Manos en paralelas, push up, salto. Más profundo.', 'barras'],
     ['Ring Burpee', 'expert', 4, 'full_body', 'chest', 'Burpee en anillas. Push up en anillas, extremademente inestable. Elite.', 'anillas'],
-    
+
     // Circuitos y combos
     ['Man Maker', 'expert', 4, 'full_body', 'chest', 'Creador de hombres. Con mancuernas: push up, row, row, clean, press, squat. Todo en uno.', 'mancuernas'],
     ['Ground to Overhead', 'intermediate', 3, 'full_body', 'legs', 'De suelo a sobre cabeza. Levantar peso desde suelo hasta extensión completa. CrossFit.', 'mancuernas'],
@@ -55,7 +57,7 @@ $hiit = [
     ['Plate Push', 'beginner', 2, 'full_body', 'core', 'Empuje de disco. Empujar disco de peso por suelo. Core + cardio.', 'pesos_libres'],
     ['Sled Drag', 'intermediate', 3, 'full_body', 'back', 'Arrastre de trineo hacia atrás. Caminar hacia atrás jalando trineo. Espalda + piernas.', 'trineo'],
     ['Prowler Push', 'intermediate', 4, 'full_body', 'legs', 'Empuje de prowler. Trineo bajo empujado máxima velocidad. Piernas explosivas.', 'trineo'],
-    
+
     // Más cardio movilidad
     ['Jumping Jack Variations', 'beginner', 1, 'full_body', 'calves', 'Variaciones jumping jack. Cruzar brazos/piernas, abrir cerrar, etc.', null],
     ['Seal Jacks', 'beginner', 1, 'full_body', 'calves', 'Seal jacks. Brazos adelante cruzando, piernas abriendo. Alternativa jumping jack.', null],
@@ -72,19 +74,20 @@ $hiit = [
 
 $added = 0;
 foreach ($hiit as $ex) {
-    $exists = $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE name = ?", [$ex[0]]);
-    if ($exists == 0) {
+    $exists = $conn->fetchOne('SELECT COUNT(*) FROM exercises WHERE name = ?', [$ex[0]]);
+    if (0 === $exists) {
         $disciplines = json_encode(['hiit', 'crossfit', 'cardio']);
         $conn->executeStatement(
-            "INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)",
-            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query=' . urlencode($ex[0]), $ex[6], $disciplines]
+            'INSERT INTO exercises (name, level, difficulty_rating, primary_muscle_group, secondary_muscle_group, description, media, equipment_id, disciplines) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM equipments WHERE name = ? LIMIT 1), ?)',
+            [$ex[0], $ex[1], $ex[2], $ex[3], $ex[4], $ex[5], 'https://www.youtube.com/results?search_query='.urlencode($ex[0]), $ex[6], $disciplines]
         );
-        echo "✅ {$ex[0]}\n"; $added++;
+        echo "✅ {$ex[0]}\n";
+        ++$added;
     } else {
         echo "ℹ️ Ya existe: {$ex[0]}\n";
     }
 }
 
 echo "\n🎉 Añadidos $added ejercicios HIIT nuevos\n";
-echo "\nTotal HIIT ahora: " . $conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE primary_muscle_group = 'full_body'") . "\n";
+echo "\nTotal HIIT ahora: ".$conn->fetchOne("SELECT COUNT(*) FROM exercises WHERE primary_muscle_group = 'full_body'")."\n";

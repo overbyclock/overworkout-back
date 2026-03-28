@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\EquipmentsRepository;
@@ -83,6 +85,7 @@ class Equipments
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -94,6 +97,7 @@ class Equipments
     public function setCategory(?string $category): static
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -105,6 +109,7 @@ class Equipments
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
         return $this;
     }
 
@@ -116,6 +121,7 @@ class Equipments
     public function setWeight(?float $weight): static
     {
         $this->weight = $weight;
+
         return $this;
     }
 }
