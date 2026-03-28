@@ -324,7 +324,7 @@ class TrainingApiController extends AbstractController
       'discipline' => $training->getDiscipline()->value,
       'target' => $training->getTarget()->value,
       'name' => $training->getName(),
-      'cratedAt' => $training->getCreatedAt()->format('d-m-Y H:i:s'),
+      'createdAt' => $training->getCreatedAt()->format('d-m-Y H:i:s'),
       'userCreator' => $training->getTrainingUser() ? $training->getTrainingUser()->getId() : null,
       'userCreatorNick' => $training->getTrainingUser() ? $training->getTrainingUser()->getNick() : null,
       'rounds' => $roundsData

@@ -1,0 +1,16 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - src/Command
+        - tests/bootstrap.php
+    symfony:
+        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+    ignoreErrors:
+        # Ignorar errores comunes en proyectos Symfony que no son críticos
+        - '#Call to an undefined method Symfony\\Component\\HttpFoundation\\Request::getContentTypeFormat#'
