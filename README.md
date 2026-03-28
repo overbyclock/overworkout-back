@@ -5,6 +5,9 @@ Backend API REST para la aplicación de gestión de entrenamientos OverWorkout. 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4.svg?style=flat&logo=php)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/Symfony-7.1-000000.svg?style=flat&logo=symfony)](https://symfony.com/)
 [![API Platform](https://img.shields.io/badge/API%20Platform-4.0-68D391.svg)](https://api-platform.com/)
+[![CI](https://github.com/overbyclock/overworkout-back/actions/workflows/ci.yml/badge.svg)](https://github.com/overbyclock/overworkout-back/actions)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg)](https://phpstan.org/)
+[![Code Style](https://img.shields.io/badge/code%20style-PSR--12-brightgreen.svg)](https://www.php-fig.org/psr/psr-12/)
 
 ---
 
@@ -195,13 +198,16 @@ php bin/phpunit tests/Security/AuthenticationTest.php
 ### Calidad de Código
 
 ```bash
-# Formatear código (PHP CS Fixer)
+# Formatear código con PHP-CS-Fixer
 vendor/bin/php-cs-fixer fix
 
-# Análisis estático (PHPStan)
+# Verificar estilo sin modificar archivos
+vendor/bin/php-cs-fixer fix --dry-run --diff
+
+# Análisis estático con PHPStan (nivel 5)
 vendor/bin/phpstan analyse --level=5
 
-# Verificar tipos estrictos
+# Análisis más estricto (nivel 8)
 vendor/bin/phpstan analyse --level=8
 ```
 
@@ -228,23 +234,57 @@ php scripts/seeders/load_exercises.php
 
 ### Tests Implementados
 
-- ✅ **AuthenticationTest**: Login, registro, JWT
-- ✅ **AuthorizationTest**: Acceso a recursos propios vs ajenos
-- ✅ **TrainingCrudTest**: CRUD completo de entrenamientos
-- ✅ **EquipmentCrudTest**: CRUD de equipamiento
+#### Tests Funcionales (10 tests)
+- ✅ **AuthenticationTest**: Login, registro, JWT (5 tests)
+- ✅ **TrainingCrudTest**: CRUD completo de entrenamientos (5 tests)
+
+#### Tests Unitarios (124 tests)
+- ✅ **DTOs**: Validación de 11 DTOs (47 tests)
+- ✅ **Mappers**: Conversión DTO↔Entity (18 tests)
+- ✅ **Voters**: Autorización de 4 Voters (59 tests)
+
+**Total: 134 tests, 195+ assertions**
 
 ### Estructura de Tests
 
 ```
 tests/
-├── Unit/                    # Tests unitarios
-│   ├── Service/
-│   └── Security/
-├── Integration/            # Tests de integración
-│   ├── Controller/
-│   └── Repository/
-└── Functional/            # Tests funcionales (end-to-end)
+├── Unit/                    # 124 tests unitarios
+│   ├── Dto/                 # Validación de DTOs
+│   ├── Mapper/              # Tests de mappers
+│   └── Security/Voter/      # Tests de autorización
+└── Functional/              # 10 tests funcionales
     └── Api/
+        ├── AuthenticationTest.php
+        └── TrainingCrudTest.php
+```
+
+---
+
+## 🔄 CI/CD
+
+El proyecto utiliza **GitHub Actions** para integración continua. El workflow se ejecuta en cada push y pull request a las ramas `main` y `develop`.
+
+### Jobs del Pipeline
+
+| Job | Descripción | Comando |
+|-----|-------------|---------|
+| **Code Style** | Verifica formato PSR-12 | `php-cs-fixer fix --dry-run` |
+| **Static Analysis** | Análisis estático PHPStan nivel 5 | `phpstan analyse` |
+| **Unit Tests** | Tests unitarios (sin dependencias externas) | `phpunit tests/Unit` |
+| **Functional Tests** | Tests funcionales (requiere MySQL) | `phpunit tests/Functional` |
+
+### Estado del Pipeline
+
+Haz clic en el badge de CI arriba para ver el estado actual de los workflows.
+
+### Ejecutar checks localmente
+
+```bash
+# Todos los checks (igual que en CI)
+vendor/bin/php-cs-fixer fix --dry-run --diff
+vendor/bin/phpstan analyse --level=5
+vendor/bin/phpunit tests/Unit --no-coverage
 ```
 
 ---
