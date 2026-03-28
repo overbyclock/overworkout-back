@@ -1,10 +1,9 @@
 # 🏋️ OverWorkout Backend API
 
-Backend API REST para la aplicación de gestión de entrenamientos OverWorkout. Construido con Symfony 7.1, API Platform y JWT Authentication.
+Backend API REST privada para la aplicación de gestión de entrenamientos OverWorkout. Construido con Symfony 7.1, DTOs, Voters y JWT Authentication.
 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4.svg?style=flat&logo=php)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/Symfony-7.1-000000.svg?style=flat&logo=symfony)](https://symfony.com/)
-[![API Platform](https://img.shields.io/badge/API%20Platform-4.0-68D391.svg)](https://api-platform.com/)
 [![CI](https://github.com/overbyclock/overworkout-back/actions/workflows/ci.yml/badge.svg)](https://github.com/overbyclock/overworkout-back/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg)](https://phpstan.org/)
 [![Code Style](https://img.shields.io/badge/code%20style-PSR--12-brightgreen.svg)](https://www.php-fig.org/psr/psr-12/)
@@ -142,12 +141,6 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...
 ---
 
 ## 📚 Endpoints Principales
-
-### Documentación API
-
-Una vez iniciado el servidor, accede a:
-- **Swagger UI**: `http://localhost:8000/api/docs`
-- **JSON Schema**: `http://localhost:8000/api/docs.json`
 
 ### Endpoints por Recurso
 

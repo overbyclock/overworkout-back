@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingRepository::class)]
-#[ApiResource]
 class Training
 {
     public const GROUP_READ = 'training:read';
