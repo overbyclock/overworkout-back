@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class UserVoterTest extends TestCase
 {
     private UserVoter $voter;
+
     private $token;
 
     protected function setUp(): void
@@ -160,8 +161,8 @@ class UserVoterTest extends TestCase
     private function createUser(int $id, array $roles): User
     {
         $user = new User();
-        $user->setNick('User' . $id);
-        $user->setEmail('user' . $id . '@example.com');
+        $user->setNick('User'.$id);
+        $user->setEmail('user'.$id.'@example.com');
         $user->setPassword('password');
         $user->setRoles($roles);
 

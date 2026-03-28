@@ -22,9 +22,13 @@ use PHPUnit\Framework\TestCase;
 class TrainingMapperTest extends TestCase
 {
     private TrainingMapper $mapper;
+
     private $entityManager;
+
     private $exerciseRepository;
+
     private $roundRepository;
+
     private $configRepository;
 
     protected function setUp(): void
@@ -68,9 +72,9 @@ class TrainingMapperTest extends TestCase
                             reps: 10,
                             sets: 3,
                             restBetweenSets: 30
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         );
 
@@ -117,7 +121,7 @@ class TrainingMapperTest extends TestCase
                 new TrainingRoundDto(
                     round: 1,
                     exercises: [new TrainingExerciseConfigDto(exerciseId: 999)]
-                )
+                ),
             ]
         );
 

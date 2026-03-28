@@ -36,9 +36,9 @@ class TrainingCreateDtoTest extends TestCase
                             exerciseId: 1,
                             reps: 10,
                             sets: 3
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         );
 
@@ -57,7 +57,7 @@ class TrainingCreateDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
         $disciplineViolation = $this->findViolationForProperty($violations, 'discipline');
         $this->assertNotNull($disciplineViolation);
     }
@@ -118,7 +118,6 @@ class TrainingCreateDtoTest extends TestCase
 
         $roundsViolation = $this->findViolationForProperty($violations, 'rounds');
         $this->assertNotNull($roundsViolation);
-        $this->assertNotNull($roundsViolation);
     }
 
     public function testNameIsOptional(): void
@@ -131,7 +130,7 @@ class TrainingCreateDtoTest extends TestCase
                 new TrainingRoundDto(
                     round: 1,
                     exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
-                )
+                ),
             ]
         );
 
@@ -149,7 +148,7 @@ class TrainingCreateDtoTest extends TestCase
                 new TrainingRoundDto(
                     round: 1,
                     exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
-                )
+                ),
             ]
         );
 
@@ -166,7 +165,7 @@ class TrainingCreateDtoTest extends TestCase
                 new TrainingRoundDto(
                     round: 1,
                     exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
-                )
+                ),
             ]
         );
 

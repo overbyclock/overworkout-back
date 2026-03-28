@@ -86,7 +86,7 @@ class TrainingExerciseConfiguration
 
     public function setSets(int $setsForExercise): static
     {
-        if (null !== $setsForExercise && $setsForExercise <= 0) {
+        if ($setsForExercise <= 0) {
             throw new \InvalidArgumentException('Sets must be a positive value');
         }
         $this->setsForExercise = $setsForExercise;

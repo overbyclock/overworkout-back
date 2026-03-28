@@ -26,27 +26,27 @@ readonly class EquipmentMapper
 
     public function updateFromDto(Equipments $equipment, EquipmentUpdateDto $dto): void
     {
-        if ($dto->name !== null) {
+        if (null !== $dto->name) {
             $equipment->setName($dto->name);
         }
 
-        if ($dto->image !== null) {
+        if (null !== $dto->image) {
             $equipment->setImage($dto->image);
         }
 
-        if ($dto->description !== null) {
+        if (null !== $dto->description) {
             $equipment->setDescription($dto->description);
         }
 
-        if ($dto->category !== null) {
+        if (null !== $dto->category) {
             $equipment->setCategory($dto->category);
         }
 
-        if ($dto->icon !== null) {
+        if (null !== $dto->icon) {
             $equipment->setIcon($dto->icon);
         }
 
-        if ($dto->weight !== null) {
+        if (null !== $dto->weight) {
             $equipment->setWeight($dto->weight);
         }
     }

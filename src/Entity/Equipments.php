@@ -13,6 +13,7 @@ class Equipments
 {
     public const GROUP_READ = 'equipment:read';
     public const GROUP_READ_DETAIL = 'equipment:read:detail';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

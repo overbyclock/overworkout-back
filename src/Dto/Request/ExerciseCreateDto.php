@@ -65,7 +65,7 @@ readonly class ExerciseCreateDto
 
     public function getSecondaryMuscleGroupEnum(): ?\App\Enum\MuscleGroup
     {
-        return $this->secondaryMuscleGroup !== null
+        return null !== $this->secondaryMuscleGroup
             ? \App\Enum\MuscleGroup::from($this->secondaryMuscleGroup)
             : null;
     }

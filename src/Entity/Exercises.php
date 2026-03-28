@@ -48,9 +48,9 @@ class Exercises
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
 
-#[ORM\Column(type: 'integer', nullable: true)]
-  #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
-  private ?int $difficultyRating = 1;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    private ?int $difficultyRating = 1;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;

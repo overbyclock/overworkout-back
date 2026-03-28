@@ -43,7 +43,7 @@ class UserRegistrationDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
         $this->assertEquals('El nick es obligatorio', $violations[0]->getMessage());
     }
 
@@ -113,7 +113,7 @@ class UserRegistrationDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
         $this->assertEquals('La contraseña es obligatoria', $violations[0]->getMessage());
     }
 
@@ -197,6 +197,6 @@ class UserRegistrationDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThan(1, count($violations));
+        $this->assertGreaterThan(1, \count($violations));
     }
 }

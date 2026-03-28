@@ -101,7 +101,7 @@ class TrainingRound
     }
 
     /**
-     * @return Collection<int, TrainingExerciseConfigurarion>
+     * @return Collection<int, TrainingExerciseConfiguration>
      */
     public function getTrainingExerciseConfigurations(): Collection
     {

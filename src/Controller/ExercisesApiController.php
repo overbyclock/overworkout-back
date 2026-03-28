@@ -42,7 +42,7 @@ class ExercisesApiController extends AbstractController
     {
         $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
 
-        if ($exercise === null) {
+        if (null === $exercise) {
             return $this->json(['error' => 'Exercise not found'], 404);
         }
 
@@ -81,7 +81,7 @@ class ExercisesApiController extends AbstractController
     ): JsonResponse {
         $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
 
-        if ($exercise === null) {
+        if (null === $exercise) {
             return $this->json(['error' => 'Exercise not found'], 404);
         }
 
@@ -110,7 +110,7 @@ class ExercisesApiController extends AbstractController
     {
         $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
 
-        if ($exercise === null) {
+        if (null === $exercise) {
             return $this->json(['error' => 'Exercise not found'], 404);
         }
 

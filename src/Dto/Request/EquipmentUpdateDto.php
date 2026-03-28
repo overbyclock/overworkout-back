@@ -42,11 +42,11 @@ readonly class EquipmentUpdateDto
 
     public function hasChanges(): bool
     {
-        return $this->name !== null
-            || $this->image !== null
-            || $this->description !== null
-            || $this->category !== null
-            || $this->icon !== null
-            || $this->weight !== null;
+        return null !== $this->name
+            || null !== $this->image
+            || null !== $this->description
+            || null !== $this->category
+            || null !== $this->icon
+            || null !== $this->weight;
     }
 }

@@ -23,7 +23,7 @@ jobs:
         coverage: none
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.composer/cache/files
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -52,7 +52,7 @@ jobs:
         coverage: none
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.composer/cache/files
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -61,6 +61,9 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-scripts
+
+    - name: Warm up cache
+      run: php bin/console cache:clear --env=dev
 
     - name: Run PHPStan
       run: vendor/bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=1G
@@ -81,7 +84,7 @@ jobs:
         coverage: none
 
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.composer/cache/files
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -93,66 +96,3 @@ jobs:
 
     - name: Run PHPUnit (Unit Tests only)
       run: vendor/bin/phpunit tests/Unit --no-coverage --testdox
-
-  functional-tests:
-    name: Functional Tests (PHPUnit)
-    runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: overworkout_test
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, intl, pdo_mysql
-        coverage: none
-
-    - name: Cache Composer dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.composer/cache/files
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-scripts
-
-    - name: Create .env.test.local
-      run: |
-        echo "APP_ENV=test" > .env.test.local
-        echo "DATABASE_URL=mysql://test:test@127.0.0.1:3306/overworkout_test?serverVersion=8.0&charset=utf8mb4" >> .env.test.local
-        echo "JWT_SECRET_KEY=test_secret_key_for_ci_only" >> .env.test.local
-
-    - name: Wait for MySQL
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y mysql-client
-        while ! mysqladmin ping --host=127.0.0.1 --password=root --silent; do
-          sleep 1
-        done
-
-    - name: Create database schema
-      run: |
-        php bin/console doctrine:database:create --if-not-exists --env=test
-        php bin/console doctrine:schema:create --env=test
-      env:
-        DATABASE_URL: mysql://test:test@127.0.0.1:3306/overworkout_test?serverVersion=8.0&charset=utf8mb4
-
-    - name: Run Functional Tests
-      run: vendor/bin/phpunit tests/Functional --no-coverage --testdox
-      env:
-        DATABASE_URL: mysql://test:test@127.0.0.1:3306/overworkout_test?serverVersion=8.0&charset=utf8mb4

@@ -16,7 +16,9 @@ use PHPUnit\Framework\TestCase;
 class ExerciseMapperTest extends TestCase
 {
     private ExerciseMapper $mapper;
+
     private $entityManager;
+
     private $equipmentRepository;
 
     protected function setUp(): void

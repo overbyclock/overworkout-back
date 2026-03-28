@@ -42,7 +42,7 @@ class EquipmentsApiController extends AbstractController
     {
         $equipment = $this->entityManager->getRepository(Equipments::class)->find($id);
 
-        if ($equipment === null) {
+        if (null === $equipment) {
             return $this->json(['error' => 'Equipment not found'], 404);
         }
 
@@ -77,7 +77,7 @@ class EquipmentsApiController extends AbstractController
     ): JsonResponse {
         $equipment = $this->entityManager->getRepository(Equipments::class)->find($id);
 
-        if ($equipment === null) {
+        if (null === $equipment) {
             return $this->json(['error' => 'Equipment not found'], 404);
         }
 
@@ -101,7 +101,7 @@ class EquipmentsApiController extends AbstractController
     {
         $equipment = $this->entityManager->getRepository(Equipments::class)->find($id);
 
-        if ($equipment === null) {
+        if (null === $equipment) {
             return $this->json(['error' => 'Equipment not found'], 404);
         }
 

@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 class UserMapperTest extends TestCase
 {
     private UserMapper $mapper;
+
     private $passwordHashService;
 
     protected function setUp(): void

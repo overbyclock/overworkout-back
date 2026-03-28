@@ -41,7 +41,7 @@ class EquipmentCreateDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
         $this->assertEquals('El nombre es obligatorio', $violations[0]->getMessage());
     }
 

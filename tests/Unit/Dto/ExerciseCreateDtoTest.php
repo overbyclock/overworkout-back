@@ -48,7 +48,7 @@ class ExerciseCreateDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
     }
 
     public function testPrimaryMuscleGroupIsRequired(): void
@@ -61,7 +61,7 @@ class ExerciseCreateDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
     }
 
     public function testLevelIsRequired(): void
@@ -74,7 +74,7 @@ class ExerciseCreateDtoTest extends TestCase
 
         $violations = $this->validator->validate($dto);
 
-        $this->assertGreaterThanOrEqual(1, count($violations));
+        $this->assertGreaterThanOrEqual(1, \count($violations));
     }
 
     public function testInvalidMuscleGroup(): void

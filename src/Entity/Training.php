@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Enum\Discipline;
 use App\Enum\TargetWorkout;
 use App\Repository\TrainingRepository;

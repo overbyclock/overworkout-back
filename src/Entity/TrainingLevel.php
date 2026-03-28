@@ -9,13 +9,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingLevelRepository::class)]
 class TrainingLevel
 {
+    final public const GROUP_READ = 'level:read';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'levels')]
@@ -23,9 +27,11 @@ class TrainingLevel
     private ?TrainingProgram $program = null;
 
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $levelNumber = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([self::GROUP_READ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]

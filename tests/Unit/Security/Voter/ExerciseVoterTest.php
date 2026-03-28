@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class ExerciseVoterTest extends TestCase
 {
     private ExerciseVoter $voter;
+
     private $token;
 
     protected function setUp(): void
@@ -101,8 +102,8 @@ class ExerciseVoterTest extends TestCase
     private function createUser(int $id, array $roles): User
     {
         $user = new User();
-        $user->setNick('User' . $id);
-        $user->setEmail('user' . $id . '@example.com');
+        $user->setNick('User'.$id);
+        $user->setEmail('user'.$id.'@example.com');
         $user->setPassword('password');
         $user->setRoles($roles);
 

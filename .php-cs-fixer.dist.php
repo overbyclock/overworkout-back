@@ -5,7 +5,7 @@ use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->in(__DIR__)
-    ->exclude(['var', 'vendor', 'config/secrets'])
+    ->exclude(['var', 'vendor', 'config/secrets', 'scripts'])
     ->ignoreDotFiles(true)
     ->ignoreVCS(true)
     ->files()

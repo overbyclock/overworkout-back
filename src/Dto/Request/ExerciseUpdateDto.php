@@ -57,35 +57,35 @@ readonly class ExerciseUpdateDto
 
     public function getPrimaryMuscleGroupEnum(): ?\App\Enum\MuscleGroup
     {
-        return $this->primaryMuscleGroup !== null
+        return null !== $this->primaryMuscleGroup
             ? \App\Enum\MuscleGroup::from($this->primaryMuscleGroup)
             : null;
     }
 
     public function getSecondaryMuscleGroupEnum(): ?\App\Enum\MuscleGroup
     {
-        return $this->secondaryMuscleGroup !== null
+        return null !== $this->secondaryMuscleGroup
             ? \App\Enum\MuscleGroup::from($this->secondaryMuscleGroup)
             : null;
     }
 
     public function getLevelEnum(): ?\App\Enum\Levels
     {
-        return $this->level !== null
+        return null !== $this->level
             ? \App\Enum\Levels::from($this->level)
             : null;
     }
 
     public function hasChanges(): bool
     {
-        return $this->name !== null
-            || $this->primaryMuscleGroup !== null
-            || $this->secondaryMuscleGroup !== null
-            || $this->level !== null
-            || $this->equipmentId !== null
-            || $this->media !== null
-            || $this->difficultyRating !== null
-            || $this->description !== null
-            || $this->disciplines !== null;
+        return null !== $this->name
+            || null !== $this->primaryMuscleGroup
+            || null !== $this->secondaryMuscleGroup
+            || null !== $this->level
+            || null !== $this->equipmentId
+            || null !== $this->media
+            || null !== $this->difficultyRating
+            || null !== $this->description
+            || null !== $this->disciplines;
     }
 }

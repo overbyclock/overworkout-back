@@ -9,40 +9,54 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingProgramRepository::class)]
 class TrainingProgram
 {
+    final public const GROUP_READ = 'program:read';
+    final public const GROUP_DETAIL = 'program:detail';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([self::GROUP_READ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups([self::GROUP_READ])]
     private ?string $discipline = null;
 
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $totalLevels = 12;
 
     #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?int $estimatedDurationWeeks = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups([self::GROUP_READ])]
     private ?string $difficulty = null;
 
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?bool $isActive = true;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $imageUrl = null;
 
     #[ORM\Column]

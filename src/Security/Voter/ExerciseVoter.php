@@ -24,7 +24,7 @@ final class ExerciseVoter extends Voter
     {
         return match ($attribute) {
             self::VIEW, self::EDIT, self::DELETE => $subject instanceof Exercises,
-            self::CREATE, self::LIST_ALL => $subject === null,
+            self::CREATE, self::LIST_ALL => null === $subject,
             default => false,
         };
     }
@@ -38,7 +38,7 @@ final class ExerciseVoter extends Voter
         }
 
         // Todos los ejercicios son públicos para lectura
-        if ($attribute === self::VIEW || $attribute === self::LIST_ALL) {
+        if (self::VIEW === $attribute || self::LIST_ALL === $attribute) {
             return true;
         }
 
@@ -48,6 +48,6 @@ final class ExerciseVoter extends Voter
 
     private function isAdmin(UserInterface $user): bool
     {
-        return in_array('ROLE_ADMIN', $user->getRoles(), true);
+        return \in_array('ROLE_ADMIN', $user->getRoles(), true);
     }
 }

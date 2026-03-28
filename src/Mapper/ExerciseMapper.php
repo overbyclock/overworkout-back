@@ -22,7 +22,7 @@ readonly class ExerciseMapper
         $exercise = new Exercises();
         $exercise->setName($dto->name);
         $exercise->setPrimaryMuscleGroup($dto->getPrimaryMuscleGroupEnum());
-        if ($dto->secondaryMuscleGroup !== null) {
+        if (null !== $dto->secondaryMuscleGroup) {
             $exercise->setSecondaryMuscleGroup($dto->getSecondaryMuscleGroupEnum());
         }
         $exercise->setLevel($dto->getLevelEnum());
@@ -31,10 +31,10 @@ readonly class ExerciseMapper
         $exercise->setDescription($dto->description);
         $exercise->setDisciplines($dto->disciplines ?? ['calisthenics']);
 
-        if ($dto->equipmentId !== null) {
+        if (null !== $dto->equipmentId) {
             $equipment = $this->entityManager->getRepository(Equipments::class)->find($dto->equipmentId);
-            if ($equipment === null) {
-                throw new \InvalidArgumentException('Equipment not found: ' . $dto->equipmentId);
+            if (null === $equipment) {
+                throw new \InvalidArgumentException('Equipment not found: '.$dto->equipmentId);
             }
             $exercise->setEquipment($equipment);
         }
@@ -44,42 +44,42 @@ readonly class ExerciseMapper
 
     public function updateFromDto(Exercises $exercise, ExerciseUpdateDto $dto): void
     {
-        if ($dto->name !== null) {
+        if (null !== $dto->name) {
             $exercise->setName($dto->name);
         }
 
-        if ($dto->primaryMuscleGroup !== null) {
+        if (null !== $dto->primaryMuscleGroup) {
             $exercise->setPrimaryMuscleGroup($dto->getPrimaryMuscleGroupEnum());
         }
 
-        if ($dto->secondaryMuscleGroup !== null) {
+        if (null !== $dto->secondaryMuscleGroup) {
             $exercise->setSecondaryMuscleGroup($dto->getSecondaryMuscleGroupEnum());
         }
 
-        if ($dto->level !== null) {
+        if (null !== $dto->level) {
             $exercise->setLevel($dto->getLevelEnum());
         }
 
-        if ($dto->media !== null) {
+        if (null !== $dto->media) {
             $exercise->setMedia($dto->media);
         }
 
-        if ($dto->difficultyRating !== null) {
+        if (null !== $dto->difficultyRating) {
             $exercise->setDifficultyRating($dto->difficultyRating);
         }
 
-        if ($dto->description !== null) {
+        if (null !== $dto->description) {
             $exercise->setDescription($dto->description);
         }
 
-        if ($dto->disciplines !== null) {
+        if (null !== $dto->disciplines) {
             $exercise->setDisciplines($dto->disciplines);
         }
 
-        if ($dto->equipmentId !== null) {
+        if (null !== $dto->equipmentId) {
             $equipment = $this->entityManager->getRepository(Equipments::class)->find($dto->equipmentId);
-            if ($equipment === null) {
-                throw new \InvalidArgumentException('Equipment not found: ' . $dto->equipmentId);
+            if (null === $equipment) {
+                throw new \InvalidArgumentException('Equipment not found: '.$dto->equipmentId);
             }
             $exercise->setEquipment($equipment);
         }
