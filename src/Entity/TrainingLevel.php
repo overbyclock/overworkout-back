@@ -12,9 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrainingLevelRepository::class)]
 class TrainingLevel
-    ]
-)]
-class TrainingLevel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
