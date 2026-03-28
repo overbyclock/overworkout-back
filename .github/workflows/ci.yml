@@ -62,8 +62,10 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-scripts
 
-    - name: Warm up cache
-      run: php bin/console cache:clear --env=dev
+    - name: Warm up Symfony cache
+      run: |
+        php bin/console cache:warmup --env=dev
+        ls -la var/cache/dev/ | grep -i container || echo "Container not found"
 
     - name: Run PHPStan
       run: vendor/bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=1G
