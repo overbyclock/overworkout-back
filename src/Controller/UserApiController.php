@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-#[Route('/api')]
 class UserApiController extends AbstractController
 {
     public function __construct(
@@ -92,7 +91,7 @@ class UserApiController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
+    #[Route('/api/users/{id}', name: 'get_user', methods: ['GET'])]
     #[IsGranted(UserVoter::VIEW, subject: 'id')]
     public function getUserById(int $id): JsonResponse
     {
@@ -110,7 +109,7 @@ class UserApiController extends AbstractController
         return $this->json($this->normalizer->normalize($user, null, ['groups' => $groups]));
     }
 
-    #[Route('/users/{id}', name: 'update_user', methods: ['PATCH'])]
+    #[Route('/api/users/{id}', name: 'update_user', methods: ['PATCH'])]
     public function updateUser(
         int $id,
         Request $request,
@@ -137,7 +136,7 @@ class UserApiController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
+    #[Route('/api/users/{id}', name: 'delete_user', methods: ['DELETE'])]
     public function deleteUser(int $id): JsonResponse
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
@@ -154,7 +153,7 @@ class UserApiController extends AbstractController
         return $this->json(['message' => 'User deleted successfully']);
     }
 
-    #[Route('/users', name: 'get_all_users', methods: ['GET'])]
+    #[Route('/api/users', name: 'get_all_users', methods: ['GET'])]
     public function getAllUsers(): JsonResponse
     {
         $this->denyAccessUnlessGranted(UserVoter::LIST_ALL);
