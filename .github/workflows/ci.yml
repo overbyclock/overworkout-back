@@ -62,6 +62,14 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-scripts
 
+    - name: Create .env file for CI
+      run: |
+        echo "APP_ENV=dev" > .env
+        echo "APP_SECRET=test-secret-for-ci-only" >> .env
+        echo "JWT_SECRET_KEY=test-jwt-key-for-ci-only-change-in-production" >> .env
+        echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" >> .env
+        echo "CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'" >> .env
+
     - name: Warm up Symfony cache
       run: |
         php bin/console cache:warmup --env=dev
@@ -95,6 +103,14 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-scripts
+
+    - name: Create .env file for CI
+      run: |
+        echo "APP_ENV=test" > .env
+        echo "APP_SECRET=test-secret-for-ci-only" >> .env
+        echo "JWT_SECRET_KEY=test-jwt-key-for-ci-only-change-in-production" >> .env
+        echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" >> .env
+        mkdir -p var
 
     - name: Run PHPUnit (Unit Tests only)
       run: vendor/bin/phpunit tests/Unit --no-coverage --testdox
