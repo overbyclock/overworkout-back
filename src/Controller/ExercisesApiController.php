@@ -4,236 +4,122 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Equipments;
+use App\Dto\Request\ExerciseCreateDto;
+use App\Dto\Request\ExerciseUpdateDto;
 use App\Entity\Exercises;
-use App\Enum\Levels;
-use App\Enum\MuscleGroup;
+use App\Mapper\ExerciseMapper;
+use App\Security\Voter\ExerciseVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+#[Route('/api')]
 class ExercisesApiController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ExerciseMapper $exerciseMapper,
+        private readonly NormalizerInterface $normalizer
+    ) {
     }
 
-    #[Route('api/exercises', name: 'get_all_exercises', methods: ['GET'])]
+    #[Route('/exercises', name: 'get_all_exercises', methods: ['GET'])]
     public function getAllExercises(): JsonResponse
     {
+        $this->denyAccessUnlessGranted(ExerciseVoter::LIST_ALL);
+
         $exercises = $this->entityManager->getRepository(Exercises::class)->findAll();
-        $responseData = [];
 
-        foreach ($exercises as $exercise) {
-            $equipmentData = null;
-
-            if ($exercise->getEquipment()) {
-                $equipment = $exercise->getEquipment();
-                $equipmentData = [
-                    'id' => $equipment->getId(),
-                    'name' => $equipment->getName(),
-                    'image' => $equipment->getImage(),
-                ];
-            }
-            $responseData[] = [
-                'id' => $exercise->getId(),
-                'name' => $exercise->getName(),
-                'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup()?->value,
-                'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup()?->value,
-                'level' => $exercise->getLevel()?->value,
-                'difficultyRating' => $exercise->getDifficultyRating(),
-                'description' => $exercise->getDescription(),
-                'disciplines' => $exercise->getDisciplines(),
-                'equipment' => $equipmentData,
-                'media' => $exercise->getMedia(),
-            ];
-        }
-
-        return new JsonResponse($responseData);
+        return $this->json(
+            $this->normalizer->normalize($exercises, null, ['groups' => [Exercises::GROUP_READ]])
+        );
     }
 
-    #[Route('api/exercises/{id}', name: 'get_exercise', methods: ['GET'])]
+    #[Route('/exercises/{id}', name: 'get_exercise', methods: ['GET'])]
     public function getExercise(int $id): JsonResponse
     {
         $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
-        if (!$exercise) {
-            return new JsonResponse(['error' => 'Exercise not found'], 404);
+
+        if ($exercise === null) {
+            return $this->json(['error' => 'Exercise not found'], 404);
         }
 
-        $equipmentData = null;
+        $this->denyAccessUnlessGranted(ExerciseVoter::VIEW, $exercise);
 
-        if ($exercise->getEquipment()) {
-            $equipment = $exercise->getEquipment();
-            $equipmentData = [
-                'id' => $equipment->getId(),
-                'name' => $equipment->getName(),
-                'image' => $equipment->getImage(),
-            ];
-        }
-
-        return new JsonResponse([
-            'id' => $exercise->getId(),
-            'name' => $exercise->getName(),
-            'primaryMuscleGroup' => $exercise->getPrimaryMuscleGroup(),
-            'secondaryMuscleGroup' => $exercise->getSecondaryMuscleGroup(),
-            'level' => $exercise->getLevel()?->value,
-            'difficultyRating' => $exercise->getDifficultyRating(),
-            'description' => $exercise->getDescription(),
-            'disciplines' => $exercise->getDisciplines(),
-            'equipment' => $equipmentData,
-            'media' => $exercise->getMedia(),
-        ]);
+        return $this->json(
+            $this->normalizer->normalize($exercise, null, ['groups' => [Exercises::GROUP_READ_DETAIL]])
+        );
     }
 
-    #[Route('api/exercises', name: 'create_exercise', methods: ['POST'])]
-    public function createExercise(Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    #[Route('/exercises', name: 'create_exercise', methods: ['POST'])]
+    public function createExercise(
+        #[MapRequestPayload] ExerciseCreateDto $dto
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(ExerciseVoter::CREATE);
 
-        $data = json_decode($request->getContent(), true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            return new JsonResponse(['error' => 'Invalid JSON format: '.json_last_error_msg()], 400);
+        try {
+            $exercise = $this->exerciseMapper->fromCreateDto($dto);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
         }
 
-        $name = $data['name'] ?? null;
-        $primaryMuscleGroup = $data['primaryMuscleGroup'] ?? null;
-        $secondaryMuscleGroup = $data['secondaryMuscleGroup'] ?? null;
-        $level = $data['level'] ?? null;
-        $equipmentId = $data['equipment'] ?? null;
-        $media = $data['media'] ?? null;
-        $difficultyRating = $data['difficultyRating'] ?? 1;
-        $description = $data['description'] ?? null;
-        $disciplines = $data['disciplines'] ?? ['calisthenics'];
+        $this->entityManager->persist($exercise);
+        $this->entityManager->flush();
 
-        $equipment = null;
-        if ($equipmentId) {
-            $equipment = $this->entityManager->getRepository(Equipments::class)->find($equipmentId);
-            if (!$equipment) {
-                return new JsonResponse(['error' => 'Equipment not found'], 404);
-            }
+        return $this->json([
+            'message' => 'Exercise created successfully',
+            'exercise' => $this->normalizer->normalize($exercise, null, ['groups' => [Exercises::GROUP_READ]]),
+        ], 201);
+    }
+
+    #[Route('/exercises/{id}', name: 'update_exercise', methods: ['PATCH'])]
+    public function updateExercise(
+        int $id,
+        #[MapRequestPayload] ExerciseUpdateDto $dto
+    ): JsonResponse {
+        $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
+
+        if ($exercise === null) {
+            return $this->json(['error' => 'Exercise not found'], 404);
         }
 
-        if (!$name || !$primaryMuscleGroup || !$level) {
-            return new JsonResponse(['error' => 'Required fields: name, primaryMuscleGroup and level'], 400);
+        $this->denyAccessUnlessGranted(ExerciseVoter::EDIT, $exercise);
+
+        if (!$dto->hasChanges()) {
+            return $this->json(['message' => 'No changes provided'], 400);
         }
 
         try {
-            $primaryMuscleGroup = MuscleGroup::from($primaryMuscleGroup);
-            $secondaryMuscleGroup = MuscleGroup::from($secondaryMuscleGroup);
-            $level = Levels::from($level);
-        } catch (\ValueError $e) {
-            return new JsonResponse(['error' => 'Invalid value for muscle group or level'], 400);
+            $this->exerciseMapper->updateFromDto($exercise, $dto);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
         }
 
-        $exercise = new Exercises();
-        $exercise->setName($name);
-        $exercise->setPrimaryMuscleGroup($primaryMuscleGroup);
-        $exercise->setSecondaryMuscleGroup($secondaryMuscleGroup);
-        $exercise->setLevel($level);
-        $exercise->setEquipment($equipment);
-        $exercise->setMedia($media);
-        $exercise->setDifficultyRating($difficultyRating);
-        $exercise->setDescription($description);
-        $exercise->setDisciplines($disciplines);
-
-        $this->entityManager->persist($exercise);
         $this->entityManager->flush();
 
-        return new JsonResponse(['message' => 'Exercise created susccessfully'], 201);
+        return $this->json([
+            'message' => 'Exercise updated successfully',
+            'exercise' => $this->normalizer->normalize($exercise, null, ['groups' => [Exercises::GROUP_READ]]),
+        ]);
     }
 
-    #[Route('api/exercises/{id}', name: 'update_exercise', methods: ['PATCH'])]
-    public function updateExercise(int $id, Request $request): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
-
-        if (!$exercise) {
-            return new JsonResponse(['error' => 'Exercise not found'], 404);
-        }
-
-        $data = json_decode($request->getContent(), true);
-
-        if (isset($data['name'])) {
-            $exercise->setName($data['name']);
-        }
-
-        if (isset($data['primaryMuscleGroup'])) {
-            try {
-                $primaryMuscleGroup = MuscleGroup::from($data['primaryMuscleGroup']);
-                $exercise->setPrimaryMuscleGroup($primaryMuscleGroup);
-            } catch (\ValueError $e) {
-                return new JsonResponse(['error' => 'Invalid value for primaryMuscleGroup']);
-            }
-        }
-
-        if (isset($data['secondaryMuscleGroup'])) {
-            try {
-                $secondaryMuscleGroup = $data['secondaryMuscleGroup'] ? MuscleGroup::from($data['secondaryMuscleGroup']) : null;
-                $exercise->setSecondayMuscleGroup($secondaryMuscleGroup);
-            } catch (\ValueError $e) {
-                return new JsonResponse(['error' => 'Invalid value for secondaryMuscleGroup']);
-            }
-        }
-        if (isset($data['level'])) {
-            try {
-                $level = Levels::from($data['level']);
-                $exercise->setLevel($level);
-            } catch (\ValueError $e) {
-                return new JsonResponse(['error' => 'Invalid value for level']);
-            }
-        }
-        if (isset($data['difficultyRating'])) {
-            $exercise->setDifficultyRating($data['difficultyRating']);
-        }
-        if (isset($data['description'])) {
-            $exercise->setDescription($data['description']);
-        }
-        if (isset($data['disciplines'])) {
-            $exercise->setDisciplines($data['disciplines']);
-        }
-
-        if (isset($data['equipment'])) {
-            $equipmentId = $data['equipment'];
-            $equipment = $this->entityManager->getRepository(Equipments::class)->find($equipmentId);
-            if ($equipment) {
-                $exercise->setEquipment($equipment);
-            } else {
-                return new JsonResponse(['error' => 'Equipment not found'], 404);
-            }
-        }
-
-        if (isset($data['media'])) {
-            $exercise->setMedia($data['media']);
-        }
-
-        $this->entityManager->persist($exercise);
-        $this->entityManager->flush();
-
-        return new JsonResponse(['message' => 'Exercise updated successfully'], 200);
-    }
-
-    #[Route('api/exercises/{id}', name: 'delete_exercise', methods: ['DELETE'])]
+    #[Route('/exercises/{id}', name: 'delete_exercise', methods: ['DELETE'])]
     public function deleteExercise(int $id): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $exercise = $this->entityManager->getRepository(Exercises::class)->find($id);
 
-        if (!$exercise) {
-            return new JsonResponse(['error' => 'Exercise not found'], 404);
+        if ($exercise === null) {
+            return $this->json(['error' => 'Exercise not found'], 404);
         }
+
+        $this->denyAccessUnlessGranted(ExerciseVoter::DELETE, $exercise);
 
         $this->entityManager->remove($exercise);
         $this->entityManager->flush();
 
-        return new JsonResponse(['message' => 'Exercise deleted successfully'], 200);
+        return $this->json(['message' => 'Exercise deleted successfully']);
     }
 }
