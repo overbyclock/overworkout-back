@@ -12,13 +12,13 @@ readonly class TrainingUpdateDto
 {
     public function __construct(
         #[Assert\Choice(
-            choices: ['Calistenia', 'Crossfit', 'Halters', 'Cardio', 'Stretching'],
+            choices: ['calisthenics', 'crossfit', 'fitness', 'calisthenicsfitness'],
             message: 'La disciplina seleccionada no es válida'
         )]
         public ?string $discipline = null,
 
         #[Assert\Choice(
-            choices: ['Fuerza', 'Hipertrofia', 'Resistencia', 'Tecnica', 'Movilidad'],
+            choices: ['strength', 'fatburning', 'repbuilding', 'warmup'],
             message: 'El objetivo seleccionado no es válido'
         )]
         public ?string $target = null,
