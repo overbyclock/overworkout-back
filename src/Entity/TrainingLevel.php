@@ -68,10 +68,14 @@ class TrainingLevel
     #[ORM\OneToMany(mappedBy: 'level', targetEntity: LevelRequirement::class, orphanRemoval: true)]
     private Collection $requirements;
 
+    #[ORM\OneToMany(mappedBy: 'trainingLevel', targetEntity: Training::class)]
+    private Collection $trainings;
+
     public function __construct()
     {
         $this->skills = new ArrayCollection();
         $this->requirements = new ArrayCollection();
+        $this->trainings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,5 +229,32 @@ class TrainingLevel
     public function getRequirements(): Collection
     {
         return $this->requirements;
+    }
+
+    /**
+     * @return Collection<int, Training>
+     */
+    public function getTrainings(): Collection
+    {
+        return $this->trainings;
+    }
+
+    public function addTraining(Training $training): static
+    {
+        if (!$this->trainings->contains($training)) {
+            $this->trainings->add($training);
+            $training->setTrainingLevel($this);
+        }
+        return $this;
+    }
+
+    public function removeTraining(Training $training): static
+    {
+        if ($this->trainings->removeElement($training)) {
+            if ($training->getTrainingLevel() === $this) {
+                $training->setTrainingLevel(null);
+            }
+        }
+        return $this;
     }
 }

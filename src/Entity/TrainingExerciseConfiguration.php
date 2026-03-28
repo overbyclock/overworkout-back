@@ -57,7 +57,7 @@ class TrainingExerciseConfiguration
     return $this->reps;
   }
 
-  public function setReps(int $reps): static
+  public function setReps(?int $reps): static
   {
     if ($reps !== null && $reps <= 0) {
       throw new \InvalidArgumentException('The reps must be a positive value');

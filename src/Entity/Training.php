@@ -71,6 +71,16 @@ class Training
   #[ORM\JoinColumn(name: "training_user_id", referencedColumnName: "id", nullable: true)]
   private ?User $trainingUser = null;
 
+  #[ORM\ManyToOne(inversedBy: 'trainings')]
+  #[ORM\JoinColumn(nullable: true)]
+  private ?TrainingLevel $trainingLevel = null;
+
+  #[ORM\Column(nullable: true)]
+  private ?int $weekNumber = null;
+
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $dayKey = null;
+
   public function __construct()
   {
     $this->trainingRounds = new ArrayCollection();
@@ -280,6 +290,39 @@ class Training
   public function setBeginnerTime(?string $beginnerTime): static
   {
     $this->beginnerTime = $beginnerTime;
+    return $this;
+  }
+
+  public function getTrainingLevel(): ?TrainingLevel
+  {
+    return $this->trainingLevel;
+  }
+
+  public function setTrainingLevel(?TrainingLevel $trainingLevel): static
+  {
+    $this->trainingLevel = $trainingLevel;
+    return $this;
+  }
+
+  public function getWeekNumber(): ?int
+  {
+    return $this->weekNumber;
+  }
+
+  public function setWeekNumber(?int $weekNumber): static
+  {
+    $this->weekNumber = $weekNumber;
+    return $this;
+  }
+
+  public function getDayKey(): ?string
+  {
+    return $this->dayKey;
+  }
+
+  public function setDayKey(?string $dayKey): static
+  {
+    $this->dayKey = $dayKey;
     return $this;
   }
 }

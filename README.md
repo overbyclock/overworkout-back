@@ -1,0 +1,351 @@
+# 🏋️ OverWorkout Backend API
+
+Backend API REST para la aplicación de gestión de entrenamientos OverWorkout. Construido con Symfony 7.1, API Platform y JWT Authentication.
+
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4.svg?style=flat&logo=php)](https://php.net/)
+[![Symfony](https://img.shields.io/badge/Symfony-7.1-000000.svg?style=flat&logo=symfony)](https://symfony.com/)
+[![API Platform](https://img.shields.io/badge/API%20Platform-4.0-68D391.svg)](https://api-platform.com/)
+
+---
+
+## 📋 Requisitos
+
+- **PHP**: 8.2 o superior
+- **Composer**: 2.x
+- **MySQL**: 8.0 o MariaDB 10.6+
+- **Symfony CLI**: (opcional pero recomendado)
+
+---
+
+## 🚀 Instalación Rápida
+
+### 1. Clonar y dependencias
+
+```bash
+git clone https://github.com/overbyclock/overworkout-back.git
+cd overworkout-back
+composer install
+```
+
+### 2. Configurar entorno
+
+```bash
+# Copiar archivo de entorno
+cp .env .env.local
+
+# Editar .env.local con tus credenciales de base de datos
+DATABASE_URL="mysql://usuario:password@127.0.0.1:3306/overworkout_db?serverVersion=8.0"
+
+# Generar clave JWT
+php bin/console secrets:set JWT_SECRET_KEY
+# Cuando te pida el valor, genera uno seguro con:
+# openssl rand -base64 32
+```
+
+### 3. Crear base de datos
+
+```bash
+# Crear la base de datos
+php bin/console doctrine:database:create
+
+# Ejecutar migraciones
+php bin/console doctrine:migrations:migrate
+
+# Cargar datos iniciales (opcional)
+php bin/console doctrine:fixtures:load
+```
+
+### 4. Iniciar servidor
+
+```bash
+# Opción A: Con Symfony CLI (recomendado)
+symfony server:start
+
+# Opción B: Con PHP nativo
+php -S localhost:8000 -t public/
+```
+
+La API estará disponible en: `http://localhost:8000`
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+overworkout-back/
+├── bin/                    # Scripts de consola Symfony
+├── config/                 # Configuración (YAML/PHP)
+│   ├── packages/          # Config de bundles
+│   └── routes/            # Rutas
+├── migrations/            # Migraciones de Doctrine
+├── public/                # Punto de entrada web
+│   └── index.php
+├── scripts/               # Scripts de utilidad (datos, fixes)
+│   ├── migrations/        # Scripts de migración de datos
+│   ├── seeders/          # Datos iniciales
+│   └── checks/           # Scripts de verificación
+├── src/
+│   ├── ApiResource/       # Configuración API Platform
+│   ├── Command/           # Comandos de consola Symfony
+│   ├── Controller/        # Controladores API
+│   ├── DTO/              # Data Transfer Objects (Request/Response)
+│   ├── Entity/            # Entidades Doctrine
+│   ├── Enum/              # Enums PHP 8
+│   ├── Repository/        # Repositorios Doctrine
+│   ├── Security/          # JWT Authenticator, Voters
+│   └── Service/           # Lógica de negocio
+├── tests/                 # Tests PHPUnit
+├── translations/          # Traducciones
+├── var/                   # Cache, logs, sessions
+└── vendor/                # Dependencias Composer
+```
+
+---
+
+## 🔐 Autenticación
+
+La API usa **JWT (JSON Web Tokens)** para autenticación.
+
+### Login
+
+```http
+POST /api/login
+Content-Type: application/json
+
+{
+  "nick": "usuario",
+  "password": "contraseña"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
+  "userId": 1,
+  "nick": "usuario",
+  "roles": ["ROLE_ADMIN"]
+}
+```
+
+### Uso del Token
+
+Incluir el token en el header de todas las peticiones:
+
+```http
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...
+```
+
+---
+
+## 📚 Endpoints Principales
+
+### Documentación API
+
+Una vez iniciado el servidor, accede a:
+- **Swagger UI**: `http://localhost:8000/api/docs`
+- **JSON Schema**: `http://localhost:8000/api/docs.json`
+
+### Endpoints por Recurso
+
+| Recurso | Listar | Ver | Crear | Actualizar | Eliminar |
+|---------|--------|-----|-------|------------|----------|
+| **Users** | GET `/api/users` | GET `/api/users/{id}` | POST `/api/users` | PATCH `/api/users/{id}` | DELETE `/api/users/{id}` |
+| **Exercises** | GET `/api/exercises` | GET `/api/exercises/{id}` | POST `/api/exercises` | PATCH `/api/exercises/{id}` | DELETE `/api/exercises/{id}` |
+| **Equipments** | GET `/api/equipments` | GET `/api/equipments/{id}` | POST `/api/equipments` | PATCH `/api/equipments/{id}` | DELETE `/api/equipments/{id}` |
+| **Trainings** | GET `/api/trainings` | GET `/api/trainings/{id}` | POST `/api/trainings` | PATCH `/api/trainings/{id}` | DELETE `/api/trainings/{id}` |
+| **Programs** | GET `/api/training-programs` | GET `/api/training-programs/{id}` | POST `/api/training-programs` | PATCH `/api/training-programs/{id}` | DELETE `/api/training-programs/{id}` |
+
+---
+
+## 🛠️ Comandos Útiles
+
+### Desarrollo
+
+```bash
+# Limpiar caché
+php bin/console cache:clear
+
+# Crear nueva entidad
+php bin/console make:entity
+
+# Crear migración
+php bin/console make:migration
+
+# Ejecutar migraciones
+php bin/console doctrine:migrations:migrate
+
+# Validar mapping de Doctrine
+php bin/console doctrine:schema:validate
+```
+
+### Tests
+
+```bash
+# Ejecutar todos los tests
+php bin/phpunit
+
+# Ejecutar tests con cobertura
+php bin/phpunit --coverage-html coverage/
+
+# Ejecutar tests específicos
+php bin/phpunit tests/Security/AuthenticationTest.php
+```
+
+### Calidad de Código
+
+```bash
+# Formatear código (PHP CS Fixer)
+vendor/bin/php-cs-fixer fix
+
+# Análisis estático (PHPStan)
+vendor/bin/phpstan analyse --level=5
+
+# Verificar tipos estrictos
+vendor/bin/phpstan analyse --level=8
+```
+
+---
+
+## 🔧 Scripts de Utilidad
+
+Los scripts en la carpeta `scripts/` sirven para tareas de mantenimiento:
+
+```bash
+# Scripts de migración de datos
+php scripts/migrations/migrate_data.php
+
+# Scripts de verificación
+php scripts/checks/check_equipment.php
+
+# Scripts de seeders (datos de prueba)
+php scripts/seeders/load_exercises.php
+```
+
+---
+
+## 🧪 Testing
+
+### Tests Implementados
+
+- ✅ **AuthenticationTest**: Login, registro, JWT
+- ✅ **AuthorizationTest**: Acceso a recursos propios vs ajenos
+- ✅ **TrainingCrudTest**: CRUD completo de entrenamientos
+- ✅ **EquipmentCrudTest**: CRUD de equipamiento
+
+### Estructura de Tests
+
+```
+tests/
+├── Unit/                    # Tests unitarios
+│   ├── Service/
+│   └── Security/
+├── Integration/            # Tests de integración
+│   ├── Controller/
+│   └── Repository/
+└── Functional/            # Tests funcionales (end-to-end)
+    └── Api/
+```
+
+---
+
+## 🔒 Seguridad
+
+### Roles
+
+| Rol | Descripción |
+|-----|-------------|
+| `ROLE_USER` | Usuario estándar, acceso a sus propios recursos |
+| `ROLE_ADMIN` | Administrador, acceso completo a todos los recursos |
+
+### Voters
+
+Los voters controlan el acceso granular a recursos:
+
+- **TrainingVoter**: Usuarios solo pueden modificar sus propios entrenamientos
+- **EquipmentVoter**: Administradores pueden modificar, usuarios solo ver
+- **UserVoter**: Usuarios solo pueden ver/editar su propio perfil
+
+### CORS
+
+Configurado en `config/packages/nelmio_cors.yaml`. Por defecto permite:
+- Origen: `http://localhost:5173` (frontend Vite dev server)
+- Métodos: GET, POST, PUT, PATCH, DELETE, OPTIONS
+- Headers: Authorization, Content-Type
+
+---
+
+## 📦 Dependencias Principales
+
+| Paquete | Versión | Propósito |
+|---------|---------|-----------|
+| `symfony/framework-bundle` | 7.1.* | Core de Symfony |
+| `api-platform/core` | 4.0.* | API REST automática |
+| `doctrine/orm` | 3.* | ORM para base de datos |
+| `firebase/php-jwt` | ^6.0 | Autenticación JWT |
+| `nelmio/cors-bundle` | ^2.0 | Configuración CORS |
+| `symfony/security-bundle` | 7.1.* | Sistema de seguridad |
+| `symfony/validator` | 7.1.* | Validación de datos |
+| `symfony/serializer` | 7.1.* | Serialización JSON |
+
+---
+
+## 🐳 Docker (Opcional)
+
+Si prefieres usar Docker:
+
+```bash
+# Construir imágenes
+docker-compose build
+
+# Iniciar servicios
+docker-compose up -d
+
+# Ejecutar migraciones
+docker-compose exec php php bin/console doctrine:migrations:migrate
+```
+
+Servicios incluidos:
+- PHP 8.2-FPM
+- Nginx
+- MySQL 8.0
+- Redis (opcional, para caché)
+
+---
+
+## 🤝 Contribución
+
+### Guía de Estilo
+
+- PSR-12 para estilo de código
+- PHP 8.2+ features (enums, attributes, named arguments)
+- Tipado estricto (`declare(strict_types=1)`)
+- Inyección de dependencias vía constructor
+
+### Proceso
+
+1. Crear rama: `git checkout -b feature/nueva-funcionalidad`
+2. Hacer cambios con tests
+3. Ejecutar: `composer check` (corre tests, lint y phpstan)
+4. Commit: `git commit -m "feat: descripción"`
+5. Push y Pull Request
+
+---
+
+## 📄 Licencia
+
+Proyecto privado - OverWorkout Team
+
+---
+
+## 💬 Soporte
+
+- Documentación Symfony: https://symfony.com/doc/current/
+- Documentación API Platform: https://api-platform.com/docs/
+- Issues: Crear issue en el repositorio
+
+---
+
+**Última actualización:** 2026-03-28  
+**Versión API:** 1.0.0  
+**Estado:** En desarrollo activo 🚀
