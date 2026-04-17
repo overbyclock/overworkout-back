@@ -34,7 +34,7 @@ class UserPasswordHashService
         $hashedPassword = $this->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
 
-        $user->setCreatedAt(new \DateTime());
+        $user->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

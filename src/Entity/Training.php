@@ -10,7 +10,7 @@ use App\Repository\TrainingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingRepository::class)]
 class Training
@@ -43,7 +43,7 @@ class Training
     /**
      * @var Collection<int, TrainingRound>
      */
-    #[ORM\OneToMany(targetEntity: TrainingRound::class, mappedBy: 'training')]
+    #[ORM\OneToMany(targetEntity: TrainingRound::class, mappedBy: 'training', cascade: ['persist', 'remove'])]
     private Collection $trainingRounds;
 
     #[ORM\Column(length: 255, nullable: true)]

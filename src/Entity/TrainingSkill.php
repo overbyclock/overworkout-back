@@ -8,6 +8,7 @@ use App\Repository\TrainingSkillRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrainingSkillRepository::class)]
+#[ORM\Table(name: 'training_skills')]
 class TrainingSkill
 {
     #[ORM\Id]

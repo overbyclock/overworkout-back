@@ -241,7 +241,7 @@ class TrainingVoterTest extends TestCase
 
         $reflection = new \ReflectionClass($user);
         $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
+
         $property->setValue($user, $id);
 
         return $user;

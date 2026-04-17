@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -81,7 +81,7 @@ class UserApiController extends AbstractController
         $tokenData = $this->jwtService->generateToken($payload);
 
         // Actualizar último login
-        $user->setLastlogin(new \DateTime());
+        $user->setLastlogin(new \DateTimeImmutable());
         $this->entityManager->flush();
 
         return $this->json([

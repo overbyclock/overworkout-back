@@ -8,6 +8,7 @@ use App\Repository\LevelRequirementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LevelRequirementRepository::class)]
+#[ORM\Table(name: 'level_requirements')]
 class LevelRequirement
 {
     #[ORM\Id]

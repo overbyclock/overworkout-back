@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use App\Repository\EquipmentsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EquipmentsRepository::class)]
 class Equipments
@@ -44,7 +44,7 @@ class Equipments
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     private ?string $icon = null;
 
-    #[ORM\Column(type: 'decimal', precision: 8, scale: 2, nullable: true)]
+    #[ORM\Column(nullable: true)]
     #[Groups([self::GROUP_READ_DETAIL])]
     private ?float $weight = null;
 

@@ -8,6 +8,7 @@ use App\Repository\AchievementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AchievementRepository::class)]
+#[ORM\Table(name: 'achievements')]
 class Achievement
 {
     #[ORM\Id]

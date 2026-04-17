@@ -169,7 +169,7 @@ class UserVoterTest extends TestCase
         // Usar reflexión para establecer el ID
         $reflection = new \ReflectionClass($user);
         $property = $reflection->getProperty('id');
-        $property->setAccessible(true);
+
         $property->setValue($user, $id);
 
         return $user;

@@ -22,7 +22,7 @@ readonly class UserMapper
         $user->setNick($dto->nick);
         $user->setEmail($dto->email);
         $user->setAvatar($dto->avatar);
-        $user->setCreatedAt(new \DateTime());
+        $user->setCreatedAt(new \DateTimeImmutable());
 
         return $user;
     }

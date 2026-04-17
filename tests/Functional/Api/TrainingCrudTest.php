@@ -4,47 +4,56 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
+use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\User;
 use App\Enum\Discipline;
+use App\Enum\Levels;
+use App\Enum\MuscleGroup;
+use App\Enum\TargetWorkout;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * Tests CRUD de Training.
- *
- * Verifica que los usuarios pueden crear, leer, actualizar y eliminar sus entrenamientos.
- */
 class TrainingCrudTest extends WebTestCase
 {
-    private ?EntityManagerInterface $entityManager;
+    private ?EntityManagerInterface $entityManager = null;
 
-    private ?UserPasswordHasherInterface $passwordHasher;
+    private ?UserPasswordHasherInterface $passwordHasher = null;
 
     private ?string $authToken = null;
 
     private ?User $testUser = null;
 
+    private ?Exercises $testExercise = null;
+
+    private $client;
+
     protected function setUp(): void
     {
-        self::bootKernel();
-        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $this->passwordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
+        $this->client = static::createClient();
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $this->passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
-        // Crear usuario de test y obtener token
+        $this->createTestExercise();
         $this->createTestUserAndLogin();
     }
 
-    protected function tearDown(): void
+    private function createTestExercise(): void
     {
-        $this->cleanTestData();
-        parent::tearDown();
+        $exercise = new Exercises();
+        $exercise->setName('Test Exercise');
+        $exercise->setPrimaryMuscleGroup(MuscleGroup::CHEST);
+        $exercise->setLevel(Levels::BEGINNER);
+
+        $this->entityManager->persist($exercise);
+        $this->entityManager->flush();
+
+        $this->testExercise = $exercise;
     }
 
     private function createTestUserAndLogin(): void
     {
-        // Crear usuario
         $this->testUser = new User();
         $this->testUser->setNick('trainingtest');
         $this->testUser->setEmail('training@test.com');
@@ -54,51 +63,27 @@ class TrainingCrudTest extends WebTestCase
         $this->entityManager->persist($this->testUser);
         $this->entityManager->flush();
 
-        // Login para obtener token
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'POST',
-            '/api/login',
+            '/login',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'nick' => 'trainingtest',
+                'email' => 'training@test.com',
                 'password' => 'Test123!',
             ])
         );
 
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->authToken = $data['token'] ?? null;
     }
 
-    private function cleanTestData(): void
-    {
-        // Eliminar trainings del usuario de test
-        $trainings = $this->entityManager->getRepository(Training::class)
-            ->findBy(['user' => $this->testUser]);
-
-        foreach ($trainings as $training) {
-            $this->entityManager->remove($training);
-        }
-
-        // Eliminar usuario de test
-        if ($this->testUser) {
-            $this->entityManager->remove($this->testUser);
-        }
-
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Test: Crear un nuevo training.
-     */
     public function testCreateTraining(): void
     {
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'POST',
-            '/api/trainings',
+            '/trainings',
             [],
             [],
             [
@@ -108,59 +93,60 @@ class TrainingCrudTest extends WebTestCase
             json_encode([
                 'name' => 'Test Training',
                 'discipline' => Discipline::CALISTHENICS->value,
-                'description' => 'Training de prueba',
+                'target' => TargetWorkout::STRENGTH->value,
+                'rounds' => [
+                    [
+                        'round' => 1,
+                        'restBetweenRounds' => 60,
+                        'exercises' => [
+                            [
+                                'exerciseId' => $this->testExercise->getId(),
+                                'reps' => 10,
+                                'sets' => 3,
+                            ],
+                        ],
+                    ],
+                ],
             ])
         );
 
-        $response = $client->getResponse();
-
+        $response = $this->client->getResponse();
         $this->assertSame(201, $response->getStatusCode());
 
         $data = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('id', $data);
-        $this->assertSame('Test Training', $data['name']);
+        $this->assertArrayHasKey('training', $data);
+        $this->assertSame('Test Training', $data['training']['name']);
     }
 
-    /**
-     * Test: Listar trainings del usuario.
-     */
     public function testListTrainings(): void
     {
-        // Crear un training primero
         $training = new Training();
         $training->setName('Mi Training');
         $training->setDiscipline(Discipline::CALISTHENICS);
-        $training->setUser($this->testUser);
-        $training->setTarget('strength');
+        $training->setTrainingUser($this->testUser);
+        $training->setTarget(TargetWorkout::STRENGTH);
 
         $this->entityManager->persist($training);
         $this->entityManager->flush();
 
-        // Listar
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'GET',
-            '/api/trainings',
+            '/trainings/user/'.$this->testUser->getId(),
             [],
             [],
             ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
-        $response = $client->getResponse();
-
+        $response = $this->client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
 
         $data = json_decode($response->getContent(), true);
         $this->assertIsArray($data);
-        $this->assertCount(1, $data); // Solo debe ver su propio training
+        $this->assertCount(1, $data);
     }
 
-    /**
-     * Test: Usuario no puede ver trainings de otro usuario.
-     */
     public function testUserCannotSeeOtherUserTrainings(): void
     {
-        // Crear otro usuario con un training
         $otherUser = new User();
         $otherUser->setNick('otheruser');
         $otherUser->setEmail('other@test.com');
@@ -171,58 +157,45 @@ class TrainingCrudTest extends WebTestCase
         $otherTraining = new Training();
         $otherTraining->setName('Other Training');
         $otherTraining->setDiscipline(Discipline::FITNESS);
-        $otherTraining->setUser($otherUser);
-        $otherTraining->setTarget('cardio');
+        $otherTraining->setTrainingUser($otherUser);
+        $otherTraining->setTarget(TargetWorkout::FATBURNING);
 
         $this->entityManager->persist($otherTraining);
         $this->entityManager->flush();
 
-        // Listar con nuestro usuario
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'GET',
-            '/api/trainings',
+            '/trainings/user/'.$this->testUser->getId(),
             [],
             [],
             ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $data = json_decode($response->getContent(), true);
 
-        // No debe ver el training del otro usuario
+        $this->assertIsArray($data);
         foreach ($data as $training) {
             $this->assertNotSame('Other Training', $training['name']);
         }
-
-        // Cleanup
-        $this->entityManager->remove($otherTraining);
-        $this->entityManager->remove($otherUser);
-        $this->entityManager->flush();
     }
 
-    /**
-     * Test: Actualizar un training propio.
-     */
     public function testUpdateOwnTraining(): void
     {
-        // Crear training
         $training = new Training();
         $training->setName('Original Name');
         $training->setDiscipline(Discipline::CALISTHENICS);
-        $training->setUser($this->testUser);
-        $training->setTarget('strength');
+        $training->setTrainingUser($this->testUser);
+        $training->setTarget(TargetWorkout::STRENGTH);
 
         $this->entityManager->persist($training);
         $this->entityManager->flush();
 
         $trainingId = $training->getId();
 
-        // Actualizar
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'PATCH',
-            "/api/trainings/{$trainingId}",
+            "/trainings/{$trainingId}",
             [],
             [],
             [
@@ -234,46 +207,37 @@ class TrainingCrudTest extends WebTestCase
             ])
         );
 
-        $response = $client->getResponse();
-
+        $response = $this->client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
 
         $data = json_decode($response->getContent(), true);
-        $this->assertSame('Updated Name', $data['name']);
+        $this->assertSame('Updated Name', $data['training']['name']);
     }
 
-    /**
-     * Test: Eliminar un training propio.
-     */
     public function testDeleteOwnTraining(): void
     {
-        // Crear training
         $training = new Training();
         $training->setName('To Delete');
         $training->setDiscipline(Discipline::CROSSFIT);
-        $training->setUser($this->testUser);
-        $training->setTarget('hiit');
+        $training->setTrainingUser($this->testUser);
+        $training->setTarget(TargetWorkout::REPBUILDING);
 
         $this->entityManager->persist($training);
         $this->entityManager->flush();
 
         $trainingId = $training->getId();
 
-        // Eliminar
-        $client = static::createClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
-            "/api/trainings/{$trainingId}",
+            "/trainings/{$trainingId}",
             [],
             [],
             ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertSame(204, $response->getStatusCode());
-
-        // Verificar que ya no existe
         $deletedTraining = $this->entityManager->getRepository(Training::class)->find($trainingId);
         $this->assertNull($deletedTraining);
     }

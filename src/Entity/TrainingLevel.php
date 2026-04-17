@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingLevelRepository::class)]
+#[ORM\Table(name: 'training_levels')]
 class TrainingLevel
 {
     final public const GROUP_READ = 'level:read';
