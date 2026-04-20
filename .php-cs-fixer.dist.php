@@ -6,6 +6,7 @@ use PhpCsFixer\Finder;
 $finder = Finder::create()
     ->in(__DIR__)
     ->exclude(['var', 'vendor', 'config/secrets', 'scripts'])
+    ->notPath('config/reference.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true)
     ->files()
