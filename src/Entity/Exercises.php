@@ -22,23 +22,23 @@ class Exercises
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?string $name = null;
 
     #[ORM\Column(enumType: MuscleGroup::class)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?MuscleGroup $primaryMuscleGroup = null;
 
     #[ORM\Column(enumType: MuscleGroup::class, nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?MuscleGroup $secondaryMuscleGroup = null;
 
     #[ORM\Column(enumType: Levels::class)]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?Levels $level = null;
 
     #[ORM\JoinColumn(nullable: true)]
@@ -49,7 +49,7 @@ class Exercises
     private ?string $media = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?int $difficultyRating = 1;
 
     #[ORM\Column(type: 'text', nullable: true)]

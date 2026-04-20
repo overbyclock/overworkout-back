@@ -20,7 +20,7 @@ class TrainingLevel
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'levels')]
@@ -28,11 +28,11 @@ class TrainingLevel
     private ?TrainingProgram $program = null;
 
     #[ORM\Column]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?int $levelNumber = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -131,6 +131,7 @@ class TrainingLevel
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getDescription(): ?string
     {
         return $this->description;
@@ -143,6 +144,7 @@ class TrainingLevel
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getObjective(): ?string
     {
         return $this->objective;
@@ -155,6 +157,7 @@ class TrainingLevel
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getEstimatedDurationWeeks(): ?int
     {
         return $this->estimatedDurationWeeks;
@@ -215,6 +218,7 @@ class TrainingLevel
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function isIsLockedByDefault(): ?bool
     {
         return $this->isLockedByDefault;
@@ -246,6 +250,7 @@ class TrainingLevel
     /**
      * @return Collection<int, Training>
      */
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getTrainings(): Collection
     {
         return $this->trainings;

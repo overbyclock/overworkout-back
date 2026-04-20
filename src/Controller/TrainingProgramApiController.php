@@ -41,7 +41,7 @@ class TrainingProgramApiController extends AbstractController
         }
 
         return $this->json(
-            $this->normalizer->normalize($program, null, ['groups' => ['program:read', 'program:detail']])
+            $this->normalizer->normalize($program, null, ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']])
         );
     }
 
@@ -58,7 +58,7 @@ class TrainingProgramApiController extends AbstractController
             ->findBy(['program' => $id], ['levelNumber' => 'ASC']);
 
         return $this->json(
-            $this->normalizer->normalize($levels, null, ['groups' => ['level:read']])
+            $this->normalizer->normalize($levels, null, ['groups' => ['level:read', 'training:read:detail']])
         );
     }
 }

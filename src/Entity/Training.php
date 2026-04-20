@@ -139,6 +139,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getRounds(): ?int
     {
         return $this->rounds;
@@ -154,6 +155,7 @@ class Training
     /**
      * @return Collection<int, TrainingRound>
      */
+    #[Groups([self::GROUP_READ_DETAIL])]
     public function getTrainingRounds(): Collection
     {
         return $this->trainingRounds;
@@ -217,6 +219,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function isCircuit(): ?bool
     {
         return $this->isCircuit ?? false;
@@ -325,6 +328,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getWeekNumber(): ?int
     {
         return $this->weekNumber;
@@ -337,6 +341,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getDayKey(): ?string
     {
         return $this->dayKey;

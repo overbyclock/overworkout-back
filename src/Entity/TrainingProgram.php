@@ -194,6 +194,7 @@ class TrainingProgram
     /**
      * @return Collection<int, TrainingLevel>
      */
+    #[Groups([self::GROUP_DETAIL])]
     public function getLevels(): Collection
     {
         return $this->levels;

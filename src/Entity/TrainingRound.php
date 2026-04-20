@@ -45,13 +45,13 @@ class TrainingRound
         return $this->id;
     }
 
-    public function getRound(): ?int
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    public function getSetsForRound(): ?int
     {
-
         return $this->setsForRound;
     }
 
-    public function setRound(int $setsForRound): static
+    public function setSetsForRound(int $setsForRound): static
     {
         if ($setsForRound < 1 || $setsForRound > 100) {
             throw new \InvalidArgumentException('The round must between 1 and 100');
@@ -59,6 +59,18 @@ class TrainingRound
         $this->setsForRound = $setsForRound;
 
         return $this;
+    }
+
+    /** @deprecated Use getSetsForRound() */
+    public function getRound(): ?int
+    {
+        return $this->setsForRound;
+    }
+
+    /** @deprecated Use setSetsForRound() */
+    public function setRound(int $setsForRound): static
+    {
+        return $this->setSetsForRound($setsForRound);
     }
 
     public function getRestBetweenRounds(): ?int
