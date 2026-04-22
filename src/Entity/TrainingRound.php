@@ -73,6 +73,7 @@ class TrainingRound
         return $this->setSetsForRound($setsForRound);
     }
 
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getRestBetweenRounds(): ?int
     {
         return $this->restBetweenRounds;
@@ -115,6 +116,7 @@ class TrainingRound
     /**
      * @return Collection<int, TrainingExerciseConfiguration>
      */
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getTrainingExerciseConfigurations(): Collection
     {
         return $this->trainingExerciseConfigurations;

@@ -220,6 +220,7 @@ class Training
     }
 
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    #[\Symfony\Component\Serializer\Attribute\SerializedName('isCircuit')]
     public function isCircuit(): ?bool
     {
         return $this->isCircuit ?? false;

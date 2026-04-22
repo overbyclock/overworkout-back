@@ -10,14 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 #[Route('/training-programs')]
 class TrainingProgramApiController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly NormalizerInterface $normalizer
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
@@ -26,9 +23,7 @@ class TrainingProgramApiController extends AbstractController
     {
         $programs = $this->entityManager->getRepository(TrainingProgram::class)->findAll();
 
-        return $this->json(
-            $this->normalizer->normalize($programs, null, ['groups' => ['program:read']])
-        );
+        return $this->json($programs, 200, [], ['groups' => ['program:read']]);
     }
 
     #[Route('/{id}', name: 'get_training_program', methods: ['GET'])]
@@ -40,9 +35,7 @@ class TrainingProgramApiController extends AbstractController
             return $this->json(['error' => 'Program not found'], 404);
         }
 
-        return $this->json(
-            $this->normalizer->normalize($program, null, ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']])
-        );
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']]);
     }
 
     #[Route('/{id}/levels', name: 'get_program_levels', methods: ['GET'])]
@@ -57,8 +50,6 @@ class TrainingProgramApiController extends AbstractController
         $levels = $this->entityManager->getRepository(TrainingLevel::class)
             ->findBy(['program' => $id], ['levelNumber' => 'ASC']);
 
-        return $this->json(
-            $this->normalizer->normalize($levels, null, ['groups' => ['level:read', 'training:read:detail']])
-        );
+        return $this->json($levels, 200, [], ['groups' => ['level:read', 'training:read:detail']]);
     }
 }

@@ -59,6 +59,10 @@ class TrainingLevel
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $requirementsSummary = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?array $tips = null;
+
     #[ORM\Column]
     private ?bool $isLockedByDefault = true;
 
@@ -71,11 +75,16 @@ class TrainingLevel
     #[ORM\OneToMany(mappedBy: 'trainingLevel', targetEntity: Training::class)]
     private Collection $trainings;
 
+    #[ORM\OneToMany(mappedBy: 'trainingLevel', targetEntity: TrainingWeekInfo::class, orphanRemoval: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private Collection $weekInfos;
+
     public function __construct()
     {
         $this->skills = new ArrayCollection();
         $this->requirements = new ArrayCollection();
         $this->trainings = new ArrayCollection();
+        $this->weekInfos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,6 +228,19 @@ class TrainingLevel
     }
 
     #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getTips(): ?array
+    {
+        return $this->tips;
+    }
+
+    public function setTips(?array $tips): static
+    {
+        $this->tips = $tips;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function isIsLockedByDefault(): ?bool
     {
         return $this->isLockedByDefault;
@@ -242,6 +264,7 @@ class TrainingLevel
     /**
      * @return Collection<int, LevelRequirement>
      */
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getRequirements(): Collection
     {
         return $this->requirements;
@@ -271,6 +294,36 @@ class TrainingLevel
         if ($this->trainings->removeElement($training)) {
             if ($training->getTrainingLevel() === $this) {
                 $training->setTrainingLevel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TrainingWeekInfo>
+     */
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getWeekInfos(): Collection
+    {
+        return $this->weekInfos;
+    }
+
+    public function addWeekInfo(TrainingWeekInfo $weekInfo): static
+    {
+        if (!$this->weekInfos->contains($weekInfo)) {
+            $this->weekInfos->add($weekInfo);
+            $weekInfo->setTrainingLevel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWeekInfo(TrainingWeekInfo $weekInfo): static
+    {
+        if ($this->weekInfos->removeElement($weekInfo)) {
+            if ($weekInfo->getTrainingLevel() === $this) {
+                $weekInfo->setTrainingLevel(null);
             }
         }
 

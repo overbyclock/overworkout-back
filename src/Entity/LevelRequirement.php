@@ -6,14 +6,18 @@ namespace App\Entity;
 
 use App\Repository\LevelRequirementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: LevelRequirementRepository::class)]
 #[ORM\Table(name: 'level_requirements')]
 class LevelRequirement
 {
+    final public const GROUP_READ = 'requirement:read';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: TrainingLevel::class, inversedBy: 'requirements')]
@@ -61,6 +65,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getDescription(): ?string
     {
         return $this->description;
@@ -73,6 +78,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getType(): ?string
     {
         return $this->type;
@@ -85,6 +91,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getMinValue(): ?int
     {
         return $this->minValue;
@@ -97,6 +104,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getMaxValue(): ?int
     {
         return $this->maxValue;
@@ -109,6 +117,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getTargetValue(): ?int
     {
         return $this->targetValue;
@@ -121,6 +130,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getUnit(): ?string
     {
         return $this->unit;
@@ -133,6 +143,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getOrderIndex(): ?int
     {
         return $this->orderIndex;
@@ -145,6 +156,7 @@ class LevelRequirement
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function isRequired(): ?bool
     {
         return $this->isRequired;

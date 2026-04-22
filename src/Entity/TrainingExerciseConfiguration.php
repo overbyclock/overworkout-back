@@ -52,6 +52,7 @@ class TrainingExerciseConfiguration
         return $this->id;
     }
 
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getExercise(): ?Exercises
     {
         return $this->exercise;
@@ -79,6 +80,7 @@ class TrainingExerciseConfiguration
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getSets(): ?int
     {
         return $this->setsForExercise;
@@ -94,6 +96,7 @@ class TrainingExerciseConfiguration
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getRestBetweenSets(): ?int
     {
         return $this->restBetweenSets;
@@ -124,6 +127,7 @@ class TrainingExerciseConfiguration
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getMaxTimeForReps(): ?int
     {
         return $this->maxTimeForReps;
@@ -156,6 +160,10 @@ class TrainingExerciseConfiguration
     #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?int $restBetweenExercises = null;
 
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?string $notes = null;
+
     public function getTrainingRound(): ?TrainingRound
     {
         return $this->trainingRound;
@@ -168,6 +176,7 @@ class TrainingExerciseConfiguration
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
     public function getRestBetweenExercises(): ?int
     {
         return $this->restBetweenExercises;
@@ -179,6 +188,19 @@ class TrainingExerciseConfiguration
             throw new \InvalidArgumentException('The rest between exercises must be a positive value.');
         }
         $this->restBetweenExercises = $restBetweenExercises;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingRound::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): static
+    {
+        $this->notes = $notes;
 
         return $this;
     }
