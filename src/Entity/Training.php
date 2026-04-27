@@ -92,6 +92,14 @@ class Training
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $dayKey = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    private ?int $estimatedDurationMin = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    private ?int $estimatedDurationMax = null;
+
     public function __construct()
     {
         $this->trainingRounds = new ArrayCollection();
@@ -351,6 +359,30 @@ class Training
     public function setDayKey(?string $dayKey): static
     {
         $this->dayKey = $dayKey;
+
+        return $this;
+    }
+
+    public function getEstimatedDurationMin(): ?int
+    {
+        return $this->estimatedDurationMin;
+    }
+
+    public function setEstimatedDurationMin(?int $estimatedDurationMin): static
+    {
+        $this->estimatedDurationMin = $estimatedDurationMin;
+
+        return $this;
+    }
+
+    public function getEstimatedDurationMax(): ?int
+    {
+        return $this->estimatedDurationMax;
+    }
+
+    public function setEstimatedDurationMax(?int $estimatedDurationMax): static
+    {
+        $this->estimatedDurationMax = $estimatedDurationMax;
 
         return $this;
     }

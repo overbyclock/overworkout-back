@@ -15,6 +15,7 @@ use App\Entity\TrainingRound;
 use App\Entity\User;
 
 use App\Mapper\TrainingMapper;
+use App\Service\TrainingTimeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
@@ -31,12 +32,15 @@ class TrainingMapperTest extends TestCase
 
     private $configRepository;
 
+    private $timeCalculator;
+
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->exerciseRepository = $this->createMock(EntityRepository::class);
         $this->roundRepository = $this->createMock(EntityRepository::class);
         $this->configRepository = $this->createMock(EntityRepository::class);
+        $this->timeCalculator = $this->createMock(TrainingTimeCalculator::class);
 
         $this->entityManager
             ->method('getRepository')
@@ -46,7 +50,11 @@ class TrainingMapperTest extends TestCase
                 [TrainingExerciseConfiguration::class, $this->configRepository],
             ]);
 
-        $this->mapper = new TrainingMapper($this->entityManager);
+        $this->timeCalculator
+            ->method('calculate')
+            ->willReturn(['min' => 120, 'max' => 180]);
+
+        $this->mapper = new TrainingMapper($this->entityManager, $this->timeCalculator);
     }
 
     public function testFromCreateDtoCreatesTraining(): void

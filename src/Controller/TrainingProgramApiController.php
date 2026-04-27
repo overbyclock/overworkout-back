@@ -26,7 +26,19 @@ class TrainingProgramApiController extends AbstractController
         return $this->json($programs, 200, [], ['groups' => ['program:read']]);
     }
 
-    #[Route('/{id}', name: 'get_training_program', methods: ['GET'])]
+    #[Route('/by-slug/{slug}', name: 'get_training_program_by_slug', methods: ['GET'])]
+    public function getBySlug(string $slug): JsonResponse
+    {
+        $program = $this->entityManager->getRepository(TrainingProgram::class)->findOneBy(['slug' => $slug]);
+
+        if (null === $program) {
+            return $this->json(['error' => 'Program not found'], 404);
+        }
+
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']]);
+    }
+
+    #[Route('/{id}', name: 'get_training_program', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function getById(int $id): JsonResponse
     {
         $program = $this->entityManager->getRepository(TrainingProgram::class)->find($id);

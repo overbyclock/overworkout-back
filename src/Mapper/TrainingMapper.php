@@ -13,12 +13,14 @@ use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingRound;
 use App\Entity\User;
+use App\Service\TrainingTimeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class TrainingMapper
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private TrainingTimeCalculator $timeCalculator,
     ) {
     }
 
@@ -33,6 +35,8 @@ readonly class TrainingMapper
             $round = $this->createRoundFromDto($roundDto);
             $training->addTrainingRound($round);
         }
+
+        $this->recalculateEstimatedDuration($training);
 
         return $training;
     }
@@ -53,6 +57,7 @@ readonly class TrainingMapper
 
         if (null !== $dto->rounds) {
             $this->updateRounds($training, $dto->rounds);
+            $this->recalculateEstimatedDuration($training);
         }
     }
 
@@ -110,6 +115,13 @@ readonly class TrainingMapper
                 $training->addTrainingRound($newRound);
             }
         }
+    }
+
+    private function recalculateEstimatedDuration(Training $training): void
+    {
+        $result = $this->timeCalculator->calculate($training);
+        $training->setEstimatedDurationMin($result['min']);
+        $training->setEstimatedDurationMax($result['max']);
     }
 
     /**
