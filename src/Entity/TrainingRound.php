@@ -36,6 +36,10 @@ class TrainingRound
     #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?int $restBetweenRounds = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?int $restAfterBlock = null;
+
     #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
     #[ORM\JoinColumn(name: 'training_id', referencedColumnName: 'id')]
     private ?Training $training = null;
@@ -85,6 +89,19 @@ class TrainingRound
             throw new \InvalidArgumentException('The rest between rounds must be a positive value');
         }
         $this->restBetweenRounds = $restBetweenRounds;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    public function getRestAfterBlock(): ?int
+    {
+        return $this->restAfterBlock;
+    }
+
+    public function setRestAfterBlock(?int $restAfterBlock): static
+    {
+        $this->restAfterBlock = $restAfterBlock;
 
         return $this;
     }

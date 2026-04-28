@@ -206,6 +206,10 @@ class CreateCalisteniaMasterCommand extends Command
         $round->setSetsForRound($blockData['rounds']);
         $round->setRestBetweenRounds($blockData['restBetweenRounds']);
 
+        if (isset($blockData['restAfterBlock'])) {
+            $round->setRestAfterBlock($blockData['restAfterBlock']);
+        }
+
         $this->em->persist($round);
 
         foreach ($blockData['exercises'] as $exerciseData) {

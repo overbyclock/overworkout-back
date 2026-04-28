@@ -37,7 +37,30 @@ class CalisteniaMasterBlueprint
             'day4_core' => 'dayCore',
             default => throw new \InvalidArgumentException("Día {$dayKey} no válido"),
         };
-        return self::{$method}($levelNumber, $phase);
+        $data = self::{$method}($levelNumber, $phase);
+        $data['blocks'] = self::addRestBetweenBlocks($data['blocks'], $levelNumber);
+        return $data;
+    }
+
+    private static function addRestBetweenBlocks(array $blocks, int $level): array
+    {
+        if (count($blocks) <= 1) {
+            return $blocks;
+        }
+
+        $rest = match (true) {
+            $level <= 6 => 180,
+            $level <= 9 => 180,
+            default => 240,
+        };
+
+        foreach ($blocks as $index => &$block) {
+            if ($index < count($blocks) - 1) {
+                $block['restAfterBlock'] = $rest;
+            }
+        }
+
+        return $blocks;
     }
 
     // ========================================================================

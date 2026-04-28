@@ -45,9 +45,9 @@ class TrainingTimeCalculator
             $totalMin += $roundResult['min'];
             $totalMax += $roundResult['max'];
 
-            // Descanso entre rounds del training (si hay múltiples TrainingRounds)
+            // Descanso entre bloques del training (si hay múltiples TrainingRounds)
             if ($roundIndex < $rounds->count() - 1) {
-                $rest = $round->getRestBetweenRounds() ?? 0;
+                $rest = $round->getRestAfterBlock() ?? $round->getRestBetweenRounds() ?? 0;
                 $totalMin += $rest;
                 $totalMax += $rest;
             }
