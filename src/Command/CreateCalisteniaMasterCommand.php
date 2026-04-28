@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Command\Blueprint\CalisteniaMasterBlueprint;
+use App\Command\Blueprint\CalisteniaMasterContent;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Entity\TrainingRound;
+use App\Entity\TrainingWeekInfo;
 use App\Enum\Discipline;
 use App\Service\TrainingTimeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -158,20 +160,23 @@ class CreateCalisteniaMasterCommand extends Command
         $level->setIcon('fitness_center');
         $level->setRequirementsSummary($meta['requirementsSummary']);
 
+        // Aplicar contenido educativo (tips, weekInfos)
+        $this->applyLevelContent($level, $levelNum);
+
         $days = ['day1_push', 'day2_pull', 'day3_legs', 'day4_core'];
         $weeks = [0 => 'base', 1 => 'base', 2 => 'progression', 3 => 'intensification'];
 
         foreach ($weeks as $weekNum => $phase) {
             foreach ($days as $dayKey) {
                 $data = CalisteniaMasterBlueprint::getDayData($levelNum, $dayKey, $phase);
-                $this->createTraining($level, $data, $weekNum, $dayKey);
+                $this->createTraining($level, $data, $weekNum, $dayKey, $levelNum);
             }
         }
 
         $this->io->text("  Created Level {$levelNum} with 16 trainings");
     }
 
-    private function createTraining(TrainingLevel $level, array $data, int $weekNum, string $dayKey): void
+    private function createTraining(TrainingLevel $level, array $data, int $weekNum, string $dayKey, int $levelNum): void
     {
         $training = new Training();
         $training->setName($data['name'] . ' - Semana ' . $weekNum);
@@ -185,7 +190,7 @@ class CreateCalisteniaMasterCommand extends Command
         $this->em->persist($training);
 
         foreach ($data['blocks'] as $blockData) {
-            $this->createTrainingRound($training, $blockData);
+            $this->createTrainingRound($training, $blockData, $levelNum);
         }
 
         // Auto-calculate duration
@@ -194,7 +199,7 @@ class CreateCalisteniaMasterCommand extends Command
         $training->setEstimatedDurationMax($duration['max']);
     }
 
-    private function createTrainingRound(Training $training, array $blockData): void
+    private function createTrainingRound(Training $training, array $blockData, int $levelNum): void
     {
         $round = new TrainingRound();
         $round->setTraining($training);
@@ -204,11 +209,11 @@ class CreateCalisteniaMasterCommand extends Command
         $this->em->persist($round);
 
         foreach ($blockData['exercises'] as $exerciseData) {
-            $this->createExerciseConfig($round, $exerciseData, $blockData['restBetweenExercises']);
+            $this->createExerciseConfig($round, $exerciseData, $blockData['restBetweenExercises'], $levelNum);
         }
     }
 
-    private function createExerciseConfig(TrainingRound $round, array $exData, int $restBetweenExercises): void
+    private function createExerciseConfig(TrainingRound $round, array $exData, int $restBetweenExercises, int $levelNum): void
     {
         $exercise = $this->em->getRepository(Exercises::class)->findOneBy(['name' => $exData['name']]);
 
@@ -243,6 +248,38 @@ class CreateCalisteniaMasterCommand extends Command
         $config->setRestBetweenExercises($restBetweenExercises);
         $config->setWeight(null);
 
+        // Aplicar nota técnica del contenido educativo
+        $note = CalisteniaMasterContent::getExerciseNote($levelNum, $exData['name']);
+        if ($note) {
+            $config->setNotes($note);
+        }
+
         $this->em->persist($config);
+    }
+
+    private function applyLevelContent(TrainingLevel $level, int $levelNum): void
+    {
+        $content = CalisteniaMasterContent::getLevelContent($levelNum);
+
+        // Tips
+        $level->setTips($content['tips']);
+
+        // Limpiar weekInfos existentes
+        foreach ($level->getWeekInfos() as $existing) {
+            $level->removeWeekInfo($existing);
+            $this->em->remove($existing);
+        }
+
+        // Crear nuevos weekInfos
+        foreach ($content['trainingWeeks'] as $weekInfoData) {
+            $weekInfo = new TrainingWeekInfo();
+            $weekInfo->setTrainingLevel($level);
+            $weekInfo->setWeekNumber($weekInfoData['week']);
+            $weekInfo->setName($weekInfoData['name']);
+            $weekInfo->setFocus($weekInfoData['focus']);
+            $weekInfo->setNote($weekInfoData['note']);
+            $weekInfo->setIntensity($weekInfoData['intensity']);
+            $this->em->persist($weekInfo);
+        }
     }
 }
