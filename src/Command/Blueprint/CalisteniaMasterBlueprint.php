@@ -1706,15 +1706,15 @@ class CalisteniaMasterBlueprint
                 ]],
                 'intensification' => ['name' => 'Día 4: Core Intensificación', 'goal' => 'Intensificación', 'blocks' => [
                     self::block(3, 180, 30, [
-                        self::ex('Human Flag','50-55s'), self::ex('Maltese Push Up','15-18'),
-                        self::ex('Planche Push Up','12-15'),
+                        self::ex('Human Flag', '50-55s'), self::ex('Maltese Push Up', '15-18'),
+                        self::ex('Planche Push Up', '12-15'),
                     ]),
-                    self::block(3,150,45,[
-                        self::ex('Advanced Tuck Planche','25-30s'), self::ex('Full Front Lever Hold','35-40s'),
-                        self::ex('Front Lever Raise','15-18'),
+                    self::block(3, 150, 45, [
+                        self::ex('Advanced Tuck Planche', '25-30s'), self::ex('Full Front Lever Hold', '35-40s'),
+                        self::ex('Front Lever Raise', '15-18'),
                     ]),
-                    self::block(2,90,30,[
-                        self::ex('Hollow Body Press','25-30'), self::ex('Ab Wheel Rollout','25-30'),
+                    self::block(2, 90, 30, [
+                        self::ex('Hollow Body Press', '25-30'), self::ex('Ab Wheel Rollout', '25-30'),
                     ]),
                 ]],
                 default => throw new \InvalidArgumentException(),

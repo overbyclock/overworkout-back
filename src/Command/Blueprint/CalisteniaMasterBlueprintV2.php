@@ -1735,15 +1735,15 @@ class CalisteniaMasterBlueprintV2
                 self::ex('Human Flag', '12s'), self::ex('Maltese Push Up', '3-5'),
                 self::ex('Planche Push Up', '5-8'), self::ex('Hollow Body Press', '5-8'),
             ])]],
-            'intensification' => ['name' => 'Día 4: Circuit Intensificación', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(4,60,20,[
-                self::ex('L-Sit','30s'), self::ex('Dragon Flag','10-12'),
-                self::ex('Human Flag','15s'), self::ex('Maltese Push Up','5'),
-                self::ex('Planche Push Up','8'), self::ex('Hollow Body Press','8'),
+            'intensification' => ['name' => 'Día 4: Circuit Intensificación', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(4, 60, 20, [
+                self::ex('L-Sit', '30s'), self::ex('Dragon Flag', '10-12'),
+                self::ex('Human Flag', '15s'), self::ex('Maltese Push Up', '5'),
+                self::ex('Planche Push Up', '8'), self::ex('Hollow Body Press', '8'),
             ])]],
-            'deload' => ['name' => 'Día 4: Circuit Deload', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(2,60,20,[
-                self::ex('L-Sit','15s'), self::ex('Dragon Flag','5'),
-                self::ex('Human Flag','8s'), self::ex('Maltese Push Up','3'),
-                self::ex('Planche Push Up','3'), self::ex('Hollow Body Press','3'),
+            'deload' => ['name' => 'Día 4: Circuit Deload', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(2, 60, 20, [
+                self::ex('L-Sit', '15s'), self::ex('Dragon Flag', '5'),
+                self::ex('Human Flag', '8s'), self::ex('Maltese Push Up', '3'),
+                self::ex('Planche Push Up', '3'), self::ex('Hollow Body Press', '3'),
             ])]],
             default => throw new \InvalidArgumentException(),
         };
