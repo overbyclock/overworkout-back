@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\TestResult;
-use App\Entity\TrainingLevel;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use App\Service\LevelProgressService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +19,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class LevelProgressApiController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly LevelProgressService $levelProgressService,
         private readonly UserLevelProgressRepository $progressRepository,
         private readonly TrainingLevelRepository $levelRepository,
@@ -52,7 +49,7 @@ class LevelProgressApiController extends AbstractController
 
         $activeProgress = $this->levelProgressService->getActiveProgress($user);
 
-        if ($activeProgress === null) {
+        if (null === $activeProgress) {
             return $this->json(['error' => 'No active progress found'], 404);
         }
 
@@ -70,22 +67,22 @@ class LevelProgressApiController extends AbstractController
         $user = $this->getUser();
 
         $level = $this->levelRepository->find($levelId);
-        if ($level === null) {
+        if (null === $level) {
             return $this->json(['error' => 'Level not found'], 404);
         }
 
         $progress = $this->progressRepository->findByUserAndLevel($user, $level);
-        if ($progress === null) {
+        if (null === $progress) {
             return $this->json(['error' => 'Progress not found for this level'], 404);
         }
 
-        if ($progress->getStatus() === UserLevelProgress::STATUS_LOCKED) {
+        if (UserLevelProgress::STATUS_LOCKED === $progress->getStatus()) {
             return $this->json(['error' => 'Level is locked'], 403);
         }
 
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['results']) || !is_array($data['results'])) {
+        if (!isset($data['results']) || !\is_array($data['results'])) {
             return $this->json(['error' => 'Missing or invalid results array'], 400);
         }
 
@@ -125,12 +122,12 @@ class LevelProgressApiController extends AbstractController
         $user = $this->getUser();
 
         $level = $this->levelRepository->find($levelId);
-        if ($level === null) {
+        if (null === $level) {
             return $this->json(['error' => 'Level not found'], 404);
         }
 
         $progress = $this->progressRepository->findByUserAndLevel($user, $level);
-        if ($progress === null) {
+        if (null === $progress) {
             return $this->json(['error' => 'Progress not found'], 404);
         }
 
@@ -158,7 +155,7 @@ class LevelProgressApiController extends AbstractController
 
         return $this->json([
             'message' => 'Progress initialized',
-            'levelsCount' => count($levels),
+            'levelsCount' => \count($levels),
         ]);
     }
 }

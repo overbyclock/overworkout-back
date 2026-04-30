@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\TestResult;
-use App\Entity\TrainingLevel;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
-use App\Repository\TestResultRepository;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +16,6 @@ class LevelProgressService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserLevelProgressRepository $progressRepository,
-        private readonly TestResultRepository $testResultRepository,
         private readonly TrainingLevelRepository $levelRepository,
     ) {
     }
@@ -38,7 +35,7 @@ class LevelProgressService
             $progress->setCurrentWeek(0);
 
             // El primer nivel queda in_progress, el resto locked
-            if ($level->getLevelNumber() === 1) {
+            if (1 === $level->getLevelNumber()) {
                 $progress->setStatus(UserLevelProgress::STATUS_IN_PROGRESS);
             }
 
@@ -51,7 +48,7 @@ class LevelProgressService
     /**
      * Registra los resultados de un test y evalúa si el usuario pasa de nivel.
      *
-     * @param array<int, array{name: string, value: int|float}> $results
+     * @param array<int, array{name: string, value: int|float}>   $results
      * @param array<int, array{name: string, minimum: int|float}> $requirements
      */
     public function submitTestResults(
@@ -97,10 +94,10 @@ class LevelProgressService
             'levelNumber' => $currentLevel->getLevelNumber() + 1,
         ]);
 
-        if ($nextLevel !== null) {
+        if (null !== $nextLevel) {
             $nextProgress = $this->progressRepository->findByUserAndLevel($progress->getUser(), $nextLevel);
 
-            if ($nextProgress === null) {
+            if (null === $nextProgress) {
                 $nextProgress = new UserLevelProgress();
                 $nextProgress->setUser($progress->getUser());
                 $nextProgress->setTrainingLevel($nextLevel);

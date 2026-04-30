@@ -122,7 +122,7 @@ class UserLevelProgress
 
     public function incrementCycle(): static
     {
-        $this->cyclesCompleted++;
+        ++$this->cyclesCompleted;
         $this->currentWeek = 0;
         $this->status = self::STATUS_IN_PROGRESS;
 
@@ -144,7 +144,7 @@ class UserLevelProgress
     public function advanceWeek(): static
     {
         if ($this->currentWeek < 3) {
-            $this->currentWeek++;
+            ++$this->currentWeek;
         }
 
         return $this;

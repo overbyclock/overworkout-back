@@ -144,7 +144,7 @@ class TestResult
 
     /**
      * Calcula si el usuario pasó basado en los resultados y los requisitos mínimos.
-     * results: [{name, value, minimum, unit}]
+     * results: [{name, value, minimum, unit}].
      */
     public function evaluate(array $requirements): static
     {
@@ -152,11 +152,11 @@ class TestResult
         $evaluatedResults = [];
 
         foreach ($this->results as $result) {
-            $req = array_find($requirements, fn($r) => $r['name'] === $result['name']);
+            $req = array_find($requirements, fn ($r) => $r['name'] === $result['name']);
             $minimum = $req['minimum'] ?? 0;
             $passed = $result['value'] >= $minimum;
             if ($passed) {
-                $passedCount++;
+                ++$passedCount;
             }
             $evaluatedResults[] = array_merge($result, [
                 'minimum' => $minimum,
@@ -165,7 +165,7 @@ class TestResult
         }
 
         // Pasar si supera al menos 3 de 4 tests (o todos si son menos de 4)
-        $total = count($requirements);
+        $total = \count($requirements);
         $threshold = $total >= 4 ? 3 : $total;
         $this->overallPassed = $passedCount >= $threshold;
         $this->results = $evaluatedResults;

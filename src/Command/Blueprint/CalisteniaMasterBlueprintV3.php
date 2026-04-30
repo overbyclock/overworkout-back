@@ -55,7 +55,7 @@ class CalisteniaMasterBlueprintV3
 
     private static function addRestBetweenBlocks(array $blocks, int $level): array
     {
-        if (count($blocks) <= 1) {
+        if (\count($blocks) <= 1) {
             return $blocks;
         }
 
@@ -66,7 +66,7 @@ class CalisteniaMasterBlueprintV3
         };
 
         foreach ($blocks as $index => &$block) {
-            if ($index < count($blocks) - 1) {
+            if ($index < \count($blocks) - 1) {
                 $block['restAfterBlock'] = $rest;
             }
         }
@@ -245,7 +245,6 @@ class CalisteniaMasterBlueprintV3
         };
     }
 
-
     // ========================================================================
     // SESSION B — STRENGTH PULL
     // ========================================================================
@@ -401,7 +400,6 @@ class CalisteniaMasterBlueprintV3
         };
     }
 
-
     // ========================================================================
     // SESSION C — FULL BODY CIRCUIT
     // ========================================================================
@@ -556,7 +554,6 @@ class CalisteniaMasterBlueprintV3
             default => throw new \InvalidArgumentException(),
         };
     }
-
 
     // ========================================================================
     // SESSION D — SKILL & CONDITIONING
