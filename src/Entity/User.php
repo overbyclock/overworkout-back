@@ -59,9 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Training::class, mappedBy: 'trainingUser')]
     private Collection $trainings;
 
+    /**
+     * @var Collection<int, UserLevelProgress>
+     */
+    #[ORM\OneToMany(targetEntity: UserLevelProgress::class, mappedBy: 'user')]
+    private Collection $levelProgress;
+
     public function __construct()
     {
         $this->trainings = new ArrayCollection();
+        $this->levelProgress = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -193,6 +200,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($training->getTrainingUser() === $this) {
                 $training->setTrainingUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLevelProgress>
+     */
+    public function getLevelProgress(): Collection
+    {
+        return $this->levelProgress;
+    }
+
+    public function addLevelProgress(UserLevelProgress $levelProgress): static
+    {
+        if (!$this->levelProgress->contains($levelProgress)) {
+            $this->levelProgress->add($levelProgress);
+            $levelProgress->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLevelProgress(UserLevelProgress $levelProgress): static
+    {
+        if ($this->levelProgress->removeElement($levelProgress)) {
+            if ($levelProgress->getUser() === $this) {
+                $levelProgress->setUser(null);
             }
         }
 

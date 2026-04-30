@@ -56,6 +56,10 @@ class Training
     #[ORM\Column(nullable: true)]
     private ?bool $isCircuit = false;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
+    private ?string $sessionType = null;
+
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $benchmarkType = null;
 
@@ -237,6 +241,18 @@ class Training
     public function setIsCircuit(?bool $isCircuit): static
     {
         $this->isCircuit = $isCircuit;
+
+        return $this;
+    }
+
+    public function getSessionType(): ?string
+    {
+        return $this->sessionType;
+    }
+
+    public function setSessionType(?string $sessionType): static
+    {
+        $this->sessionType = $sessionType;
 
         return $this;
     }

@@ -63,6 +63,22 @@ class TrainingLevel
     #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?array $tips = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?array $testRequirements = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?string $skillFocus = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?int $cyclesCompleted = 0;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?string $programVersion = 'v1';
+
     #[ORM\Column]
     private ?bool $isLockedByDefault = true;
 
@@ -236,6 +252,58 @@ class TrainingLevel
     public function setTips(?array $tips): static
     {
         $this->tips = $tips;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getTestRequirements(): ?array
+    {
+        return $this->testRequirements;
+    }
+
+    public function setTestRequirements(?array $testRequirements): static
+    {
+        $this->testRequirements = $testRequirements;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getSkillFocus(): ?string
+    {
+        return $this->skillFocus;
+    }
+
+    public function setSkillFocus(?string $skillFocus): static
+    {
+        $this->skillFocus = $skillFocus;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getCyclesCompleted(): ?int
+    {
+        return $this->cyclesCompleted;
+    }
+
+    public function setCyclesCompleted(?int $cyclesCompleted): static
+    {
+        $this->cyclesCompleted = $cyclesCompleted;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function getProgramVersion(): ?string
+    {
+        return $this->programVersion;
+    }
+
+    public function setProgramVersion(?string $programVersion): static
+    {
+        $this->programVersion = $programVersion;
 
         return $this;
     }
