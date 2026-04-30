@@ -245,6 +245,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getSessionType(): ?string
     {
         return $this->sessionType;
