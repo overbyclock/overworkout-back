@@ -66,7 +66,7 @@ class CreateCalisteniaMasterV2Command extends Command
 
         $this->em->flush();
 
-        $this->io->success("Calistenia Master v2.0 created successfully! Levels: " . implode(', ', $levels));
+        $this->io->success('Calistenia Master v2.0 created successfully! Levels: '.implode(', ', $levels));
 
         return Command::SUCCESS;
     }
@@ -78,6 +78,7 @@ class CreateCalisteniaMasterV2Command extends Command
         $program = $this->em->getRepository(TrainingProgram::class)->findOneBy(['slug' => $slug]);
         if (!$program) {
             $this->io->note('No existing program found');
+
             return;
         }
 
@@ -88,10 +89,10 @@ class CreateCalisteniaMasterV2Command extends Command
         foreach ($levels as $level) {
             foreach ($level->getTrainings() as $training) {
                 $this->em->remove($training);
-                $countTrainings++;
+                ++$countTrainings;
             }
             $this->em->remove($level);
-            $countLevels++;
+            ++$countLevels;
         }
 
         $this->em->remove($program);
@@ -105,6 +106,7 @@ class CreateCalisteniaMasterV2Command extends Command
 
         if ($program) {
             $this->io->note("Program '{$slug}' already exists, reusing");
+
             return $program;
         }
 
@@ -183,11 +185,11 @@ class CreateCalisteniaMasterV2Command extends Command
     private function createTraining(TrainingLevel $level, array $data, int $weekNum, string $dayKey, int $levelNum): void
     {
         $training = new Training();
-        $training->setName($data['name'] . ' - Semana ' . $weekNum);
+        $training->setName($data['name'].' - Semana '.$weekNum);
         $training->setDiscipline(Discipline::CALISTHENICS);
         $training->setIsBenchmark(false);
         // strength sessions are NOT circuits; circuit sessions ARE circuits
-        $training->setIsCircuit($data['sessionType'] === 'circuit');
+        $training->setIsCircuit('circuit' === $data['sessionType']);
         $training->setSessionType($data['sessionType']);
         $training->setTrainingLevel($level);
         $training->setWeekNumber($weekNum);
@@ -231,6 +233,7 @@ class CreateCalisteniaMasterV2Command extends Command
 
         if (!$exercise) {
             $this->io->warning("  Exercise '{$exData['name']}' not found, skipping...");
+
             return;
         }
 

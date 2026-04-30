@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Service\TrainingTimeCalculator;
@@ -43,8 +42,8 @@ class FixCalisteniaMasterProgramCommand extends Command
         $levels = $this->entityManager->getRepository(TrainingLevel::class)
             ->findBy(['program' => $program], ['levelNumber' => 'ASC']);
 
-        if (\count($levels) !== 12) {
-            $io->warning(sprintf('Expected 12 levels, found %d', \count($levels)));
+        if (12 !== \count($levels)) {
+            $io->warning(\sprintf('Expected 12 levels, found %d', \count($levels)));
         }
 
         $totalUpdated = 0;
@@ -53,7 +52,7 @@ class FixCalisteniaMasterProgramCommand extends Command
             $levelNum = $level->getLevelNumber();
             $targetRounds = $this->getTargetRoundsForLevel($levelNum);
 
-            $io->section(sprintf('Level %d: %s', $levelNum, $level->getName()));
+            $io->section(\sprintf('Level %d: %s', $levelNum, $level->getName()));
 
             $trainings = $level->getTrainings();
             $updatedInLevel = 0;
@@ -80,12 +79,12 @@ class FixCalisteniaMasterProgramCommand extends Command
                 ++$totalUpdated;
             }
 
-            $io->text(sprintf('Updated %d training(s) -> %d rounds', $updatedInLevel, $targetRounds));
+            $io->text(\sprintf('Updated %d training(s) -> %d rounds', $updatedInLevel, $targetRounds));
         }
 
         $this->entityManager->flush();
 
-        $io->success(sprintf('Fixed %d training(s) across %d level(s)', $totalUpdated, \count($levels)));
+        $io->success(\sprintf('Fixed %d training(s) across %d level(s)', $totalUpdated, \count($levels)));
 
         return Command::SUCCESS;
     }

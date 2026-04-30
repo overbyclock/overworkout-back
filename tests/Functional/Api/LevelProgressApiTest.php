@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
-use App\Entity\TrainingProgram;
 use App\Entity\TrainingLevel;
+use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,7 +47,7 @@ class LevelProgressApiTest extends WebTestCase
 
         $this->entityManager->persist($program);
 
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 3; ++$i) {
             $level = new TrainingLevel();
             $level->setProgram($program);
             $level->setLevelNumber($i);

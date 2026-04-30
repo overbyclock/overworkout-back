@@ -17,7 +17,7 @@ class CalisteniaMasterContentTest extends TestCase
         $content = CalisteniaMasterContent::getLevelContent($levelNumber);
 
         self::assertNotEmpty($content['tips'], "Level {$levelNumber} must have tips");
-        self::assertGreaterThanOrEqual(5, count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
+        self::assertGreaterThanOrEqual(5, \count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
     }
 
     /**
@@ -90,8 +90,9 @@ class CalisteniaMasterContentTest extends TestCase
 
         foreach ($commonExercises as $exercise) {
             $note = CalisteniaMasterContent::getExerciseNote($levelNumber, $exercise);
-            if ($note !== null) {
+            if (null !== $note) {
                 $hasNotes = true;
+
                 break;
             }
         }

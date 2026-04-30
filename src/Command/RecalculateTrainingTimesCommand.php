@@ -56,7 +56,7 @@ class RecalculateTrainingTimesCommand extends Command
         $this->entityManager->flush();
         $io->progressFinish();
 
-        $io->success(sprintf('Updated %d training(s)', $updated));
+        $io->success(\sprintf('Updated %d training(s)', $updated));
 
         return Command::SUCCESS;
     }

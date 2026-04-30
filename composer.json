@@ -37,7 +37,8 @@
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "captainhook/hook-installer": true
         },
         "sort-packages": true
     },
@@ -84,6 +85,8 @@
         }
     },
     "require-dev": {
+        "captainhook/captainhook": "^5.29",
+        "captainhook/hook-installer": "^1.0",
         "dama/doctrine-test-bundle": "^8.6",
         "friendsofphp/php-cs-fixer": "^3.66",
         "phpstan/phpstan": "^2.1",

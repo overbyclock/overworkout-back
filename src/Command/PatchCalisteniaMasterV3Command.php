@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Command\Blueprint\CalisteniaMasterBlueprintV3;
 use App\Command\Blueprint\CalisteniaMasterContentV3;
-use App\Entity\Discipline;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
@@ -43,11 +42,12 @@ class PatchCalisteniaMasterV3Command extends Command
         $io = new SymfonyStyle($input, $output);
         $levelsOption = $input->getOption('levels');
         $targetLevels = array_map('intval', explode(',', $levelsOption));
-        $io->title('Patch Calistenia Master v3.0 — Niveles ' . implode(', ', $targetLevels));
+        $io->title('Patch Calistenia Master v3.0 — Niveles '.implode(', ', $targetLevels));
 
         $program = $this->em->getRepository(TrainingProgram::class)->findOneBy(['slug' => 'calisthenia-master-v3']);
         if (!$program) {
             $io->error('Programa calisthenia-master-v3 no encontrado');
+
             return Command::FAILURE;
         }
 
@@ -59,7 +59,7 @@ class PatchCalisteniaMasterV3Command extends Command
         /** @var TrainingLevel $level */
         foreach ($levels as $level) {
             $levelNum = $level->getLevelNumber();
-            if (!in_array($levelNum, $targetLevels, true)) {
+            if (!\in_array($levelNum, $targetLevels, true)) {
                 continue;
             }
 
@@ -78,6 +78,7 @@ class PatchCalisteniaMasterV3Command extends Command
 
                     if (!$training) {
                         $io->warning("  Training no encontrado: {$sessionKey} week {$weekNum}");
+
                         continue;
                     }
 
@@ -85,8 +86,8 @@ class PatchCalisteniaMasterV3Command extends Command
                     $data = CalisteniaMasterBlueprintV3::getSessionData($levelNum, $sessionKey, $phase);
 
                     // Actualizar propiedades del training
-                    $training->setName($data['name'] . ' - Fase ' . $weekNum);
-                    $training->setIsCircuit($data['sessionType'] === 'circuit');
+                    $training->setName($data['name'].' - Fase '.$weekNum);
+                    $training->setIsCircuit('circuit' === $data['sessionType']);
                     $training->setSessionType($data['sessionType']);
 
                     // Eliminar rondas existentes (cascade remove)
@@ -105,7 +106,7 @@ class PatchCalisteniaMasterV3Command extends Command
                     $training->setEstimatedDurationMax($duration['max']);
 
                     $io->text("  Actualizado: {$data['name']} (Fase {$weekNum})");
-                    $patched++;
+                    ++$patched;
                 }
             }
 

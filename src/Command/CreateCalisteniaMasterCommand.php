@@ -64,7 +64,7 @@ class CreateCalisteniaMasterCommand extends Command
 
         $this->em->flush();
 
-        $this->io->success("Calistenia Master created successfully! Levels: " . implode(', ', $levels));
+        $this->io->success('Calistenia Master created successfully! Levels: '.implode(', ', $levels));
 
         return Command::SUCCESS;
     }
@@ -76,6 +76,7 @@ class CreateCalisteniaMasterCommand extends Command
         $program = $this->em->getRepository(TrainingProgram::class)->findOneBy(['slug' => 'calisthenia-master']);
         if (!$program) {
             $this->io->note('No existing program found');
+
             return;
         }
 
@@ -86,10 +87,10 @@ class CreateCalisteniaMasterCommand extends Command
         foreach ($levels as $level) {
             foreach ($level->getTrainings() as $training) {
                 $this->em->remove($training);
-                $countTrainings++;
+                ++$countTrainings;
             }
             $this->em->remove($level);
-            $countLevels++;
+            ++$countLevels;
         }
 
         $this->em->remove($program);
@@ -103,6 +104,7 @@ class CreateCalisteniaMasterCommand extends Command
 
         if ($program) {
             $this->io->note('Program "Calistenia Master" already exists, reusing');
+
             return $program;
         }
 
@@ -179,7 +181,7 @@ class CreateCalisteniaMasterCommand extends Command
     private function createTraining(TrainingLevel $level, array $data, int $weekNum, string $dayKey, int $levelNum): void
     {
         $training = new Training();
-        $training->setName($data['name'] . ' - Semana ' . $weekNum);
+        $training->setName($data['name'].' - Semana '.$weekNum);
         $training->setDiscipline(Discipline::CALISTHENICS);
         $training->setIsBenchmark(false);
         $training->setIsCircuit(true);
@@ -223,6 +225,7 @@ class CreateCalisteniaMasterCommand extends Command
 
         if (!$exercise) {
             $this->io->warning("  Exercise '{$exData['name']}' not found, skipping...");
+
             return;
         }
 

@@ -18,7 +18,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         $content = CalisteniaMasterContentV2::getLevelContent($levelNumber);
 
         self::assertNotEmpty($content['tips'], "Level {$levelNumber} must have tips");
-        self::assertGreaterThanOrEqual(5, count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
+        self::assertGreaterThanOrEqual(5, \count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
     }
 
     /**
@@ -90,8 +90,9 @@ class CalisteniaMasterContentV2Test extends TestCase
 
         foreach ($commonExercises as $exercise) {
             $note = CalisteniaMasterContentV2::getExerciseNote($levelNumber, $exercise);
-            if ($note !== null) {
+            if (null !== $note) {
                 $hasNotes = true;
+
                 break;
             }
         }
@@ -145,7 +146,7 @@ class CalisteniaMasterContentV2Test extends TestCase
             self::assertArrayHasKey('restBetweenRounds', $block);
             self::assertArrayHasKey('restBetweenExercises', $block);
             self::assertArrayHasKey('exercises', $block);
-            self::assertGreaterThanOrEqual(2, count($block['exercises']), 'Block must have at least 2 exercises');
+            self::assertGreaterThanOrEqual(2, \count($block['exercises']), 'Block must have at least 2 exercises');
         }
     }
 
