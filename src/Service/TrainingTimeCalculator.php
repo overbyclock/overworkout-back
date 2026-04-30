@@ -119,9 +119,11 @@ class TrainingTimeCalculator
             return ['min' => 0, 'max' => 0];
         }
 
+        $numberOfRounds = $round->getSetsForRound() ?? 1;
+        $restBetweenRounds = $round->getRestBetweenRounds() ?? 0;
         $restBetweenExercises = $this->getRestBetweenExercisesForRound($round);
-        $totalMin = 0;
-        $totalMax = 0;
+        $timePerRoundMin = 0;
+        $timePerRoundMax = 0;
 
         /** @var TrainingExerciseConfiguration $config */
         foreach ($configs as $index => $config) {
@@ -130,20 +132,34 @@ class TrainingTimeCalculator
             $restBetweenSets = $config->getRestBetweenSets() ?? 0;
 
             for ($s = 0; $s < $sets; ++$s) {
-                $totalMin += $exTime['min'];
-                $totalMax += $exTime['max'];
+                $timePerRoundMin += $exTime['min'];
+                $timePerRoundMax += $exTime['max'];
 
                 // Descanso entre sets (excepto después del último)
                 if ($s < $sets - 1) {
-                    $totalMin += $restBetweenSets;
-                    $totalMax += $restBetweenSets;
+                    $timePerRoundMin += $restBetweenSets;
+                    $timePerRoundMax += $restBetweenSets;
                 }
             }
 
             // Descanso entre ejercicios (excepto después del último)
             if ($index < $configs->count() - 1) {
-                $totalMin += $restBetweenExercises;
-                $totalMax += $restBetweenExercises;
+                $timePerRoundMin += $restBetweenExercises;
+                $timePerRoundMax += $restBetweenExercises;
+            }
+        }
+
+        $totalMin = 0;
+        $totalMax = 0;
+
+        for ($i = 0; $i < $numberOfRounds; ++$i) {
+            $totalMin += $timePerRoundMin;
+            $totalMax += $timePerRoundMax;
+
+            // Descanso entre rounds (excepto después del último)
+            if ($i < $numberOfRounds - 1) {
+                $totalMin += $restBetweenRounds;
+                $totalMax += $restBetweenRounds;
             }
         }
 

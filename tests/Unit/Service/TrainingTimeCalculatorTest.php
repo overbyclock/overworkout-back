@@ -172,6 +172,41 @@ class TrainingTimeCalculatorTest extends TestCase
         self::assertSame(165, $result['max']);
     }
 
+    public function testTraditionalRoundWithMultipleRounds(): void
+    {
+        $training = new Training();
+        $training->setDiscipline(Discipline::CALISTHENICS);
+        $training->setIsCircuit(false);
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(2);
+        $round->setRestBetweenRounds(90);
+
+        // Bloque de 2 ejercicios, 1 set cada uno (simula sesión Skill)
+        $round->addTrainingExerciseConfiguration(
+            $this->createConfig(reps: 10, sets: 1, restBetweenExercises: 45, restBetweenSets: 1)
+        );
+        $round->addTrainingExerciseConfiguration(
+            $this->createConfig(maxTime: 30, sets: 1, restBetweenExercises: 45, restBetweenSets: 1)
+        );
+
+        $training->addTrainingRound($round);
+
+        $result = $this->calculator->calculate($training);
+
+        // Por round:
+        //   Ej1: 10 reps * 3-5 = 30-50s
+        //   Ej2: 30s = 30s
+        //   Descanso entre ejercicios: 45s
+        //   Round min: 30 + 30 + 45 = 105s
+        //   Round max: 50 + 30 + 45 = 125s
+        // 2 rounds + 1 descanso entre rounds (90s)
+        //   Min: 2*105 + 90 = 210 + 90 = 300s
+        //   Max: 2*125 + 90 = 250 + 90 = 340s
+        self::assertSame(300, $result['min']);
+        self::assertSame(340, $result['max']);
+    }
+
     private function createCircuitTraining(int $rounds, int $restBetweenRounds): Training
     {
         $training = new Training();
