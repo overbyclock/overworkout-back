@@ -192,7 +192,7 @@ class CreateCalisteniaMasterV3Command extends Command
         $training->setIsCircuit('circuit' === $data['sessionType']);
         $training->setSessionType($data['sessionType']);
         $training->setTrainingLevel($level);
-        $training->setWeekNumber($weekNum + 1);
+        $training->setWeekNumber($weekNum);
         $training->setDayKey($sessionKey);
 
         $this->em->persist($training);

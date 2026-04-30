@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:fix-training-phase-names',
-    description: 'Corrige nombres de fase 0-3 a 1-4 y weekNumber en trainings v3',
+    description: 'Corrige nombres de fase 0-3 a 1-4 en trainings v3 (sin tocar weekNumber)',
 )]
 class FixTrainingPhaseNamesCommand extends Command
 {
@@ -60,14 +60,13 @@ class FixTrainingPhaseNamesCommand extends Command
                     continue;
                 }
 
-                $newWeekNumber = $weekNumber + 1;
-                $newName = preg_replace('/ - Fase \d+$/', ' - Fase '.$newWeekNumber, $name);
+                $expectedPhase = $weekNumber + 1;
+                $newName = preg_replace('/ - Fase \d+$/', ' - Fase '.$expectedPhase, $name);
 
-                if ($newName !== $name || $newWeekNumber !== $weekNumber) {
+                if ($newName !== $name) {
                     $training->setName($newName);
-                    $training->setWeekNumber($newWeekNumber);
                     ++$updated;
-                    $io->text("  {$name} → {$newName} (week: {$newWeekNumber})");
+                    $io->text("  {$name} → {$newName}");
                 }
             }
         }

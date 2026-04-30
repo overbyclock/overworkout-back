@@ -73,7 +73,7 @@ class PatchCalisteniaMasterV3Command extends Command
                     $training = $this->em->getRepository(Training::class)->findOneBy([
                         'trainingLevel' => $level,
                         'dayKey' => $sessionKey,
-                        'weekNumber' => $weekNum + 1,
+                        'weekNumber' => $weekNum,
                     ]);
 
                     if (!$training) {
