@@ -1574,20 +1574,20 @@ class CalisteniaMasterBlueprintV2
                 self::ex('Human Flag', '8s'), self::ex('Maltese Push Up', '3'),
                 self::ex('Planche', '5s'), self::ex('Hollow Body Press', '5'),
             ])]],
-            'progression' => ['name' => 'Día 4: Circuit Progresión', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3,60,20,[
-                self::ex('L-Sit','18-22s'), self::ex('Dragon Flag','8-10'),
-                self::ex('Human Flag','10s'), self::ex('Maltese Push Up','3-5'),
-                self::ex('Planche','8s'), self::ex('Hollow Body Press','5-8'),
+            'progression' => ['name' => 'Día 4: Circuit Progresión', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3, 60, 20, [
+                self::ex('L-Sit', '18-22s'), self::ex('Dragon Flag', '8-10'),
+                self::ex('Human Flag', '10s'), self::ex('Maltese Push Up', '3-5'),
+                self::ex('Planche', '8s'), self::ex('Hollow Body Press', '5-8'),
             ])]],
-            'intensification' => ['name' => 'Día 4: Circuit Intensificación', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(4,60,20,[
-                self::ex('L-Sit','20-25s'), self::ex('Dragon Flag','10-12'),
-                self::ex('Human Flag','12s'), self::ex('Maltese Push Up','3-5'),
-                self::ex('Planche','10s'), self::ex('Hollow Body Press','5-8'),
+            'intensification' => ['name' => 'Día 4: Circuit Intensificación', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(4, 60, 20, [
+                self::ex('L-Sit', '20-25s'), self::ex('Dragon Flag', '10-12'),
+                self::ex('Human Flag', '12s'), self::ex('Maltese Push Up', '3-5'),
+                self::ex('Planche', '10s'), self::ex('Hollow Body Press', '5-8'),
             ])]],
-            'deload' => ['name' => 'Día 4: Circuit Deload', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(2,60,20,[
-                self::ex('L-Sit','10-12s'), self::ex('Dragon Flag','4-5'),
-                self::ex('Human Flag','5s'), self::ex('Maltese Push Up','2'),
-                self::ex('Planche','5s'), self::ex('Hollow Body Press','3'),
+            'deload' => ['name' => 'Día 4: Circuit Deload', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(2, 60, 20, [
+                self::ex('L-Sit', '10-12s'), self::ex('Dragon Flag', '4-5'),
+                self::ex('Human Flag', '5s'), self::ex('Maltese Push Up', '2'),
+                self::ex('Planche', '5s'), self::ex('Hollow Body Press', '3'),
             ])]],
             default => throw new \InvalidArgumentException(),
         };
@@ -1600,34 +1600,34 @@ class CalisteniaMasterBlueprintV2
     private static function day1StrengthN12(string $phase): array
     {
         return match ($phase) {
-            'base' => ['name' => 'Día 1: Push Base', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Freestanding Handstand Push Up','1-3',5),
-                self::ex('Planche Push Up','1-3',5),
-                self::ex('One-Arm Push Up','1-3',5),
-                self::ex('Planche','4-5s',5),
-                self::ex('90 Degree Push Up','1-3',5),
-            ],180)]],
-            'progression' => ['name' => 'Día 1: Push Progresión', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Freestanding Handstand Push Up','1-3',5),
-                self::ex('Planche Push Up','1-3',5),
-                self::ex('One-Arm Push Up','1-3',5),
-                self::ex('Planche','5-6s',5),
-                self::ex('90 Degree Push Up','1-3',5),
-            ],180)]],
-            'intensification' => ['name' => 'Día 1: Push Intensificación', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Freestanding Handstand Push Up','2-3',5),
-                self::ex('Planche Push Up','2-3',5),
-                self::ex('One-Arm Push Up','2-3',5),
-                self::ex('Planche','6-8s',5),
-                self::ex('90 Degree Push Up','2-3',5),
-            ],180)]],
-            'deload' => ['name' => 'Día 1: Push Deload', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Freestanding Handstand Push Up','1-2',4),
-                self::ex('Planche Push Up','1-2',4),
-                self::ex('One-Arm Push Up','1-2',4),
-                self::ex('Planche','3-4s',4),
-                self::ex('90 Degree Push Up','1-2',4),
-            ],180)]],
+            'base' => ['name' => 'Día 1: Push Base', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Freestanding Handstand Push Up', '1-3', 5),
+                self::ex('Planche Push Up', '1-3', 5),
+                self::ex('One-Arm Push Up', '1-3', 5),
+                self::ex('Planche', '4-5s', 5),
+                self::ex('90 Degree Push Up', '1-3', 5),
+            ], 180)]],
+            'progression' => ['name' => 'Día 1: Push Progresión', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Freestanding Handstand Push Up', '1-3', 5),
+                self::ex('Planche Push Up', '1-3', 5),
+                self::ex('One-Arm Push Up', '1-3', 5),
+                self::ex('Planche', '5-6s', 5),
+                self::ex('90 Degree Push Up', '1-3', 5),
+            ], 180)]],
+            'intensification' => ['name' => 'Día 1: Push Intensificación', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Freestanding Handstand Push Up', '2-3', 5),
+                self::ex('Planche Push Up', '2-3', 5),
+                self::ex('One-Arm Push Up', '2-3', 5),
+                self::ex('Planche', '6-8s', 5),
+                self::ex('90 Degree Push Up', '2-3', 5),
+            ], 180)]],
+            'deload' => ['name' => 'Día 1: Push Deload', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Freestanding Handstand Push Up', '1-2', 4),
+                self::ex('Planche Push Up', '1-2', 4),
+                self::ex('One-Arm Push Up', '1-2', 4),
+                self::ex('Planche', '3-4s', 4),
+                self::ex('90 Degree Push Up', '1-2', 4),
+            ], 180)]],
             default => throw new \InvalidArgumentException(),
         };
     }
@@ -1635,26 +1635,26 @@ class CalisteniaMasterBlueprintV2
     private static function day2StrengthN12(string $phase): array
     {
         return match ($phase) {
-            'base' => ['name' => 'Día 2: Pull Base', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Full Front Lever Hold','12-15s',5), self::ex('Human Flag','8-10s',5),
-                self::ex('One Arm Pull Up','1-3',5), self::ex('One Arm Chin Up','1-3',5),
-                self::ex('Muscle Up','1-3',5),
-            ],180)]],
-            'progression' => ['name' => 'Día 2: Pull Progresión', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Full Front Lever Hold','15-18s',5), self::ex('Human Flag','10-12s',5),
-                self::ex('One Arm Pull Up','1-3',5), self::ex('One Arm Chin Up','1-3',5),
-                self::ex('Muscle Up','1-3',5),
-            ],180)]],
-            'intensification' => ['name' => 'Día 2: Pull Intensificación', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Full Front Lever Hold','18-22s',5), self::ex('Human Flag','12-15s',5),
-                self::ex('One Arm Pull Up','2-3',5), self::ex('One Arm Chin Up','2-3',5),
-                self::ex('Muscle Up','2-3',5),
-            ],180)]],
-            'deload' => ['name' => 'Día 2: Pull Deload', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1,1,60,[
-                self::ex('Full Front Lever Hold','8-10s',4), self::ex('Human Flag','5-6s',4),
-                self::ex('One Arm Pull Up','1-2',4), self::ex('One Arm Chin Up','1-2',4),
-                self::ex('Muscle Up','1-2',4),
-            ],180)]],
+            'base' => ['name' => 'Día 2: Pull Base', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Full Front Lever Hold', '12-15s', 5), self::ex('Human Flag', '8-10s', 5),
+                self::ex('One Arm Pull Up', '1-3', 5), self::ex('One Arm Chin Up', '1-3', 5),
+                self::ex('Muscle Up', '1-3', 5),
+            ], 180)]],
+            'progression' => ['name' => 'Día 2: Pull Progresión', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Full Front Lever Hold', '15-18s', 5), self::ex('Human Flag', '10-12s', 5),
+                self::ex('One Arm Pull Up', '1-3', 5), self::ex('One Arm Chin Up', '1-3', 5),
+                self::ex('Muscle Up', '1-3', 5),
+            ], 180)]],
+            'intensification' => ['name' => 'Día 2: Pull Intensificación', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Full Front Lever Hold', '18-22s', 5), self::ex('Human Flag', '12-15s', 5),
+                self::ex('One Arm Pull Up', '2-3', 5), self::ex('One Arm Chin Up', '2-3', 5),
+                self::ex('Muscle Up', '2-3', 5),
+            ], 180)]],
+            'deload' => ['name' => 'Día 2: Pull Deload', 'goal' => 'Fuerza + Skill + Accesorio', 'blocks' => [self::block(1, 1, 60, [
+                self::ex('Full Front Lever Hold', '8-10s', 4), self::ex('Human Flag', '5-6s', 4),
+                self::ex('One Arm Pull Up', '1-2', 4), self::ex('One Arm Chin Up', '1-2', 4),
+                self::ex('Muscle Up', '1-2', 4),
+            ], 180)]],
             default => throw new \InvalidArgumentException(),
         };
     }
@@ -1663,59 +1663,59 @@ class CalisteniaMasterBlueprintV2
     {
         return match ($phase) {
             'base' => ['name' => 'Día 3: Circuit Base', 'goal' => 'Piernas + Prehab', 'blocks' => [
-                self::block(3,60,20,[
-                    self::ex('Dragon Pistol Squat','3-5/leg'), self::ex('Pistol Squat','5/leg'),
-                    self::ex('Bulgarian Split Squat','10/leg'),
+                self::block(3, 60, 20, [
+                    self::ex('Dragon Pistol Squat', '3-5/leg'), self::ex('Pistol Squat', '5/leg'),
+                    self::ex('Bulgarian Split Squat', '10/leg'),
                 ]),
-                self::block(2,60,20,[
-                    self::ex('Nordic Curl','3-5'), self::ex('Calf Raise on Step','15'),
-                    self::ex('Single Leg Glute Bridge','10/leg'),
+                self::block(2, 60, 20, [
+                    self::ex('Nordic Curl', '3-5'), self::ex('Calf Raise on Step', '15'),
+                    self::ex('Single Leg Glute Bridge', '10/leg'),
                 ]),
-                self::block(2,30,10,[
-                    self::ex('Deep Squat Hold','30s'), self::ex('Cossack Squat','5/side'),
-                    self::ex('Deep Squat Hold','20s/side'),
+                self::block(2, 30, 10, [
+                    self::ex('Deep Squat Hold', '30s'), self::ex('Cossack Squat', '5/side'),
+                    self::ex('Deep Squat Hold', '20s/side'),
                 ]),
             ]],
             'progression' => ['name' => 'Día 3: Circuit Progresión', 'goal' => 'Piernas + Prehab', 'blocks' => [
-                self::block(3,60,20,[
-                    self::ex('Dragon Pistol Squat','3-5/leg'), self::ex('Pistol Squat','5/leg'),
-                    self::ex('Bulgarian Split Squat','10/leg'),
+                self::block(3, 60, 20, [
+                    self::ex('Dragon Pistol Squat', '3-5/leg'), self::ex('Pistol Squat', '5/leg'),
+                    self::ex('Bulgarian Split Squat', '10/leg'),
                 ]),
-                self::block(2,60,20,[
-                    self::ex('Nordic Curl','3-5'), self::ex('Calf Raise on Step','18'),
-                    self::ex('Single Leg Glute Bridge','10/leg'),
+                self::block(2, 60, 20, [
+                    self::ex('Nordic Curl', '3-5'), self::ex('Calf Raise on Step', '18'),
+                    self::ex('Single Leg Glute Bridge', '10/leg'),
                 ]),
-                self::block(2,30,10,[
-                    self::ex('Deep Squat Hold','35s'), self::ex('Cossack Squat','6/side'),
-                    self::ex('Deep Squat Hold','20s/side'),
+                self::block(2, 30, 10, [
+                    self::ex('Deep Squat Hold', '35s'), self::ex('Cossack Squat', '6/side'),
+                    self::ex('Deep Squat Hold', '20s/side'),
                 ]),
             ]],
             'intensification' => ['name' => 'Día 3: Circuit Intensificación', 'goal' => 'Piernas + Prehab', 'blocks' => [
-                self::block(4,60,20,[
-                    self::ex('Dragon Pistol Squat','5/leg'), self::ex('Pistol Squat','5/leg'),
-                    self::ex('Bulgarian Split Squat','12/leg'),
+                self::block(4, 60, 20, [
+                    self::ex('Dragon Pistol Squat', '5/leg'), self::ex('Pistol Squat', '5/leg'),
+                    self::ex('Bulgarian Split Squat', '12/leg'),
                 ]),
-                self::block(2,60,20,[
-                    self::ex('Nordic Curl','3-5'), self::ex('Calf Raise on Step','20'),
-                    self::ex('Single Leg Glute Bridge','12/leg'),
+                self::block(2, 60, 20, [
+                    self::ex('Nordic Curl', '3-5'), self::ex('Calf Raise on Step', '20'),
+                    self::ex('Single Leg Glute Bridge', '12/leg'),
                 ]),
-                self::block(2,30,10,[
-                    self::ex('Deep Squat Hold','40s'), self::ex('Cossack Squat','6/side'),
-                    self::ex('Deep Squat Hold','25s/side'),
+                self::block(2, 30, 10, [
+                    self::ex('Deep Squat Hold', '40s'), self::ex('Cossack Squat', '6/side'),
+                    self::ex('Deep Squat Hold', '25s/side'),
                 ]),
             ]],
             'deload' => ['name' => 'Día 3: Circuit Deload', 'goal' => 'Piernas + Prehab', 'blocks' => [
-                self::block(2,60,20,[
-                    self::ex('Dragon Pistol Squat','2/leg'), self::ex('Pistol Squat','3/leg'),
-                    self::ex('Bulgarian Split Squat','5/leg'),
+                self::block(2, 60, 20, [
+                    self::ex('Dragon Pistol Squat', '2/leg'), self::ex('Pistol Squat', '3/leg'),
+                    self::ex('Bulgarian Split Squat', '5/leg'),
                 ]),
-                self::block(2,60,20,[
-                    self::ex('Nordic Curl','1-3'), self::ex('Calf Raise on Step','10'),
-                    self::ex('Single Leg Glute Bridge','5/leg'),
+                self::block(2, 60, 20, [
+                    self::ex('Nordic Curl', '1-3'), self::ex('Calf Raise on Step', '10'),
+                    self::ex('Single Leg Glute Bridge', '5/leg'),
                 ]),
-                self::block(2,30,10,[
-                    self::ex('Deep Squat Hold','20s'), self::ex('Cossack Squat','3/side'),
-                    self::ex('Deep Squat Hold','15s/side'),
+                self::block(2, 30, 10, [
+                    self::ex('Deep Squat Hold', '20s'), self::ex('Cossack Squat', '3/side'),
+                    self::ex('Deep Squat Hold', '15s/side'),
                 ]),
             ]],
             default => throw new \InvalidArgumentException(),
@@ -1725,15 +1725,15 @@ class CalisteniaMasterBlueprintV2
     private static function day4CircuitN12(string $phase): array
     {
         return match ($phase) {
-            'base' => ['name' => 'Día 4: Circuit Base', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3,60,20,[
-                self::ex('L-Sit','20-30s'), self::ex('Dragon Flag','8-10'),
-                self::ex('Human Flag','10s'), self::ex('Maltese Push Up','3-5'),
-                self::ex('Planche Push Up','5'), self::ex('Hollow Body Press','5'),
+            'base' => ['name' => 'Día 4: Circuit Base', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3, 60, 20, [
+                self::ex('L-Sit', '20-30s'), self::ex('Dragon Flag', '8-10'),
+                self::ex('Human Flag', '10s'), self::ex('Maltese Push Up', '3-5'),
+                self::ex('Planche Push Up', '5'), self::ex('Hollow Body Press', '5'),
             ])]],
-            'progression' => ['name' => 'Día 4: Circuit Progresión', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3,60,20,[
-                self::ex('L-Sit','25-30s'), self::ex('Dragon Flag','10-12'),
-                self::ex('Human Flag','12s'), self::ex('Maltese Push Up','3-5'),
-                self::ex('Planche Push Up','5-8'), self::ex('Hollow Body Press','5-8'),
+            'progression' => ['name' => 'Día 4: Circuit Progresión', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(3, 60, 20, [
+                self::ex('L-Sit', '25-30s'), self::ex('Dragon Flag', '10-12'),
+                self::ex('Human Flag', '12s'), self::ex('Maltese Push Up', '3-5'),
+                self::ex('Planche Push Up', '5-8'), self::ex('Hollow Body Press', '5-8'),
             ])]],
             'intensification' => ['name' => 'Día 4: Circuit Intensificación', 'goal' => 'Core + Conditioning', 'blocks' => [self::block(4,60,20,[
                 self::ex('L-Sit','30s'), self::ex('Dragon Flag','10-12'),

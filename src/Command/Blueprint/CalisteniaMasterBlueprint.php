@@ -1568,144 +1568,144 @@ class CalisteniaMasterBlueprint
                 'progression' => ['name' => 'Día 4: Core Progresión', 'goal' => 'Progresión', 'blocks' => [
                     self::block(3, 120, 25, [
                         self::ex('Dragon Flag', '10-12'), self::ex('Full Front Lever Hold', '20-25s'),
-                        self::ex('Human Flag','20-25s'),
+                        self::ex('Human Flag', '20-25s'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Planche Lean','20-25s'), self::ex('Planche Lean','45-50s'),
-                        self::ex('Back Lever Hold','40-45s'),
+                    self::block(2, 60, 20, [
+                        self::ex('Planche Lean', '20-25s'), self::ex('Planche Lean', '45-50s'),
+                        self::ex('Back Lever Hold', '40-45s'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','12-15'), self::ex('Ab Wheel Rollout','12-15'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '12-15'), self::ex('Ab Wheel Rollout', '12-15'),
                     ]),
                 ]],
                 'intensification' => ['name' => 'Día 4: Core Intensificación', 'goal' => 'Intensificación', 'blocks' => [
-                    self::block(3,150,30,[
-                        self::ex('Dragon Flag','12-15'), self::ex('Full Front Lever Hold','25-30s'),
-                        self::ex('Human Flag','25-30s'),
+                    self::block(3, 150, 30, [
+                        self::ex('Dragon Flag', '12-15'), self::ex('Full Front Lever Hold', '25-30s'),
+                        self::ex('Human Flag', '25-30s'),
                     ]),
-                    self::block(2,90,30,[
-                        self::ex('Maltese Push Up','3-5'), self::ex('Planche Lean','50-55s'),
-                        self::ex('Back Lever Raise','8-10'),
+                    self::block(2, 90, 30, [
+                        self::ex('Maltese Push Up', '3-5'), self::ex('Planche Lean', '50-55s'),
+                        self::ex('Back Lever Raise', '8-10'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','15-18'), self::ex('Ab Wheel Rollout','15-18'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '15-18'), self::ex('Ab Wheel Rollout', '15-18'),
                     ]),
                 ]],
                 default => throw new \InvalidArgumentException(),
             },
             10 => match ($phase) {
                 'base' => ['name' => 'Día 4: Core Base', 'goal' => 'Skill + Estático + Finisher', 'blocks' => [
-                    self::block(3,120,25,[
-                        self::ex('Full Front Lever Hold','25-30s'), self::ex('Human Flag','25-30s'),
-                        self::ex('Maltese Push Up','5-8'),
+                    self::block(3, 120, 25, [
+                        self::ex('Full Front Lever Hold', '25-30s'), self::ex('Human Flag', '25-30s'),
+                        self::ex('Maltese Push Up', '5-8'),
                     ]),
-                    self::block(3,90,30,[
-                        self::ex('Planche','10-15s'), self::ex('Planche Lean','50-55s'),
-                        self::ex('Full Front Lever Row','8-10'),
+                    self::block(3, 90, 30, [
+                        self::ex('Planche', '10-15s'), self::ex('Planche Lean', '50-55s'),
+                        self::ex('Full Front Lever Row', '8-10'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','12-15'), self::ex('Ab Wheel Rollout','12-15'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '12-15'), self::ex('Ab Wheel Rollout', '12-15'),
                     ]),
                 ]],
                 'progression' => ['name' => 'Día 4: Core Progresión', 'goal' => 'Progresión', 'blocks' => [
-                    self::block(3,120,25,[
-                        self::ex('Full Front Lever Hold','30-35s'), self::ex('Human Flag','30-35s'),
-                        self::ex('Maltese Push Up','8-10'),
+                    self::block(3, 120, 25, [
+                        self::ex('Full Front Lever Hold', '30-35s'), self::ex('Human Flag', '30-35s'),
+                        self::ex('Maltese Push Up', '8-10'),
                     ]),
-                    self::block(3,90,30,[
-                        self::ex('Planche','15-20s'), self::ex('Planche Lean','55-60s'),
-                        self::ex('Full Front Lever Row','10-12'),
+                    self::block(3, 90, 30, [
+                        self::ex('Planche', '15-20s'), self::ex('Planche Lean', '55-60s'),
+                        self::ex('Full Front Lever Row', '10-12'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','15-18'), self::ex('Ab Wheel Rollout','15-18'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '15-18'), self::ex('Ab Wheel Rollout', '15-18'),
                     ]),
                 ]],
                 'intensification' => ['name' => 'Día 4: Core Intensificación', 'goal' => 'Intensificación', 'blocks' => [
-                    self::block(3,150,30,[
-                        self::ex('Full Front Lever Hold','35-40s'), self::ex('Human Flag','35-40s'),
-                        self::ex('Maltese Push Up','10-12'),
+                    self::block(3, 150, 30, [
+                        self::ex('Full Front Lever Hold', '35-40s'), self::ex('Human Flag', '35-40s'),
+                        self::ex('Maltese Push Up', '10-12'),
                     ]),
-                    self::block(3,120,45,[
-                        self::ex('Planche','20-25s'), self::ex('Planche Push Up','5-8'),
-                        self::ex('Front Lever Raise','8-10'),
+                    self::block(3, 120, 45, [
+                        self::ex('Planche', '20-25s'), self::ex('Planche Push Up', '5-8'),
+                        self::ex('Front Lever Raise', '8-10'),
                     ]),
-                    self::block(2,90,30,[
-                        self::ex('Hollow Body Press','18-20'), self::ex('Ab Wheel Rollout','18-20'),
+                    self::block(2, 90, 30, [
+                        self::ex('Hollow Body Press', '18-20'), self::ex('Ab Wheel Rollout', '18-20'),
                     ]),
                 ]],
                 default => throw new \InvalidArgumentException(),
             },
             11 => match ($phase) {
                 'base' => ['name' => 'Día 4: Core Base', 'goal' => 'Skill + Estático + Finisher', 'blocks' => [
-                    self::block(3,120,25,[
-                        self::ex('Human Flag','30-35s'), self::ex('Maltese Push Up','8-10'),
-                        self::ex('Planche','20-25s'),
+                    self::block(3, 120, 25, [
+                        self::ex('Human Flag', '30-35s'), self::ex('Maltese Push Up', '8-10'),
+                        self::ex('Planche', '20-25s'),
                     ]),
-                    self::block(3,90,30,[
-                        self::ex('Advanced Tuck Planche','5-10s'), self::ex('Planche Push Up','8-10'),
-                        self::ex('Front Lever Raise','10-12'),
+                    self::block(3, 90, 30, [
+                        self::ex('Advanced Tuck Planche', '5-10s'), self::ex('Planche Push Up', '8-10'),
+                        self::ex('Front Lever Raise', '10-12'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','15-18'), self::ex('Ab Wheel Rollout','15-18'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '15-18'), self::ex('Ab Wheel Rollout', '15-18'),
                     ]),
                 ]],
                 'progression' => ['name' => 'Día 4: Core Progresión', 'goal' => 'Progresión', 'blocks' => [
-                    self::block(3,120,25,[
-                        self::ex('Human Flag','35-40s'), self::ex('Maltese Push Up','10-12'),
-                        self::ex('Planche','25-30s'),
+                    self::block(3, 120, 25, [
+                        self::ex('Human Flag', '35-40s'), self::ex('Maltese Push Up', '10-12'),
+                        self::ex('Planche', '25-30s'),
                     ]),
-                    self::block(3,90,30,[
-                        self::ex('Advanced Tuck Planche','10-15s'), self::ex('Planche Push Up','10-12'),
-                        self::ex('Front Lever Raise','12-15'),
+                    self::block(3, 90, 30, [
+                        self::ex('Advanced Tuck Planche', '10-15s'), self::ex('Planche Push Up', '10-12'),
+                        self::ex('Front Lever Raise', '12-15'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','18-20'), self::ex('Ab Wheel Rollout','18-20'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '18-20'), self::ex('Ab Wheel Rollout', '18-20'),
                     ]),
                 ]],
                 'intensification' => ['name' => 'Día 4: Core Intensificación', 'goal' => 'Intensificación', 'blocks' => [
-                    self::block(3,150,30,[
-                        self::ex('Human Flag','40-45s'), self::ex('Maltese Push Up','12-15'),
-                        self::ex('Planche','30-35s'),
+                    self::block(3, 150, 30, [
+                        self::ex('Human Flag', '40-45s'), self::ex('Maltese Push Up', '12-15'),
+                        self::ex('Planche', '30-35s'),
                     ]),
-                    self::block(3,120,45,[
-                        self::ex('Advanced Tuck Planche','15-20s'), self::ex('Planche Push Up','12-15'),
-                        self::ex('Front Lever Raise','15-18'),
+                    self::block(3, 120, 45, [
+                        self::ex('Advanced Tuck Planche', '15-20s'), self::ex('Planche Push Up', '12-15'),
+                        self::ex('Front Lever Raise', '15-18'),
                     ]),
-                    self::block(2,90,30,[
-                        self::ex('Hollow Body Press','20-25'), self::ex('Ab Wheel Rollout','20-25'),
+                    self::block(2, 90, 30, [
+                        self::ex('Hollow Body Press', '20-25'), self::ex('Ab Wheel Rollout', '20-25'),
                     ]),
                 ]],
                 default => throw new \InvalidArgumentException(),
             },
             12 => match ($phase) {
                 'base' => ['name' => 'Día 4: Core Base', 'goal' => 'Skill + Estático + Finisher', 'blocks' => [
-                    self::block(3,150,30,[
-                        self::ex('Human Flag','40-45s'), self::ex('Maltese Push Up','10-12'),
-                        self::ex('Planche Push Up','8-10'),
+                    self::block(3, 150, 30, [
+                        self::ex('Human Flag', '40-45s'), self::ex('Maltese Push Up', '10-12'),
+                        self::ex('Planche Push Up', '8-10'),
                     ]),
-                    self::block(3,120,45,[
-                        self::ex('Advanced Tuck Planche','15-20s'), self::ex('Full Front Lever Hold','25-30s'),
-                        self::ex('Front Lever Raise','10-12'),
+                    self::block(3, 120, 45, [
+                        self::ex('Advanced Tuck Planche', '15-20s'), self::ex('Full Front Lever Hold', '25-30s'),
+                        self::ex('Front Lever Raise', '10-12'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','18-20'), self::ex('Ab Wheel Rollout','18-20'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '18-20'), self::ex('Ab Wheel Rollout', '18-20'),
                     ]),
                 ]],
                 'progression' => ['name' => 'Día 4: Core Progresión', 'goal' => 'Progresión', 'blocks' => [
-                    self::block(3,150,30,[
-                        self::ex('Human Flag','45-50s'), self::ex('Maltese Push Up','12-15'),
-                        self::ex('Planche Push Up','10-12'),
+                    self::block(3, 150, 30, [
+                        self::ex('Human Flag', '45-50s'), self::ex('Maltese Push Up', '12-15'),
+                        self::ex('Planche Push Up', '10-12'),
                     ]),
-                    self::block(3,120,45,[
-                        self::ex('Advanced Tuck Planche','20-25s'), self::ex('Full Front Lever Hold','30-35s'),
-                        self::ex('Front Lever Raise','12-15'),
+                    self::block(3, 120, 45, [
+                        self::ex('Advanced Tuck Planche', '20-25s'), self::ex('Full Front Lever Hold', '30-35s'),
+                        self::ex('Front Lever Raise', '12-15'),
                     ]),
-                    self::block(2,60,20,[
-                        self::ex('Hollow Body Press','20-25'), self::ex('Ab Wheel Rollout','20-25'),
+                    self::block(2, 60, 20, [
+                        self::ex('Hollow Body Press', '20-25'), self::ex('Ab Wheel Rollout', '20-25'),
                     ]),
                 ]],
                 'intensification' => ['name' => 'Día 4: Core Intensificación', 'goal' => 'Intensificación', 'blocks' => [
-                    self::block(3,180,30,[
+                    self::block(3, 180, 30, [
                         self::ex('Human Flag','50-55s'), self::ex('Maltese Push Up','15-18'),
                         self::ex('Planche Push Up','12-15'),
                     ]),
