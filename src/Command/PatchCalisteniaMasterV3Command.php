@@ -73,7 +73,7 @@ class PatchCalisteniaMasterV3Command extends Command
                     $training = $this->em->getRepository(Training::class)->findOneBy([
                         'trainingLevel' => $level,
                         'dayKey' => $sessionKey,
-                        'weekNumber' => $weekNum,
+                        'weekNumber' => $weekNum + 1,
                     ]);
 
                     if (!$training) {
@@ -86,7 +86,7 @@ class PatchCalisteniaMasterV3Command extends Command
                     $data = CalisteniaMasterBlueprintV3::getSessionData($levelNum, $sessionKey, $phase);
 
                     // Actualizar propiedades del training
-                    $training->setName($data['name'].' - Fase '.$weekNum);
+                    $training->setName($data['name'].' - Fase '.($weekNum + 1));
                     $training->setIsCircuit('circuit' === $data['sessionType']);
                     $training->setSessionType($data['sessionType']);
 
@@ -105,7 +105,7 @@ class PatchCalisteniaMasterV3Command extends Command
                     $training->setEstimatedDurationMin($duration['min']);
                     $training->setEstimatedDurationMax($duration['max']);
 
-                    $io->text("  Actualizado: {$data['name']} (Fase {$weekNum})");
+                    $io->text("  Actualizado: {$data['name']} (Fase ".($weekNum + 1).')');
                     ++$patched;
                 }
             }

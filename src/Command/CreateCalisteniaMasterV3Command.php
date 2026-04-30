@@ -185,14 +185,14 @@ class CreateCalisteniaMasterV3Command extends Command
     private function createTraining(TrainingLevel $level, array $data, int $weekNum, string $sessionKey, int $levelNum): void
     {
         $training = new Training();
-        $training->setName($data['name'].' - Fase '.$weekNum);
+        $training->setName($data['name'].' - Fase '.($weekNum + 1));
         $training->setDiscipline(Discipline::CALISTHENICS);
         $training->setIsBenchmark(false);
         // strength sessions are NOT circuits; circuit sessions ARE circuits
         $training->setIsCircuit('circuit' === $data['sessionType']);
         $training->setSessionType($data['sessionType']);
         $training->setTrainingLevel($level);
-        $training->setWeekNumber($weekNum);
+        $training->setWeekNumber($weekNum + 1);
         $training->setDayKey($sessionKey);
 
         $this->em->persist($training);
