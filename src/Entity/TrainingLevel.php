@@ -324,6 +324,7 @@ class TrainingLevel
     /**
      * @return Collection<int, TrainingSkill>
      */
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     public function getSkills(): Collection
     {
         return $this->skills;

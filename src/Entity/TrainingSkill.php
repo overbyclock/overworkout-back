@@ -6,49 +6,64 @@ namespace App\Entity;
 
 use App\Repository\TrainingSkillRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingSkillRepository::class)]
 #[ORM\Table(name: 'training_skills')]
 class TrainingSkill
 {
+    final public const GROUP_READ = 'training_skill:read';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups([self::GROUP_READ])]
     private ?TrainingProgram $program = null;
 
     #[ORM\ManyToOne(inversedBy: 'skills')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups([self::GROUP_READ])]
     private ?TrainingLevel $level = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([self::GROUP_READ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups([self::GROUP_READ])]
     private ?string $family = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $description = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $icon = null;
 
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $unlockAtLevel = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?int $masteryAtLevel = null;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $videoTutorialUrl = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?int $difficultyScore = null;
 
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?bool $isKeySkill = false;
 
     public function getId(): ?int
