@@ -54,6 +54,7 @@ class Training
     private ?bool $isBenchmark = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     private ?bool $isCircuit = false;
 
     #[ORM\Column(length: 30, nullable: true)]
