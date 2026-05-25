@@ -30,11 +30,11 @@ class Exercises
     private ?string $name = null;
 
     #[ORM\Column(enumType: MuscleGroup::class)]
-    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?MuscleGroup $primaryMuscleGroup = null;
 
     #[ORM\Column(enumType: MuscleGroup::class, nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?MuscleGroup $secondaryMuscleGroup = null;
 
     #[ORM\Column(enumType: Levels::class)]
