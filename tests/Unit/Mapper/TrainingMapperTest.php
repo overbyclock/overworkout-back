@@ -11,6 +11,7 @@ use App\Dto\Request\TrainingUpdateDto;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
+use App\Entity\TrainingLevel;
 use App\Entity\TrainingRound;
 use App\Entity\User;
 
@@ -48,6 +49,7 @@ class TrainingMapperTest extends TestCase
                 [Exercises::class, $this->exerciseRepository],
                 [TrainingRound::class, $this->roundRepository],
                 [TrainingExerciseConfiguration::class, $this->configRepository],
+                [TrainingLevel::class, $this->createMock(EntityRepository::class)],
             ]);
 
         $this->timeCalculator
@@ -218,5 +220,9 @@ class TrainingMapperTest extends TestCase
         $this->assertTrue((new TrainingUpdateDto(target: 'Fuerza'))->hasChanges());
         $this->assertTrue((new TrainingUpdateDto(name: 'Test'))->hasChanges());
         $this->assertTrue((new TrainingUpdateDto(rounds: []))->hasChanges());
+        $this->assertTrue((new TrainingUpdateDto(trainingLevelId: 1))->hasChanges());
+        $this->assertTrue((new TrainingUpdateDto(weekNumber: 1))->hasChanges());
+        $this->assertTrue((new TrainingUpdateDto(dayKey: 'day_a'))->hasChanges());
+        $this->assertTrue((new TrainingUpdateDto(sessionType: 'strength'))->hasChanges());
     }
 }

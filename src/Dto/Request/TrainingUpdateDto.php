@@ -31,7 +31,25 @@ readonly class TrainingUpdateDto
 
         #[Assert\Valid]
         /** @var TrainingRoundDto[] */
-        public ?array $rounds = null
+        public ?array $rounds = null,
+
+        #[Assert\Positive(message: 'El ID del nivel debe ser positivo')]
+        public ?int $trainingLevelId = null,
+
+        #[Assert\Positive(message: 'El número de semana debe ser positivo')]
+        public ?int $weekNumber = null,
+
+        #[Assert\Length(
+            max: 50,
+            maxMessage: 'La clave del día no puede tener más de {{ limit }} caracteres'
+        )]
+        public ?string $dayKey = null,
+
+        #[Assert\Length(
+            max: 30,
+            maxMessage: 'El tipo de sesión no puede tener más de {{ limit }} caracteres'
+        )]
+        public ?string $sessionType = null,
     ) {
     }
 
@@ -50,6 +68,10 @@ readonly class TrainingUpdateDto
         return null !== $this->discipline
             || null !== $this->target
             || null !== $this->name
-            || null !== $this->rounds;
+            || null !== $this->rounds
+            || null !== $this->trainingLevelId
+            || null !== $this->weekNumber
+            || null !== $this->dayKey
+            || null !== $this->sessionType;
     }
 }

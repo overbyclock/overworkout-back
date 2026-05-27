@@ -11,6 +11,7 @@ use App\Dto\Request\TrainingUpdateDto;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
+use App\Entity\TrainingLevel;
 use App\Entity\TrainingRound;
 use App\Entity\User;
 use App\Service\TrainingTimeCalculator;
@@ -30,6 +31,26 @@ readonly class TrainingMapper
         $training->setDiscipline($dto->getDisciplineEnum());
         $training->setTarget($dto->getTargetEnum());
         $training->setName($dto->name);
+
+        if (null !== $dto->trainingLevelId) {
+            $level = $this->entityManager->getRepository(TrainingLevel::class)->find($dto->trainingLevelId);
+            if (null === $level) {
+                throw new \InvalidArgumentException('Nivel no encontrado: '.$dto->trainingLevelId);
+            }
+            $training->setTrainingLevel($level);
+        }
+
+        if (null !== $dto->weekNumber) {
+            $training->setWeekNumber($dto->weekNumber);
+        }
+
+        if (null !== $dto->dayKey) {
+            $training->setDayKey($dto->dayKey);
+        }
+
+        if (null !== $dto->sessionType) {
+            $training->setSessionType($dto->sessionType);
+        }
 
         foreach ($dto->rounds as $roundDto) {
             $round = $this->createRoundFromDto($roundDto);
@@ -53,6 +74,26 @@ readonly class TrainingMapper
 
         if (null !== $dto->name) {
             $training->setName($dto->name);
+        }
+
+        if (null !== $dto->trainingLevelId) {
+            $level = $this->entityManager->getRepository(TrainingLevel::class)->find($dto->trainingLevelId);
+            if (null === $level) {
+                throw new \InvalidArgumentException('Nivel no encontrado: '.$dto->trainingLevelId);
+            }
+            $training->setTrainingLevel($level);
+        }
+
+        if (null !== $dto->weekNumber) {
+            $training->setWeekNumber($dto->weekNumber);
+        }
+
+        if (null !== $dto->dayKey) {
+            $training->setDayKey($dto->dayKey);
+        }
+
+        if (null !== $dto->sessionType) {
+            $training->setSessionType($dto->sessionType);
         }
 
         if (null !== $dto->rounds) {

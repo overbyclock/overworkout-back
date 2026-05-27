@@ -173,6 +173,82 @@ class TrainingCreateDtoTest extends TestCase
         $this->assertEquals('fatburning', $enum->value);
     }
 
+    public function testTrainingLevelIdMustBePositive(): void
+    {
+        $dto = new TrainingCreateDto(
+            discipline: 'calisthenics',
+            target: 'strength',
+            rounds: [
+                new TrainingRoundDto(
+                    round: 1,
+                    exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
+                ),
+            ],
+            trainingLevelId: -1,
+        );
+
+        $violations = $this->validator->validate($dto);
+
+        $this->assertCount(1, $violations);
+    }
+
+    public function testWeekNumberMustBePositive(): void
+    {
+        $dto = new TrainingCreateDto(
+            discipline: 'calisthenics',
+            target: 'strength',
+            rounds: [
+                new TrainingRoundDto(
+                    round: 1,
+                    exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
+                ),
+            ],
+            weekNumber: 0,
+        );
+
+        $violations = $this->validator->validate($dto);
+
+        $this->assertCount(1, $violations);
+    }
+
+    public function testDayKeyMaxLength(): void
+    {
+        $dto = new TrainingCreateDto(
+            discipline: 'calisthenics',
+            target: 'strength',
+            rounds: [
+                new TrainingRoundDto(
+                    round: 1,
+                    exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
+                ),
+            ],
+            dayKey: str_repeat('a', 51),
+        );
+
+        $violations = $this->validator->validate($dto);
+
+        $this->assertCount(1, $violations);
+    }
+
+    public function testSessionTypeMaxLength(): void
+    {
+        $dto = new TrainingCreateDto(
+            discipline: 'calisthenics',
+            target: 'strength',
+            rounds: [
+                new TrainingRoundDto(
+                    round: 1,
+                    exercises: [new TrainingExerciseConfigDto(exerciseId: 1)]
+                ),
+            ],
+            sessionType: str_repeat('a', 31),
+        );
+
+        $violations = $this->validator->validate($dto);
+
+        $this->assertCount(1, $violations);
+    }
+
     /**
      * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
      */

@@ -38,7 +38,25 @@ readonly class TrainingCreateDto
         )]
         #[Assert\Valid]
         /** @var TrainingRoundDto[] */
-        public array $rounds = []
+        public array $rounds = [],
+
+        #[Assert\Positive(message: 'El ID del nivel debe ser positivo')]
+        public ?int $trainingLevelId = null,
+
+        #[Assert\Positive(message: 'El número de semana debe ser positivo')]
+        public ?int $weekNumber = null,
+
+        #[Assert\Length(
+            max: 50,
+            maxMessage: 'La clave del día no puede tener más de {{ limit }} caracteres'
+        )]
+        public ?string $dayKey = null,
+
+        #[Assert\Length(
+            max: 30,
+            maxMessage: 'El tipo de sesión no puede tener más de {{ limit }} caracteres'
+        )]
+        public ?string $sessionType = null,
     ) {
     }
 
