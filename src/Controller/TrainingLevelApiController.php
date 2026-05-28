@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Dto\Request\TrainingLevelCreateDto;
 use App\Dto\Request\TrainingLevelUpdateDto;
+use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use App\Mapper\TrainingLevelMapper;
 use App\Security\Voter\TrainingLevelVoter;
@@ -50,7 +51,7 @@ class TrainingLevelApiController extends AbstractController
         $this->denyAccessUnlessGranted(TrainingLevelVoter::VIEW, $level);
 
         return $this->json(
-            $this->normalizer->normalize($level, null, ['groups' => [TrainingLevel::GROUP_READ, 'program:detail']])
+            $this->normalizer->normalize($level, null, ['groups' => [TrainingLevel::GROUP_READ, 'program:detail', Training::GROUP_READ_DETAIL]])
         );
     }
 

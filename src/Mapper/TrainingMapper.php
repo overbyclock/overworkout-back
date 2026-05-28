@@ -141,9 +141,17 @@ readonly class TrainingMapper
      */
     private function updateRounds(Training $training, array $roundDtos): void
     {
+        $incomingIds = array_filter(array_map(static fn (TrainingRoundDto $dto) => $dto->id, $roundDtos));
+
+        foreach ($training->getTrainingRounds() as $existingRound) {
+            if (!\in_array($existingRound->getId(), $incomingIds, true)) {
+                $training->removeTrainingRound($existingRound);
+                $this->entityManager->remove($existingRound);
+            }
+        }
+
         foreach ($roundDtos as $roundDto) {
             if (null !== $roundDto->id) {
-                // Actualizar round existente
                 $round = $this->entityManager->getRepository(TrainingRound::class)->find($roundDto->id);
                 if ($round && $round->getTraining() === $training) {
                     $round->setRound($roundDto->round);
@@ -151,7 +159,6 @@ readonly class TrainingMapper
                     $this->updateExercisesInRound($round, $roundDto->exercises);
                 }
             } else {
-                // Crear nuevo round
                 $newRound = $this->createRoundFromDto($roundDto);
                 $training->addTrainingRound($newRound);
             }
@@ -170,9 +177,17 @@ readonly class TrainingMapper
      */
     private function updateExercisesInRound(TrainingRound $round, array $exerciseDtos): void
     {
+        $incomingIds = array_filter(array_map(static fn (TrainingExerciseConfigDto $dto) => $dto->id, $exerciseDtos));
+
+        foreach ($round->getTrainingExerciseConfigurations() as $existingConfig) {
+            if (!\in_array($existingConfig->getId(), $incomingIds, true)) {
+                $round->removeTrainingExerciseConfiguration($existingConfig);
+                $this->entityManager->remove($existingConfig);
+            }
+        }
+
         foreach ($exerciseDtos as $exerciseDto) {
             if (null !== $exerciseDto->id) {
-                // Actualizar ejercicio existente
                 $config = $this->entityManager->getRepository(TrainingExerciseConfiguration::class)->find($exerciseDto->id);
                 if ($config && $config->getTrainingRound() === $round) {
                     $config->setReps($exerciseDto->reps ?? $config->getReps());
@@ -183,7 +198,6 @@ readonly class TrainingMapper
                     $config->setWeight(null !== $exerciseDto->weight ? (int) $exerciseDto->weight : $config->getWeight());
                 }
             } else {
-                // Crear nuevo ejercicio
                 $newConfig = $this->createExerciseConfigFromDto($exerciseDto);
                 $round->addTrainingExerciseConfiguration($newConfig);
             }

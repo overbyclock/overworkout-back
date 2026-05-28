@@ -48,6 +48,13 @@ class TrainingWeekInfo
         return $this->id;
     }
 
+    #[Groups([self::GROUP_READ, TrainingLevel::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    #[\Symfony\Component\Serializer\Attribute\SerializedName('levelId')]
+    public function getLevelId(): ?int
+    {
+        return $this->trainingLevel?->getId();
+    }
+
     public function getTrainingLevel(): ?TrainingLevel
     {
         return $this->trainingLevel;

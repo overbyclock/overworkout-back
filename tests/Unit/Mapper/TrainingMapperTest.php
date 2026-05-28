@@ -225,4 +225,121 @@ class TrainingMapperTest extends TestCase
         $this->assertTrue((new TrainingUpdateDto(dayKey: 'day_a'))->hasChanges());
         $this->assertTrue((new TrainingUpdateDto(sessionType: 'strength'))->hasChanges());
     }
+
+    public function testUpdateFromDtoReplacesRounds(): void
+    {
+        $training = new Training();
+        $training->setDiscipline(\App\Enum\Discipline::CALISTHENICS);
+        $training->setTarget(\App\Enum\TargetWorkout::STRENGTH);
+
+        $oldRound = new TrainingRound();
+        $oldRound->setRound(1);
+        $oldRound->setRestBetweenRounds(60);
+        $oldRound->setTraining($training);
+        $training->addTrainingRound($oldRound);
+
+        $reflection = new \ReflectionClass($oldRound);
+        $idProp = $reflection->getProperty('id');
+        $idProp->setAccessible(true);
+        $idProp->setValue($oldRound, 100);
+
+        $exercise = new Exercises();
+        $this->exerciseRepository->method('find')->willReturn($exercise);
+
+        $dto = new TrainingUpdateDto(rounds: [
+            new TrainingRoundDto(round: 1, restBetweenRounds: 90, exercises: [
+                new TrainingExerciseConfigDto(exerciseId: 1, reps: 5),
+            ]),
+        ]);
+
+        $this->entityManager->expects($this->once())->method('remove')->with($oldRound);
+
+        $this->mapper->updateFromDto($training, $dto);
+
+        $this->assertCount(1, $training->getTrainingRounds());
+        $this->assertEquals(90, $training->getTrainingRounds()->first()->getRestBetweenRounds());
+    }
+
+    public function testUpdateFromDtoUpdatesExistingRound(): void
+    {
+        $training = new Training();
+        $training->setDiscipline(\App\Enum\Discipline::CALISTHENICS);
+        $training->setTarget(\App\Enum\TargetWorkout::STRENGTH);
+
+        $existingRound = new TrainingRound();
+        $existingRound->setRound(1);
+        $existingRound->setRestBetweenRounds(60);
+        $existingRound->setTraining($training);
+        $training->addTrainingRound($existingRound);
+
+        $reflection = new \ReflectionClass($existingRound);
+        $idProp = $reflection->getProperty('id');
+        $idProp->setAccessible(true);
+        $idProp->setValue($existingRound, 200);
+
+        $this->roundRepository
+            ->method('find')
+            ->with(200)
+            ->willReturn($existingRound);
+
+        $dto = new TrainingUpdateDto(rounds: [
+            new TrainingRoundDto(round: 2, restBetweenRounds: 120, id: 200, exercises: []),
+        ]);
+
+        $this->mapper->updateFromDto($training, $dto);
+
+        $this->assertCount(1, $training->getTrainingRounds());
+        $this->assertEquals(2, $existingRound->getRound());
+        $this->assertEquals(120, $existingRound->getRestBetweenRounds());
+    }
+
+    public function testUpdateFromDtoReplacesExercisesInRound(): void
+    {
+        $training = new Training();
+        $training->setDiscipline(\App\Enum\Discipline::CALISTHENICS);
+        $training->setTarget(\App\Enum\TargetWorkout::STRENGTH);
+
+        $round = new TrainingRound();
+        $round->setRound(1);
+        $round->setRestBetweenRounds(60);
+        $round->setTraining($training);
+        $training->addTrainingRound($round);
+
+        $reflection = new \ReflectionClass($round);
+        $idProp = $reflection->getProperty('id');
+        $idProp->setAccessible(true);
+        $idProp->setValue($round, 300);
+
+        $this->roundRepository
+            ->method('find')
+            ->with(300)
+            ->willReturn($round);
+
+        $oldExercise = new TrainingExerciseConfiguration();
+        $oldExercise->setSets(3);
+        $oldExercise->setRestBetweenSets(30);
+        $oldExercise->setTrainingRound($round);
+        $round->addTrainingExerciseConfiguration($oldExercise);
+
+        $exReflection = new \ReflectionClass($oldExercise);
+        $exIdProp = $exReflection->getProperty('id');
+        $exIdProp->setAccessible(true);
+        $exIdProp->setValue($oldExercise, 500);
+
+        $exercise = new Exercises();
+        $this->exerciseRepository->method('find')->willReturn($exercise);
+
+        $dto = new TrainingUpdateDto(rounds: [
+            new TrainingRoundDto(round: 1, restBetweenRounds: 60, id: 300, exercises: [
+                new TrainingExerciseConfigDto(exerciseId: 1, reps: 10, sets: 4),
+            ]),
+        ]);
+
+        $this->entityManager->expects($this->once())->method('remove')->with($oldExercise);
+
+        $this->mapper->updateFromDto($training, $dto);
+
+        $this->assertCount(1, $round->getTrainingExerciseConfigurations());
+        $this->assertEquals(4, $round->getTrainingExerciseConfigurations()->first()->getSets());
+    }
 }
