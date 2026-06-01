@@ -76,15 +76,8 @@ class SeedProgramSkillsAchievementsCommand extends Command
         ];
 
         foreach ($skills as $s) {
-            $skill = new TrainingSkill();
-            $skill->setName($s['name']);
-            $skill->setFamily($s['family']);
-            $skill->setUnlockAtLevel($s['unlockAtLevel']);
-            $skill->setProgram($program);
-            $skill->setLevel($levelMap[$s['levelNum']] ?? null);
-            $skill->setDescription('Skill de equilibrio invertido');
-            $skill->setIcon($s['icon']);
-            $this->entityManager->persist($skill);
+            $s['description'] = 'Skill de equilibrio invertido';
+            $this->createSkill($s, $program, $levelMap[$s['levelNum']] ?? null);
         }
     }
 
@@ -106,15 +99,8 @@ class SeedProgramSkillsAchievementsCommand extends Command
         ];
 
         foreach ($skills as $s) {
-            $skill = new TrainingSkill();
-            $skill->setName($s['name']);
-            $skill->setFamily($s['family']);
-            $skill->setUnlockAtLevel($s['unlockAtLevel']);
-            $skill->setProgram($program);
-            $skill->setLevel($levelMap[$s['levelNum']] ?? null);
-            $skill->setDescription('Skill de tracción horizontal');
-            $skill->setIcon($s['icon']);
-            $this->entityManager->persist($skill);
+            $s['description'] = 'Skill de tracción horizontal';
+            $this->createSkill($s, $program, $levelMap[$s['levelNum']] ?? null);
         }
     }
 
@@ -139,26 +125,35 @@ class SeedProgramSkillsAchievementsCommand extends Command
         ];
 
         foreach ($skills as $s) {
-            $skill = new TrainingSkill();
-            $skill->setName($s['name']);
-            $skill->setFamily($s['family']);
-            $skill->setUnlockAtLevel($s['unlockAtLevel']);
-            $skill->setProgram($program);
-            $skill->setLevel($levelMap[$s['levelNum']] ?? null);
-            $skill->setDescription('Skill de calistenia');
-            $skill->setIcon($s['icon']);
-            $this->entityManager->persist($skill);
+            $s['description'] = 'Skill de calistenia';
+            $this->createSkill($s, $program, $levelMap[$s['levelNum']] ?? null);
         }
     }
 
     private function seedHandstandAchievements(TrainingProgram $program): void
     {
         $achievements = [
+            // Progreso
             ['code' => 'hs_first_steps', 'name' => 'Primeros Pasos', 'description' => 'Completa el Nivel 1', 'category' => 'progress', 'icon' => '🎯', 'xp' => 100],
             ['code' => 'hs_wall_master', 'name' => 'Rey de la Pared', 'description' => 'Completa el Nivel 3', 'category' => 'progress', 'icon' => '🧱', 'xp' => 200],
-            ['code' => 'hs_freestanding', 'name' => 'Libre como el Viento', 'description' => 'Alcanza el Freestanding Handstand', 'category' => 'skill', 'icon' => '🤸', 'xp' => 500],
-            ['code' => 'hs_consistency', 'name' => 'Consistencia', 'description' => 'Completa 4 sesiones en una semana', 'category' => 'consistency', 'icon' => '🔥', 'xp' => 150],
+            ['code' => 'hs_halfway', 'name' => 'A Medio Camino', 'description' => 'Completa el Nivel 3', 'category' => 'progress', 'icon' => '📍', 'xp' => 300],
             ['code' => 'hs_master', 'name' => 'Handstand Master', 'description' => 'Completa todos los niveles del programa', 'category' => 'skill', 'icon' => '👑', 'xp' => 1000],
+            // Skill
+            ['code' => 'hs_freestanding', 'name' => 'Libre como el Viento', 'description' => 'Alcanza el Freestanding Handstand', 'category' => 'skill', 'icon' => '🤸', 'xp' => 500],
+            ['code' => 'hs_10s', 'name' => '10 Segundos Libres', 'description' => 'Mantén Handstand libre 10s', 'category' => 'skill', 'icon' => '⏱️', 'xp' => 400],
+            ['code' => 'hs_30s', 'name' => '30 Segundos Libres', 'description' => 'Mantén Handstand libre 30s', 'category' => 'skill', 'icon' => '🏆', 'xp' => 800],
+            ['code' => 'hs_walk', 'name' => 'Paseo Invertido', 'description' => 'Caminar 5m en Handstand', 'category' => 'skill', 'icon' => '🚶', 'xp' => 700],
+            // Consistencia
+            ['code' => 'hs_consistency', 'name' => 'Consistencia', 'description' => 'Completa 4 sesiones en una semana', 'category' => 'consistency', 'icon' => '🔥', 'xp' => 150],
+            ['code' => 'hs_week', 'name' => 'Semana Perfecta', 'description' => '7 días seguidos entrenando', 'category' => 'consistency', 'icon' => '📅', 'xp' => 250],
+            ['code' => 'hs_month', 'name' => 'Mes de Hierro', 'description' => '30 días seguidos entrenando', 'category' => 'consistency', 'icon' => '🦾', 'xp' => 500],
+            ['code' => 'hs_comeback', 'name' => 'El Regreso', 'description' => 'Entrena tras 7 días de pausa', 'category' => 'consistency', 'icon' => '🔄', 'xp' => 100],
+            // Volumen
+            ['code' => 'hs_100reps', 'name' => '100 Reps Invertidas', 'description' => '100 repeticiones en una sesión', 'category' => 'volume', 'icon' => '💯', 'xp' => 200],
+            ['code' => 'hs_sprint', 'name' => 'Sesión Express', 'description' => 'Completa una sesión en menos de 20 min', 'category' => 'volume', 'icon' => '⚡', 'xp' => 150],
+            // Secretos
+            ['code' => 'hs_ninja', 'name' => 'Madrugador', 'description' => 'Entrena antes de las 6:00 AM', 'category' => 'secret', 'icon' => '🥷', 'xp' => 300],
+            ['code' => 'hs_double', 'name' => 'Doble Turno', 'description' => '2 sesiones en un mismo día', 'category' => 'secret', 'icon' => '🔄', 'xp' => 250],
         ];
 
         foreach ($achievements as $a) {
@@ -169,11 +164,26 @@ class SeedProgramSkillsAchievementsCommand extends Command
     private function seedFrontLeverAchievements(TrainingProgram $program): void
     {
         $achievements = [
+            // Progreso
             ['code' => 'fl_first_steps', 'name' => 'Primeros Pasos', 'description' => 'Completa el Nivel 1', 'category' => 'progress', 'icon' => '🎯', 'xp' => 100],
+            ['code' => 'fl_halfway', 'name' => 'A Medio Camino', 'description' => 'Completa el Nivel 3', 'category' => 'progress', 'icon' => '📍', 'xp' => 300],
+            ['code' => 'fl_advanced', 'name' => 'Avanzado', 'description' => 'Completa el Nivel 4', 'category' => 'progress', 'icon' => '📈', 'xp' => 400],
+            ['code' => 'fl_master', 'name' => 'Front Lever Master', 'description' => 'Completa todos los niveles del programa', 'category' => 'skill', 'icon' => '👑', 'xp' => 1200],
+            // Skill
             ['code' => 'fl_tuck_hold', 'name' => 'Tuck Dominado', 'description' => 'Mantén Tuck FL 20s', 'category' => 'skill', 'icon' => '🦶', 'xp' => 300],
             ['code' => 'fl_straddle', 'name' => 'Straddle Conquistado', 'description' => 'Alcanza el Straddle Front Lever', 'category' => 'skill', 'icon' => '🤸', 'xp' => 500],
             ['code' => 'fl_full_lever', 'name' => 'Front Lever Completo', 'description' => 'Mantén Full FL 10s', 'category' => 'skill', 'icon' => '💪', 'xp' => 1000],
-            ['code' => 'fl_master', 'name' => 'Front Lever Master', 'description' => 'Completa todos los niveles del programa', 'category' => 'skill', 'icon' => '👑', 'xp' => 1200],
+            ['code' => 'fl_row', 'name' => 'Tracción Horizontal', 'description' => '5 Front Lever Rows', 'category' => 'skill', 'icon' => '🏋️', 'xp' => 600],
+            // Consistencia
+            ['code' => 'fl_week', 'name' => 'Semana Perfecta', 'description' => '7 días seguidos entrenando', 'category' => 'consistency', 'icon' => '📅', 'xp' => 250],
+            ['code' => 'fl_month', 'name' => 'Mes de Hierro', 'description' => '30 días seguidos entrenando', 'category' => 'consistency', 'icon' => '🦾', 'xp' => 500],
+            ['code' => 'fl_comeback', 'name' => 'El Regreso', 'description' => 'Entrena tras 7 días de pausa', 'category' => 'consistency', 'icon' => '🔄', 'xp' => 100],
+            // Volumen
+            ['code' => 'fl_100reps', 'name' => '100 Reps de Tracción', 'description' => '100 repeticiones en una sesión', 'category' => 'volume', 'icon' => '💯', 'xp' => 200],
+            ['code' => 'fl_sprint', 'name' => 'Sesión Express', 'description' => 'Completa una sesión en menos de 25 min', 'category' => 'volume', 'icon' => '⚡', 'xp' => 150],
+            // Secretos
+            ['code' => 'fl_ninja', 'name' => 'Madrugador', 'description' => 'Entrena antes de las 6:00 AM', 'category' => 'secret', 'icon' => '🥷', 'xp' => 300],
+            ['code' => 'fl_perfection', 'name' => 'Perfección', 'description' => 'Pasa un test con 100% de requisitos', 'category' => 'secret', 'icon' => '💎', 'xp' => 400],
         ];
 
         foreach ($achievements as $a) {
@@ -184,17 +194,57 @@ class SeedProgramSkillsAchievementsCommand extends Command
     private function seedCalistheniaAchievements(TrainingProgram $program): void
     {
         $achievements = [
+            // Progreso
             ['code' => 'cal_first_steps', 'name' => 'Primeros Pasos', 'description' => 'Completa el Nivel 1', 'category' => 'progress', 'icon' => '🎯', 'xp' => 100],
+            ['code' => 'cal_transition', 'name' => 'Transición Completa', 'description' => 'Completa el Nivel 3', 'category' => 'progress', 'icon' => '🌉', 'xp' => 250],
+            ['code' => 'cal_halfway', 'name' => 'A Medio Camino', 'description' => 'Completa el Nivel 6', 'category' => 'progress', 'icon' => '📍', 'xp' => 300],
+            ['code' => 'cal_elite', 'name' => 'Élite', 'description' => 'Completa el Nivel 10', 'category' => 'progress', 'icon' => '🏔️', 'xp' => 600],
+            ['code' => 'cal_master', 'name' => 'Maestro de la Calistenia', 'description' => 'Completa todos los niveles del programa', 'category' => 'skill', 'icon' => '👑', 'xp' => 2000],
+            // Skill
+            ['code' => 'cal_first_pullup', 'name' => 'Primera Dominada', 'description' => 'Realiza tu primera dominada', 'category' => 'skill', 'icon' => '🏋️', 'xp' => 200],
             ['code' => 'cal_muscleup', 'name' => 'Muscle-up Unlocked', 'description' => 'Realiza tu primer Muscle-up', 'category' => 'skill', 'icon' => '💥', 'xp' => 500],
+            ['code' => 'cal_lsit', 'name' => 'L-Sit Solido', 'description' => 'Mantén L-Sit 30 segundos', 'category' => 'skill', 'icon' => '🪑', 'xp' => 400],
             ['code' => 'cal_human_flag', 'name' => 'Bandera Humana', 'description' => 'Alcanza el Human Flag', 'category' => 'skill', 'icon' => '🚩', 'xp' => 800],
             ['code' => 'cal_planche', 'name' => 'Planche Master', 'description' => 'Alcanza la Planche', 'category' => 'skill', 'icon' => '🛹', 'xp' => 1000],
-            ['code' => 'cal_halfway', 'name' => 'A Medio Camino', 'description' => 'Completa el Nivel 6', 'category' => 'progress', 'icon' => '📍', 'xp' => 300],
-            ['code' => 'cal_master', 'name' => 'Maestro de la Calistenia', 'description' => 'Completa todos los niveles del programa', 'category' => 'skill', 'icon' => '👑', 'xp' => 2000],
+            ['code' => 'cal_back_lever', 'name' => 'Back Lever', 'description' => 'Alcanza el Back Lever', 'category' => 'skill', 'icon' => '🔄', 'xp' => 900],
+            // Consistencia
+            ['code' => 'cal_week', 'name' => 'Semana Perfecta', 'description' => '7 días seguidos entrenando', 'category' => 'consistency', 'icon' => '📅', 'xp' => 250],
+            ['code' => 'cal_month', 'name' => 'Mes de Hierro', 'description' => '30 días seguidos entrenando', 'category' => 'consistency', 'icon' => '🦾', 'xp' => 500],
+            ['code' => 'cal_comeback', 'name' => 'El Regreso', 'description' => 'Entrena tras 7 días de pausa', 'category' => 'consistency', 'icon' => '🔄', 'xp' => 100],
+            ['code' => 'cal_noreps', 'name' => 'Sin Excusas', 'description' => 'Entrenar 10 días seguidos en vacaciones', 'category' => 'consistency', 'icon' => '🌴', 'xp' => 350],
+            // Volumen
+            ['code' => 'cal_1000reps', 'name' => 'Millar de Reps', 'description' => '1000 repeticiones en una semana', 'category' => 'volume', 'icon' => '💯', 'xp' => 300],
+            ['code' => 'cal_marathon', 'name' => 'Maratoniano', 'description' => '60 minutos de entrenamiento en un día', 'category' => 'volume', 'icon' => '⏳', 'xp' => 250],
+            ['code' => 'cal_sprint', 'name' => 'Sesión Express', 'description' => 'Completa una sesión en menos de 20 min', 'category' => 'volume', 'icon' => '⚡', 'xp' => 150],
+            // Secretos
+            ['code' => 'cal_ninja', 'name' => 'Madrugador', 'description' => 'Entrena antes de las 6:00 AM', 'category' => 'secret', 'icon' => '🥷', 'xp' => 300],
+            ['code' => 'cal_phoenix', 'name' => 'Fénix', 'description' => 'Vuelve tras 30 días sin entrenar', 'category' => 'secret', 'icon' => '🔥', 'xp' => 400],
+            ['code' => 'cal_double', 'name' => 'Doble Turno', 'description' => '2 sesiones en un mismo día', 'category' => 'secret', 'icon' => '🔄', 'xp' => 250],
         ];
 
         foreach ($achievements as $a) {
             $this->createAchievement($a, $program);
         }
+    }
+
+    private function createSkill(array $data, TrainingProgram $program, ?TrainingLevel $level): void
+    {
+        $existing = $this->entityManager->getRepository(TrainingSkill::class)
+            ->findOneBy(['program' => $program, 'name' => $data['name']]);
+
+        if ($existing !== null) {
+            return;
+        }
+
+        $skill = new TrainingSkill();
+        $skill->setName($data['name']);
+        $skill->setFamily($data['family']);
+        $skill->setUnlockAtLevel($data['unlockAtLevel']);
+        $skill->setProgram($program);
+        $skill->setLevel($level);
+        $skill->setDescription($data['description'] ?? 'Skill');
+        $skill->setIcon($data['icon']);
+        $this->entityManager->persist($skill);
     }
 
     private function createAchievement(array $data, TrainingProgram $program): void
