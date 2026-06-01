@@ -6,9 +6,11 @@ namespace App\Controller;
 
 use App\Dto\Request\TrainingProgramCreateDto;
 use App\Dto\Request\TrainingProgramUpdateDto;
+use App\Entity\Achievement;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Mapper\TrainingProgramMapper;
+use App\Repository\AchievementRepository;
 use App\Security\Voter\TrainingProgramVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +26,7 @@ class TrainingProgramApiController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly TrainingProgramMapper $trainingProgramMapper,
         private readonly NormalizerInterface $normalizer,
+        private readonly AchievementRepository $achievementRepository,
     ) {
     }
 
@@ -176,5 +179,21 @@ class TrainingProgramApiController extends AbstractController
             'paused' => 0,
             'dropped' => 0,
         ]);
+    }
+
+    #[Route('/{id}/achievements', name: 'get_training_program_achievements', methods: ['GET'])]
+    public function getAchievements(int $id): JsonResponse
+    {
+        $program = $this->entityManager->getRepository(TrainingProgram::class)->find($id);
+
+        if (null === $program) {
+            return $this->json(['error' => 'Programa no encontrado'], 404);
+        }
+
+        $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
+
+        $achievements = $this->achievementRepository->findByProgram($program);
+
+        return $this->json($achievements, 200, [], ['groups' => ['achievement:read']]);
     }
 }

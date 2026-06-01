@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\AchievementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AchievementRepository::class)]
 #[ORM\Table(name: 'achievements')]
@@ -14,37 +15,53 @@ class Achievement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['achievement:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['achievement:read'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['achievement:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['achievement:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['achievement:read'])]
     private ?string $category = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['achievement:read'])]
     private ?string $icon = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['achievement:read'])]
     private ?string $color = null;
 
     #[ORM\Column]
+    #[Groups(['achievement:read'])]
     private ?int $xpReward = 0;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['achievement:read'])]
     private ?string $requirementType = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['achievement:read'])]
     private ?int $requirementValue = null;
 
     #[ORM\Column]
+    #[Groups(['achievement:read'])]
     private ?bool $isSecret = false;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['achievement:read'])]
+    private ?TrainingProgram $program = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -182,5 +199,17 @@ class Achievement
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getProgram(): ?TrainingProgram
+    {
+        return $this->program;
+    }
+
+    public function setProgram(?TrainingProgram $program): static
+    {
+        $this->program = $program;
+
+        return $this;
     }
 }
