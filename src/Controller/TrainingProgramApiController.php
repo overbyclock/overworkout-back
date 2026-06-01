@@ -155,4 +155,26 @@ class TrainingProgramApiController extends AbstractController
 
         return $this->json(['message' => 'Programa eliminado correctamente']);
     }
+
+    #[Route('/{id}/stats', name: 'get_training_program_stats', methods: ['GET'])]
+    public function getStats(int $id): JsonResponse
+    {
+        $program = $this->entityManager->getRepository(TrainingProgram::class)->find($id);
+
+        if (null === $program) {
+            return $this->json(['error' => 'Programa no encontrado'], 404);
+        }
+
+        $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
+
+        // TODO: Calcular estadísticas reales desde UserLevelProgress
+        return $this->json([
+            'totalUsers' => 0,
+            'avgProgress' => 0,
+            'completions' => 0,
+            'avgTime' => 0,
+            'paused' => 0,
+            'dropped' => 0,
+        ]);
+    }
 }
