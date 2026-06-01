@@ -200,4 +200,28 @@ class TrainingSkill
 
         return $this;
     }
+
+    #[Groups([self::GROUP_READ])]
+    public function getProgramId(): ?int
+    {
+        return $this->program?->getId();
+    }
+
+    #[Groups([self::GROUP_READ])]
+    public function getProgramName(): ?string
+    {
+        return $this->program?->getName();
+    }
+
+    #[Groups([self::GROUP_READ])]
+    public function getLevelId(): ?int
+    {
+        return $this->level?->getId();
+    }
+
+    #[Groups([self::GROUP_READ])]
+    public function getLevelName(): ?string
+    {
+        return $this->level?->getName();
+    }
 }

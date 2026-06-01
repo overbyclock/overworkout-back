@@ -21,15 +21,15 @@ class TrainingProgram
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, 'achievement:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, 'achievement:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, 'achievement:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
