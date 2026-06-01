@@ -48,7 +48,7 @@ class TrainingProgramApiController extends AbstractController
 
         $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
 
-        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']]);
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail', 'training_skill:read']]);
     }
 
     #[Route('/{id}', name: 'get_training_program', methods: ['GET'], requirements: ['id' => '\d+'])]
@@ -62,7 +62,7 @@ class TrainingProgramApiController extends AbstractController
 
         $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
 
-        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail']]);
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail', 'training_skill:read']]);
     }
 
     #[Route('/{id}/levels', name: 'get_program_levels', methods: ['GET'])]
