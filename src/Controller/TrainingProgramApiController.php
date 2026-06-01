@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Dto\Request\TrainingProgramCreateDto;
 use App\Dto\Request\TrainingProgramUpdateDto;
-use App\Entity\Achievement;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Mapper\TrainingProgramMapper;

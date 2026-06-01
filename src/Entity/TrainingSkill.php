@@ -22,12 +22,10 @@ class TrainingSkill
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups([self::GROUP_READ])]
     private ?TrainingProgram $program = null;
 
     #[ORM\ManyToOne(inversedBy: 'skills')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups([self::GROUP_READ])]
     private ?TrainingLevel $level = null;
 
     #[ORM\Column(length: 255)]

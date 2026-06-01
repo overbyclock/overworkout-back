@@ -232,7 +232,7 @@ class SeedProgramSkillsAchievementsCommand extends Command
         $existing = $this->entityManager->getRepository(TrainingSkill::class)
             ->findOneBy(['program' => $program, 'name' => $data['name']]);
 
-        if ($existing !== null) {
+        if (null !== $existing) {
             return;
         }
 
@@ -252,7 +252,7 @@ class SeedProgramSkillsAchievementsCommand extends Command
         $existing = $this->entityManager->getRepository(Achievement::class)
             ->findOneBy(['code' => $data['code']]);
 
-        if ($existing !== null) {
+        if (null !== $existing) {
             return;
         }
 
