@@ -264,7 +264,6 @@ class CreateFrontLeverMasteryCommand extends Command
         $training = new Training();
         $training->setName($data['name'].' - Fase '.($weekNum + 1));
         $training->setDiscipline(Discipline::CALISTHENICS);
-        $training->setIsBenchmark(false);
         $training->setIsCircuit('circuit' === $data['sessionType']);
         $training->setSessionType($data['sessionType']);
         $training->setTrainingLevel($level);

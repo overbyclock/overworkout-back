@@ -7,67 +7,81 @@ namespace App\Entity;
 use App\Repository\BenchmarkRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: BenchmarkRepository::class)]
 class Benchmark
 {
+    public const GROUP_READ = 'benchmark:read';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([self::GROUP_READ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $type = null; // girl, hero, benchmark
+    #[Groups([self::GROUP_READ])]
+    private ?string $type = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $rxWeightMale = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $rxWeightFemale = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?array $movements = null;
 
-    // Rango Élite
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $eliteTimeMale = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $eliteTimeFemale = null;
 
-    // Rango Avanzado
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $advancedTimeMale = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $advancedTimeFemale = null;
 
-    // Rango Intermedio
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $intermediateTimeMale = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $intermediateTimeFemale = null;
 
-    // Rango Principiante
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $beginnerTimeMale = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $beginnerTimeFemale = null;
 
-    // Escalado opciones
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $scalingOptions = null;
 
-    // Video tutorial
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups([self::GROUP_READ])]
     private ?string $videoUrl = null;
 
     public function getId(): ?int

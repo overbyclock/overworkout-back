@@ -51,36 +51,12 @@ class Training
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $isBenchmark = null;
-
-    #[ORM\Column(nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     private ?bool $isCircuit = false;
 
     #[ORM\Column(length: 30, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     private ?string $sessionType = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $benchmarkType = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $rxWeightMale = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $rxWeightFemale = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $eliteTime = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $advancedTime = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $intermediateTime = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $beginnerTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'trainings')]
     #[ORM\JoinColumn(name: 'training_user_id', referencedColumnName: 'id', nullable: true)]
@@ -220,18 +196,6 @@ class Training
         return $this;
     }
 
-    public function isBenchmark(): ?bool
-    {
-        return $this->isBenchmark;
-    }
-
-    public function setIsBenchmark(?bool $isBenchmark): static
-    {
-        $this->isBenchmark = $isBenchmark;
-
-        return $this;
-    }
-
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     #[\Symfony\Component\Serializer\Attribute\SerializedName('isCircuit')]
     public function isCircuit(): ?bool
@@ -255,90 +219,6 @@ class Training
     public function setSessionType(?string $sessionType): static
     {
         $this->sessionType = $sessionType;
-
-        return $this;
-    }
-
-    public function getBenchmarkType(): ?string
-    {
-        return $this->benchmarkType;
-    }
-
-    public function setBenchmarkType(?string $benchmarkType): static
-    {
-        $this->benchmarkType = $benchmarkType;
-
-        return $this;
-    }
-
-    public function getRxWeightMale(): ?string
-    {
-        return $this->rxWeightMale;
-    }
-
-    public function setRxWeightMale(?string $rxWeightMale): static
-    {
-        $this->rxWeightMale = $rxWeightMale;
-
-        return $this;
-    }
-
-    public function getRxWeightFemale(): ?string
-    {
-        return $this->rxWeightFemale;
-    }
-
-    public function setRxWeightFemale(?string $rxWeightFemale): static
-    {
-        $this->rxWeightFemale = $rxWeightFemale;
-
-        return $this;
-    }
-
-    public function getEliteTime(): ?string
-    {
-        return $this->eliteTime;
-    }
-
-    public function setEliteTime(?string $eliteTime): static
-    {
-        $this->eliteTime = $eliteTime;
-
-        return $this;
-    }
-
-    public function getAdvancedTime(): ?string
-    {
-        return $this->advancedTime;
-    }
-
-    public function setAdvancedTime(?string $advancedTime): static
-    {
-        $this->advancedTime = $advancedTime;
-
-        return $this;
-    }
-
-    public function getIntermediateTime(): ?string
-    {
-        return $this->intermediateTime;
-    }
-
-    public function setIntermediateTime(?string $intermediateTime): static
-    {
-        $this->intermediateTime = $intermediateTime;
-
-        return $this;
-    }
-
-    public function getBeginnerTime(): ?string
-    {
-        return $this->beginnerTime;
-    }
-
-    public function setBeginnerTime(?string $beginnerTime): static
-    {
-        $this->beginnerTime = $beginnerTime;
 
         return $this;
     }

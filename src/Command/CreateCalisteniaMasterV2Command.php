@@ -187,7 +187,6 @@ class CreateCalisteniaMasterV2Command extends Command
         $training = new Training();
         $training->setName($data['name'].' - Semana '.$weekNum);
         $training->setDiscipline(Discipline::CALISTHENICS);
-        $training->setIsBenchmark(false);
         // strength sessions are NOT circuits; circuit sessions ARE circuits
         $training->setIsCircuit('circuit' === $data['sessionType']);
         $training->setSessionType($data['sessionType']);

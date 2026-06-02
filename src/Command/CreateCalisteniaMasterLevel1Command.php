@@ -331,7 +331,6 @@ class CreateCalisteniaMasterLevel1Command extends Command
         $training->setDiscipline(Discipline::CALISTHENICS);
         // Target se deja como está (sin establecer)
         $training->setRounds($sessionData['rounds']);
-        $training->setIsBenchmark(false);
         $training->setIsCircuit(true);
         $training->setTrainingLevel($level);
         $training->setWeekNumber($weekNum);

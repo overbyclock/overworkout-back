@@ -183,7 +183,6 @@ class CreateCalisteniaMasterCommand extends Command
         $training = new Training();
         $training->setName($data['name'].' - Semana '.$weekNum);
         $training->setDiscipline(Discipline::CALISTHENICS);
-        $training->setIsBenchmark(false);
         $training->setIsCircuit(true);
         $training->setTrainingLevel($level);
         $training->setWeekNumber($weekNum);
