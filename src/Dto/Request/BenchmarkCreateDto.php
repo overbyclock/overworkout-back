@@ -104,6 +104,15 @@ readonly class BenchmarkCreateDto
             maxMessage: 'La URL no puede tener más de {{ limit }} caracteres'
         )]
         public ?string $videoUrl = null,
+
+        /**
+         * @var BenchmarkExerciseDto[]|null
+         */
+        #[Assert\All([
+            new Assert\Type(BenchmarkExerciseDto::class),
+        ])]
+        #[Assert\Valid]
+        public ?array $exercises = null,
     ) {
     }
 }

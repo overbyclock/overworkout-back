@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace App\Mapper;
 
 use App\Dto\Request\BenchmarkCreateDto;
+use App\Dto\Request\BenchmarkExerciseDto;
 use App\Dto\Request\BenchmarkUpdateDto;
 use App\Entity\Benchmark;
+use App\Entity\BenchmarkExercise;
+use App\Repository\ExercisesRepository;
 
 readonly class BenchmarkMapper
 {
+    public function __construct(
+        private ExercisesRepository $exercisesRepository,
+    ) {
+    }
+
     public function fromCreateDto(BenchmarkCreateDto $dto): Benchmark
     {
         $benchmark = new Benchmark();
@@ -29,6 +37,12 @@ readonly class BenchmarkMapper
         $benchmark->setBeginnerTimeFemale($dto->beginnerTimeFemale);
         $benchmark->setScalingOptions($dto->scalingOptions);
         $benchmark->setVideoUrl($dto->videoUrl);
+
+        if (null !== $dto->exercises) {
+            foreach ($dto->exercises as $exerciseDto) {
+                $benchmark->addExercise($this->createBenchmarkExercise($exerciseDto));
+            }
+        }
 
         return $benchmark;
     }
@@ -98,5 +112,33 @@ readonly class BenchmarkMapper
         if (null !== $dto->videoUrl) {
             $benchmark->setVideoUrl($dto->videoUrl);
         }
+
+        if (null !== $dto->exercises) {
+            $benchmark->clearExercises();
+            foreach ($dto->exercises as $exerciseDto) {
+                $benchmark->addExercise($this->createBenchmarkExercise($exerciseDto));
+            }
+        }
+    }
+
+    private function createBenchmarkExercise(BenchmarkExerciseDto $dto): BenchmarkExercise
+    {
+        $exercise = $this->exercisesRepository->find($dto->exerciseId);
+        if (null === $exercise) {
+            throw new \InvalidArgumentException('Ejercicio no encontrado: '.$dto->exerciseId);
+        }
+
+        $benchmarkExercise = new BenchmarkExercise();
+        $benchmarkExercise->setExercise($exercise);
+        $benchmarkExercise->setPosition($dto->position);
+        $benchmarkExercise->setReps($dto->reps);
+        $benchmarkExercise->setDistanceMeters($dto->distanceMeters);
+        $benchmarkExercise->setDurationSeconds($dto->durationSeconds);
+        $benchmarkExercise->setCalories($dto->calories);
+        $benchmarkExercise->setRxWeightMale($dto->rxWeightMale);
+        $benchmarkExercise->setRxWeightFemale($dto->rxWeightFemale);
+        $benchmarkExercise->setRestSeconds($dto->restSeconds);
+
+        return $benchmarkExercise;
     }
 }

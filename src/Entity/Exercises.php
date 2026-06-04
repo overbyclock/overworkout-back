@@ -22,11 +22,11 @@ class Exercises
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL, Benchmark::GROUP_READ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL, TrainingExerciseConfiguration::GROUP_READ, Training::GROUP_READ_DETAIL, Benchmark::GROUP_READ])]
     private ?string $name = null;
 
     #[ORM\Column(enumType: MuscleGroup::class)]

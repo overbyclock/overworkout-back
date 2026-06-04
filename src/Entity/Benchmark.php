@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\BenchmarkRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -83,6 +85,18 @@ class Benchmark
     #[ORM\Column(length: 500, nullable: true)]
     #[Groups([self::GROUP_READ])]
     private ?string $videoUrl = null;
+
+    /**
+     * @var Collection<int, BenchmarkExercise>
+     */
+    #[ORM\OneToMany(targetEntity: BenchmarkExercise::class, mappedBy: 'benchmark', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups([self::GROUP_READ])]
+    private Collection $exercises;
+
+    public function __construct()
+    {
+        $this->exercises = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -277,6 +291,38 @@ class Benchmark
     public function setVideoUrl(?string $videoUrl): static
     {
         $this->videoUrl = $videoUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BenchmarkExercise>
+     */
+    public function getExercises(): Collection
+    {
+        return $this->exercises;
+    }
+
+    public function addExercise(BenchmarkExercise $exercise): static
+    {
+        if (!$this->exercises->contains($exercise)) {
+            $this->exercises->add($exercise);
+            $exercise->setBenchmark($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercise(BenchmarkExercise $exercise): static
+    {
+        $this->exercises->removeElement($exercise);
+
+        return $this;
+    }
+
+    public function clearExercises(): static
+    {
+        $this->exercises->clear();
 
         return $this;
     }
