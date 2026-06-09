@@ -29,6 +29,11 @@ readonly class ExerciseMapper
         $exercise->setMedia($dto->media);
         $exercise->setDifficultyRating($dto->difficultyRating);
         $exercise->setDescription($dto->description);
+        $exercise->setSetupInstructions($dto->setupInstructions);
+        $exercise->setExecutionInstructions($dto->executionInstructions);
+        $exercise->setMovementStandards($dto->movementStandards);
+        $exercise->setCommonFaults($dto->commonFaults);
+        $exercise->setSafetyTips($dto->safetyTips);
         $exercise->setDisciplines($dto->disciplines ?? ['calisthenics']);
 
         if (null !== $dto->equipmentId) {
@@ -70,6 +75,26 @@ readonly class ExerciseMapper
 
         if (null !== $dto->description) {
             $exercise->setDescription($dto->description);
+        }
+
+        if (null !== $dto->setupInstructions) {
+            $exercise->setSetupInstructions($dto->setupInstructions);
+        }
+
+        if (null !== $dto->executionInstructions) {
+            $exercise->setExecutionInstructions($dto->executionInstructions);
+        }
+
+        if (null !== $dto->movementStandards) {
+            $exercise->setMovementStandards($dto->movementStandards);
+        }
+
+        if (null !== $dto->commonFaults) {
+            $exercise->setCommonFaults($dto->commonFaults);
+        }
+
+        if (null !== $dto->safetyTips) {
+            $exercise->setSafetyTips($dto->safetyTips);
         }
 
         if (null !== $dto->disciplines) {

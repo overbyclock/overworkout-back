@@ -51,6 +51,16 @@ readonly class ExerciseUpdateDto
 
         public ?string $description = null,
 
+        public ?string $setupInstructions = null,
+
+        public ?string $executionInstructions = null,
+
+        public ?string $movementStandards = null,
+
+        public ?array $commonFaults = null,
+
+        public ?string $safetyTips = null,
+
         public ?array $disciplines = null
     ) {
     }
@@ -86,6 +96,11 @@ readonly class ExerciseUpdateDto
             || null !== $this->media
             || null !== $this->difficultyRating
             || null !== $this->description
+            || null !== $this->setupInstructions
+            || null !== $this->executionInstructions
+            || null !== $this->movementStandards
+            || null !== $this->commonFaults
+            || null !== $this->safetyTips
             || null !== $this->disciplines;
     }
 }

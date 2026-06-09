@@ -54,6 +54,28 @@ class ExerciseMapperTest extends TestCase
         $this->assertEquals('beginner', $exercise->getLevel()->value);
     }
 
+    public function testFromCreateDtoMapsGuidanceFields(): void
+    {
+        $dto = new ExerciseCreateDto(
+            name: 'Thruster',
+            primaryMuscleGroup: 'full_body',
+            level: 'intermediate',
+            setupInstructions: 'Barra en front rack.',
+            executionInstructions: 'Sentadilla completa y empuje overhead.',
+            movementStandards: 'Cadera debajo de la rodilla.',
+            commonFaults: ['No bloquear codos'],
+            safetyTips: 'Mantén el core activo.'
+        );
+
+        $exercise = $this->mapper->fromCreateDto($dto);
+
+        $this->assertEquals('Barra en front rack.', $exercise->getSetupInstructions());
+        $this->assertEquals('Sentadilla completa y empuje overhead.', $exercise->getExecutionInstructions());
+        $this->assertEquals('Cadera debajo de la rodilla.', $exercise->getMovementStandards());
+        $this->assertEquals(['No bloquear codos'], $exercise->getCommonFaults());
+        $this->assertEquals('Mantén el core activo.', $exercise->getSafetyTips());
+    }
+
     public function testFromCreateDtoWithEquipment(): void
     {
         $equipment = new Equipments();
@@ -108,6 +130,28 @@ class ExerciseMapperTest extends TestCase
         $this->assertEquals('New Name', $exercise->getName());
     }
 
+    public function testUpdateFromDtoUpdatesGuidanceFields(): void
+    {
+        $exercise = new Exercises();
+        $exercise->setName('Squat');
+
+        $dto = new ExerciseUpdateDto(
+            setupInstructions: 'Pies a anchura de hombros.',
+            executionInstructions: 'Baja controladamente.',
+            movementStandards: 'Cadera por debajo de la rodilla.',
+            commonFaults: ['Levantar talones'],
+            safetyTips: 'No hiperextender la espalda.'
+        );
+
+        $this->mapper->updateFromDto($exercise, $dto);
+
+        $this->assertEquals('Pies a anchura de hombros.', $exercise->getSetupInstructions());
+        $this->assertEquals('Baja controladamente.', $exercise->getExecutionInstructions());
+        $this->assertEquals('Cadera por debajo de la rodilla.', $exercise->getMovementStandards());
+        $this->assertEquals(['Levantar talones'], $exercise->getCommonFaults());
+        $this->assertEquals('No hiperextender la espalda.', $exercise->getSafetyTips());
+    }
+
     public function testHasChanges(): void
     {
         $dtoNoChanges = new ExerciseUpdateDto();
@@ -115,5 +159,11 @@ class ExerciseMapperTest extends TestCase
 
         $dtoWithChanges = new ExerciseUpdateDto(name: 'Test');
         $this->assertTrue($dtoWithChanges->hasChanges());
+    }
+
+    public function testHasChangesWithGuidanceFields(): void
+    {
+        $dto = new ExerciseUpdateDto(executionInstructions: 'Nuevo paso a paso');
+        $this->assertTrue($dto->hasChanges());
     }
 }

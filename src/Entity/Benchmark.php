@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\BenchmarkFormat;
 use App\Repository\BenchmarkRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,6 +34,30 @@ class Benchmark
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ])]
     private ?string $description = null;
+
+    #[ORM\Column(length: 30, enumType: BenchmarkFormat::class, nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?BenchmarkFormat $format = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?int $rounds = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?int $timeCapSeconds = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?int $restBetweenRoundsSeconds = null;
+
+    #[ORM\Column]
+    #[Groups([self::GROUP_READ])]
+    private bool $partitioningAllowed = false;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?array $timerConfig = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GROUP_READ])]
@@ -135,6 +160,78 @@ class Benchmark
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getFormat(): ?BenchmarkFormat
+    {
+        return $this->format;
+    }
+
+    public function setFormat(?BenchmarkFormat $format): static
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getRounds(): ?int
+    {
+        return $this->rounds;
+    }
+
+    public function setRounds(?int $rounds): static
+    {
+        $this->rounds = $rounds;
+
+        return $this;
+    }
+
+    public function getTimeCapSeconds(): ?int
+    {
+        return $this->timeCapSeconds;
+    }
+
+    public function setTimeCapSeconds(?int $timeCapSeconds): static
+    {
+        $this->timeCapSeconds = $timeCapSeconds;
+
+        return $this;
+    }
+
+    public function getRestBetweenRoundsSeconds(): ?int
+    {
+        return $this->restBetweenRoundsSeconds;
+    }
+
+    public function setRestBetweenRoundsSeconds(?int $restBetweenRoundsSeconds): static
+    {
+        $this->restBetweenRoundsSeconds = $restBetweenRoundsSeconds;
+
+        return $this;
+    }
+
+    public function isPartitioningAllowed(): bool
+    {
+        return $this->partitioningAllowed;
+    }
+
+    public function setPartitioningAllowed(bool $partitioningAllowed): static
+    {
+        $this->partitioningAllowed = $partitioningAllowed;
+
+        return $this;
+    }
+
+    public function getTimerConfig(): ?array
+    {
+        return $this->timerConfig;
+    }
+
+    public function setTimerConfig(?array $timerConfig): static
+    {
+        $this->timerConfig = $timerConfig;
 
         return $this;
     }

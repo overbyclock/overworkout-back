@@ -54,6 +54,16 @@ readonly class ExerciseCreateDto
 
         public ?string $description = null,
 
+        public ?string $setupInstructions = null,
+
+        public ?string $executionInstructions = null,
+
+        public ?string $movementStandards = null,
+
+        public ?array $commonFaults = null,
+
+        public ?string $safetyTips = null,
+
         public ?array $disciplines = ['calisthenics']
     ) {
     }

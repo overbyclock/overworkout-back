@@ -30,6 +30,11 @@ class ExerciseCreateDtoTest extends TestCase
             media: 'https://example.com/pushup.mp4',
             difficultyRating: 2,
             description: 'Flexiones básicas',
+            setupInstructions: 'Manos a la altura de los hombros, cuerpo recto.',
+            executionInstructions: '1. Baja el pecho al suelo.\n2. Empuja hasta bloquear los codos.',
+            movementStandards: 'Codos bloqueados arriba, pecho toca el suelo abajo.',
+            commonFaults: ['Cadera caída', 'Codos abiertos'],
+            safetyTips: 'Mantén el core activo.',
             disciplines: ['calisthenics']
         );
 
@@ -143,6 +148,24 @@ class ExerciseCreateDtoTest extends TestCase
         $this->assertEquals('legs', $dto->getPrimaryMuscleGroupEnum()->value);
         $this->assertEquals('glutes', $dto->getSecondaryMuscleGroupEnum()->value);
         $this->assertEquals('intermediate', $dto->getLevelEnum()->value);
+    }
+
+    public function testOptionalGuidanceFieldsAreNullable(): void
+    {
+        $dto = new ExerciseCreateDto(
+            name: 'Push Up',
+            primaryMuscleGroup: 'chest',
+            level: 'beginner'
+        );
+
+        $this->assertNull($dto->setupInstructions);
+        $this->assertNull($dto->executionInstructions);
+        $this->assertNull($dto->movementStandards);
+        $this->assertNull($dto->commonFaults);
+        $this->assertNull($dto->safetyTips);
+
+        $violations = $this->validator->validate($dto);
+        $this->assertCount(0, $violations);
     }
 
     public function testGetSecondaryMuscleGroupEnumReturnsNull(): void

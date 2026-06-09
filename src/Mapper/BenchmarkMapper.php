@@ -24,6 +24,12 @@ readonly class BenchmarkMapper
         $benchmark->setName($dto->name);
         $benchmark->setType($dto->type);
         $benchmark->setDescription($dto->description);
+        $benchmark->setFormat($dto->format);
+        $benchmark->setRounds($dto->rounds);
+        $benchmark->setTimeCapSeconds($dto->timeCapSeconds);
+        $benchmark->setRestBetweenRoundsSeconds($dto->restBetweenRoundsSeconds);
+        $benchmark->setPartitioningAllowed($dto->partitioningAllowed);
+        $benchmark->setTimerConfig($dto->timerConfig);
         $benchmark->setRxWeightMale($dto->rxWeightMale);
         $benchmark->setRxWeightFemale($dto->rxWeightFemale);
         $benchmark->setMovements($dto->movements);
@@ -59,6 +65,30 @@ readonly class BenchmarkMapper
 
         if (null !== $dto->description) {
             $benchmark->setDescription($dto->description);
+        }
+
+        if (null !== $dto->format) {
+            $benchmark->setFormat($dto->format);
+        }
+
+        if (null !== $dto->rounds) {
+            $benchmark->setRounds($dto->rounds);
+        }
+
+        if (null !== $dto->timeCapSeconds) {
+            $benchmark->setTimeCapSeconds($dto->timeCapSeconds);
+        }
+
+        if (null !== $dto->restBetweenRoundsSeconds) {
+            $benchmark->setRestBetweenRoundsSeconds($dto->restBetweenRoundsSeconds);
+        }
+
+        if (null !== $dto->partitioningAllowed) {
+            $benchmark->setPartitioningAllowed($dto->partitioningAllowed);
+        }
+
+        if (null !== $dto->timerConfig) {
+            $benchmark->setTimerConfig($dto->timerConfig);
         }
 
         if (null !== $dto->rxWeightMale) {

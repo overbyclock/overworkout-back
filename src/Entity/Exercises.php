@@ -53,7 +53,28 @@ class Exercises
     private ?int $difficultyRating = 1;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
     private ?string $description = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
+    private ?string $setupInstructions = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
+    private ?string $executionInstructions = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
+    private ?string $movementStandards = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
+    private ?array $commonFaults = [];
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL])]
+    private ?string $safetyTips = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $disciplines = [];
@@ -84,6 +105,66 @@ class Exercises
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSetupInstructions(): ?string
+    {
+        return $this->setupInstructions;
+    }
+
+    public function setSetupInstructions(?string $setupInstructions): static
+    {
+        $this->setupInstructions = $setupInstructions;
+
+        return $this;
+    }
+
+    public function getExecutionInstructions(): ?string
+    {
+        return $this->executionInstructions;
+    }
+
+    public function setExecutionInstructions(?string $executionInstructions): static
+    {
+        $this->executionInstructions = $executionInstructions;
+
+        return $this;
+    }
+
+    public function getMovementStandards(): ?string
+    {
+        return $this->movementStandards;
+    }
+
+    public function setMovementStandards(?string $movementStandards): static
+    {
+        $this->movementStandards = $movementStandards;
+
+        return $this;
+    }
+
+    public function getCommonFaults(): ?array
+    {
+        return $this->commonFaults ?? [];
+    }
+
+    public function setCommonFaults(?array $commonFaults): static
+    {
+        $this->commonFaults = $commonFaults;
+
+        return $this;
+    }
+
+    public function getSafetyTips(): ?string
+    {
+        return $this->safetyTips;
+    }
+
+    public function setSafetyTips(?string $safetyTips): static
+    {
+        $this->safetyTips = $safetyTips;
 
         return $this;
     }

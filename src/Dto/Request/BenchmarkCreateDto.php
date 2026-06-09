@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dto\Request;
 
+use App\Enum\BenchmarkFormat;
 use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class BenchmarkCreateDto
@@ -28,6 +29,25 @@ readonly class BenchmarkCreateDto
             maxMessage: 'La descripción es demasiado larga'
         )]
         public ?string $description = null,
+
+        #[Assert\Choice(
+            callback: [BenchmarkFormat::class, 'cases'],
+            message: 'El formato no es válido'
+        )]
+        public ?BenchmarkFormat $format = null,
+
+        #[Assert\Positive(message: 'El número de rondas debe ser positivo')]
+        public ?int $rounds = null,
+
+        #[Assert\Positive(message: 'El time cap debe ser positivo')]
+        public ?int $timeCapSeconds = null,
+
+        #[Assert\Positive(message: 'El descanso entre rondas debe ser positivo')]
+        public ?int $restBetweenRoundsSeconds = null,
+
+        public bool $partitioningAllowed = false,
+
+        public ?array $timerConfig = null,
 
         #[Assert\Length(
             max: 255,
