@@ -53,6 +53,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([self::GROUP_READ, self::GROUP_READ_ADMIN, self::GROUP_WRITE])]
     private ?string $avatar = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $trainingGoal = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $estimatedLevel = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $gender = null;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?float $weightKg = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?int $heightCm = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?\DateTimeInterface $birthDate = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $trainingLocation = null;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups([self::GROUP_READ])]
+    private int $xp = 0;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups([self::GROUP_READ])]
+    private int $streakDays = 0;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups([self::GROUP_READ])]
+    private int $totalWorkouts = 0;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups([self::GROUP_READ])]
+    private int $athleteLevel = 1;
+
+    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    #[Groups([self::GROUP_READ_ADMIN])]
+    private ?\DateTimeInterface $lastWorkoutAt = null;
+
     /**
      * @var Collection<int, Training>
      */
@@ -172,6 +220,164 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getTrainingGoal(): ?string
+    {
+        return $this->trainingGoal;
+    }
+
+    public function setTrainingGoal(?string $trainingGoal): static
+    {
+        $this->trainingGoal = $trainingGoal;
+
+        return $this;
+    }
+
+    public function getEstimatedLevel(): ?string
+    {
+        return $this->estimatedLevel;
+    }
+
+    public function setEstimatedLevel(?string $estimatedLevel): static
+    {
+        $this->estimatedLevel = $estimatedLevel;
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getWeightKg(): ?float
+    {
+        return $this->weightKg;
+    }
+
+    public function setWeightKg(?float $weightKg): static
+    {
+        $this->weightKg = $weightKg;
+
+        return $this;
+    }
+
+    public function getHeightCm(): ?int
+    {
+        return $this->heightCm;
+    }
+
+    public function setHeightCm(?int $heightCm): static
+    {
+        $this->heightCm = $heightCm;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(?\DateTimeInterface $birthDate): static
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getTrainingLocation(): ?string
+    {
+        return $this->trainingLocation;
+    }
+
+    public function setTrainingLocation(?string $trainingLocation): static
+    {
+        $this->trainingLocation = $trainingLocation;
+
+        return $this;
+    }
+
+    public function getXp(): int
+    {
+        return $this->xp;
+    }
+
+    public function setXp(int $xp): static
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+
+    public function addXp(int $amount): static
+    {
+        $this->xp += $amount;
+
+        return $this;
+    }
+
+    public function getStreakDays(): int
+    {
+        return $this->streakDays;
+    }
+
+    public function setStreakDays(int $streakDays): static
+    {
+        $this->streakDays = $streakDays;
+
+        return $this;
+    }
+
+    public function getTotalWorkouts(): int
+    {
+        return $this->totalWorkouts;
+    }
+
+    public function setTotalWorkouts(int $totalWorkouts): static
+    {
+        $this->totalWorkouts = $totalWorkouts;
+
+        return $this;
+    }
+
+    public function incrementWorkouts(): static
+    {
+        ++$this->totalWorkouts;
+
+        return $this;
+    }
+
+    public function getAthleteLevel(): int
+    {
+        return $this->athleteLevel;
+    }
+
+    public function setAthleteLevel(int $athleteLevel): static
+    {
+        $this->athleteLevel = $athleteLevel;
+
+        return $this;
+    }
+
+    public function getLastWorkoutAt(): ?\DateTimeInterface
+    {
+        return $this->lastWorkoutAt;
+    }
+
+    public function setLastWorkoutAt(?\DateTimeInterface $lastWorkoutAt): static
+    {
+        $this->lastWorkoutAt = $lastWorkoutAt;
 
         return $this;
     }
