@@ -19,6 +19,7 @@ class UserLevelProgress
     public const STATUS_IN_PROGRESS = 'in_progress';
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_REPEAT = 'repeat';
+    public const STATUS_ABANDONED = 'abandoned';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -53,6 +54,9 @@ class UserLevelProgress
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $completedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $abandonedAt = null;
 
     /**
      * @var Collection<int, TestResult>
@@ -170,6 +174,26 @@ class UserLevelProgress
     public function setCompletedAt(?\DateTimeImmutable $completedAt): static
     {
         $this->completedAt = $completedAt;
+
+        return $this;
+    }
+
+    public function getAbandonedAt(): ?\DateTimeImmutable
+    {
+        return $this->abandonedAt;
+    }
+
+    public function setAbandonedAt(?\DateTimeImmutable $abandonedAt): static
+    {
+        $this->abandonedAt = $abandonedAt;
+
+        return $this;
+    }
+
+    public function abandon(): static
+    {
+        $this->status = self::STATUS_ABANDONED;
+        $this->abandonedAt = new \DateTimeImmutable();
 
         return $this;
     }

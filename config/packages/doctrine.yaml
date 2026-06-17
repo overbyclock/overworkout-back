@@ -6,6 +6,13 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '16'
 
+        # Fuerza InnoDB para evitar problemas con foreign keys cuando el servidor
+        # tenga otro motor por defecto (por ejemplo MyISAM).
+        default_table_options:
+            engine: InnoDB
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+
         profiling_collect_backtrace: '%kernel.debug%'
         schema_filter: '~^(?!doctrine_migration_versions|training_level$|training_program$|post_comments$|post_likes$|user_achievements$|user_notifications$)~'
     orm:

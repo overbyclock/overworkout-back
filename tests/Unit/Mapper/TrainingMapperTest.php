@@ -240,7 +240,6 @@ class TrainingMapperTest extends TestCase
 
         $reflection = new \ReflectionClass($oldRound);
         $idProp = $reflection->getProperty('id');
-        $idProp->setAccessible(true);
         $idProp->setValue($oldRound, 100);
 
         $exercise = new Exercises();
@@ -274,7 +273,6 @@ class TrainingMapperTest extends TestCase
 
         $reflection = new \ReflectionClass($existingRound);
         $idProp = $reflection->getProperty('id');
-        $idProp->setAccessible(true);
         $idProp->setValue($existingRound, 200);
 
         $this->roundRepository
@@ -307,7 +305,6 @@ class TrainingMapperTest extends TestCase
 
         $reflection = new \ReflectionClass($round);
         $idProp = $reflection->getProperty('id');
-        $idProp->setAccessible(true);
         $idProp->setValue($round, 300);
 
         $this->roundRepository
@@ -323,7 +320,6 @@ class TrainingMapperTest extends TestCase
 
         $exReflection = new \ReflectionClass($oldExercise);
         $exIdProp = $exReflection->getProperty('id');
-        $exIdProp->setAccessible(true);
         $exIdProp->setValue($oldExercise, 500);
 
         $exercise = new Exercises();

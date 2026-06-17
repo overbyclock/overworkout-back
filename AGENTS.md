@@ -8,8 +8,16 @@
 
 **OverWorkout Backend API** es una API REST privada para una aplicación de gestión de entrenamientos físicos (workouts). El backend gestiona usuarios, ejercicios, equipamiento, entrenamientos y programas de entrenamiento, con soporte para calistenia, CrossFit, HIIT y otras disciplinas.
 
+Este repositorio forma parte de un proyecto dividido en dos aplicaciones separadas:
+
+- **Backend API** (este repositorio): `C:/Projects/overworkout-back`
+- **Frontend / Admin Panel** (repositorio separado): `C:/Projects/overworkout-front`
+
+El frontend es una SPA con Vue 3 + Quasar Framework que consume esta API. Cualquier cambio en endpoints, DTOs o payloads debe coordinarse con el frontend.
+
 - **Licencia**: Propietaria (OverWorkout Team)
-- **Repositorio**: `overbyclock/overworkout-back`
+- **Repositorio backend**: `overbyclock/overworkout-back`
+- **Repositorio frontend**: `overbyclock/overworkout-front`
 - **Versión API**: 1.0.0
 - **Estado**: En desarrollo activo
 

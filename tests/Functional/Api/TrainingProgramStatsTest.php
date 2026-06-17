@@ -47,6 +47,21 @@ class TrainingProgramStatsTest extends WebTestCase
         $this->testProgram = $program;
     }
 
+    private function createProgram(string $name, string $slug, string $discipline, string $difficulty, bool $isActive = true): TrainingProgram
+    {
+        $program = new TrainingProgram();
+        $program->setName($name);
+        $program->setSlug($slug);
+        $program->setDiscipline($discipline);
+        $program->setDifficulty($difficulty);
+        $program->setTotalLevels(6);
+        $program->setIsActive($isActive);
+
+        $this->entityManager->persist($program);
+
+        return $program;
+    }
+
     private function createTestUserAndLogin(): void
     {
         $user = new User();
@@ -112,5 +127,72 @@ class TrainingProgramStatsTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testGetProgramsFilterByDiscipline(): void
+    {
+        $this->createProgram('CrossFit Program', 'crossfit-program', 'crossfit', 'intermediate');
+        $this->createProgram('Fitness Program', 'fitness-program', 'fitness', 'beginner');
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/training-programs?discipline=calisthenics',
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertCount(1, $data);
+        $this->assertSame('Test Stats Program', $data[0]['name']);
+    }
+
+    public function testGetProgramsFilterByDifficulty(): void
+    {
+        $this->createProgram('Advanced Program', 'advanced-program', 'calisthenics', 'expert');
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/training-programs?difficulty=beginner',
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertCount(1, $data);
+        $this->assertSame('Test Stats Program', $data[0]['name']);
+    }
+
+    public function testGetProgramsFilterByActive(): void
+    {
+        $this->createProgram('Inactive Program', 'inactive-program', 'calisthenics', 'beginner', false);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/training-programs?active=1',
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertGreaterThanOrEqual(1, \count($data));
+        $this->assertTrue($data[0]['isActive']);
     }
 }

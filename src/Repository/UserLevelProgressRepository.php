@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\TrainingLevel;
+use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -55,6 +56,55 @@ class UserLevelProgressRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @return UserLevelProgress[]
+     */
+    public function findAllActiveByUser(User $user): array
+    {
+        return $this->createQueryBuilder('ulp')
+            ->andWhere('ulp.user = :user')
+            ->andWhere('ulp.status IN (:statuses)')
+            ->setParameter('user', $user)
+            ->setParameter('statuses', [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT])
+            ->orderBy('ulp.startedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return UserLevelProgress[]
+     */
+    public function findByUserAndProgram(User $user, TrainingProgram $program): array
+    {
+        return $this->createQueryBuilder('ulp')
+            ->innerJoin('ulp.trainingLevel', 'tl')
+            ->andWhere('ulp.user = :user')
+            ->andWhere('tl.program = :program')
+            ->setParameter('user', $user)
+            ->setParameter('program', $program)
+            ->orderBy('tl.levelNumber', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return UserLevelProgress[]
+     */
+    public function findActiveByUserAndProgram(User $user, TrainingProgram $program): array
+    {
+        return $this->createQueryBuilder('ulp')
+            ->innerJoin('ulp.trainingLevel', 'tl')
+            ->andWhere('ulp.user = :user')
+            ->andWhere('tl.program = :program')
+            ->andWhere('ulp.status IN (:statuses)')
+            ->setParameter('user', $user)
+            ->setParameter('program', $program)
+            ->setParameter('statuses', [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT])
+            ->orderBy('tl.levelNumber', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(UserLevelProgress $entity, bool $flush = false): void

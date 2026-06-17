@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\TestResult;
+use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Repository\TrainingLevelRepository;
@@ -40,6 +41,70 @@ class LevelProgressService
             }
 
             $this->entityManager->persist($progress);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Inicia o reinicia el progreso de un programa sin afectar a otros programas activos.
+     * Si el usuario ya tiene un progreso activo en este programa, no se realiza ningún cambio.
+     * Si tiene progresos previos no activos, se eliminan para reiniciar de cero.
+     */
+    public function switchProgram(User $user, TrainingProgram $program): void
+    {
+        $existingProgresses = $this->progressRepository->findByUserAndProgram($user, $program);
+
+        // Si ya existe un progreso activo en este programa, no hacemos nada.
+        $hasActive = false;
+        foreach ($existingProgresses as $progress) {
+            if (\in_array($progress->getStatus(), [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT], true)) {
+                $hasActive = true;
+            }
+        }
+
+        if ($hasActive) {
+            return;
+        }
+
+        // Eliminar progresos previos del programa objetivo para reiniciar de cero
+        foreach ($existingProgresses as $progress) {
+            $this->entityManager->remove($progress);
+        }
+
+        $this->entityManager->flush();
+
+        // Inicializar progreso nuevo
+        $levels = $this->levelRepository->findByProgramOrdered($program->getId());
+        $this->initializeProgress($user, $levels);
+    }
+
+    /**
+     * Abandona uno o todos los programas activos del usuario.
+     * Si se indica un programa, solo se abandona ese. En caso contrario se abandonan todos los activos.
+     */
+    public function abandonActiveProgram(User $user, ?TrainingProgram $program = null): void
+    {
+        if (null !== $program) {
+            $programProgresses = $this->progressRepository->findByUserAndProgram($user, $program);
+
+            foreach ($programProgresses as $progress) {
+                $progress->abandon();
+            }
+
+            $this->entityManager->flush();
+
+            return;
+        }
+
+        $activeProgresses = $this->progressRepository->findAllActiveByUser($user);
+
+        if (empty($activeProgresses)) {
+            throw new \InvalidArgumentException('No tienes ningún programa activo para abandonar.');
+        }
+
+        foreach ($activeProgresses as $progress) {
+            $progress->abandon();
         }
 
         $this->entityManager->flush();

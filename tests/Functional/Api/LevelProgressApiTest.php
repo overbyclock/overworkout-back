@@ -24,6 +24,8 @@ class LevelProgressApiTest extends WebTestCase
 
     private ?TrainingProgram $testProgram = null;
 
+    private ?TrainingProgram $secondProgram = null;
+
     private $client;
 
     protected function setUp(): void
@@ -58,8 +60,29 @@ class LevelProgressApiTest extends WebTestCase
             $this->entityManager->persist($level);
         }
 
+        $secondProgram = new TrainingProgram();
+        $secondProgram->setName('Second Program');
+        $secondProgram->setDescription('Second description');
+        $secondProgram->setSlug('second-program');
+        $secondProgram->setDiscipline('crossfit');
+        $secondProgram->setDifficulty('intermediate');
+
+        $this->entityManager->persist($secondProgram);
+
+        for ($i = 1; $i <= 2; ++$i) {
+            $level = new TrainingLevel();
+            $level->setProgram($secondProgram);
+            $level->setLevelNumber($i);
+            $level->setName("Second Level {$i}");
+            $level->setTitle("Second Level {$i}");
+            $level->setEstimatedDurationWeeks(4);
+            $level->setProgramVersion('v2');
+            $this->entityManager->persist($level);
+        }
+
         $this->entityManager->flush();
         $this->testProgram = $program;
+        $this->secondProgram = $secondProgram;
     }
 
     private function createTestUserAndLogin(): void
@@ -353,5 +376,282 @@ class LevelProgressApiTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testSwitchProgramKeepsCurrentAndInitializesNew(): void
+    {
+        // Iniciar primer programa
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        // Iniciar segundo programa
+        $this->client->request(
+            'POST',
+            '/user/programs/'.$this->secondProgram->getId().'/switch',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Program switched successfully', $data['message']);
+        $this->assertSame('Second Program', $data['program']['name']);
+        $this->assertSame(2, $data['levelsCount']);
+
+        // Verificar que el primer programa sigue activo
+        $this->entityManager->clear();
+        $firstProgress = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndProgram($this->testUser, $this->testProgram);
+        $activeFirst = array_filter($firstProgress, fn ($p) => UserLevelProgress::STATUS_IN_PROGRESS === $p->getStatus());
+        $this->assertCount(1, $activeFirst);
+
+        // Verificar que el segundo programa también está activo
+        $secondProgress = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndProgram($this->testUser, $this->secondProgram);
+        $activeSecond = array_filter($secondProgress, fn ($p) => UserLevelProgress::STATUS_IN_PROGRESS === $p->getStatus());
+        $this->assertCount(1, $activeSecond);
+    }
+
+    public function testInitProgressAddsSecondActiveProgram(): void
+    {
+        // Iniciar primer programa
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Iniciar segundo programa con init (debería añadirse sin afectar al primero)
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->secondProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Progress initialized', $data['message']);
+
+        // Verificar que hay dos programas activos
+        $this->entityManager->clear();
+        $activePrograms = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findAllActiveByUser($this->testUser);
+        $this->assertCount(2, $activePrograms);
+    }
+
+    public function testGetActiveProgramsReturnsMultiplePrograms(): void
+    {
+        // Iniciar ambos programas
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'POST',
+            '/user/programs/'.$this->secondProgram->getId().'/switch',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Listar programas activos
+        $this->client->request(
+            'GET',
+            '/user/programs/active',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertCount(2, $data);
+        $names = array_column($data, 'name');
+        $this->assertContains('Test Program', $names);
+        $this->assertContains('Second Program', $names);
+
+        foreach ($data as $program) {
+            $this->assertArrayHasKey('progress', $program);
+            $this->assertArrayHasKey('percentage', $program['progress']);
+            $this->assertArrayHasKey('completedLevels', $program['progress']);
+            $this->assertArrayHasKey('totalLevels', $program['progress']);
+            $this->assertSame(0, $program['progress']['completedLevels']);
+            $this->assertGreaterThan(0, $program['progress']['totalLevels']);
+        }
+    }
+
+    public function testSwitchProgramReturns404ForInvalidProgram(): void
+    {
+        $this->client->request(
+            'POST',
+            '/user/programs/99999/switch',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testAbandonActiveProgramMarksProgressAsAbandoned(): void
+    {
+        // Iniciar primer programa
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Abandonar programa activo específico
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Programa abandonado correctamente.', $data['message']);
+
+        // Verificar que el progreso del primer programa está abandoned
+        $this->entityManager->clear();
+        $abandonedProgresses = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndProgram($this->testUser, $this->testProgram);
+        $this->assertCount(3, $abandonedProgresses);
+        foreach ($abandonedProgresses as $progress) {
+            $this->assertSame(UserLevelProgress::STATUS_ABANDONED, $progress->getStatus());
+        }
+    }
+
+    public function testAbandonOneProgramKeepsOtherActive(): void
+    {
+        // Iniciar ambos programas
+        $this->client->request(
+            'POST',
+            '/user/progress/init/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'POST',
+            '/user/programs/'.$this->secondProgram->getId().'/switch',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Abandonar solo el primer programa
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$this->testProgram->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Verificar que el segundo sigue activo
+        $this->entityManager->clear();
+        $secondProgress = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndProgram($this->testUser, $this->secondProgram);
+        $activeSecond = array_filter($secondProgress, fn ($p) => UserLevelProgress::STATUS_IN_PROGRESS === $p->getStatus());
+        $this->assertCount(1, $activeSecond);
+    }
+
+    public function testAbandonActiveProgramReturns404ForInvalidProgram(): void
+    {
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/99999',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(404, $response->getStatusCode());
     }
 }

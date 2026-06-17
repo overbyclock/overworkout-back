@@ -22,9 +22,9 @@ class TrainingSkillCrudTest extends WebTestCase
 
     private ?string $userToken = null;
 
-    private ?TrainingProgram $testProgram = null;
+    private ?int $testProgramId = null;
 
-    private ?TrainingLevel $testLevel = null;
+    private ?int $testLevelId = null;
 
     private $client;
 
@@ -57,8 +57,24 @@ class TrainingSkillCrudTest extends WebTestCase
         $this->entityManager->persist($level);
         $this->entityManager->flush();
 
-        $this->testProgram = $program;
-        $this->testLevel = $level;
+        $this->testProgramId = $program->getId();
+        $this->testLevelId = $level->getId();
+    }
+
+    private function getTestProgram(): TrainingProgram
+    {
+        $program = $this->entityManager->getRepository(TrainingProgram::class)->find($this->testProgramId);
+        $this->assertInstanceOf(TrainingProgram::class, $program);
+
+        return $program;
+    }
+
+    private function getTestLevel(): TrainingLevel
+    {
+        $level = $this->entityManager->getRepository(TrainingLevel::class)->find($this->testLevelId);
+        $this->assertInstanceOf(TrainingLevel::class, $level);
+
+        return $level;
     }
 
     private function createTestUsersAndLogin(): void
@@ -124,8 +140,8 @@ class TrainingSkillCrudTest extends WebTestCase
             json_encode([
                 'name' => 'Handstand Wall',
                 'family' => 'handstand',
-                'programId' => $this->testProgram->getId(),
-                'levelId' => $this->testLevel->getId(),
+                'programId' => $this->testProgramId,
+                'levelId' => $this->testLevelId,
                 'unlockAtLevel' => 1,
                 'description' => 'Apoyo en pared',
                 'isKeySkill' => true,
@@ -155,8 +171,8 @@ class TrainingSkillCrudTest extends WebTestCase
             json_encode([
                 'name' => 'Forbidden Skill',
                 'family' => 'test',
-                'programId' => $this->testProgram->getId(),
-                'levelId' => $this->testLevel->getId(),
+                'programId' => $this->testProgramId,
+                'levelId' => $this->testLevelId,
                 'unlockAtLevel' => 1,
             ])
         );
@@ -170,8 +186,8 @@ class TrainingSkillCrudTest extends WebTestCase
         $skill = new TrainingSkill();
         $skill->setName('Test Skill');
         $skill->setFamily('test');
-        $skill->setProgram($this->testProgram);
-        $skill->setLevel($this->testLevel);
+        $skill->setProgram($this->getTestProgram());
+        $skill->setLevel($this->getTestLevel());
         $skill->setUnlockAtLevel(1);
 
         $this->entityManager->persist($skill);
@@ -199,8 +215,8 @@ class TrainingSkillCrudTest extends WebTestCase
         $skill = new TrainingSkill();
         $skill->setName('Single Skill');
         $skill->setFamily('test');
-        $skill->setProgram($this->testProgram);
-        $skill->setLevel($this->testLevel);
+        $skill->setProgram($this->getTestProgram());
+        $skill->setLevel($this->getTestLevel());
         $skill->setUnlockAtLevel(2);
 
         $this->entityManager->persist($skill);
@@ -227,8 +243,8 @@ class TrainingSkillCrudTest extends WebTestCase
         $skill = new TrainingSkill();
         $skill->setName('Original');
         $skill->setFamily('original');
-        $skill->setProgram($this->testProgram);
-        $skill->setLevel($this->testLevel);
+        $skill->setProgram($this->getTestProgram());
+        $skill->setLevel($this->getTestLevel());
         $skill->setUnlockAtLevel(1);
 
         $this->entityManager->persist($skill);
@@ -264,8 +280,8 @@ class TrainingSkillCrudTest extends WebTestCase
         $skill = new TrainingSkill();
         $skill->setName('To Delete');
         $skill->setFamily('test');
-        $skill->setProgram($this->testProgram);
-        $skill->setLevel($this->testLevel);
+        $skill->setProgram($this->getTestProgram());
+        $skill->setLevel($this->getTestLevel());
         $skill->setUnlockAtLevel(1);
 
         $this->entityManager->persist($skill);
@@ -284,6 +300,7 @@ class TrainingSkillCrudTest extends WebTestCase
         $response = $this->client->getResponse();
         $this->assertSame(200, $response->getStatusCode());
 
+        $this->entityManager->clear();
         $deletedSkill = $this->entityManager->getRepository(TrainingSkill::class)->find($skillId);
         $this->assertNull($deletedSkill);
     }

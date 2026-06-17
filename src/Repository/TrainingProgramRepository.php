@@ -39,4 +39,30 @@ class TrainingProgramRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return TrainingProgram[]
+     */
+    public function findByFilters(?string $discipline = null, ?string $difficulty = null, ?bool $isActive = null): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.name', 'ASC');
+
+        if (null !== $discipline) {
+            $qb->andWhere('p.discipline = :discipline')
+                ->setParameter('discipline', $discipline);
+        }
+
+        if (null !== $difficulty) {
+            $qb->andWhere('p.difficulty = :difficulty')
+                ->setParameter('difficulty', $difficulty);
+        }
+
+        if (null !== $isActive) {
+            $qb->andWhere('p.isActive = :isActive')
+                ->setParameter('isActive', $isActive);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

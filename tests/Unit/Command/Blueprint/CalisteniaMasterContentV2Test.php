@@ -6,13 +6,12 @@ namespace App\Tests\Unit\Command\Blueprint;
 
 use App\Command\Blueprint\CalisteniaMasterBlueprintV2;
 use App\Command\Blueprint\CalisteniaMasterContentV2;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CalisteniaMasterContentV2Test extends TestCase
 {
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTips(int $levelNumber): void
     {
         $content = CalisteniaMasterContentV2::getLevelContent($levelNumber);
@@ -21,9 +20,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         self::assertGreaterThanOrEqual(5, \count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTrainingWeeks(int $levelNumber): void
     {
         $content = CalisteniaMasterContentV2::getLevelContent($levelNumber);
@@ -42,9 +39,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         }
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasProgression(int $levelNumber): void
     {
         $content = CalisteniaMasterContentV2::getLevelContent($levelNumber);
@@ -56,9 +51,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         self::assertArrayHasKey('week3', $content['progression']);
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTestWeek(int $levelNumber): void
     {
         $content = CalisteniaMasterContentV2::getLevelContent($levelNumber);
@@ -80,9 +73,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         }
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasExerciseNotesForCommonExercises(int $levelNumber): void
     {
         $commonExercises = ['Standard Push Up', 'Plank', 'Air Squat', 'Australian Pull Up'];
@@ -100,9 +91,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         self::assertTrue($hasNotes, "Level {$levelNumber} should have notes for at least one common exercise");
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasMetaData(int $levelNumber): void
     {
         $meta = CalisteniaMasterBlueprintV2::getLevelMeta($levelNumber);
@@ -119,9 +108,7 @@ class CalisteniaMasterContentV2Test extends TestCase
         self::assertNotEmpty($meta['title']);
     }
 
-    /**
-     * @dataProvider dayProvider
-     */
+    #[DataProvider('dayProvider')]
     public function testEveryDayAndPhaseHasValidData(int $levelNumber, string $dayKey, string $phase): void
     {
         $data = CalisteniaMasterBlueprintV2::getDayData($levelNumber, $dayKey, $phase);

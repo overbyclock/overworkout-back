@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Command\Blueprint;
 
 use App\Command\Blueprint\CalisteniaMasterContent;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CalisteniaMasterContentTest extends TestCase
 {
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTips(int $levelNumber): void
     {
         $content = CalisteniaMasterContent::getLevelContent($levelNumber);
@@ -20,9 +19,7 @@ class CalisteniaMasterContentTest extends TestCase
         self::assertGreaterThanOrEqual(5, \count($content['tips']), "Level {$levelNumber} should have at least 5 tips");
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTrainingWeeks(int $levelNumber): void
     {
         $content = CalisteniaMasterContent::getLevelContent($levelNumber);
@@ -41,9 +38,7 @@ class CalisteniaMasterContentTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasProgression(int $levelNumber): void
     {
         $content = CalisteniaMasterContent::getLevelContent($levelNumber);
@@ -55,9 +50,7 @@ class CalisteniaMasterContentTest extends TestCase
         self::assertArrayHasKey('week3', $content['progression']);
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasTestWeek(int $levelNumber): void
     {
         $content = CalisteniaMasterContent::getLevelContent($levelNumber);
@@ -79,9 +72,7 @@ class CalisteniaMasterContentTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider levelProvider
-     */
+    #[DataProvider('levelProvider')]
     public function testEveryLevelHasExerciseNotesForCommonExercises(int $levelNumber): void
     {
         // Verificar que al menos algunos ejercicios clave tienen notes

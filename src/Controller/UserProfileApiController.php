@@ -57,12 +57,16 @@ class UserProfileApiController extends AbstractController
             return $this->json(['error' => 'Se requiere un array de resultados'], 400);
         }
 
+        // Persistir preferencias del onboarding si se proporcionan
+        $profileData = [
+            'trainingGoal' => $data['trainingGoal'] ?? $user->getTrainingGoal(),
+            'estimatedLevel' => $data['estimatedLevel'] ?? $user->getEstimatedLevel(),
+        ];
+        $this->userProfileService->updateProfile($user, $profileData);
+
         $recommendedProgram = $this->userProfileService->recommendProgram(
             $data['results'],
-            [
-                'trainingGoal' => $data['trainingGoal'] ?? $user->getTrainingGoal(),
-                'estimatedLevel' => $data['estimatedLevel'] ?? $user->getEstimatedLevel(),
-            ]
+            $profileData
         );
 
         if (null === $recommendedProgram) {

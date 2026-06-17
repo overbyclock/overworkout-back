@@ -10,10 +10,12 @@ use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Mapper\TrainingProgramMapper;
 use App\Repository\AchievementRepository;
+use App\Repository\TrainingProgramRepository;
 use App\Security\Voter\TrainingProgramVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -30,11 +32,19 @@ class TrainingProgramApiController extends AbstractController
     }
 
     #[Route('', name: 'get_all_training_programs', methods: ['GET'])]
-    public function getAll(): JsonResponse
+    public function getAll(Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted(TrainingProgramVoter::LIST_ALL);
 
-        $programs = $this->entityManager->getRepository(TrainingProgram::class)->findAll();
+        $discipline = $request->query->get('discipline');
+        $difficulty = $request->query->get('difficulty');
+        $active = $request->query->has('active')
+            ? filter_var($request->query->get('active'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+            : null;
+
+        /** @var TrainingProgramRepository $programRepository */
+        $programRepository = $this->entityManager->getRepository(TrainingProgram::class);
+        $programs = $programRepository->findByFilters($discipline ?: null, $difficulty ?: null, $active);
 
         return $this->json($programs, 200, [], ['groups' => ['program:read']]);
     }
