@@ -53,27 +53,27 @@ class Exercises
     private ?int $difficultyRating = 1;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $description = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $setupInstructions = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $executionInstructions = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $movementStandards = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?array $commonFaults = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ_DETAIL])]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $safetyTips = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
