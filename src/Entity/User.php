@@ -113,10 +113,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserLevelProgress::class, mappedBy: 'user')]
     private Collection $levelProgress;
 
+    /**
+     * @var Collection<int, UserFavoriteTraining>
+     */
+    #[ORM\OneToMany(targetEntity: UserFavoriteTraining::class, mappedBy: 'user')]
+    private Collection $favoriteTrainings;
+
     public function __construct()
     {
         $this->trainings = new ArrayCollection();
         $this->levelProgress = new ArrayCollection();
+        $this->favoriteTrainings = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -439,5 +446,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFavoriteTraining>
+     */
+    public function getFavoriteTrainings(): Collection
+    {
+        return $this->favoriteTrainings;
     }
 }
