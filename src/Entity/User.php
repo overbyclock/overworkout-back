@@ -125,12 +125,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserFavoriteProgram::class, mappedBy: 'user')]
     private Collection $favoritePrograms;
 
+    /**
+     * @var Collection<int, UserTrainingLog>
+     */
+    #[ORM\OneToMany(targetEntity: UserTrainingLog::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userTrainingLogs;
+
     public function __construct()
     {
         $this->trainings = new ArrayCollection();
         $this->levelProgress = new ArrayCollection();
         $this->favoriteTrainings = new ArrayCollection();
         $this->favoritePrograms = new ArrayCollection();
+        $this->userTrainingLogs = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -469,5 +476,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFavoritePrograms(): Collection
     {
         return $this->favoritePrograms;
+    }
+
+    /**
+     * @return Collection<int, UserTrainingLog>
+     */
+    public function getUserTrainingLogs(): Collection
+    {
+        return $this->userTrainingLogs;
+    }
+
+    public function addUserTrainingLog(UserTrainingLog $userTrainingLog): static
+    {
+        if (!$this->userTrainingLogs->contains($userTrainingLog)) {
+            $this->userTrainingLogs->add($userTrainingLog);
+            $userTrainingLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserTrainingLog(UserTrainingLog $userTrainingLog): static
+    {
+        if ($this->userTrainingLogs->removeElement($userTrainingLog)) {
+            if ($userTrainingLog->getUser() === $this) {
+                $userTrainingLog->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -81,9 +81,16 @@ class Training
     #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     private ?int $estimatedDurationMax = null;
 
+    /**
+     * @var Collection<int, UserTrainingLog>
+     */
+    #[ORM\OneToMany(targetEntity: UserTrainingLog::class, mappedBy: 'training')]
+    private Collection $userTrainingLogs;
+
     public function __construct()
     {
         $this->trainingRounds = new ArrayCollection();
+        $this->userTrainingLogs = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -281,6 +288,35 @@ class Training
     public function setEstimatedDurationMax(?int $estimatedDurationMax): static
     {
         $this->estimatedDurationMax = $estimatedDurationMax;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserTrainingLog>
+     */
+    public function getUserTrainingLogs(): Collection
+    {
+        return $this->userTrainingLogs;
+    }
+
+    public function addUserTrainingLog(UserTrainingLog $userTrainingLog): static
+    {
+        if (!$this->userTrainingLogs->contains($userTrainingLog)) {
+            $this->userTrainingLogs->add($userTrainingLog);
+            $userTrainingLog->setTraining($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserTrainingLog(UserTrainingLog $userTrainingLog): static
+    {
+        if ($this->userTrainingLogs->removeElement($userTrainingLog)) {
+            if ($userTrainingLog->getTraining() === $this) {
+                $userTrainingLog->setTraining(null);
+            }
+        }
 
         return $this;
     }
