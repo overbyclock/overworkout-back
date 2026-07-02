@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\TrainingLevel;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,5 +60,42 @@ class UserTrainingLogRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return (int) $result;
+    }
+
+    /**
+     * Devuelve la sesión de entrenamiento iniciada pero no completada más reciente
+     * de un usuario, o null si no tiene ninguna.
+     */
+    public function findStartedButNotCompletedByUser(User $user): ?UserTrainingLog
+    {
+        return $this->createQueryBuilder('log')
+            ->where('log.user = :user')
+            ->andWhere('log.startedAt IS NOT NULL')
+            ->andWhere('log.completedAt IS NULL')
+            ->setParameter('user', $user)
+            ->orderBy('log.startedAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Devuelve los logs completados por un usuario para un nivel y semana concretos.
+     *
+     * @return UserTrainingLog[]
+     */
+    public function findCompletedByUserAndLevelAndWeek(User $user, TrainingLevel $level, int $weekNumber): array
+    {
+        return $this->createQueryBuilder('log')
+            ->innerJoin('log.training', 'training')
+            ->where('log.user = :user')
+            ->andWhere('training.trainingLevel = :level')
+            ->andWhere('training.weekNumber = :weekNumber')
+            ->andWhere('log.completedAt IS NOT NULL')
+            ->setParameter('user', $user)
+            ->setParameter('level', $level)
+            ->setParameter('weekNumber', $weekNumber)
+            ->getQuery()
+            ->getResult();
     }
 }
