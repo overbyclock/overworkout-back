@@ -286,6 +286,7 @@ final class UserFavoriteApiTest extends WebTestCase
         $this->assertArrayHasKey('rounds', $trainingFavorite['training']);
 
         $programFavorite = $data['programs'][0];
+        $this->assertArrayHasKey('levelCount', $programFavorite['trainingProgram']);
         $this->assertArrayHasKey('totalPhases', $programFavorite['trainingProgram']);
         $this->assertArrayHasKey('totalSessions', $programFavorite['trainingProgram']);
     }

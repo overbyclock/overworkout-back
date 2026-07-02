@@ -211,6 +211,12 @@ class TrainingProgram
     }
 
     #[Groups([self::GROUP_READ])]
+    public function getLevelCount(): int
+    {
+        return $this->levels->count();
+    }
+
+    #[Groups([self::GROUP_READ])]
     public function getTotalPhases(): int
     {
         $total = 0;
