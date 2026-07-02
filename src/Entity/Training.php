@@ -268,6 +268,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getEstimatedDurationMin(): ?int
     {
         return $this->estimatedDurationMin;
@@ -280,6 +281,7 @@ class Training
         return $this;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_READ_DETAIL])]
     public function getEstimatedDurationMax(): ?int
     {
         return $this->estimatedDurationMax;
