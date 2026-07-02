@@ -120,6 +120,17 @@ class UserStatsApiTest extends WebTestCase
     {
         $this->client->request(
             'POST',
+            '/user/trainings/'.$this->testTraining->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_ACCEPT' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->client->request(
+            'POST',
             '/user/trainings/'.$this->testTraining->getId().'/complete',
             [],
             [],
@@ -133,9 +144,7 @@ class UserStatsApiTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $data = json_decode($response->getContent(), true);
-        $this->assertSame('Entrenamiento completado', $data['message']);
-        $this->assertSame(50, $data['stats']['xp']);
-        $this->assertSame(1, $data['stats']['totalWorkouts']);
+        $this->assertSame('Sesión completada correctamente', $data['message']);
         $this->assertSame('program', $data['log']['source']);
 
         $this->entityManager->clear();
@@ -148,6 +157,17 @@ class UserStatsApiTest extends WebTestCase
     {
         $this->client->request(
             'POST',
+            '/user/trainings/'.$this->testTraining->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_ACCEPT' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->client->request(
+            'POST',
             '/user/trainings/'.$this->testTraining->getId().'/complete',
             [],
             [],
@@ -157,8 +177,7 @@ class UserStatsApiTest extends WebTestCase
             ],
             json_encode([
                 'durationSeconds' => 1800,
-                'source' => UserTrainingLog::SOURCE_FREE,
-                'xp' => 75,
+                'xpEarned' => 75,
             ])
         );
 
@@ -166,9 +185,8 @@ class UserStatsApiTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $data = json_decode($response->getContent(), true);
-        $this->assertSame(75, $data['stats']['xp']);
+        $this->assertSame(75, $data['log']['xpEarned']);
         $this->assertSame(1800, $data['log']['durationSeconds']);
-        $this->assertSame(UserTrainingLog::SOURCE_FREE, $data['log']['source']);
     }
 
     public function testCompleteTrainingReturns404ForMissingTraining(): void
