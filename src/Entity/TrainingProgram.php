@@ -209,4 +209,28 @@ class TrainingProgram
 
         return $this;
     }
+
+    #[Groups([self::GROUP_READ])]
+    public function getTotalPhases(): int
+    {
+        $total = 0;
+
+        foreach ($this->levels as $level) {
+            $total += $level->getWeekInfos()->count();
+        }
+
+        return $total;
+    }
+
+    #[Groups([self::GROUP_READ])]
+    public function getTotalSessions(): int
+    {
+        $total = 0;
+
+        foreach ($this->levels as $level) {
+            $total += $level->getTrainings()->count();
+        }
+
+        return $total;
+    }
 }

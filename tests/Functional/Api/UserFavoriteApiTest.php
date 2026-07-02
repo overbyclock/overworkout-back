@@ -284,6 +284,10 @@ final class UserFavoriteApiTest extends WebTestCase
         $this->assertArrayHasKey('estimatedDurationMin', $trainingFavorite['training']);
         $this->assertArrayHasKey('estimatedDurationMax', $trainingFavorite['training']);
         $this->assertArrayHasKey('rounds', $trainingFavorite['training']);
+
+        $programFavorite = $data['programs'][0];
+        $this->assertArrayHasKey('totalPhases', $programFavorite['trainingProgram']);
+        $this->assertArrayHasKey('totalSessions', $programFavorite['trainingProgram']);
     }
 
     public function testCannotManageOtherUserFavorite(): void

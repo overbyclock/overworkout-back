@@ -46,6 +46,10 @@ class TrainingProgramRepository extends ServiceEntityRepository
     public function findByFilters(?string $discipline = null, ?string $difficulty = null, ?bool $isActive = null): array
     {
         $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.levels', 'l')
+            ->leftJoin('l.weekInfos', 'w')
+            ->leftJoin('l.trainings', 't')
+            ->addSelect('l', 'w', 't')
             ->orderBy('p.name', 'ASC');
 
         if (null !== $discipline) {
