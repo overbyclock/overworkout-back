@@ -38,7 +38,11 @@ class UserTrainingLog
     #[Groups([self::GROUP_READ])]
     private string $source = self::SOURCE_PROGRAM;
 
-    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?\DateTimeImmutable $startedAt = null;
+
+    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     #[Groups([self::GROUP_READ])]
     private ?\DateTimeImmutable $completedAt = null;
 
@@ -52,7 +56,8 @@ class UserTrainingLog
 
     public function __construct()
     {
-        $this->completedAt = new \DateTimeImmutable();
+        $this->startedAt = new \DateTimeImmutable();
+        $this->completedAt = null;
     }
 
     public function getId(): ?int
@@ -96,12 +101,24 @@ class UserTrainingLog
         return $this;
     }
 
+    public function getStartedAt(): ?\DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+
+    public function setStartedAt(?\DateTimeImmutable $startedAt): static
+    {
+        $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
     public function getCompletedAt(): ?\DateTimeImmutable
     {
         return $this->completedAt;
     }
 
-    public function setCompletedAt(\DateTimeImmutable $completedAt): static
+    public function setCompletedAt(?\DateTimeImmutable $completedAt): static
     {
         $this->completedAt = $completedAt;
 

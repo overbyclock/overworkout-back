@@ -38,9 +38,7 @@ class UserStatsService
             $log->setDurationSeconds($context['durationSeconds']);
         }
 
-        if (isset($context['completedAt']) && $context['completedAt'] instanceof \DateTimeImmutable) {
-            $log->setCompletedAt($context['completedAt']);
-        }
+        $log->setCompletedAt($context['completedAt'] ?? new \DateTimeImmutable());
 
         $user->addUserTrainingLog($log);
         $user->addXp($log->getXpEarned());
