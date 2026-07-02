@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,5 +41,26 @@ class TrainingLevelRepository extends ServiceEntityRepository
             ->setParameter('levelNumber', $levelNumber)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Devuelve los entrenamientos de un nivel para una semana concreta,
+     * ordenados por day_key y por id.
+     *
+     * @return Training[]
+     */
+    public function findTrainingsForWeek(TrainingLevel $level, int $weekNumber): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from(Training::class, 't')
+            ->where('t.trainingLevel = :level')
+            ->andWhere('t.weekNumber = :weekNumber')
+            ->setParameter('level', $level)
+            ->setParameter('weekNumber', $weekNumber)
+            ->orderBy('t.dayKey', 'ASC')
+            ->addOrderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }
