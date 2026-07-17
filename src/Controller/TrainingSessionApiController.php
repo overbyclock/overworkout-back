@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Training;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
+use App\Entity\UserTrainingSessionStep;
 use App\Service\TrainingSessionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,17 +37,24 @@ final class TrainingSessionApiController extends AbstractController
         $training = $this->findTrainingOr404($trainingId);
 
         try {
-            $log = $this->sessionService->startSession($user, $training);
+            $result = $this->sessionService->startSession($user, $training);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], 400);
         }
 
+        $log = $result['log'];
+
         return $this->json([
-            'message' => 'Sesión iniciada correctamente',
+            'message' => $result['created'] ? 'Sesión iniciada correctamente' : 'Sesión ya iniciada',
             'log' => $this->normalizer->normalize($log, null, [
                 'groups' => [UserTrainingLog::GROUP_READ, Training::GROUP_READ],
             ]),
-        ], 201);
+            'logId' => $log->getId(),
+            'currentPosition' => $log->getCurrentPosition(),
+            'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
+                'groups' => [UserTrainingSessionStep::GROUP_READ],
+            ]),
+        ], $result['created'] ? 201 : 200);
     }
 
     #[Route('/user/trainings/{trainingId}/complete', name: 'training_session_complete', requirements: ['trainingId' => '\\d+'], methods: ['POST'])]

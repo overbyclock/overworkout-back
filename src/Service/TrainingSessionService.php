@@ -22,15 +22,25 @@ readonly class TrainingSessionService
         private UserTrainingLogRepository $trainingLogRepository,
         private TrainingLevelRepository $levelRepository,
         private LevelProgressService $levelProgressService,
+        private TrainingSessionExpander $expander,
     ) {
     }
 
     /**
-     * Inicia una sesión de entrenamiento. Si el entrenamiento pertenece a un nivel,
-     * se asegura de que el usuario tenga un progreso activo para dicho nivel.
+     * Inicia una sesión de entrenamiento generando el snapshot de pasos.
+     * Si ya existe una sesión activa para el entrenamiento, la devuelve sin
+     * crear una nueva (idempotente).
+     *
+     * @return array{log: UserTrainingLog, created: bool}
      */
-    public function startSession(User $user, Training $training): UserTrainingLog
+    public function startSession(User $user, Training $training): array
     {
+        $existing = $this->trainingLogRepository->findActiveByUserAndTraining($user, $training);
+
+        if (null !== $existing) {
+            return ['log' => $existing, 'created' => false];
+        }
+
         $level = $training->getTrainingLevel();
 
         if (null !== $level) {
@@ -40,12 +50,15 @@ readonly class TrainingSessionService
         $log = new UserTrainingLog();
         $log->setUser($user);
         $log->setTraining($training);
-        $log->setSource(UserTrainingLog::SOURCE_PROGRAM);
+        $log->setSource(null !== $level ? UserTrainingLog::SOURCE_PROGRAM : UserTrainingLog::SOURCE_FREE);
+
+        // Puede lanzar InvalidArgumentException si el entrenamiento no tiene contenido.
+        $this->expander->expand($training, $log);
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
 
-        return $log;
+        return ['log' => $log, 'created' => true];
     }
 
     /**
@@ -54,15 +67,7 @@ readonly class TrainingSessionService
      */
     public function completeSession(User $user, Training $training, ?int $durationSeconds, int $xpEarned): UserTrainingLog
     {
-        $log = $this->trainingLogRepository->createQueryBuilder('log')
-            ->where('log.user = :user')
-            ->andWhere('log.training = :training')
-            ->andWhere('log.completedAt IS NULL')
-            ->setParameter('user', $user)
-            ->setParameter('training', $training)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $log = $this->trainingLogRepository->findActiveByUserAndTraining($user, $training);
 
         if (!$log instanceof UserTrainingLog) {
             throw new \InvalidArgumentException('No hay una sesión activa para este entrenamiento.');

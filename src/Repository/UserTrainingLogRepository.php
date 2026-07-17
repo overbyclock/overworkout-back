@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
@@ -74,6 +75,23 @@ class UserTrainingLogRepository extends ServiceEntityRepository
             ->andWhere('log.completedAt IS NULL')
             ->setParameter('user', $user)
             ->orderBy('log.startedAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Devuelve la sesión activa (iniciada y no completada) de un usuario para
+     * un entrenamiento concreto, o null si no existe.
+     */
+    public function findActiveByUserAndTraining(User $user, Training $training): ?UserTrainingLog
+    {
+        return $this->createQueryBuilder('log')
+            ->where('log.user = :user')
+            ->andWhere('log.training = :training')
+            ->andWhere('log.completedAt IS NULL')
+            ->setParameter('user', $user)
+            ->setParameter('training', $training)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

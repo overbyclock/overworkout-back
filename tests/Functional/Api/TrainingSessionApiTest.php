@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
+use App\Entity\Exercises;
 use App\Entity\Training;
+use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
+use App\Entity\TrainingRound;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Entity\UserTrainingLog;
 use App\Enum\Discipline;
+use App\Enum\Levels;
+use App\Enum\MuscleGroup;
 use App\Enum\TargetWorkout;
 use App\Repository\UserLevelProgressRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -103,10 +108,36 @@ final class TrainingSessionApiTest extends WebTestCase
         $training->setTrainingLevel($level);
         $training->setWeekNumber($weekNumber);
 
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setRestBetweenRounds(60);
+
+        $config = new TrainingExerciseConfiguration();
+        $config->setExercise($this->createExercise($name.' Exercise'));
+        $config->setReps(10);
+        $config->setSets(2);
+        $config->setRestBetweenSets(60);
+        $config->setRestBetweenExercises(30);
+
+        $round->addTrainingExerciseConfiguration($config);
+        $training->addTrainingRound($round);
+
         $this->entityManager->persist($training);
         $this->entityManager->flush();
 
         return $training;
+    }
+
+    private function createExercise(string $name): Exercises
+    {
+        $exercise = new Exercises();
+        $exercise->setName($name);
+        $exercise->setPrimaryMuscleGroup(MuscleGroup::CHEST);
+        $exercise->setLevel(Levels::BEGINNER);
+
+        $this->entityManager->persist($exercise);
+
+        return $exercise;
     }
 
     public function testStartSessionForFreeTraining(): void
@@ -408,5 +439,78 @@ final class TrainingSessionApiTest extends WebTestCase
         $data = json_decode($response->getContent(), true);
         $this->assertSame('No hay sesiones pendientes', $data['message']);
         $this->assertNull($data['session']);
+    }
+
+    public function testStartSessionCreatesStepsSnapshot(): void
+    {
+        $training = $this->createTraining();
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(201, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('logId', $data);
+        $this->assertSame(0, $data['currentPosition']);
+        // Fixture: 2 series + 1 descanso entre series = 3 pasos
+        $this->assertCount(3, $data['steps']);
+        $this->assertSame('exercise', $data['steps'][0]['type']);
+        $this->assertSame('pending', $data['steps'][0]['status']);
+        $this->assertSame(10, $data['steps'][0]['payload']['reps']);
+        $this->assertSame('rest', $data['steps'][1]['type']);
+        $this->assertSame(60, $data['steps'][1]['payload']['restSeconds']);
+        $this->assertSame('exercise', $data['steps'][2]['type']);
+    }
+
+    public function testStartSessionIsIdempotent(): void
+    {
+        $training = $this->createTraining();
+
+        $headers = [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            'HTTP_ACCEPT' => 'application/json',
+        ];
+
+        $this->client->request('POST', '/user/trainings/'.$training->getId().'/start', [], [], $headers);
+        $firstData = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->client->request('POST', '/user/trainings/'.$training->getId().'/start', [], [], $headers);
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Sesión ya iniciada', $data['message']);
+        $this->assertSame($firstData['logId'], $data['logId']);
+        $this->assertCount(3, $data['steps']);
+    }
+
+    public function testStartSessionSetsFreeSourceForTrainingWithoutLevel(): void
+    {
+        $training = $this->createTraining();
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame(UserTrainingLog::SOURCE_FREE, $data['log']['source']);
     }
 }

@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
+use App\Entity\Exercises;
 use App\Entity\Training;
+use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
+use App\Entity\TrainingRound;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
 use App\Enum\Discipline;
+use App\Enum\Levels;
+use App\Enum\MuscleGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -62,6 +67,25 @@ class UserStatsApiTest extends WebTestCase
         $training->setName('Stats Test Training');
         $training->setTrainingLevel($level);
         $this->entityManager->persist($training);
+
+        // Desde Task 3, iniciar sesión exige que el entrenamiento tenga contenido.
+        $exercise = new Exercises();
+        $exercise->setName('Stats Test Exercise');
+        $exercise->setPrimaryMuscleGroup(MuscleGroup::CHEST);
+        $exercise->setLevel(Levels::BEGINNER);
+        $this->entityManager->persist($exercise);
+
+        $config = new TrainingExerciseConfiguration();
+        $config->setExercise($exercise);
+        $config->setReps(10);
+        $config->setSets(1);
+        $config->setRestBetweenSets(60);
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setRestBetweenRounds(60);
+        $round->addTrainingExerciseConfiguration($config);
+        $training->addTrainingRound($round);
 
         $this->entityManager->flush();
 
