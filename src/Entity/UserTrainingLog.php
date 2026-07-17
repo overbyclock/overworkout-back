@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserTrainingLogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -54,10 +56,22 @@ class UserTrainingLog
     #[Groups([self::GROUP_READ])]
     private int $xpEarned = 0;
 
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups([self::GROUP_READ])]
+    private int $currentPosition = 0;
+
+    /**
+     * @var Collection<int, UserTrainingSessionStep>
+     */
+    #[ORM\OneToMany(targetEntity: UserTrainingSessionStep::class, mappedBy: 'log', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $sessionSteps;
+
     public function __construct()
     {
         $this->startedAt = new \DateTimeImmutable();
         $this->completedAt = null;
+        $this->sessionSteps = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +159,47 @@ class UserTrainingLog
     public function setXpEarned(int $xpEarned): static
     {
         $this->xpEarned = $xpEarned;
+
+        return $this;
+    }
+
+    public function getCurrentPosition(): int
+    {
+        return $this->currentPosition;
+    }
+
+    public function setCurrentPosition(int $currentPosition): static
+    {
+        $this->currentPosition = $currentPosition;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserTrainingSessionStep>
+     */
+    public function getSessionSteps(): Collection
+    {
+        return $this->sessionSteps;
+    }
+
+    public function addSessionStep(UserTrainingSessionStep $step): static
+    {
+        if (!$this->sessionSteps->contains($step)) {
+            $this->sessionSteps->add($step);
+            $step->setLog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionStep(UserTrainingSessionStep $step): static
+    {
+        if ($this->sessionSteps->removeElement($step)) {
+            if ($step->getLog() === $this) {
+                $step->setLog(null);
+            }
+        }
 
         return $this;
     }

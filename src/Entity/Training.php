@@ -44,6 +44,7 @@ class Training
      * @var Collection<int, TrainingRound>
      */
     #[ORM\OneToMany(targetEntity: TrainingRound::class, mappedBy: 'training', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $trainingRounds;
 
     #[ORM\Column(length: 255, nullable: true)]

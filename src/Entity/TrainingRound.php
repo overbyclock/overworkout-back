@@ -122,6 +122,7 @@ class TrainingRound
      * @var Collection<int, TrainingExerciseConfiguration>
      */
     #[ORM\OneToMany(targetEntity: TrainingExerciseConfiguration::class, mappedBy: 'trainingRound', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private Collection $trainingExerciseConfigurations;
 
