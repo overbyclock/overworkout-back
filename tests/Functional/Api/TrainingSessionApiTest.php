@@ -513,4 +513,102 @@ final class TrainingSessionApiTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame(UserTrainingLog::SOURCE_FREE, $data['log']['source']);
     }
+
+    public function testGetSessionReturnsStepsAndPosition(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'GET',
+            '/user/sessions/'.$logId,
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame($logId, $data['logId']);
+        $this->assertSame($training->getId(), $data['training']['id']);
+        $this->assertSame(0, $data['currentPosition']);
+        $this->assertNull($data['completedAt']);
+        $this->assertCount(3, $data['steps']);
+    }
+
+    public function testGetSessionReturns404ForNonExistentSession(): void
+    {
+        $this->client->request(
+            'GET',
+            '/user/sessions/999999',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testGetSessionReturns403ForOtherUsersSession(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $otherUser = new User();
+        $otherUser->setNick('otheruser');
+        $otherUser->setEmail('other@test.com');
+        $otherUser->setPassword($this->passwordHasher->hashPassword($otherUser, 'Test123!'));
+        $otherUser->setRoles(['ROLE_USER']);
+        $this->entityManager->persist($otherUser);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'POST',
+            '/login',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode(['email' => 'other@test.com', 'password' => 'Test123!'])
+        );
+        $otherToken = json_decode($this->client->getResponse()->getContent(), true)['token'];
+
+        $this->client->request(
+            'GET',
+            '/user/sessions/'.$logId,
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$otherToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    private function startSessionAndGetLogId(Training $training): int
+    {
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+
+        return $data['logId'];
+    }
 }

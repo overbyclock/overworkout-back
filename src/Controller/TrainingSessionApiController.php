@@ -83,6 +83,28 @@ final class TrainingSessionApiController extends AbstractController
         ]);
     }
 
+    #[Route('/user/sessions/{logId}', name: 'training_session_show', requirements: ['logId' => '\\d+'], methods: ['GET'])]
+    public function getSession(int $logId): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $log = $this->findLogOr404($logId);
+        $this->assertLogOwnership($log, $user);
+
+        return $this->json([
+            'logId' => $log->getId(),
+            'training' => $this->normalizer->normalize($log->getTraining(), null, [
+                'groups' => [Training::GROUP_READ],
+            ]),
+            'currentPosition' => $log->getCurrentPosition(),
+            'completedAt' => $log->getCompletedAt()?->format(\DateTimeInterface::ATOM),
+            'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
+                'groups' => [UserTrainingSessionStep::GROUP_READ],
+            ]),
+        ]);
+    }
+
     #[Route('/user/trainings/next', name: 'training_session_next', methods: ['GET'])]
     public function getNextSession(): JsonResponse
     {
@@ -110,5 +132,23 @@ final class TrainingSessionApiController extends AbstractController
         }
 
         return $training;
+    }
+
+    private function findLogOr404(int $logId): UserTrainingLog
+    {
+        $log = $this->entityManager->getRepository(UserTrainingLog::class)->find($logId);
+
+        if (null === $log) {
+            throw new NotFoundHttpException('Sesión no encontrada');
+        }
+
+        return $log;
+    }
+
+    private function assertLogOwnership(UserTrainingLog $log, User $user): void
+    {
+        if ($log->getUser()?->getId() !== $user->getId()) {
+            throw $this->createAccessDeniedException('No tienes acceso a esta sesión');
+        }
     }
 }
