@@ -388,4 +388,25 @@ final class TrainingSessionApiTest extends WebTestCase
         $data = json_decode($response->getContent(), true);
         $this->assertSame('No hay una sesión activa para este entrenamiento.', $data['error']);
     }
+
+    public function testGetNextSessionReturnsNullWhenNoActiveSessionOrProgram(): void
+    {
+        $this->client->request(
+            'GET',
+            '/user/trainings/next',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('No hay sesiones pendientes', $data['message']);
+        $this->assertNull($data['session']);
+    }
 }
