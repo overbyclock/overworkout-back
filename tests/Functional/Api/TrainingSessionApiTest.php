@@ -128,6 +128,44 @@ final class TrainingSessionApiTest extends WebTestCase
         return $training;
     }
 
+    /**
+     * Crea un entrenamiento con el patrón [A, B, A] en una única vuelta:
+     * el mismo ejercicio aparece dos veces con otro ejercicio entre medias.
+     * Pasos generados: [A, descanso, B, descanso, A].
+     */
+    private function createTrainingWithRepeatedExerciseInRound(string $name = 'Dup Training'): Training
+    {
+        $training = new Training();
+        $training->setName($name);
+        $training->setDiscipline(Discipline::CALISTHENICS);
+        $training->setTarget(TargetWorkout::STRENGTH);
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setRestBetweenRounds(60);
+
+        $dupExercise = $this->createExercise($name.' Dup A');
+        $middleExercise = $this->createExercise($name.' B Middle');
+
+        foreach ([$dupExercise, $middleExercise, $dupExercise] as $exercise) {
+            $config = new TrainingExerciseConfiguration();
+            $config->setExercise($exercise);
+            $config->setReps(10);
+            $config->setSets(1);
+            $config->setRestBetweenSets(60);
+            $config->setRestBetweenExercises(30);
+
+            $round->addTrainingExerciseConfiguration($config);
+        }
+
+        $training->addTrainingRound($round);
+
+        $this->entityManager->persist($training);
+        $this->entityManager->flush();
+
+        return $training;
+    }
+
     private function createExercise(string $name): Exercises
     {
         $exercise = new Exercises();
@@ -420,6 +458,44 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame('No hay una sesión activa para este entrenamiento.', $data['error']);
     }
 
+    public function testCompleteSessionReturns400WhenAlreadyCompleted(): void
+    {
+        $training = $this->createTraining();
+        $this->startSessionAndGetLogId($training);
+
+        $headers = [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            'HTTP_ACCEPT' => 'application/json',
+        ];
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            $headers,
+            json_encode(['durationSeconds' => 300])
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Segunda llamada: la sesión ya no está activa
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            $headers,
+            json_encode(['durationSeconds' => 300])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(400, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('No hay una sesión activa para este entrenamiento.', $data['error']);
+    }
+
     public function testGetNextSessionReturnsNullWhenNoActiveSessionOrProgram(): void
     {
         $this->client->request(
@@ -674,6 +750,41 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(3, $data['currentPosition']);
     }
 
+    public function testSkipWithExerciseScopeDoesNotSkipOtherExercisesBetweenDuplicates(): void
+    {
+        $training = $this->createTrainingWithRepeatedExerciseInRound();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        // Pasos: [A, descanso, B, descanso, A]
+        $this->assertCount(5, $steps);
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'skip', 'scope' => 'exercise'])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        // B corta la secuencia contigua: solo se omite la primera aparición de A
+        $this->assertSame('skipped', $data['steps'][0]['status']);
+        $this->assertSame('pending', $data['steps'][1]['status']);
+        $this->assertSame('pending', $data['steps'][2]['status']);
+        $this->assertSame('pending', $data['steps'][3]['status']);
+        $this->assertSame('pending', $data['steps'][4]['status']);
+        $this->assertSame(1, $data['currentPosition']);
+    }
+
     public function testStepActionReturns404ForStepFromAnotherSession(): void
     {
         $training = $this->createTraining();
@@ -754,6 +865,28 @@ final class TrainingSessionApiTest extends WebTestCase
         );
 
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testStepActionReturns422ForInvalidAction(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'pause'])
+        );
+
+        $this->assertSame(422, $this->client->getResponse()->getStatusCode());
     }
 
     public function testBackReopensPreviousStep(): void

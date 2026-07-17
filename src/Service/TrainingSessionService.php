@@ -267,8 +267,10 @@ readonly class TrainingSessionService
     }
 
     /**
-     * Marca como omitidos todos los pasos pendientes del mismo ejercicio, vuelta
-     * y bloque (incluidos los descansos intermedios), desde el paso indicado.
+     * Marca como omitidos todos los pasos pendientes de la secuencia contigua
+     * del mismo ejercicio, vuelta y bloque (incluidos los descansos intermedios),
+     * desde el paso indicado. La secuencia se corta al encontrar un paso de
+     * ejercicio de otra identidad (p. ej. otro ejercicio de la misma vuelta).
      */
     private function skipExerciseSteps(UserTrainingLog $log, UserTrainingSessionStep $fromStep): void
     {
@@ -282,17 +284,28 @@ readonly class TrainingSessionService
         $lap = $payload['lapNumber'] ?? null;
         $block = $payload['blockNumber'] ?? null;
 
+        // Recorrido contiguo: el primer paso de ejercicio de otra identidad
+        // cierra la secuencia; los descansos intermedios no la interrumpen.
         $lastPosition = $fromStep->getPosition();
         foreach ($log->getSessionSteps() as $candidate) {
+            if ($candidate->getPosition() < $fromStep->getPosition()) {
+                continue;
+            }
+
+            if (UserTrainingSessionStep::TYPE_EXERCISE !== $candidate->getType()) {
+                continue;
+            }
+
             $candidatePayload = $candidate->getPayload();
             if (
-                $candidate->getPosition() >= $fromStep->getPosition()
-                && ($candidatePayload['exerciseId'] ?? null) === $exerciseId
-                && ($candidatePayload['lapNumber'] ?? null) === $lap
-                && ($candidatePayload['blockNumber'] ?? null) === $block
+                ($candidatePayload['exerciseId'] ?? null) !== $exerciseId
+                || ($candidatePayload['lapNumber'] ?? null) !== $lap
+                || ($candidatePayload['blockNumber'] ?? null) !== $block
             ) {
-                $lastPosition = $candidate->getPosition();
+                break;
             }
+
+            $lastPosition = $candidate->getPosition();
         }
 
         foreach ($log->getSessionSteps() as $candidate) {
