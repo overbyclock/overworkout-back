@@ -152,6 +152,32 @@ final class TrainingSessionApiController extends AbstractController
         ]);
     }
 
+    #[Route('/user/sessions/{logId}/back', name: 'training_session_back', requirements: ['logId' => '\\d+'], methods: ['POST'])]
+    public function goBack(int $logId): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $log = $this->findLogOr404($logId);
+        $this->assertLogOwnership($log, $user);
+
+        try {
+            $this->sessionService->goBack($log);
+        } catch (\DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], 409);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
+        }
+
+        return $this->json([
+            'message' => 'Paso anterior reabierto',
+            'currentPosition' => $log->getCurrentPosition(),
+            'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
+                'groups' => [UserTrainingSessionStep::GROUP_READ],
+            ]),
+        ]);
+    }
+
     private function findStepInLogOr404(UserTrainingLog $log, int $stepId): UserTrainingSessionStep
     {
         foreach ($log->getSessionSteps() as $step) {

@@ -165,6 +165,32 @@ readonly class TrainingSessionService
     }
 
     /**
+     * Retrocede al paso anterior de la sesión y lo reabre (vuelve a pendiente).
+     *
+     * @throws \DomainException          si la sesión ya está completada
+     * @throws \InvalidArgumentException si no hay paso anterior
+     */
+    public function goBack(UserTrainingLog $log): void
+    {
+        $this->assertSessionIsActive($log);
+
+        $previous = null;
+        foreach ($log->getSessionSteps() as $step) {
+            if ($step->getPosition() < $log->getCurrentPosition()) {
+                $previous = $step;
+            }
+        }
+
+        if (null === $previous) {
+            throw new \InvalidArgumentException('No hay paso anterior.');
+        }
+
+        $previous->reopen();
+        $log->setCurrentPosition($previous->getPosition());
+        $this->entityManager->flush();
+    }
+
+    /**
      * Asegura que el usuario tenga un progreso activo para el nivel indicado.
      */
     private function ensureLevelProgressIsActive(User $user, TrainingLevel $level): void

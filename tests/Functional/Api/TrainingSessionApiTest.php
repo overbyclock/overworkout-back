@@ -756,6 +756,95 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testBackReopensPreviousStep(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        // Completar el primer paso y retroceder
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/back',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame(0, $data['currentPosition']);
+        $this->assertSame('pending', $data['steps'][0]['status']);
+        $this->assertNull($data['steps'][0]['completedAt']);
+    }
+
+    public function testBackOnFirstStepReturns400(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/back',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testBackReturns409WhenSessionCompleted(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 300])
+        );
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/back',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(409, $this->client->getResponse()->getStatusCode());
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */
