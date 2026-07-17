@@ -369,14 +369,13 @@ class CreateCalisteniaMasterLevel1Command extends Command
 
             // Parse reps (could be "10-12" or "20-30s")
             $reps = $exerciseData['reps'];
-            if (str_contains($reps, 's')) {
+            // Las dosis "5/side" contienen 's' pero son repeticiones: se decide por el patrón de tiempo real.
+            $timeMatch = preg_match('/(\d+)(?:-(\d+))?s/', $reps, $matches);
+            if ($timeMatch) {
                 // Time-based exercise
                 $config->setReps(null);
-                $timeMatch = preg_match('/(\d+)(?:-(\d+))?s/', $reps, $matches);
-                if ($timeMatch) {
-                    $maxTime = $matches[2] ?? $matches[1];
-                    $config->setMaxTimeForReps((int) $maxTime);
-                }
+                $maxTime = $matches[2] ?? $matches[1];
+                $config->setMaxTimeForReps((int) $maxTime);
             } else {
                 // Rep-based exercise
                 $repMatch = preg_match('/(\d+)(?:-(\d+))?/', $reps, $matches);

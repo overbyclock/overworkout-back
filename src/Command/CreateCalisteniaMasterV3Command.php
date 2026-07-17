@@ -243,13 +243,12 @@ class CreateCalisteniaMasterV3Command extends Command
         $config->setSets($exData['sets'] ?? 1);
 
         $reps = $exData['reps'];
-        if (str_contains($reps, 's')) {
+        // Las dosis "5/side" contienen 's' pero son repeticiones: se decide por el patrón de tiempo real.
+        $timeMatch = preg_match('/(\d+)(?:-(\d+))?s/', $reps, $matches);
+        if ($timeMatch) {
             $config->setReps(null);
-            $timeMatch = preg_match('/(\d+)(?:-(\d+))?s/', $reps, $matches);
-            if ($timeMatch) {
-                $maxTime = $matches[2] ?? $matches[1];
-                $config->setMaxTimeForReps((int) $maxTime);
-            }
+            $maxTime = $matches[2] ?? $matches[1];
+            $config->setMaxTimeForReps((int) $maxTime);
         } else {
             $repMatch = preg_match('/(\d+)(?:-(\d+))?/', $reps, $matches);
             if ($repMatch) {

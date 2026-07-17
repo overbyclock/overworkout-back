@@ -388,7 +388,7 @@ Configurado en `config/packages/nelmio_cors.yaml`:
 
 - Motor principal: **MySQL 8.0** (también compatible MariaDB 10.6+)
 - En tests/CI se puede usar **SQLite** para tests unitarios/funcionales simples
-- El `schema_filter` en `doctrine.yaml` excluye tablas internas de migraciones y algunas tablas de features no activos
+- El `schema_filter` en `doctrine.yaml` excluye tablas legacy no gestionadas por Doctrine (`training_level`, `training_program` singulares y tablas de features no activos). **Nunca** excluir `doctrine_migration_versions`: rompe `doctrine:migrations:migrate`
 - Sufijo de base de datos en test: `_test` (o `_test{N}` con ParaTest)
 
 ---

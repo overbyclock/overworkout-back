@@ -14,7 +14,10 @@ doctrine:
             collate: utf8mb4_unicode_ci
 
         profiling_collect_backtrace: '%kernel.debug%'
-        schema_filter: '~^(?!doctrine_migration_versions|training_level$|training_program$|post_comments$|post_likes$|user_achievements$|user_notifications$)~'
+        # Excluye de la introspección tablas gestionadas fuera de Doctrine.
+        # NO excluir doctrine_migration_versions: rompe doctrine:migrations:migrate
+        # (el metadata storage no ve la tabla e intenta recrearla).
+        schema_filter: '~^(?!training_level$|training_program$|post_comments$|post_likes$|user_achievements$|user_notifications$)~'
     orm:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
