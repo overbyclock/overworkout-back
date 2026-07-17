@@ -9,6 +9,7 @@ use App\Entity\TrainingLevel;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Entity\UserTrainingLog;
+use App\Entity\UserTrainingSessionStep;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use App\Repository\UserTrainingLogRepository;
@@ -139,6 +140,31 @@ readonly class TrainingSessionService
     }
 
     /**
+     * Aplica una acción (complete|skip) sobre un paso de la sesión y avanza
+     * el puntero de posición al siguiente paso pendiente.
+     *
+     * @throws \DomainException          si la sesión ya está completada
+     * @throws \InvalidArgumentException si se pide scope exercise sobre un paso de descanso
+     */
+    public function applyStepAction(UserTrainingLog $log, UserTrainingSessionStep $step, string $action, string $scope): void
+    {
+        $this->assertSessionIsActive($log);
+
+        if ('complete' === $action) {
+            if ($step->isPending()) {
+                $step->complete();
+            }
+        } elseif ('exercise' === $scope) {
+            $this->skipExerciseSteps($log, $step);
+        } elseif ($step->isPending()) {
+            $step->skip();
+        }
+
+        $this->advanceCurrentPosition($log);
+        $this->entityManager->flush();
+    }
+
+    /**
      * Asegura que el usuario tenga un progreso activo para el nivel indicado.
      */
     private function ensureLevelProgressIsActive(User $user, TrainingLevel $level): void
@@ -205,5 +231,66 @@ readonly class TrainingSessionService
             ->getSingleScalarResult();
 
         return (int) $count > 0;
+    }
+
+    /**
+     * Marca como omitidos todos los pasos pendientes del mismo ejercicio, vuelta
+     * y bloque (incluidos los descansos intermedios), desde el paso indicado.
+     */
+    private function skipExerciseSteps(UserTrainingLog $log, UserTrainingSessionStep $fromStep): void
+    {
+        $payload = $fromStep->getPayload();
+
+        if (UserTrainingSessionStep::TYPE_EXERCISE !== $fromStep->getType()) {
+            throw new \InvalidArgumentException('Solo se puede saltar un ejercicio completo desde un paso de ejercicio.');
+        }
+
+        $exerciseId = $payload['exerciseId'] ?? null;
+        $lap = $payload['lapNumber'] ?? null;
+        $block = $payload['blockNumber'] ?? null;
+
+        $lastPosition = $fromStep->getPosition();
+        foreach ($log->getSessionSteps() as $candidate) {
+            $candidatePayload = $candidate->getPayload();
+            if (
+                $candidate->getPosition() >= $fromStep->getPosition()
+                && ($candidatePayload['exerciseId'] ?? null) === $exerciseId
+                && ($candidatePayload['lapNumber'] ?? null) === $lap
+                && ($candidatePayload['blockNumber'] ?? null) === $block
+            ) {
+                $lastPosition = $candidate->getPosition();
+            }
+        }
+
+        foreach ($log->getSessionSteps() as $candidate) {
+            if (
+                $candidate->getPosition() >= $fromStep->getPosition()
+                && $candidate->getPosition() <= $lastPosition
+                && $candidate->isPending()
+            ) {
+                $candidate->skip();
+            }
+        }
+    }
+
+    private function advanceCurrentPosition(UserTrainingLog $log): void
+    {
+        foreach ($log->getSessionSteps() as $step) {
+            if ($step->isPending()) {
+                $log->setCurrentPosition($step->getPosition());
+
+                return;
+            }
+        }
+
+        $lastStep = $log->getSessionSteps()->last();
+        $log->setCurrentPosition(false !== $lastStep ? $lastStep->getPosition() + 1 : 0);
+    }
+
+    private function assertSessionIsActive(UserTrainingLog $log): void
+    {
+        if (null !== $log->getCompletedAt()) {
+            throw new \DomainException('La sesión ya está completada.');
+        }
     }
 }

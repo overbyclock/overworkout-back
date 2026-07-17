@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\Request\SessionStepActionDto;
 use App\Entity\Training;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -121,6 +123,44 @@ final class TrainingSessionApiController extends AbstractController
             'message' => 'Siguiente sesión encontrada',
             'session' => $nextSession,
         ]);
+    }
+
+    #[Route('/user/sessions/{logId}/steps/{stepId}', name: 'training_session_step_action', requirements: ['logId' => '\\d+', 'stepId' => '\\d+'], methods: ['PATCH'])]
+    public function applyStepAction(int $logId, int $stepId, #[MapRequestPayload] SessionStepActionDto $dto): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $log = $this->findLogOr404($logId);
+        $this->assertLogOwnership($log, $user);
+        $step = $this->findStepInLogOr404($log, $stepId);
+
+        try {
+            $this->sessionService->applyStepAction($log, $step, $dto->action, $dto->scope);
+        } catch (\DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], 409);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['error' => $e->getMessage()], 400);
+        }
+
+        return $this->json([
+            'message' => 'Paso actualizado correctamente',
+            'currentPosition' => $log->getCurrentPosition(),
+            'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
+                'groups' => [UserTrainingSessionStep::GROUP_READ],
+            ]),
+        ]);
+    }
+
+    private function findStepInLogOr404(UserTrainingLog $log, int $stepId): UserTrainingSessionStep
+    {
+        foreach ($log->getSessionSteps() as $step) {
+            if ($step->getId() === $stepId) {
+                return $step;
+            }
+        }
+
+        throw new NotFoundHttpException('Paso no encontrado');
     }
 
     private function findTrainingOr404(int $trainingId): Training

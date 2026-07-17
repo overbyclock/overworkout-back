@@ -594,6 +594,189 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testCompleteStepAdvancesCurrentPosition(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame(1, $data['currentPosition']);
+        $this->assertSame('completed', $data['steps'][0]['status']);
+        $this->assertNotNull($data['steps'][0]['completedAt']);
+    }
+
+    public function testSkipStepMarksAsSkipped(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'skip'])
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('skipped', $data['steps'][0]['status']);
+        $this->assertSame(1, $data['currentPosition']);
+    }
+
+    public function testSkipWithExerciseScopeSkipsWholeExercise(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        // Fixture: ejercicio de 2 series (pasos 0 y 2) con descanso intermedio (paso 1)
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'skip', 'scope' => 'exercise'])
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('skipped', $data['steps'][0]['status']);
+        $this->assertSame('skipped', $data['steps'][1]['status']);
+        $this->assertSame('skipped', $data['steps'][2]['status']);
+        // Sin pasos pendientes: el puntero queda tras el último paso
+        $this->assertSame(3, $data['currentPosition']);
+    }
+
+    public function testStepActionReturns404ForStepFromAnotherSession(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $otherTraining = $this->createTraining('Other Training');
+        $otherLogId = $this->startSessionAndGetLogId($otherTraining);
+        $otherSteps = $this->getSessionSteps($otherLogId);
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$otherSteps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testStepActionReturns409WhenSessionCompleted(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 300])
+        );
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $this->assertSame(409, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testSkipWithExerciseScopeOnRestStepReturns400(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        // El paso 1 es un descanso
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[1]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'skip', 'scope' => 'exercise'])
+        );
+
+        $this->assertSame(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getSessionSteps(int $logId): array
+    {
+        $this->client->request(
+            'GET',
+            '/user/sessions/'.$logId,
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+
+        return $data['steps'];
+    }
+
     private function startSessionAndGetLogId(Training $training): int
     {
         $this->client->request(
