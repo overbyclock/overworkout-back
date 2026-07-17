@@ -77,11 +77,23 @@ final class TrainingSessionApiController extends AbstractController
             return $this->json(['error' => $e->getMessage()], 400);
         }
 
+        $stepsCompleted = 0;
+        $stepsSkipped = 0;
+        foreach ($log->getSessionSteps() as $step) {
+            if (UserTrainingSessionStep::STATUS_COMPLETED === $step->getStatus()) {
+                ++$stepsCompleted;
+            } else {
+                ++$stepsSkipped;
+            }
+        }
+
         return $this->json([
             'message' => 'Sesión completada correctamente',
             'log' => $this->normalizer->normalize($log, null, [
                 'groups' => [UserTrainingLog::GROUP_READ, Training::GROUP_READ],
             ]),
+            'stepsCompleted' => $stepsCompleted,
+            'stepsSkipped' => $stepsSkipped,
         ]);
     }
 

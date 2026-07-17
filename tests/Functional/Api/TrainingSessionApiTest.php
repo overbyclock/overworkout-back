@@ -845,6 +845,88 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(409, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testCompleteSessionMarksPendingStepsAsSkippedAndReturnsTotals(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        // Completar solo el primer paso; quedan 2 pendientes
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 600, 'xpEarned' => 50])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame(1, $data['stepsCompleted']);
+        $this->assertSame(2, $data['stepsSkipped']);
+
+        // Los pasos omitidos quedan persistidos
+        $stepsAfter = $this->getSessionSteps($logId);
+        $this->assertSame('completed', $stepsAfter[0]['status']);
+        $this->assertSame('skipped', $stepsAfter[1]['status']);
+        $this->assertSame('skipped', $stepsAfter[2]['status']);
+    }
+
+    public function testCompleteSessionWithAllStepsCompletedCountsZeroSkipped(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        foreach ($steps as $step) {
+            $this->client->request(
+                'PATCH',
+                '/user/sessions/'.$logId.'/steps/'.$step['id'],
+                [],
+                [],
+                [
+                    'CONTENT_TYPE' => 'application/json',
+                    'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                ],
+                json_encode(['action' => 'complete'])
+            );
+        }
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 600])
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame(3, $data['stepsCompleted']);
+        $this->assertSame(0, $data['stepsSkipped']);
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */

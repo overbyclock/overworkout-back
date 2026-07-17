@@ -79,6 +79,13 @@ readonly class TrainingSessionService
         $log->setDurationSeconds($durationSeconds);
         $log->setXpEarned($xpEarned);
 
+        // Los pasos que sigan pendientes se marcan como omitidos al cerrar la sesión.
+        foreach ($log->getSessionSteps() as $step) {
+            if ($step->isPending()) {
+                $step->skip();
+            }
+        }
+
         $user->addXp($xpEarned);
         $user->incrementWorkouts();
         $user->setLastWorkoutAt($now);
