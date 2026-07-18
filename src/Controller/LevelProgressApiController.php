@@ -54,8 +54,9 @@ class LevelProgressApiController extends AbstractController
 
         $activeProgress = $this->levelProgressService->getActiveProgress($user);
 
+        // Sin progreso activo es un estado válido: 200 con null (evita 404 ruidosos en el cliente).
         if (null === $activeProgress) {
-            return $this->json(['error' => 'No active progress found'], 404);
+            return $this->json(null);
         }
 
         return $this->json(

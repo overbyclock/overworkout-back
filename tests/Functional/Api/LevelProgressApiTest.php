@@ -193,6 +193,21 @@ class LevelProgressApiTest extends WebTestCase
         $this->assertSame(UserLevelProgress::STATUS_IN_PROGRESS, $data['status']);
     }
 
+    public function testGetActiveProgressReturnsNullWhenNoProgress(): void
+    {
+        $this->client->request(
+            'GET',
+            '/user/progress/active',
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('null', $response->getContent());
+    }
+
     public function testSubmitTestResultsPass(): void
     {
         $level = $this->entityManager->getRepository(TrainingLevel::class)
