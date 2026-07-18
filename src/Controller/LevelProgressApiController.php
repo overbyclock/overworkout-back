@@ -287,6 +287,12 @@ class LevelProgressApiController extends AbstractController
             $levelData = $this->normalizer->normalize($level, null, [
                 'groups' => [TrainingLevel::GROUP_READ],
             ]);
+
+            // El contexto level:read no expone los campos de Training: normalizarlos aparte.
+            $levelData['trainings'] = $this->normalizer->normalize($level->getTrainings()->toArray(), null, [
+                'groups' => [Training::GROUP_READ],
+            ]);
+
             $progress = $progressByLevelId[$level->getId()] ?? null;
             $levelData['progress'] = null === $progress ? null : $this->normalizer->normalize($progress, null, [
                 'groups' => [UserLevelProgress::GROUP_READ],

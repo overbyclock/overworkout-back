@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
+use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
+use App\Enum\Discipline;
+use App\Enum\TargetWorkout;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -653,5 +656,44 @@ class LevelProgressApiTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testGetUserProgramLevelsIncludesTrainingData(): void
+    {
+        $level = $this->entityManager->getRepository(TrainingLevel::class)
+            ->findOneBy(['program' => $this->testProgram, 'levelNumber' => 1]);
+
+        $training = new Training();
+        $training->setName('Sesión A - Fase 1');
+        $training->setDiscipline(Discipline::CALISTHENICS);
+        $training->setTarget(TargetWorkout::STRENGTH);
+        $training->setTrainingLevel($level);
+        $training->setWeekNumber(0);
+        $training->setDayKey('session_a');
+        $training->setSessionType('strength');
+        $this->entityManager->persist($training);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/user/programs/'.$this->testProgram->getId().'/levels',
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $matchingLevels = array_values(array_filter($data, fn ($l) => $l['id'] === $level->getId()));
+        $this->assertCount(1, $matchingLevels);
+
+        $trainings = $matchingLevels[0]['trainings'];
+        $this->assertCount(1, $trainings);
+        $this->assertSame($training->getId(), $trainings[0]['id']);
+        $this->assertSame('Sesión A - Fase 1', $trainings[0]['name']);
+        $this->assertSame(0, $trainings[0]['weekNumber']);
+        $this->assertSame('session_a', $trainings[0]['dayKey']);
     }
 }
