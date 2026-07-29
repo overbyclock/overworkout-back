@@ -617,6 +617,59 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertCount(3, $data['steps']);
     }
 
+    public function testStartAndGetSessionReturnSkillFocusAndEstimatedDurations(): void
+    {
+        $program = $this->createTrainingProgram('Skill Program', 'skill-program');
+        $level = $this->createTrainingLevel($program);
+        $level->setSkillFocus('Plancha frontal');
+        $this->entityManager->flush();
+
+        $training = $this->createTraining('Skill Training', $level);
+        $training->setEstimatedDurationMin(30);
+        $training->setEstimatedDurationMax(54);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(201, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Plancha frontal', $data['skillFocus']);
+        $this->assertSame(30, $data['estimatedDurationMin']);
+        $this->assertSame(54, $data['estimatedDurationMax']);
+
+        $logId = $data['logId'];
+
+        $this->client->request(
+            'GET',
+            '/user/sessions/'.$logId,
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Plancha frontal', $data['skillFocus']);
+        $this->assertSame(30, $data['estimatedDurationMin']);
+        $this->assertSame(54, $data['estimatedDurationMax']);
+    }
+
     public function testGetSessionReturns404ForNonExistentSession(): void
     {
         $this->client->request(

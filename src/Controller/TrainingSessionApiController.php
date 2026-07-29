@@ -46,6 +46,8 @@ final class TrainingSessionApiController extends AbstractController
 
         $log = $result['log'];
 
+        $training = $log->getTraining();
+
         return $this->json([
             'message' => $result['created'] ? 'Sesión iniciada correctamente' : 'Sesión ya iniciada',
             'log' => $this->normalizer->normalize($log, null, [
@@ -53,6 +55,9 @@ final class TrainingSessionApiController extends AbstractController
             ]),
             'logId' => $log->getId(),
             'currentPosition' => $log->getCurrentPosition(),
+            'skillFocus' => $training?->getTrainingLevel()?->getSkillFocus(),
+            'estimatedDurationMin' => $training?->getEstimatedDurationMin(),
+            'estimatedDurationMax' => $training?->getEstimatedDurationMax(),
             'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
                 'groups' => [UserTrainingSessionStep::GROUP_READ],
             ]),
@@ -106,13 +111,18 @@ final class TrainingSessionApiController extends AbstractController
         $log = $this->findLogOr404($logId);
         $this->assertLogOwnership($log, $user);
 
+        $training = $log->getTraining();
+
         return $this->json([
             'logId' => $log->getId(),
-            'training' => $this->normalizer->normalize($log->getTraining(), null, [
+            'training' => $this->normalizer->normalize($training, null, [
                 'groups' => [Training::GROUP_READ],
             ]),
             'currentPosition' => $log->getCurrentPosition(),
             'completedAt' => $log->getCompletedAt()?->format(\DateTimeInterface::ATOM),
+            'skillFocus' => $training?->getTrainingLevel()?->getSkillFocus(),
+            'estimatedDurationMin' => $training?->getEstimatedDurationMin(),
+            'estimatedDurationMax' => $training?->getEstimatedDurationMax(),
             'steps' => $this->normalizer->normalize($log->getSessionSteps()->toArray(), null, [
                 'groups' => [UserTrainingSessionStep::GROUP_READ],
             ]),
