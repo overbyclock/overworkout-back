@@ -416,6 +416,69 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(0, $data['session']['weekNumber']);
     }
 
+    public function testGetNextSessionReturnsEnrichedTrainingSummary(): void
+    {
+        $program = $this->createTrainingProgram('V4 Program', 'v4-program');
+        $level = $this->createTrainingLevel($program);
+        $level->setSkillFocus('Plancha frontal');
+        $this->entityManager->flush();
+
+        $training = $this->createTraining('V4 Training', $level, 0);
+        $firstRound = $training->getTrainingRounds()->first();
+        $firstRound->setBlockType('preparacion');
+        $firstRound->setName('Preparación y movilidad');
+        $firstRound->setDescription('Movilidad fluida encadenada');
+
+        $secondRound = new TrainingRound();
+        $secondRound->setSetsForRound(1);
+        $secondRound->setRestBetweenRounds(90);
+        $secondRound->setBlockType('principal');
+        $secondRound->setName('Bloque principal');
+        $secondRound->setDescription('Fuerza de plancha');
+        $training->addTrainingRound($secondRound);
+
+        $training->setEstimatedDurationMin(30);
+        $training->setEstimatedDurationMax(54);
+
+        $progress = new UserLevelProgress();
+        $progress->setUser($this->testUser);
+        $progress->setTrainingLevel($level);
+        $progress->setStatus(UserLevelProgress::STATUS_IN_PROGRESS);
+        $progress->setCurrentWeek(0);
+        $this->entityManager->persist($progress);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/user/trainings/next',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('next', $data['session']['type']);
+
+        $training = $data['session']['training'];
+        $this->assertSame('V4 Training', $training['name']);
+        $this->assertSame('Plancha frontal', $training['skillFocus']);
+        $this->assertSame(30, $training['estimatedDurationMin']);
+        $this->assertSame(54, $training['estimatedDurationMax']);
+        $this->assertCount(2, $training['blocks']);
+        $this->assertSame(1, $training['blocks'][0]['blockNumber']);
+        $this->assertSame('preparacion', $training['blocks'][0]['blockType']);
+        $this->assertSame('Preparación y movilidad', $training['blocks'][0]['name']);
+        $this->assertSame('Movilidad fluida encadenada', $training['blocks'][0]['description']);
+        $this->assertSame(2, $training['blocks'][1]['blockNumber']);
+        $this->assertSame('principal', $training['blocks'][1]['blockType']);
+    }
+
     public function testStartSessionReturns404ForNonExistentTraining(): void
     {
         $this->client->request(

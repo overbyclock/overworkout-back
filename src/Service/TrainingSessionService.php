@@ -111,10 +111,7 @@ readonly class TrainingSessionService
             return [
                 'type' => 'continue',
                 'logId' => $activeLog->getId(),
-                'training' => [
-                    'id' => $activeLog->getTraining()->getId(),
-                    'name' => $activeLog->getTraining()->getName(),
-                ],
+                'training' => $this->trainingSummary($activeLog->getTraining()),
                 'startedAt' => $activeLog->getStartedAt()?->format(\DateTimeInterface::ATOM),
             ];
         }
@@ -133,10 +130,7 @@ readonly class TrainingSessionService
             if (!$this->isTrainingCompletedByUser($user, $training)) {
                 return [
                     'type' => 'next',
-                    'training' => [
-                        'id' => $training->getId(),
-                        'name' => $training->getName(),
-                    ],
+                    'training' => $this->trainingSummary($training),
                     'levelNumber' => $level->getLevelNumber(),
                     'weekNumber' => $weekNumber,
                 ];
@@ -195,6 +189,34 @@ readonly class TrainingSessionService
         $previous->reopen();
         $log->setCurrentPosition($previous->getPosition());
         $this->entityManager->flush();
+    }
+
+    /**
+     * Resumen del entrenamiento para la pantalla previa de sesión:
+     * incluye contexto de nivel (skillFocus, duración) y la estructura de bloques.
+     *
+     * @return array<string, mixed>
+     */
+    private function trainingSummary(Training $training): array
+    {
+        $blocks = [];
+        foreach ($training->getTrainingRounds() as $index => $round) {
+            $blocks[] = [
+                'blockNumber' => $index + 1,
+                'blockType' => $round->getBlockType(),
+                'name' => $round->getName(),
+                'description' => $round->getDescription(),
+            ];
+        }
+
+        return [
+            'id' => $training->getId(),
+            'name' => $training->getName(),
+            'estimatedDurationMin' => $training->getEstimatedDurationMin(),
+            'estimatedDurationMax' => $training->getEstimatedDurationMax(),
+            'skillFocus' => $training->getTrainingLevel()?->getSkillFocus(),
+            'blocks' => $blocks,
+        ];
     }
 
     /**
