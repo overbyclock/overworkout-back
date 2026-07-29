@@ -45,7 +45,7 @@ readonly class TrainingSessionExpander
                     $sets = max(1, $config->getSets() ?? 1);
 
                     for ($set = 1; $set <= $sets; ++$set) {
-                        $log->addSessionStep($this->createExerciseStep($position++, $config, $set, $sets, $lap, $laps, $blockIndex + 1, $totalBlocks));
+                        $log->addSessionStep($this->createExerciseStep($position++, $config, $set, $sets, $lap, $laps, $blockIndex + 1, $totalBlocks, $round->getBlockType(), $round->getName(), $round->getDescription()));
 
                         if ($set < $sets && null !== $config->getRestBetweenSets()) {
                             $log->addSessionStep($this->createRestStep($position++, $config->getRestBetweenSets(), 'between_sets', $this->exerciseName($config)));
@@ -64,8 +64,19 @@ readonly class TrainingSessionExpander
 
             $hasNextBlock = $blockIndex < $totalBlocks - 1;
             if ($hasNextBlock && null !== $round->getRestAfterBlock()) {
-                $nextName = $this->firstExerciseName($rounds[$blockIndex + 1]);
-                $log->addSessionStep($this->createRestStep($position++, $round->getRestAfterBlock(), 'after_block', $nextName));
+                $nextRound = $rounds[$blockIndex + 1];
+                $log->addSessionStep($this->createRestStep(
+                    $position++,
+                    $round->getRestAfterBlock(),
+                    'after_block',
+                    $this->firstExerciseName($nextRound),
+                    [
+                        'nextBlockNumber' => $blockIndex + 2,
+                        'nextBlockType' => $nextRound->getBlockType(),
+                        'nextBlockName' => $nextRound->getName(),
+                        'nextBlockDescription' => $nextRound->getDescription(),
+                    ],
+                ));
             }
         }
 
@@ -74,7 +85,7 @@ readonly class TrainingSessionExpander
         }
     }
 
-    private function createExerciseStep(int $position, TrainingExerciseConfiguration $config, int $set, int $sets, int $lap, int $laps, int $block, int $totalBlocks): UserTrainingSessionStep
+    private function createExerciseStep(int $position, TrainingExerciseConfiguration $config, int $set, int $sets, int $lap, int $laps, int $block, int $totalBlocks, ?string $blockType = null, ?string $blockName = null, ?string $blockDescription = null): UserTrainingSessionStep
     {
         $exercise = $config->getExercise();
 
@@ -94,21 +105,27 @@ readonly class TrainingSessionExpander
             'totalLaps' => $laps,
             'blockNumber' => $block,
             'totalBlocks' => $totalBlocks,
+            'blockType' => $blockType,
+            'blockName' => $blockName,
+            'blockDescription' => $blockDescription,
         ]);
 
         return $step;
     }
 
-    private function createRestStep(int $position, int $restSeconds, string $reason, ?string $nextExerciseName): UserTrainingSessionStep
+    /**
+     * @param array<string, mixed> $extraPayload metadatos adicionales (p. ej. bloque destino en descansos after_block)
+     */
+    private function createRestStep(int $position, int $restSeconds, string $reason, ?string $nextExerciseName, array $extraPayload = []): UserTrainingSessionStep
     {
         $step = new UserTrainingSessionStep();
         $step->setPosition($position);
         $step->setType(UserTrainingSessionStep::TYPE_REST);
-        $step->setPayload([
+        $step->setPayload(array_merge([
             'restSeconds' => $restSeconds,
             'reason' => $reason,
             'nextExerciseName' => $nextExerciseName,
-        ]);
+        ], $extraPayload));
 
         return $step;
     }

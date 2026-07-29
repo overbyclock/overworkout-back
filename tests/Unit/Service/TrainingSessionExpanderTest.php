@@ -183,6 +183,97 @@ final class TrainingSessionExpanderTest extends TestCase
         $this->expander->expand($training, new UserTrainingLog());
     }
 
+    public function testExerciseStepIncluyeDescripcionDelBloque(): void
+    {
+        $log = $this->expandTrainingConBloquesV4();
+
+        $exerciseSteps = array_values(array_filter(
+            $log->getSessionSteps()->toArray(),
+            static fn (UserTrainingSessionStep $s): bool => UserTrainingSessionStep::TYPE_EXERCISE === $s->getType(),
+        ));
+
+        $this->assertSame('Preparación y movilidad', $exerciseSteps[0]->getPayload()['blockName']);
+        $this->assertSame('Movilidad fluida encadenada', $exerciseSteps[0]->getPayload()['blockDescription']);
+    }
+
+    public function testDescansoAfterBlockIncluyeMetadatosDelBloqueDestino(): void
+    {
+        $log = $this->expandTrainingConBloquesV4();
+
+        $restSteps = array_values(array_filter(
+            $log->getSessionSteps()->toArray(),
+            static fn (UserTrainingSessionStep $s): bool => UserTrainingSessionStep::TYPE_REST === $s->getType()
+                && 'after_block' === $s->getPayload()['reason'],
+        ));
+
+        $this->assertCount(1, $restSteps);
+        $payload = $restSteps[0]->getPayload();
+        $this->assertSame(60, $payload['restSeconds']);
+        $this->assertSame('Flexiones', $payload['nextExerciseName']);
+        $this->assertSame(2, $payload['nextBlockNumber']);
+        $this->assertSame('principal', $payload['nextBlockType']);
+        $this->assertSame('Fuerza — Empuje', $payload['nextBlockName']);
+        $this->assertSame('Trabajo de empuje del nivel', $payload['nextBlockDescription']);
+    }
+
+    public function testBloqueSinDescripcionDevuelveNull(): void
+    {
+        $training = new Training();
+        $round = (new TrainingRound())->setRound(1)->setSetsForRound(1);
+        $config = (new TrainingExerciseConfiguration())->setSets(1)->setReps(5);
+        $round->addTrainingExerciseConfiguration($config);
+        $training->addTrainingRound($round);
+
+        $log = new UserTrainingLog();
+        $this->expander->expand($training, $log);
+
+        $payload = $log->getSessionSteps()->first()->getPayload();
+        $this->assertNull($payload['blockType']);
+        $this->assertNull($payload['blockName']);
+        $this->assertNull($payload['blockDescription']);
+    }
+
+    /**
+     * Entrenamiento v4 con dos bloques tipados (preparación + principal) y descanso after_block.
+     */
+    private function expandTrainingConBloquesV4(): UserTrainingLog
+    {
+        $training = new Training();
+
+        $round1 = (new TrainingRound())
+            ->setRound(1)
+            ->setSetsForRound(1)
+            ->setBlockType('preparacion')
+            ->setName('Preparación y movilidad')
+            ->setDescription('Movilidad fluida encadenada')
+            ->setRestAfterBlock(60);
+        $config1 = (new TrainingExerciseConfiguration())
+            ->setExercise((new Exercises())->setName('Wall Slide'))
+            ->setSets(1)
+            ->setMaxTimeForReps(40);
+        $round1->addTrainingExerciseConfiguration($config1);
+
+        $round2 = (new TrainingRound())
+            ->setRound(2)
+            ->setSetsForRound(1)
+            ->setBlockType('principal')
+            ->setName('Fuerza — Empuje')
+            ->setDescription('Trabajo de empuje del nivel');
+        $config2 = (new TrainingExerciseConfiguration())
+            ->setExercise((new Exercises())->setName('Flexiones'))
+            ->setSets(1)
+            ->setReps(8);
+        $round2->addTrainingExerciseConfiguration($config2);
+
+        $training->addTrainingRound($round1);
+        $training->addTrainingRound($round2);
+
+        $log = new UserTrainingLog();
+        $this->expander->expand($training, $log);
+
+        return $log;
+    }
+
     /**
      * @param TrainingRound[] $rounds
      */
