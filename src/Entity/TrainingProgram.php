@@ -18,6 +18,14 @@ class TrainingProgram
     final public const GROUP_READ = 'program:read';
     final public const GROUP_DETAIL = 'program:detail';
 
+    /**
+     * Modos de evaluación de los tests de nivel:
+     * - legacy: regla histórica (3 de 4 mínimos superados).
+     * - strict_gates: todos los mínimos de fuerza + todas las puertas de movilidad.
+     */
+    final public const TEST_EVAL_LEGACY = 'legacy';
+    final public const TEST_EVAL_STRICT_GATES = 'strict_gates';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -59,6 +67,10 @@ class TrainingProgram
     #[ORM\Column(length: 500, nullable: true)]
     #[Groups([self::GROUP_READ])]
     private ?string $imageUrl = null;
+
+    #[ORM\Column(length: 20, options: ['default' => self::TEST_EVAL_LEGACY])]
+    #[Groups([self::GROUP_READ])]
+    private string $testEvaluationMode = self::TEST_EVAL_LEGACY;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -182,6 +194,18 @@ class TrainingProgram
     public function setImageUrl(?string $imageUrl): static
     {
         $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getTestEvaluationMode(): string
+    {
+        return $this->testEvaluationMode;
+    }
+
+    public function setTestEvaluationMode(string $testEvaluationMode): static
+    {
+        $this->testEvaluationMode = $testEvaluationMode;
 
         return $this;
     }

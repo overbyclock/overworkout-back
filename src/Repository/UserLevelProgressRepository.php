@@ -51,7 +51,7 @@ class UserLevelProgressRepository extends ServiceEntityRepository
             ->andWhere('ulp.user = :user')
             ->andWhere('ulp.status IN (:statuses)')
             ->setParameter('user', $user)
-            ->setParameter('statuses', [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT])
+            ->setParameter('statuses', UserLevelProgress::ACTIVE_STATUSES)
             ->orderBy('ulp.startedAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
@@ -67,7 +67,7 @@ class UserLevelProgressRepository extends ServiceEntityRepository
             ->andWhere('ulp.user = :user')
             ->andWhere('ulp.status IN (:statuses)')
             ->setParameter('user', $user)
-            ->setParameter('statuses', [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT])
+            ->setParameter('statuses', UserLevelProgress::ACTIVE_STATUSES)
             ->orderBy('ulp.startedAt', 'DESC')
             ->getQuery()
             ->getResult();
@@ -101,7 +101,7 @@ class UserLevelProgressRepository extends ServiceEntityRepository
             ->andWhere('ulp.status IN (:statuses)')
             ->setParameter('user', $user)
             ->setParameter('program', $program)
-            ->setParameter('statuses', [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT])
+            ->setParameter('statuses', UserLevelProgress::ACTIVE_STATUSES)
             ->orderBy('tl.levelNumber', 'ASC')
             ->getQuery()
             ->getResult();

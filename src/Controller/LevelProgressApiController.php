@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\MobilityGate;
 use App\Entity\TestResult;
 use App\Entity\Training;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
+use App\Repository\MobilityGateRepository;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use App\Service\LevelProgressService;
@@ -26,6 +28,7 @@ class LevelProgressApiController extends AbstractController
         private readonly LevelProgressService $levelProgressService,
         private readonly UserLevelProgressRepository $progressRepository,
         private readonly TrainingLevelRepository $levelRepository,
+        private readonly MobilityGateRepository $mobilityGateRepository,
         private readonly NormalizerInterface $normalizer,
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -94,7 +97,7 @@ class LevelProgressApiController extends AbstractController
                     ++$completedLevels;
                 }
 
-                if (\in_array($programProgress->getStatus(), [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT], true)) {
+                if (\in_array($programProgress->getStatus(), UserLevelProgress::ACTIVE_STATUSES, true)) {
                     $currentLevelNumber = $programProgress->getTrainingLevel()->getLevelNumber();
                 }
             }
@@ -153,11 +156,18 @@ class LevelProgressApiController extends AbstractController
                 $notes
             );
 
+            $mobilityBlocked = UserLevelProgress::STATUS_MOBILITY_BLOCKED === $progress->getStatus();
+            $message = match (true) {
+                $testResult->isOverallPassed() => 'Test passed! Level completed.',
+                $mobilityBlocked => 'Fuerza superada. Nivel bloqueado por movilidad: ciclo corto de movilidad requerido.',
+                default => 'Test failed. Repeat cycle required.',
+            };
+
             return $this->json([
-                'message' => $testResult->isOverallPassed()
-                    ? 'Test passed! Level completed.'
-                    : 'Test failed. Repeat cycle required.',
+                'message' => $message,
                 'passed' => $testResult->isOverallPassed(),
+                'mobilityBlocked' => $mobilityBlocked,
+                'failedGates' => $testResult->getFailedGates(),
                 'testResult' => $this->normalizer->normalize($testResult, null, [
                     'groups' => [TestResult::GROUP_READ],
                 ]),
@@ -389,6 +399,29 @@ class LevelProgressApiController extends AbstractController
 
         $testAvailable = !$isLevelLocked && $currentWeek >= 3;
 
+        // Resolver las puertas de movilidad referenciadas por los ítems del test (gateCode)
+        $requirements = $level->getTestRequirements() ?? [];
+        $gateCodes = [];
+        foreach ($requirements as $requirement) {
+            if (isset($requirement['gateCode'])) {
+                $gateCodes[$requirement['gateCode']] = true;
+            }
+        }
+
+        $gates = [];
+        if ([] !== $gateCodes) {
+            foreach ($this->mobilityGateRepository->findByProgram($program) as $gate) {
+                if (isset($gateCodes[$gate->getCode()])) {
+                    $gates[] = $this->normalizer->normalize($gate, null, [
+                        'groups' => [MobilityGate::GROUP_READ],
+                    ]);
+                }
+            }
+        }
+
+        $latestResult = $progress?->getLatestTestResult();
+        $mobilityBlocked = null !== $progress && UserLevelProgress::STATUS_MOBILITY_BLOCKED === $progress->getStatus();
+
         return $this->json([
             'level' => $this->normalizer->normalize($level, null, [
                 'groups' => [TrainingLevel::GROUP_READ],
@@ -400,7 +433,10 @@ class LevelProgressApiController extends AbstractController
             'test' => [
                 'available' => $testAvailable,
                 'requirements' => $level->getTestRequirements(),
-                'latestResult' => null === $progress ? null : $this->normalizer->normalize($progress->getLatestTestResult(), null, [
+                'gates' => $gates,
+                'mobilityBlocked' => $mobilityBlocked,
+                'failedGates' => $mobilityBlocked ? $latestResult?->getFailedGates() : null,
+                'latestResult' => null === $latestResult ? null : $this->normalizer->normalize($latestResult, null, [
                     'groups' => [TestResult::GROUP_READ],
                 ]),
             ],

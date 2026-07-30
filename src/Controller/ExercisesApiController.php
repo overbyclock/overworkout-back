@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Dto\Request\ExerciseCreateDto;
 use App\Dto\Request\ExerciseUpdateDto;
+use App\Entity\Equipments;
 use App\Entity\Exercises;
 use App\Mapper\ExerciseMapper;
 use App\Security\Voter\ExerciseVoter;
@@ -49,7 +50,7 @@ class ExercisesApiController extends AbstractController
         $this->denyAccessUnlessGranted(ExerciseVoter::VIEW, $exercise);
 
         return $this->json(
-            $this->normalizer->normalize($exercise, null, ['groups' => [Exercises::GROUP_READ_DETAIL]])
+            $this->normalizer->normalize($exercise, null, ['groups' => [Exercises::GROUP_READ_DETAIL, Equipments::GROUP_READ]])
         );
     }
 

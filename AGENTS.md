@@ -400,5 +400,25 @@ Configurado en `config/packages/nelmio_cors.yaml`:
 - **Voters**: Antes de exponer un nuevo endpoint, evaluar si necesita un Voter en `src/Security/Voter/`.
 - **DTOs**: Para nuevos endpoints de escritura, crear un DTO en `src/Dto/Request/` con validación Symfony Validator y un Mapper correspondiente.
 - **Tests**: Añadir tests unitarios para DTOs, Mappers y Voters. Añadir tests funcionales (WebTestCase) para endpoints HTTP.
-- **Migrations**: Usar `php bin/console make:migration` para cambios de schema. Los scripts en `scripts/migrations/` son para transformación de datos, no para schema.
+- **Migrations**: Usar `php bin/console make:migration` para cambios de schema. Los scripts en `scripts/migrations/` son para transformación de datos, no para schema. Tras crear una migración, aplicarla también en el entorno de test: `php bin/console doctrine:migrations:migrate --env=test`.
 - **Calistenia**: El proyecto tiene documentación extensa sobre un sistema de calistenia (`CALISTHENIA_MASTER_SYSTEM.md`, `CALISTHENIA_ROADMAP.md`, etc.). Consultar esos archivos antes de modificar entidades relacionadas con niveles, skills o benchmarks.
+
+---
+
+## Plataforma v4 (Calistenia Master v4.0)
+
+Capacidades genéricas del sistema de programas añadidas para la arquitectura v4.0 (`docs/arquitectura_niveles_calistenia.md`). Son opcionales por programa: v3 y el resto de programas no se ven afectados.
+
+- **Puertas de movilidad**: entidad `MobilityGate` (`code` G1-G6, `criteria`, ligada a programa o global). Los ítems de `TrainingLevel.testRequirements` admiten `type` (`fuerza | puerta_movilidad | re_test`, ver `App\Enum\TestItemType`) y `gateCode`; los ítems sin `type` se tratan como `fuerza` (retrocompatible). Solo lectura por API: `GET /mobility-gates?program={id}`.
+- **Modos de evaluación de tests**: `TrainingProgram.testEvaluationMode` — `legacy` (3 de 4, por defecto) o `strict_gates` (todos los mínimos de fuerza + todas las puertas; regla §1.2 de la arquitectura v4). `TestResult` guarda `strengthPassed`, `mobilityPassed` y `failedGates`.
+- **Estado `mobility_blocked`** en `UserLevelProgress`: fuerza superada pero puerta fallada → ciclo corto de movilidad sin repetir fuerza (no incrementa ciclo). El re-test solo re-evalúa las puertas. Está incluido en `UserLevelProgress::ACTIVE_STATUSES`.
+- **Logros**: `Achievement` extendido con `tier` (comun…legendario), `type` (`test | hito`), `level` y `specialCelebration`. Desbloqueo: automático al superar un nivel (logros tipo test, en `LevelProgressService::handleLevelPassed`), **por ítem de test** (logros tipo test con `requirementType` = `test_item_min | test_item_obj` y `requirementKey` = nombre del ítem: se desbloquean en cualquier envío de test al superar el mínimo/objetivo del ítem, aunque el test global falle; el umbral se toma de `requirementValue` si está fijado o del requirement del ítem) y manual vía `POST /user/achievements/unlock` (logros tipo hito). Nueva tabla `user_achievement` (la legacy `user_achievements` sigue excluida del schema). `GET /user/achievements` lista los desbloqueados; `GET /training-programs/{id}/achievements` incluye el flag `unlocked`.
+- **Bloques de sesión tipados**: `TrainingRound.blockType` (nullable): `preparacion`, `principal`, `postural`, `cadena_posterior`, `descarga`. Aceptado por `TrainingRoundDto` y expuesto en el payload de pasos del player (`TrainingSessionExpander`). Los rounds tienen además `name`/`description` opcionales expuestos por API (mismos grupos de serialización que `blockType`; el player los recibe como `blockName` en el payload de los pasos).
+- **Seeder de ejercicios v4**: `php bin/console app:seed-calistenia-v4-exercises` (idempotente, busca por nombre; crea/actualiza fichas completas en español).
+
+### Convenciones del blueprint v4 (obligatorias al generar niveles nuevos)
+
+- **Descansos del Bloque 0 (preparación/movilidad)**: la movilidad se encadena de forma fluida → `block(BLOCK_PREPARACION, 1, 1, 5, $exercises, 5)`. NUNCA descansos de fuerza (20-30 s) en bloques de movilidad: inflan el tiempo calculado un 50%+.
+- **Descanso entre bloques (`restAfterBlock`)**: lo fija `addRestBetweenBlocks` — 60 s (niveles ≤6), 90 s (≤9), 120 s (resto). Es una transición breve, no un descanso de recuperación; no volver a subirlo a 180+.
+- **Tiempos estimados**: salen de `TrainingTimeCalculator` desde la estructura (sets × reps × descansos); nunca se hardcodean. Las duraciones que declaran los documentos de detalle son optimistas respecto a su propio contenido (~15-25%): el objetivo es que el cálculo sea razonable, no clavar el número del doc. Tras generar niveles nuevos, revisar los `estimatedDurationMin/Max` antes de darlos por buenos.
+- **Otros mapeos ya decididos**: `skillFocus` obligatorio en cada nivel; singles/series máximas → reps `1`; dosis `/lado` se computan una vez (aproximación aceptada); ejercicios sin equivalente en catálogo se omiten y se reportan (no se inventan nombres).

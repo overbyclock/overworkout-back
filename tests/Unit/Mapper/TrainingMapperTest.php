@@ -83,7 +83,9 @@ class TrainingMapperTest extends TestCase
                             sets: 3,
                             restBetweenSets: 30
                         ),
-                    ]
+                    ],
+                    name: 'Preparación y movilidad',
+                    description: 'Activación articular y movilidad específica.'
                 ),
             ]
         );
@@ -96,6 +98,9 @@ class TrainingMapperTest extends TestCase
         $this->assertEquals('strength', $training->getTarget()->value);
         $this->assertEquals('Test Training', $training->getName());
         $this->assertCount(1, $training->getTrainingRounds());
+        $round = $training->getTrainingRounds()->first();
+        $this->assertEquals('Preparación y movilidad', $round->getName());
+        $this->assertEquals('Activación articular y movilidad específica.', $round->getDescription());
     }
 
     public function testFromCreateDtoWithMultipleRounds(): void
@@ -281,7 +286,7 @@ class TrainingMapperTest extends TestCase
             ->willReturn($existingRound);
 
         $dto = new TrainingUpdateDto(rounds: [
-            new TrainingRoundDto(round: 2, restBetweenRounds: 120, id: 200, exercises: []),
+            new TrainingRoundDto(round: 2, restBetweenRounds: 120, id: 200, exercises: [], name: 'Salud postural', description: 'Cuidado del hombro.'),
         ]);
 
         $this->mapper->updateFromDto($training, $dto);
@@ -289,6 +294,8 @@ class TrainingMapperTest extends TestCase
         $this->assertCount(1, $training->getTrainingRounds());
         $this->assertEquals(2, $existingRound->getRound());
         $this->assertEquals(120, $existingRound->getRestBetweenRounds());
+        $this->assertEquals('Salud postural', $existingRound->getName());
+        $this->assertEquals('Cuidado del hombro.', $existingRound->getDescription());
     }
 
     public function testUpdateFromDtoReplacesExercisesInRound(): void

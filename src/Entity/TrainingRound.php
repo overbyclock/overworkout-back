@@ -16,6 +16,17 @@ class TrainingRound
 {
     public const GROUP_READ = 'training_round:read';
 
+    /**
+     * Tipos de bloque de una sesión (opcional; null en programas sin bloques tipados).
+     * Corresponde a la arquitectura de 5 bloques: Bloque 0 (preparación/movilidad),
+     * principal, salud postural, cadena posterior/cadera y descarga.
+     */
+    public const BLOCK_PREPARACION = 'preparacion';
+    public const BLOCK_PRINCIPAL = 'principal';
+    public const BLOCK_POSTURAL = 'postural';
+    public const BLOCK_CADENA_POSTERIOR = 'cadena_posterior';
+    public const BLOCK_DESCARGA = 'descarga';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -39,6 +50,31 @@ class TrainingRound
     #[ORM\Column(nullable: true)]
     #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?int $restAfterBlock = null;
+
+    /**
+     * Tipo de bloque de la sesión (ver constantes BLOCK_*). Null = sin tipar.
+     */
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Assert\Choice(
+        choices: [self::BLOCK_PREPARACION, self::BLOCK_PRINCIPAL, self::BLOCK_POSTURAL, self::BLOCK_CADENA_POSTERIOR, self::BLOCK_DESCARGA],
+        message: 'El tipo de bloque no es válido.',
+    )]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?string $blockType = null;
+
+    /**
+     * Nombre visible del bloque (p. ej. "Preparación y movilidad"). Null = sin nombre.
+     */
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?string $name = null;
+
+    /**
+     * Descripción opcional del bloque (qué se trabaja en él).
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
     #[ORM\JoinColumn(name: 'training_id', referencedColumnName: 'id')]
@@ -102,6 +138,42 @@ class TrainingRound
     public function setRestAfterBlock(?int $restAfterBlock): static
     {
         $this->restAfterBlock = $restAfterBlock;
+
+        return $this;
+    }
+
+    public function getBlockType(): ?string
+    {
+        return $this->blockType;
+    }
+
+    public function setBlockType(?string $blockType): static
+    {
+        $this->blockType = $blockType;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -43,9 +43,11 @@ class Exercises
 
     #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: Equipments::class)]
+    #[Groups([self::GROUP_READ_DETAIL])]
     private ?Equipments $equipment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GROUP_READ_DETAIL, Training::GROUP_READ_DETAIL])]
     private ?string $media = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]

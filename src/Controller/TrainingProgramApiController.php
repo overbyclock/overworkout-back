@@ -8,9 +8,11 @@ use App\Dto\Request\TrainingProgramCreateDto;
 use App\Dto\Request\TrainingProgramUpdateDto;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
+use App\Entity\User;
 use App\Mapper\TrainingProgramMapper;
 use App\Repository\AchievementRepository;
 use App\Repository\TrainingProgramRepository;
+use App\Repository\UserAchievementRepository;
 use App\Security\Voter\TrainingProgramVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +30,7 @@ class TrainingProgramApiController extends AbstractController
         private readonly TrainingProgramMapper $trainingProgramMapper,
         private readonly NormalizerInterface $normalizer,
         private readonly AchievementRepository $achievementRepository,
+        private readonly UserAchievementRepository $userAchievementRepository,
     ) {
     }
 
@@ -203,6 +206,21 @@ class TrainingProgramApiController extends AbstractController
 
         $achievements = $this->achievementRepository->findByProgram($program);
 
-        return $this->json($achievements, 200, [], ['groups' => ['achievement:read']]);
+        // Marcar los logros ya desbloqueados por el usuario actual
+        $unlockedIds = [];
+        /** @var User $user */
+        $user = $this->getUser();
+        foreach ($this->userAchievementRepository->findByUser($user) as $userAchievement) {
+            $unlockedIds[$userAchievement->getAchievement()->getId()] = true;
+        }
+
+        $result = [];
+        foreach ($achievements as $achievement) {
+            $data = $this->normalizer->normalize($achievement, null, ['groups' => ['achievement:read']]);
+            $data['unlocked'] = isset($unlockedIds[$achievement->getId()]);
+            $result[] = $data;
+        }
+
+        return $this->json($result);
     }
 }

@@ -107,6 +107,9 @@ readonly class TrainingMapper
         $round = new TrainingRound();
         $round->setRound($dto->round);
         $round->setRestBetweenRounds($dto->restBetweenRounds);
+        $round->setBlockType($dto->blockType);
+        $round->setName($dto->name);
+        $round->setDescription($dto->description);
 
         foreach ($dto->exercises as $exerciseDto) {
             $exerciseConfig = $this->createExerciseConfigFromDto($exerciseDto);
@@ -156,6 +159,9 @@ readonly class TrainingMapper
                 if ($round && $round->getTraining() === $training) {
                     $round->setRound($roundDto->round);
                     $round->setRestBetweenRounds($roundDto->restBetweenRounds);
+                    $round->setBlockType($roundDto->blockType);
+                    $round->setName($roundDto->name);
+                    $round->setDescription($roundDto->description);
                     $this->updateExercisesInRound($round, $roundDto->exercises);
                 }
             } else {

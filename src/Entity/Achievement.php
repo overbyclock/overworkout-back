@@ -12,6 +12,25 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Table(name: 'achievements')]
 class Achievement
 {
+    /** Tiers de rareza de los logros. */
+    public const TIER_COMUN = 'comun';
+    public const TIER_POCO_COMUN = 'poco_comun';
+    public const TIER_RARO = 'raro';
+    public const TIER_EPICO = 'epico';
+    public const TIER_LEGENDARIO = 'legendario';
+
+    /** Tipos de logro: de test (al superar un nivel) o de hito (primera ejecución en sesión). */
+    public const TYPE_TEST = 'test';
+    public const TYPE_HITO = 'hito';
+
+    /**
+     * Requisitos de logros por ítem de test (con requirementKey = nombre del ítem):
+     * se desbloquean cuando el valor del ítem supera el mínimo (o el objetivo)
+     * en CUALQUIER test enviado, aunque el test global no se supere.
+     */
+    public const REQ_TEST_ITEM_MIN = 'test_item_min';
+    public const REQ_TEST_ITEM_OBJ = 'test_item_obj';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -54,6 +73,13 @@ class Achievement
     #[Groups(['achievement:read'])]
     private ?int $requirementValue = null;
 
+    /**
+     * Clave del requisito (p. ej. el nombre del ítem de test para logros por ítem).
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['achievement:read'])]
+    private ?string $requirementKey = null;
+
     #[ORM\Column]
     #[Groups(['achievement:read'])]
     private ?bool $isSecret = false;
@@ -62,6 +88,36 @@ class Achievement
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['achievement:read'])]
     private ?TrainingProgram $program = null;
+
+    /**
+     * Tier de rareza (comun … legendario). Null = logro sin tier (genérico).
+     */
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['achievement:read'])]
+    private ?string $tier = null;
+
+    /**
+     * Tipo de logro: test (al superar un nivel) o hito (primera ejecución en sesión).
+     * Null = logro genérico (progress, consistency, volume, secret…).
+     */
+    #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['achievement:read'])]
+    private ?string $type = null;
+
+    /**
+     * Nivel del programa al que está asociado el logro (si aplica).
+     */
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['achievement:read'])]
+    private ?TrainingLevel $level = null;
+
+    /**
+     * Hitos culturales con celebración propia (p. ej. Primera Dominada, Muscle-Up).
+     */
+    #[ORM\Column(options: ['default' => false])]
+    #[Groups(['achievement:read'])]
+    private bool $specialCelebration = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -184,6 +240,18 @@ class Achievement
         return $this;
     }
 
+    public function getRequirementKey(): ?string
+    {
+        return $this->requirementKey;
+    }
+
+    public function setRequirementKey(?string $requirementKey): static
+    {
+        $this->requirementKey = $requirementKey;
+
+        return $this;
+    }
+
     public function isIsSecret(): ?bool
     {
         return $this->isSecret;
@@ -209,6 +277,54 @@ class Achievement
     public function setProgram(?TrainingProgram $program): static
     {
         $this->program = $program;
+
+        return $this;
+    }
+
+    public function getTier(): ?string
+    {
+        return $this->tier;
+    }
+
+    public function setTier(?string $tier): static
+    {
+        $this->tier = $tier;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLevel(): ?TrainingLevel
+    {
+        return $this->level;
+    }
+
+    public function setLevel(?TrainingLevel $level): static
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function hasSpecialCelebration(): bool
+    {
+        return $this->specialCelebration;
+    }
+
+    public function setSpecialCelebration(bool $specialCelebration): static
+    {
+        $this->specialCelebration = $specialCelebration;
 
         return $this;
     }

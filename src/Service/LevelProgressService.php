@@ -8,6 +8,7 @@ use App\Entity\TestResult;
 use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
+use App\Enum\TestItemType;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ class LevelProgressService
         private readonly EntityManagerInterface $entityManager,
         private readonly UserLevelProgressRepository $progressRepository,
         private readonly TrainingLevelRepository $levelRepository,
+        private readonly AchievementUnlockService $achievementUnlockService,
     ) {
     }
 
@@ -58,7 +60,7 @@ class LevelProgressService
         // Si ya existe un progreso activo en este programa, no hacemos nada.
         $hasActive = false;
         foreach ($existingProgresses as $progress) {
-            if (\in_array($progress->getStatus(), [UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::STATUS_REPEAT], true)) {
+            if (\in_array($progress->getStatus(), UserLevelProgress::ACTIVE_STATUSES, true)) {
                 $hasActive = true;
             }
         }
@@ -113,8 +115,13 @@ class LevelProgressService
     /**
      * Registra los resultados de un test y evalúa si el usuario pasa de nivel.
      *
-     * @param array<int, array{name: string, value: int|float}>   $results
-     * @param array<int, array{name: string, minimum: int|float}> $requirements
+     * En programas con modo strict_gates: si la fuerza se supera pero alguna puerta
+     * de movilidad falla, el nivel queda mobility_blocked (ciclo corto de movilidad,
+     * sin repetir la fuerza). Si el progreso ya estaba mobility_blocked, la entrega
+     * se evalúa como re-test: solo se exigen las puertas.
+     *
+     * @param array<int, array{name: string, value: int|float}>                                     $results
+     * @param array<int, array{name: string, minimum: int|float, type?: string, gateCode?: string}> $requirements
      */
     public function submitTestResults(
         UserLevelProgress $progress,
@@ -122,6 +129,9 @@ class LevelProgressService
         array $requirements,
         ?string $notes = null
     ): TestResult {
+        $mode = $progress->getTrainingLevel()->getProgram()?->getTestEvaluationMode()
+            ?? TrainingProgram::TEST_EVAL_LEGACY;
+
         $testResult = new TestResult();
         $testResult->setUserLevelProgress($progress);
         $testResult->setLevelNumber($progress->getTrainingLevel()->getLevelNumber());
@@ -129,12 +139,37 @@ class LevelProgressService
         $testResult->setResults($results);
         $testResult->setNotes($notes);
 
-        $testResult->evaluate($requirements);
+        $isGateRetest = TrainingProgram::TEST_EVAL_STRICT_GATES === $mode
+            && UserLevelProgress::STATUS_MOBILITY_BLOCKED === $progress->getStatus();
+
+        if ($isGateRetest) {
+            $gateRequirements = array_values(array_filter(
+                $requirements,
+                static fn (array $r): bool => TestItemType::fromNullable($r['type'] ?? null)->isGate(),
+            ));
+            $testResult->evaluate($gateRequirements, 'gates_only');
+        } else {
+            $testResult->evaluate($requirements, $mode);
+        }
 
         $this->entityManager->persist($testResult);
 
+        // Logros por ítem: se desbloquean con cualquier test, se supere o no globalmente
+        $this->achievementUnlockService->unlockTestItemAchievements(
+            $progress->getUser(),
+            $progress->getTrainingLevel(),
+            $testResult,
+            $requirements,
+            [
+                'levelNumber' => $progress->getTrainingLevel()->getLevelNumber(),
+                'cycleNumber' => $progress->getCyclesCompleted(),
+            ],
+        );
+
         if ($testResult->isOverallPassed()) {
             $this->handleLevelPassed($progress);
+        } elseif (TrainingProgram::TEST_EVAL_STRICT_GATES === $mode && $testResult->isStrengthPassed()) {
+            $this->handleMobilityBlocked($progress);
         } else {
             $this->handleLevelRepeat($progress);
         }
@@ -152,8 +187,18 @@ class LevelProgressService
         $progress->setStatus(UserLevelProgress::STATUS_COMPLETED);
         $progress->setCompletedAt(new \DateTimeImmutable());
 
-        // Desbloquear siguiente nivel
+        // Desbloquear los logros de tipo test asociados al nivel superado
         $currentLevel = $progress->getTrainingLevel();
+        $this->achievementUnlockService->unlockTestAchievementsForLevel(
+            $progress->getUser(),
+            $currentLevel,
+            [
+                'levelNumber' => $currentLevel->getLevelNumber(),
+                'cycleNumber' => $progress->getCyclesCompleted(),
+            ],
+        );
+
+        // Desbloquear siguiente nivel
         $nextLevel = $this->levelRepository->findOneBy([
             'program' => $currentLevel->getProgram(),
             'levelNumber' => $currentLevel->getLevelNumber() + 1,
@@ -182,6 +227,15 @@ class LevelProgressService
     {
         $progress->incrementCycle();
         $progress->setStatus(UserLevelProgress::STATUS_REPEAT);
+    }
+
+    /**
+     * Fuerza superada pero puerta de movilidad fallada: ciclo corto de movilidad.
+     * No incrementa ciclo ni reinicia semana: el trabajo de fuerza no se repite.
+     */
+    private function handleMobilityBlocked(UserLevelProgress $progress): void
+    {
+        $progress->setStatus(UserLevelProgress::STATUS_MOBILITY_BLOCKED);
     }
 
     /**

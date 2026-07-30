@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\TestItemType;
 use App\Repository\TestResultRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -43,6 +44,31 @@ class TestResult
     #[ORM\Column]
     #[Groups([self::GROUP_READ])]
     private bool $overallPassed = false;
+
+    /**
+     * En modo strict_gates: si se superaron todos los mínimos de fuerza.
+     * En modo legacy queda en true (no aplica).
+     */
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups([self::GROUP_READ])]
+    private bool $strengthPassed = true;
+
+    /**
+     * En modo strict_gates: si se superaron todas las puertas de movilidad (y re-tests).
+     * En modo legacy queda en true (no aplica).
+     */
+    #[ORM\Column(options: ['default' => true])]
+    #[Groups([self::GROUP_READ])]
+    private bool $mobilityPassed = true;
+
+    /**
+     * Códigos de las puertas de movilidad falladas (p. ej. ["G1", "G4"]).
+     *
+     * @var string[]|null
+     */
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups([self::GROUP_READ])]
+    private ?array $failedGates = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     #[Groups([self::GROUP_READ])]
@@ -130,6 +156,48 @@ class TestResult
         return $this;
     }
 
+    public function isStrengthPassed(): bool
+    {
+        return $this->strengthPassed;
+    }
+
+    public function setStrengthPassed(bool $strengthPassed): static
+    {
+        $this->strengthPassed = $strengthPassed;
+
+        return $this;
+    }
+
+    public function isMobilityPassed(): bool
+    {
+        return $this->mobilityPassed;
+    }
+
+    public function setMobilityPassed(bool $mobilityPassed): static
+    {
+        $this->mobilityPassed = $mobilityPassed;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getFailedGates(): ?array
+    {
+        return $this->failedGates;
+    }
+
+    /**
+     * @param string[]|null $failedGates
+     */
+    public function setFailedGates(?array $failedGates): static
+    {
+        $this->failedGates = $failedGates;
+
+        return $this;
+    }
+
     public function getNotes(): ?string
     {
         return $this->notes;
@@ -144,10 +212,24 @@ class TestResult
 
     /**
      * Calcula si el usuario pasó basado en los resultados y los requisitos mínimos.
+     *
+     * Modos:
+     * - legacy: regla histórica — pasa si supera al menos 3 de 4 pruebas (o todas si hay menos de 4).
+     * - strict_gates: todos los mínimos de fuerza Y todas las puertas de movilidad (regla §1.2 de la
+     *   arquitectura v4: los mínimos del test son la entrada del nivel siguiente).
+     * - gates_only: re-evaluación tras un bloqueo por movilidad; solo se evalúan las puertas
+     *   (la fuerza ya se superó en el test que produjo el bloqueo).
+     *
      * results: [{name, value, minimum, unit}].
+     *
+     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string}> $requirements
      */
-    public function evaluate(array $requirements): static
+    public function evaluate(array $requirements, string $mode = TrainingProgram::TEST_EVAL_LEGACY): static
     {
+        if (TrainingProgram::TEST_EVAL_STRICT_GATES === $mode || 'gates_only' === $mode) {
+            return $this->evaluateStrict($requirements, 'gates_only' === $mode);
+        }
+
         $passedCount = 0;
         $evaluatedResults = [];
 
@@ -168,6 +250,57 @@ class TestResult
         $total = \count($requirements);
         $threshold = $total >= 4 ? 3 : $total;
         $this->overallPassed = $passedCount >= $threshold;
+        $this->strengthPassed = true;
+        $this->mobilityPassed = true;
+        $this->failedGates = null;
+        $this->results = $evaluatedResults;
+
+        return $this;
+    }
+
+    /**
+     * Evaluación estricta (v4): itera los requisitos; un requisito sin resultado cuenta como fallo.
+     *
+     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string}> $requirements
+     */
+    private function evaluateStrict(array $requirements, bool $gatesOnly): static
+    {
+        $evaluatedResults = [];
+        $failedGates = [];
+        $strengthPassed = true;
+        $mobilityPassed = true;
+
+        foreach ($requirements as $req) {
+            $type = TestItemType::fromNullable($req['type'] ?? null);
+            $minimum = $req['minimum'] ?? 0;
+            $result = array_find($this->results, fn ($r) => $r['name'] === $req['name']);
+            $passed = null !== $result && $result['value'] >= $minimum;
+
+            if ($type->isGate()) {
+                if (!$passed) {
+                    $mobilityPassed = false;
+                    $failedGates[] = $req['gateCode'] ?? $req['name'];
+                }
+            } elseif (!$passed) {
+                $strengthPassed = false;
+            }
+
+            $evaluated = array_merge($result ?? ['name' => $req['name'], 'value' => null], [
+                'minimum' => $minimum,
+                'passed' => $passed,
+                'type' => $type->value,
+            ]);
+            if (isset($req['gateCode'])) {
+                $evaluated['gateCode'] = $req['gateCode'];
+            }
+            $evaluatedResults[] = $evaluated;
+        }
+
+        // En un re-test de puertas la fuerza ya se superó previamente.
+        $this->strengthPassed = $gatesOnly ? true : $strengthPassed;
+        $this->mobilityPassed = $mobilityPassed;
+        $this->failedGates = [] === $failedGates ? null : $failedGates;
+        $this->overallPassed = $this->strengthPassed && $this->mobilityPassed;
         $this->results = $evaluatedResults;
 
         return $this;

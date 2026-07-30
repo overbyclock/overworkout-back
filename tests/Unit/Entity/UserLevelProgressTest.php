@@ -127,5 +127,16 @@ class UserLevelProgressTest extends TestCase
         $this->assertSame('in_progress', UserLevelProgress::STATUS_IN_PROGRESS);
         $this->assertSame('completed', UserLevelProgress::STATUS_COMPLETED);
         $this->assertSame('repeat', UserLevelProgress::STATUS_REPEAT);
+        $this->assertSame('abandoned', UserLevelProgress::STATUS_ABANDONED);
+        $this->assertSame('mobility_blocked', UserLevelProgress::STATUS_MOBILITY_BLOCKED);
+    }
+
+    public function testMobilityBlockedIsActiveStatus(): void
+    {
+        $this->assertContains(UserLevelProgress::STATUS_MOBILITY_BLOCKED, UserLevelProgress::ACTIVE_STATUSES);
+        $this->assertContains(UserLevelProgress::STATUS_IN_PROGRESS, UserLevelProgress::ACTIVE_STATUSES);
+        $this->assertContains(UserLevelProgress::STATUS_REPEAT, UserLevelProgress::ACTIVE_STATUSES);
+        $this->assertNotContains(UserLevelProgress::STATUS_COMPLETED, UserLevelProgress::ACTIVE_STATUSES);
+        $this->assertNotContains(UserLevelProgress::STATUS_LOCKED, UserLevelProgress::ACTIVE_STATUSES);
     }
 }

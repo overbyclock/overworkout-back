@@ -21,6 +21,17 @@ class UserLevelProgress
     public const STATUS_REPEAT = 'repeat';
     public const STATUS_ABANDONED = 'abandoned';
 
+    /**
+     * Fuerza superada pero alguna puerta de movilidad fallada:
+     * el usuario repite un ciclo corto de movilidad, no el trabajo de fuerza.
+     */
+    public const STATUS_MOBILITY_BLOCKED = 'mobility_blocked';
+
+    /**
+     * Estados en los que el programa se considera activo para el usuario.
+     */
+    public const ACTIVE_STATUSES = [self::STATUS_IN_PROGRESS, self::STATUS_REPEAT, self::STATUS_MOBILITY_BLOCKED];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

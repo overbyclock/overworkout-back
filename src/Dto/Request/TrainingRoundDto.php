@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dto\Request;
 
+use App\Entity\TrainingRound;
 use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class TrainingRoundDto
@@ -21,8 +22,20 @@ readonly class TrainingRoundDto
         /** @var TrainingExerciseConfigDto[] */
         public array $exercises = [],
 
+        #[Assert\Choice(
+            choices: [TrainingRound::BLOCK_PREPARACION, TrainingRound::BLOCK_PRINCIPAL, TrainingRound::BLOCK_POSTURAL, TrainingRound::BLOCK_CADENA_POSTERIOR, TrainingRound::BLOCK_DESCARGA],
+            message: 'El tipo de bloque no es válido.',
+        )]
+        public ?string $blockType = null,
+
         // ID opcional para actualizaciones
-        public ?int $id = null
+        public ?int $id = null,
+
+        // Nombre y descripción opcionales del bloque
+        #[Assert\Length(max: 100, maxMessage: 'El nombre del bloque no puede superar {{ limit }} caracteres')]
+        public ?string $name = null,
+
+        public ?string $description = null
     ) {
     }
 }
