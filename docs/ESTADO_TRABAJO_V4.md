@@ -65,7 +65,7 @@
 - Migración nueva `Version20260807084654`: amplía el CHECK `training_levels_chk_1` de `difficulty_rating` 1-10 a 1-15 (los niveles 11-12 violaban el CHECK; la arquitectura prevé 15 niveles). Aplicada en dev. **Ojo:** la BD de test NO se construye desde migraciones (las de 2024 no son replayables desde cero: falla `Version20241112220658` por columna `sets`); se recrea con `doctrine:database:drop/create --env=test` + `doctrine:schema:create --env=test` + `migrations:sync-metadata-storage` + `migrations:version --add --all`, por lo que el CHECK no existe en test (igual que antes).
 - Duraciones calculadas coherentes con N7-N9 (misma escala): N10 61-118 min, N11 45-113, N12 44-112. Ordenación relativa correcta (B/D más largas, C circuito más corta, F4 la más corta).
 - Verificación: back verde (805 tests, PHPStan y CS-Fixer limpios).
-- Pendiente de commit: niveles 7-12 (blueprint + content + seeder + migración nueva) y este documento.
+- Commit hecho: niveles 7-12 + migración + este documento (`a0b10bf` en back). Los cambios pendientes del front también están commiteados (`1a4370a` bloque 3, `6f61260` fixes del player).
 
 ## Decisiones tomadas por el usuario
 
@@ -78,7 +78,7 @@
 
 ## Siguiente paso (pendiente de decidir al retomar)
 
-- Commit pendiente: niveles 7-12 (back: blueprint + content + seeder + migración `Version20260807084654` + docs nuevos `detalle_niveles_07-09.md` y `detalle_niveles_10-12.md`) y los cambios de `overworkout-front` (bloques 3 y 6).
+- Todo commiteado (back y front). Queda pendiente de decisión: si LevelView/ProgramDetailView llevan también a la intro (`user-train-intro`) con training id (hoy solo se entra desde el Home).
 - Después: niveles 13-15 cuando el usuario pase su detalle (la arquitectura prevé 15 niveles + Olimpo; el CHECK de `difficulty_rating` ya admite 1-15). Mismo procedimiento: leer "Convenciones del blueprint v4" en `AGENTS.md`, extender blueprint/content/seeder, generar con `--levels=13,14,15` y revisar duraciones.
 
 ## Notas sueltas
