@@ -172,6 +172,10 @@ class CalisteniaMasterContentV4
             10 => self::EXERCISE_NOTES_L10,
             11 => self::EXERCISE_NOTES_L11,
             12 => self::EXERCISE_NOTES_L12,
+            13 => self::EXERCISE_NOTES_L13,
+            14 => self::EXERCISE_NOTES_L14,
+            15 => self::EXERCISE_NOTES_L15,
+            16 => self::EXERCISE_NOTES_L16,
             default => [],
         };
 
@@ -2580,6 +2584,65 @@ class CalisteniaMasterContentV4
         'Knee-to-Wall Rocks' => 'Re-test G3 en el test del nivel: ≥10 cm sin despegar el talón y simetría <2 cm; ensáyalo tal como se evaluará.',
         'Seated Leg Raise' => 'Re-test G5 en el test del nivel: piernas extendidas y juntas despegadas 10 s, manos solo apoyo ligero, lumbar neutra.',
         'Standing Pike Stretch' => 'Re-test G6 en el test del nivel: palmas completas al suelo con piernas extendidas (o pecho a muslos sentado).',
+    ];
+
+    /** Notas de los ejercicios principales de N13. */
+    private const EXERCISE_NOTES_L13 = [
+        'Advanced Tuck Planche Push-Up' => 'Cierra la cadena hacia el planche PU de N14: proyección constante, codos a ~45°, brazos rectos arriba; nunca al fallo del bíceps distal.',
+        'Weighted Pull Up' => 'Dominada estricta con lastre; +10-15% limpio vale más que +25% con tirón. Construye el codo que el one-arm necesitará.',
+        'L-Sit Pull Up' => 'Rango completo desde extensión manteniendo la L-sit; pecho alto y escápulas activas en cada rep.',
+        'Human Flag' => 'Brazo inferior empuja y el superior tracciona; línea lateral estricta. Testea en tu mejor lado, entrena ambos.',
+        'Straddle Press to Handstand' => 'La compresión hace el 80% del trabajo: cadera alta, piernas abiertas, brazos que empujan desde el primer grado.',
+        'Nordic Curl' => 'Completo con control excéntrico; el talón está fijo y el cuerpo baja en línea. Si falla el final, asiste con banda.',
+        'One Arm Pull Up Negative' => 'Salida a dos brazos, bajada a uno con control total 4-5 s. Si no controlas 3 s, apoyo de dedos en la muñeca.',
+        'V-Sit Hold' => 'Pecho alto, lumbar neutra, piernas extendidas y juntas; manos solo apoyo ligero. Puerta G5 viva.',
+        'Typewriter Pull Up' => 'Mantenimiento cargado del patrón unilateral: barbilla sobre la barra todo el recorrido, lado débil marca el volumen.',
+        'Straddle Planche' => 'Consolidación del full planche de N12: apertura controlada, proyección máxima, brazos rectos.',
+        'Handstand Lower to Straddle Planche' => 'Descenso controlado desde handstand a straddle planche: el primer peldaño hacia el 90° push-up de N14.',
+    ];
+
+    /** Notas de los ejercicios principales de N14. */
+    private const EXERCISE_NOTES_L14 = [
+        'One Arm Chin Up' => 'Cima de la tracción supina: una sola exposición pesada unilateral por microciclo, siempre fresco. Dolor anterior de hombro = stop de la vía unilateral.',
+        'Planche Push Up' => 'Full planche como base; la proyección manda sobre las reps. Si no sale, alarga el hold antes de añadir flexiones.',
+        '90 Degree Push Up' => 'Handstand lower controlado a straddle planche y empuje de vuelta. Codos que ceden sincronizados, sin caída libre.',
+        'Front Lever Raise' => 'Desde colgado activo hasta full FL y bajada controlada. Brazos rectos, retroversión pélvica, sin balanceo.',
+        'Tiger Bend Hold' => 'Apoyo sobre antebrazos con cuerpo invertido en línea; base del tiger bend de N15. Sin dolor de codo — el umbral es cero.',
+        'Tiger Bend Negative' => 'Desde handstand, descenso controlado hasta apoyo de antebrazos. Cualquier punzada de codo = quedarse solo en hold.',
+        'Impossible Dip' => 'Fondo profundo en anillas con brazos rectos detrás; asistido con banda. Rango se gana en ciclos, no en sesiones.',
+        'Cross Hold' => 'Anillas con brazos extendidos lateralmente (~60-70°), asistido con banda. Hombros perfectamente calientes, falso agarre consolidado.',
+        'Maltese' => 'Proyección de planche sobre anillas con apertura lateral; banda máxima al inicio. Brazo recto estricto, cuerpo horizontal.',
+        'Dolphin' => 'Postura del delfín sobre antebrazos: base de muñeca y antebrazo para el tiger bend. Cuello libre de carga.',
+        'Forearm Stand' => 'Equilibrio invertido sobre antebrazos frente a pared si hace falta; pista de aterrizaje segura del tiger bend.',
+        'Weighted Pull Up' => '+50% BW: el techo de fuerza a dos brazos que sostiene el one-arm. Técnica idéntica a la dominada estricta.',
+    ];
+
+    /** Notas de los ejercicios principales de N15. */
+    private const EXERCISE_NOTES_L15 = [
+        'One Arm Pull Up' => 'Cima del programa cerrado en prona: una exposición pesada por microciclo, primero y fresco. Máximo 2 fallos encadenados.',
+        'Tiger Bend Push Up' => 'Desde handstand: descenso a antebrazos y empuje de vuelta. Codos apuntan al frente; asistencia con banda o rango parcial al inicio.',
+        'Impossible Dip' => 'Test del nivel: fondo profundo controlado en anillas, hombros estables, giro externo arriba. Nunca forzar rango con dolor anterior.',
+        'Iron Cross' => 'Cruz de hierro asistido con banda mínima: brazos rectos laterales, falso agarre profundo. El ángulo baja en milímetros por ciclo.',
+        'Maltese' => 'Maltese asistido con banda ligera: apertura lateral, cuerpo horizontal, brazos rectos. Progresa por reducción de banda, no por tiempo forzado.',
+        'Weighted Pull Up' => '+50% BW ×3: volumen con el mismo lastre, no más kilos. Técnica estricta en cada rep, descanso completo.',
+        'Tiger Bend' => 'Mantenimiento del hito: hold sobre antebrazos con cuerpo en línea. Base técnica del push-up.',
+    ];
+
+    /** Notas de los ejercicios principales de N16 (Bloque Élite "Olimpo"). */
+    private const EXERCISE_NOTES_L16 = [
+        'Olimpo Push Slot' => 'Slot de especialización de empuje: 1-2 objetivos legendarios por ciclo, frescos, primer bloque tras el Bloque 0. La disciplina de NO hacer es la norma.',
+        'Olimpo Pull Slot' => 'Slot de especialización de tracción: skill antes que fuerza bruta; descansos de 4-5 min no se negocian.',
+        'Olimpo Rings Slot' => 'Slot de especialización en anillas: iron cross / maltese con bandas honestas, hombros calientes, volumen bajo.',
+        'Olimpo Legs Slot' => 'Slot de especialización de piernas: mantenimiento del dragon pistol, shrimp squat y cadena posterior con dosis mínimas efectivas.',
+        'One Arm Pull Up' => 'Mantenimiento de élite: 2 series de calidad por microciclo conservan el skill; sin él, el peldaño baja rápido.',
+        'One Arm Chin Up' => 'Mantenimiento de élite: dosis mínimas efectivas; unos pocos ciclos sin tocarlo lo devuelven a asistencia.',
+        'Planche' => 'Mantenimiento de élite: full planche 2×3-5 s por microciclo; calidad sobre cantidad eternamente.',
+        'Planche Push Up' => 'Mantenimiento de élite: 2×2-3 reps limpias; conserva la proyección y el control del fondo.',
+        'Handstand Push Up' => 'Mantenimiento de élite: HSPU libre o asistido 2×1-2; la fuerza vertical no se abandona.',
+        'Iron Cross' => 'Mantenimiento de élite: cross asistido 2×5 s con banda honesta; el estático más exigente exige el mayor respeto.',
+        'Maltese' => 'Mantenimiento de élite: maltese asistido 2×3-5 s; apertura lateral con brazos rectos y cuerpo horizontal.',
+        'Tiger Bend Push Up' => 'Mantenimiento de élite: 1-2 reps limpias o asistidas; el codo nunca se fuerza tras el impossible dip.',
+        'Impossible Dip' => 'Mantenimiento de élite: asistido 2×2 si no pica en la rotación; rango que se gana en décadas, no en semanas.',
     ];
 
     /** Notas genéricas de movilidad y descarga (comunes a todos los niveles). */
