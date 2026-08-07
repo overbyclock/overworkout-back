@@ -7,12 +7,14 @@ namespace App\Command\Blueprint;
 use App\Entity\TrainingRound;
 
 /**
- * Blueprint del programa Calistenia Master v4.0 (niveles 1-12).
+ * Blueprint del programa Calistenia Master v4.0 (niveles 1-16, incluyendo el
+ * Bloque Élite Abierto "Olimpo" como nivel 16).
  *
  * Contenido transcrito literalmente de docs/detalle_niveles_01-03.md (niveles 1-3),
  * docs/detalle_niveles_04-06.md (niveles 4-6),
- * docs/detalle_niveles_07-09.md (niveles 7-9) y
- * docs/detalle_niveles_10-12.md (niveles 10-12).
+ * docs/detalle_niveles_07-09.md (niveles 7-9),
+ * docs/detalle_niveles_10-12.md (niveles 10-12) y
+ * docs/detalle_niveles_13-15_olimpo.md (niveles 13-15 y Bloque Élite Olimpo).
  * Estructura: 4 sesiones por fase (A=Empuje, B=Tracción, C=Circuito, D=Skill).
  * Fases: base (55%), progression (80%), intensification (95%), deload (50%).
  *
