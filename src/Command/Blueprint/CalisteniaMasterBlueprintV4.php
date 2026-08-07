@@ -8578,83 +8578,162 @@ class CalisteniaMasterBlueprintV4
         $b0 = self::block0(14, $phase, 'session_d');
 
         return match ($phase) {
-            'base' => [
-                'name' => 'Sesión D: Skills — 90° escalera, anillas élite y antebrazo',
-                'goal' => 'Introducción asistida al 90° push-up; cross hold con banda generosa y maltese con banda máxima (rotación por ciclo); tiger bend hold; forearm stand; handstand libre de mantenimiento',
-                'blocks' => [
-                    $b0,
-                    // NOTA: rotación de foco cross/maltese por ciclo (anti-coincidencia §1.7).
-                    // - Ciclos impares: cross pesado (4 series) y maltese técnico (2 series).
-                    // - Ciclos pares: cross técnico (2 series) y maltese pesado (3 series).
-                    // El generador NO recibe la paridad; se usa ciclo impar ('odd') por defecto.
-                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
-                        // Hito del nivel: 90° push-up asistido con banda.
-                        // Ejercicio nuevo; se reportará si no está en el catálogo.
-                        self::ex('Assisted 90 Degree Push Up', '1-2', 4),
-                        self::ex('Assisted Iron Cross', '5-8s', 4),
-                        self::ex('Assisted Maltese', '4-6s', 2),
-                        // Hito del nivel: tiger bend hold.
-                        // Ejercicio nuevo; se reportará si no está en el catálogo.
-                        self::ex('Tiger Bend Hold', '5-10s', 3),
-                        self::ex('Forearm Stand', '10-15s', 2),
-                        self::ex('Freestanding Handstand', '10-15s', 2),
-                    ], 240),
-                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
-                        self::ex('Wall Slide', '10', 2),
-                        self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Chest Doorway Stretch', '30s/lado', 2),
-                    ], 50),
-                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
-                        self::ex('Seated Leg Raise', '10s', 2),
-                        self::ex('Arch Hold', '20s', 2),
-                    ], 60),
-                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
-                        self::ex('Diaphragmatic Breathing', '120s'),
-                        self::ex('Standing Pike Stretch', '40s'),
-                        self::ex('Straddle Fold', '40s'),
-                        self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                    ], 20),
+            // NOTA: rotación de foco cross/maltese por ciclo en Fase 1-D.
+            // - Ciclos impares: cross pesado (4 series) y maltese técnico (2 series).
+            // - Ciclos pares: cross técnico (2 series) y maltese pesado (3 series).
+            // El generador NO recibe la paridad; se devuelve la variante de ciclo
+            // impar ('odd'). Cuando se wiree la paridad, cambiar el valor del match.
+            'base' => match ('odd') {
+                'odd' => [
+                    'name' => 'Sesión D: Skills — 90° escalera, anillas élite y antebrazo (ciclo impar)',
+                    'goal' => 'Ciclo impar: introducción asistida al 90° push-up; cross hold con banda generosa (foco pesado); maltese con banda máxima (técnico); tiger bend hold; forearm stand; handstand libre de mantenimiento',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Hito del nivel: 90° push-up asistido con banda.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Assisted 90 Degree Push Up', '1-2', 4),
+                            self::ex('Assisted Iron Cross', '5-8s', 4),
+                            self::ex('Assisted Maltese', '4-6s', 2),
+                            // Hito del nivel: tiger bend hold.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Tiger Bend Hold', '5-10s', 3),
+                            self::ex('Forearm Stand', '10-15s', 2),
+                            self::ex('Freestanding Handstand', '10-15s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 2),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
                 ],
-            ],
-            'progression' => [
-                'name' => 'Sesión D: Skills — 90° parcial, anillas élite y tiger bend negativo',
-                'goal' => '90° push-up parcial de medio rango; acumulación con 90° asistido; cross hold y maltese con banda (rotación por ciclo); tiger bend negativo; forearm stand y handstand libre',
-                'blocks' => [
-                    $b0,
-                    // NOTA: rotación de foco cross/maltese por ciclo (como en F1).
-                    // El generador NO recibe la paridad; se usa ciclo impar ('odd') por defecto.
-                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
-                        // Hito del nivel: 90° push-up parcial.
-                        // Ejercicio nuevo; se reportará si no está en el catálogo.
-                        self::ex('Partial 90 Degree Push Up', '1-2', 4),
-                        self::ex('Assisted 90 Degree Push Up', '2', 2),
-                        self::ex('Assisted Iron Cross', '6-8s', 4),
-                        self::ex('Assisted Maltese', '5-8s', 2),
-                        // Hito del nivel: tiger bend negativo.
-                        // Ejercicio nuevo; se reportará si no está en el catálogo.
-                        self::ex('Tiger Bend Negative', '1', 3),
-                        self::ex('Forearm Stand', '15s', 2),
-                        self::ex('Freestanding Handstand', '12s', 2),
-                    ], 240),
-                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
-                        self::ex('Wall Slide', '10', 3),
-                        self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Chest Doorway Stretch', '30s/lado', 2),
-                    ], 50),
-                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
-                        self::ex('Seated Leg Raise', '10s', 3),
-                        self::ex('Arch Hold', '20s', 2),
-                    ], 60),
-                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
-                        self::ex('Diaphragmatic Breathing', '120s'),
-                        self::ex('Standing Pike Stretch', '40s'),
-                        self::ex('Straddle Fold', '40s'),
-                        self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                    ], 20),
+                'even' => [
+                    'name' => 'Sesión D: Skills — 90° escalera, anillas élite y antebrazo (ciclo par)',
+                    'goal' => 'Ciclo par: introducción asistida al 90° push-up; cross hold con banda generosa (técnico); maltese con banda máxima (foco pesado); tiger bend hold; forearm stand; handstand libre de mantenimiento',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Hito del nivel: 90° push-up asistido con banda.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Assisted 90 Degree Push Up', '1-2', 4),
+                            self::ex('Assisted Iron Cross', '5-8s', 2),
+                            self::ex('Assisted Maltese', '4-6s', 3),
+                            // Hito del nivel: tiger bend hold.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Tiger Bend Hold', '5-10s', 3),
+                            self::ex('Forearm Stand', '10-15s', 2),
+                            self::ex('Freestanding Handstand', '10-15s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 2),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
                 ],
-            ],
+            },
+            // NOTA: rotación de foco cross/maltese por ciclo en Fase 2-D.
+            // - Ciclos impares: cross pesado (4 series) y maltese técnico (2 series).
+            // - Ciclos pares: cross técnico (2 series) y maltese pesado (3 series).
+            // El generador NO recibe la paridad; se devuelve la variante de ciclo
+            // impar ('odd'). Cuando se wiree la paridad, cambiar el valor del match.
+            'progression' => match ('odd') {
+                'odd' => [
+                    'name' => 'Sesión D: Skills — 90° parcial, anillas élite y tiger bend negativo (ciclo impar)',
+                    'goal' => 'Ciclo impar: 90° push-up parcial de medio rango; acumulación con 90° asistido; cross hold con banda (foco pesado); maltese con banda (técnico); tiger bend negativo; forearm stand y handstand libre',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Hito del nivel: 90° push-up parcial.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Partial 90 Degree Push Up', '1-2', 4),
+                            self::ex('Assisted 90 Degree Push Up', '2', 2),
+                            self::ex('Assisted Iron Cross', '6-8s', 4),
+                            self::ex('Assisted Maltese', '5-8s', 2),
+                            // Hito del nivel: tiger bend negativo.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Tiger Bend Negative', '1', 3),
+                            self::ex('Forearm Stand', '15s', 2),
+                            self::ex('Freestanding Handstand', '12s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 3),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 3),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+                'even' => [
+                    'name' => 'Sesión D: Skills — 90° parcial, anillas élite y tiger bend negativo (ciclo par)',
+                    'goal' => 'Ciclo par: 90° push-up parcial de medio rango; acumulación con 90° asistido; cross hold con banda (técnico); maltese con banda (foco pesado); tiger bend negativo; forearm stand y handstand libre',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Hito del nivel: 90° push-up parcial.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Partial 90 Degree Push Up', '1-2', 4),
+                            self::ex('Assisted 90 Degree Push Up', '2', 2),
+                            self::ex('Assisted Iron Cross', '6-8s', 2),
+                            self::ex('Assisted Maltese', '5-8s', 3),
+                            // Hito del nivel: tiger bend negativo.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Tiger Bend Negative', '1', 3),
+                            self::ex('Forearm Stand', '15s', 2),
+                            self::ex('Freestanding Handstand', '12s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 3),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 3),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+            },
             // NOTA: rotación de pico por ciclo en Fase 3-D.
             // - Ciclos impares: 90° push-up contenido (asistido/parcial), cross recibe
             //   foco pesado, maltese técnico, tiger bend negativo.
