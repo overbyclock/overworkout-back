@@ -67,6 +67,13 @@
 - Verificación: back verde (805 tests, PHPStan y CS-Fixer limpios).
 - Commit hecho: niveles 7-12 + migración + este documento (`a0b10bf` en back). Los cambios pendientes del front también están commiteados (`1a4370a` bloque 3, `6f61260` fixes del player).
 
+**Bloque 9 — Fix rendimiento detalle de programa (7 ago 2026):**
+- Síntoma: la app no podía abrir el programa v4 ("Error al cargar los niveles del programa"): `GET /training-programs/{id}` tardaba ~15 s en v4 (timeout de axios del front: 10 s). v3 tardaba ~4 s.
+- Causa raíz (medida con un comando temporal, ya borrado): NO era la BD — era el serializer. El endpoint serializaba el grafo completo (levels → trainings → rondas → configuraciones → ejercicios): 9,4 MB y ~12 s solo de serialización en v4 (6.400 configs), más ~3,5 s de lazy loading.
+- Fix: `getById`/`getBySlug` ya no piden el grupo `training:read:detail` (usan `training:read`): el payload son niveles + datos básicos de trainings (123 KB, ~0,8 s). El detalle de rondas/ejercicios lo siguen sirviendo `/training-levels/{id}` y `/trainings/{id}` (de ahí lo sacan TrainingBuilder/SessionBlock/LevelTrainingsView; verificado que nadie leía `trainingRounds` desde el detalle de programa). Repositorio: `findDetailById/findDetailBySlug` con fetch join de levels+trainings.
+- Test de contrato nuevo: `tests/Functional/Api/TrainingProgramDetailTest.php` (niveles + trainings básicos presentes, `trainingRounds` ausente).
+- **Pendiente conocido:** `GET /training-programs/{id}/levels` (admin) sigue serializando el grafo completo (9,4 MB); no lo usa el front actual. Si se usa algún día, aplicar el mismo criterio.
+
 ## Decisiones tomadas por el usuario
 
 1. v4 = programa nuevo en paralelo (`calistenia-master-v4`); v3 no se toca. Estructura universal y flexible.

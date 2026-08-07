@@ -41,6 +41,37 @@ class TrainingProgramRepository extends ServiceEntityRepository
     }
 
     /**
+     * Carga el detalle con niveles y sus trainings (el detalle de rondas y
+     * ejercicios NO se serializa en este endpoint; lo sirven /training-levels
+     * y /trainings). Los fetch joins evitan el N+1 de una query por nivel.
+     */
+    public function findDetailById(int $id): ?TrainingProgram
+    {
+        return $this->createDetailQueryBuilder()
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findDetailBySlug(string $slug): ?TrainingProgram
+    {
+        return $this->createDetailQueryBuilder()
+            ->andWhere('p.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    private function createDetailQueryBuilder(): \Doctrine\ORM\QueryBuilder
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.levels', 'l')->addSelect('l')
+            ->leftJoin('l.trainings', 't')->addSelect('t')
+            ->orderBy('l.levelNumber', 'ASC');
+    }
+
+    /**
      * @return TrainingProgram[]
      */
     public function findByFilters(?string $discipline = null, ?string $difficulty = null, ?bool $isActive = null): array

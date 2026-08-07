@@ -53,9 +53,9 @@ class TrainingProgramApiController extends AbstractController
     }
 
     #[Route('/by-slug/{slug}', name: 'get_training_program_by_slug', methods: ['GET'])]
-    public function getBySlug(string $slug): JsonResponse
+    public function getBySlug(string $slug, TrainingProgramRepository $programRepository): JsonResponse
     {
-        $program = $this->entityManager->getRepository(TrainingProgram::class)->findOneBy(['slug' => $slug]);
+        $program = $programRepository->findDetailBySlug($slug);
 
         if (null === $program) {
             return $this->json(['error' => 'Programa no encontrado'], 404);
@@ -63,13 +63,13 @@ class TrainingProgramApiController extends AbstractController
 
         $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
 
-        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail', 'training_skill:read']]);
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read', 'training_skill:read']]);
     }
 
     #[Route('/{id}', name: 'get_training_program', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function getById(int $id): JsonResponse
+    public function getById(int $id, TrainingProgramRepository $programRepository): JsonResponse
     {
-        $program = $this->entityManager->getRepository(TrainingProgram::class)->find($id);
+        $program = $programRepository->findDetailById($id);
 
         if (null === $program) {
             return $this->json(['error' => 'Programa no encontrado'], 404);
@@ -77,7 +77,7 @@ class TrainingProgramApiController extends AbstractController
 
         $this->denyAccessUnlessGranted(TrainingProgramVoter::VIEW, $program);
 
-        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read:detail', 'training_skill:read']]);
+        return $this->json($program, 200, [], ['groups' => ['program:read', 'program:detail', 'level:read', 'training:read', 'training_skill:read']]);
     }
 
     #[Route('/{id}/levels', name: 'get_program_levels', methods: ['GET'])]
