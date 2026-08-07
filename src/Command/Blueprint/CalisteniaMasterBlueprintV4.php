@@ -286,6 +286,10 @@ class CalisteniaMasterBlueprintV4
             10 => self::block0L10($phase, $sessionKey),
             11 => self::block0L11($phase, $sessionKey),
             12 => self::block0L12($phase, $sessionKey),
+            13 => self::block0L13($phase, $sessionKey),
+            14 => self::block0L14($phase, $sessionKey),
+            15 => self::block0L15($phase, $sessionKey),
+            16 => self::block0L16($phase, $sessionKey),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -1243,6 +1247,246 @@ class CalisteniaMasterBlueprintV4
             // Entrada invertida: wall HS pecho a pared (además del salvado con dedos)
             $exercises[] = self::ex('Chest to Wall Handstand', '15s');
         }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L13(string $phase, string $sessionKey): array
+    {
+        // Nivel 13 — Fuerza unilateral. Focos de movilidad: extensión torácica
+        // (preparación para human flag) y apertura straddle (preparación para press).
+        // El documento no dosifica el Bloque 0 por fase: misma dosis en las cuatro.
+        $exercises = [
+            // Activación general
+            self::ex('Active March', '120s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            // Muñeca — movilidad + fuerza (dosis alta: planche dinámico + flag)
+            self::ex('Wrist Prayer', '60s'),
+            self::ex('Back-of-Hand Stretch', '20s', 2),
+            self::ex('Wrist Curl', '12', 2),
+            self::ex('Reverse Wrist Curl', '12', 2),
+            // Omisión: "giros con carga" 2×8/lado no tiene equivalente directo en catálogo
+            self::ex('Fingertip Hold', '10s', 2),
+            // Torácica en extensión (foco del nivel)
+            self::ex('Foam Roll Thoracic Extension', '8'),
+            self::ex('Open Books', '8/lado'),
+            // Omisión: "stick overhead reach" ×8 y "extensión torácica activa contra pared"
+            // 2×6 no tienen equivalente directo en catálogo
+            // Apertura straddle (foco del nivel)
+            self::ex('Frog Stretch', '30s', 2),
+            self::ex('Straddle Fold', '30s', 2),
+            self::ex('Adductor Rockback', '8/lado', 2),
+            // G1-G2-G3 (mantenimiento)
+            self::ex('Wall Slide', '8', 2),
+            self::ex('Wrist Extension Stretch', '30s'),
+            self::ex('Knee-to-Wall Rocks', '8/lado', 2),
+            // G4 (mantenimiento): dislocates en todas las sesiones
+            self::ex('Shoulder Dislocate', '10'),
+            // G5-G6 (mantenimiento)
+            self::ex('Seated Leg Raise', '10s', 3),
+            self::ex('Jefferson Curl', '5', 2),
+            self::ex('Standing Pike Stretch', '30s', 2),
+        ];
+
+        // G4: German hang asistido en B y D
+        if (\in_array($sessionKey, ['session_b', 'session_d'], true)) {
+            $exercises[] = self::ex('German Hang', '10s');
+        }
+        // Pancake activo: sesiones C y D, diario si el press se resiste
+        if (\in_array($sessionKey, ['session_c', 'session_d'], true)) {
+            $exercises[] = self::ex('Active Pancake', '20s', 2);
+        }
+        // Específico por sesión
+        if ('session_a' === $sessionKey) {
+            $exercises[] = self::ex('Band Pull-Apart', '15');
+            $exercises[] = self::ex('Planche Lean', '15s');
+        }
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Dead Hang', '20s');
+            $exercises[] = self::ex('Retract Row', '8');
+        }
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Miniband Lateral Walk', '12');
+            $exercises[] = self::ex('Nordic Curl Negative', '2');
+        }
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('Lateral Plank Raise', '8/lado');
+            $exercises[] = self::ex('Vertical Flag', '10s/lado');
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L14(string $phase, string $sessionKey): array
+    {
+        // Nivel 14 — Era del one-arm. Foco: salud capsular del hombro y primer
+        // contacto con antebrazo en suelo (tiger bend). Mantenimiento G1-G6.
+        $exercises = [
+            // Activación general
+            self::ex('Active March', '120s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            // Muñeca — movilidad + fuerza (dosis máxima: planche PU + 90° PU + falso agarre)
+            self::ex('Wrist Prayer', '60s'),
+            self::ex('Back-of-Hand Stretch', '20s', 2),
+            self::ex('Wrist Curl', '12', 2),
+            self::ex('Reverse Wrist Curl', '12', 2),
+            // Omisión: "giros con carga" 2×8/lado no tiene equivalente directo en catálogo
+            self::ex('Fingertip Hold', '10s', 2),
+            // Primer contacto con antebrazo en suelo
+            self::ex('Forearm Floor Wrist Stretch', '15s', 2),
+            // Hombro — salud capsular (foco del nivel)
+            self::ex('Shoulder ER Band', '12/lado', 2),
+            self::ex('Cuban Rotation', '8/lado', 2),
+            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            self::ex('Shoulder Dislocate', '10'),
+            // G1-G3 (mantenimiento)
+            self::ex('Wall Slide', '8', 2),
+            self::ex('Wrist Extension Stretch', '30s'),
+            self::ex('Knee-to-Wall Rocks', '8/lado', 2),
+            // G5-G6 (mantenimiento)
+            self::ex('Seated Leg Raise', '10s', 2),
+            self::ex('Standing Pike Stretch', '30s', 2),
+        ];
+
+        // G4: German hang asistido en B y D
+        if (\in_array($sessionKey, ['session_b', 'session_d'], true)) {
+            $exercises[] = self::ex('German Hang', '10s');
+        }
+        // Antebrazo en suelo: dolphin stretch en todas las sesiones; presión dorsal extra en D
+        $exercises[] = self::ex('Dolphin Stretch', '20s', 2);
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('Forearm Floor Wrist Stretch', '15s', 2);
+        }
+        // Straddle fold (mantenimiento G6) en D
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('Straddle Fold', '30s', 2);
+        }
+        // Específico por sesión
+        if ('session_a' === $sessionKey) {
+            $exercises[] = self::ex('Band Pull-Apart', '15');
+            $exercises[] = self::ex('Planche Lean', '15s');
+        }
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Dead Hang', '20s');
+            $exercises[] = self::ex('Strict Pull Up', '3');
+        }
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Miniband Lateral Walk', '12');
+            $exercises[] = self::ex('Nordic Curl Negative', '2');
+        }
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('Chest to Wall Handstand', '5/lado', 2);
+            $exercises[] = self::ex('Chest to Wall Handstand', '15s');
+            $exercises[] = self::ex('False Grip Hang', '10s');
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L15(string $phase, string $sessionKey): array
+    {
+        // Nivel 15 — Élite de anillas. Foco: falso agarre profundo + salud capsular.
+        // Mantenimiento integral G1-G6.
+        $exercises = [
+            // Activación general
+            self::ex('Active March', '120s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            // Muñeca — movilidad + fuerza (dosis máxima del programa)
+            self::ex('Wrist Prayer', '60s'),
+            self::ex('Back-of-Hand Stretch', '30s', 2),
+            self::ex('Wrist Curl', '12', 2),
+            self::ex('Reverse Wrist Curl', '12', 2),
+            // Omisión: "giros con carga" 2×8/lado no tiene equivalente directo en catálogo
+            self::ex('Fingertip Hold', '10s', 2),
+            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+            // Hombro — salud capsular (era OAP + anillas élite)
+            self::ex('Shoulder ER Band', '12/lado', 2),
+            self::ex('Cuban Rotation', '8/lado', 2),
+            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            self::ex('Shoulder Dislocate', '10'),
+            self::ex('Ring Chest Stretch', '30s', 2),
+            // G1-G3 (mantenimiento)
+            self::ex('Wall Slide', '8', 2),
+            self::ex('Wrist Extension Stretch', '30s'),
+            self::ex('Knee-to-Wall Rocks', '8/lado', 2),
+            // G4: German hang asistido en todas las sesiones a esta altura del programa
+            self::ex('German Hang', '10s'),
+            // G5-G6 (mantenimiento)
+            self::ex('Seated Leg Raise', '10s', 2),
+            self::ex('Standing Pike Stretch', '30s', 2),
+            self::ex('Straddle Fold', '30s', 2),
+        ];
+
+        // Falso agarre: activación previa a toda sesión D
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('False Grip Hang', '15s', 2);
+            $exercises[] = self::ex('False Grip Support Hold', '10s', 2);
+        }
+        // Específico por sesión
+        if ('session_a' === $sessionKey) {
+            $exercises[] = self::ex('Band Pull-Apart', '15');
+            $exercises[] = self::ex('Ring Support Hold RTO', '15s');
+        }
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Dead Hang', '20s');
+            $exercises[] = self::ex('Strict Pull Up', '3');
+        }
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Miniband Lateral Walk', '12');
+            $exercises[] = self::ex('Nordic Curl Negative', '2');
+        }
+        if ('session_d' === $sessionKey) {
+            // Activación extra de manguito: se pliega en más ER de banda
+            $exercises[] = self::ex('Shoulder ER Band', '12/lado', 2);
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L16(string $phase, string $sessionKey): array
+    {
+        // Bloque Élite Abierto "Olimpo" (nivel 16). Calentamiento genérico de élite
+        // basado en el Nivel 15, sin sesiones específicas. Cubre los focos de
+        // movilidad comunes a las especializaciones legendarias (falso agarre,
+        // extensión de hombro, muñeca y mantenimiento G1-G6).
+        $exercises = [
+            // Activación general
+            self::ex('Active March', '120s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            // Muñeca — dosis máxima
+            self::ex('Wrist Prayer', '60s'),
+            self::ex('Back-of-Hand Stretch', '30s', 2),
+            self::ex('Wrist Curl', '12', 2),
+            self::ex('Reverse Wrist Curl', '12', 2),
+            self::ex('Fingertip Hold', '10s', 2),
+            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+            // Hombro — salud capsular y extensión
+            self::ex('Shoulder ER Band', '12/lado', 2),
+            self::ex('Cuban Rotation', '8/lado', 2),
+            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            self::ex('Shoulder Dislocate', '10'),
+            self::ex('Ring Chest Stretch', '30s', 2),
+            self::ex('German Hang', '10s'),
+            // Falso agarre profundo (común en especializaciones de anillas)
+            self::ex('False Grip Hang', '15s', 2),
+            self::ex('False Grip Support Hold', '10s', 2),
+            // G1-G3
+            self::ex('Wall Slide', '8', 2),
+            self::ex('Wrist Extension Stretch', '30s'),
+            self::ex('Knee-to-Wall Rocks', '8/lado', 2),
+            // G5-G6
+            self::ex('Seated Leg Raise', '10s', 2),
+            self::ex('Standing Pike Stretch', '30s', 2),
+            self::ex('Straddle Fold', '30s', 2),
+            self::ex('Jefferson Curl', '5', 2),
+        ];
 
         return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
     }
