@@ -7712,7 +7712,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Weighted Pull Up', '3-4', 5),
                         self::ex('L-Sit Pull Up', '3-5', 4),
-                        self::ex('Typewriter Pull Up', '2', 3),
+                        self::ex('Typewriter Pull Up', '2/lado', 3),
                         self::ex('Archer Ring Row', '6/lado', 3),
                         self::ex('Ring Row - Elevated Feet', '8', 2),
                         self::ex('Scapular Pull Up', '6', 2),
@@ -7744,7 +7744,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Weighted Pull Up', '3', 5),
                         self::ex('L-Sit Pull Up', '5-6', 4),
                         self::ex('One Arm Pull Up Negative', '1/lado', 4),
-                        self::ex('Typewriter Pull Up', '2', 2),
+                        self::ex('Typewriter Pull Up', '2/lado', 2),
                         self::ex('Archer Ring Row', '6-8/lado', 3),
                         self::ex('Ring Row - Elevated Feet', '8', 2),
                     ], 180),
@@ -7768,8 +7768,12 @@ class CalisteniaMasterBlueprintV4
                 ],
             ],
             'intensification' => match ('weighted') {
-                // Rotación de pico por ciclo: ciclos impares → lastre; ciclos pares → L-sit PU.
-                // El valor de match se debe alternar externamente según la paridad del ciclo.
+                // NOTA: rotación de pico por ciclo en Fase 3-B.
+                // - Ciclos impares: pico en weighted pull-up (+25% BW).
+                // - Ciclos pares: pico en L-sit pull-up (5-8 reps).
+                // El generador actual NO recibe la paridad del ciclo, por lo que se
+                // devuelve por defecto la variante de ciclo impar ('weighted').
+                // Cuando el generador wiree la paridad, cambiar el valor de match.
                 'weighted' => [
                     'name' => 'Sesión B: Tracción — intentos de marca de lastre +25% BW',
                     'goal' => 'Ciclo impar: marca de test de weighted pull-up (+25% BW); L-sit pull-up contenido; negativa a un brazo de mantenimiento; contrapeso horizontal lastrado',
