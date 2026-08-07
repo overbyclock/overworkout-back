@@ -1508,6 +1508,7 @@ class CalisteniaMasterBlueprintV4
             12 => self::sessionA_L12($phase),
             13 => self::sessionA_L13($phase),
             14 => self::sessionA_L14($phase),
+            15 => self::sessionA_L15($phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -1529,6 +1530,7 @@ class CalisteniaMasterBlueprintV4
             12 => self::sessionB_L12($phase),
             13 => self::sessionB_L13($phase),
             14 => self::sessionB_L14($phase),
+            15 => self::sessionB_L15($phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -1550,6 +1552,7 @@ class CalisteniaMasterBlueprintV4
             12 => self::sessionC_L12($phase),
             13 => self::sessionC_L13($phase),
             14 => self::sessionC_L14($phase),
+            15 => self::sessionC_L15($phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -1571,6 +1574,7 @@ class CalisteniaMasterBlueprintV4
             12 => self::sessionD_L12($phase),
             13 => self::sessionD_L13($phase),
             14 => self::sessionD_L14($phase),
+            15 => self::sessionD_L15($phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -8832,6 +8836,641 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
                         self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            default => throw new \InvalidArgumentException(),
+        };
+    }
+
+    // ========================================================================
+    // NIVEL 15 — ONE-ARM PULL-UP
+    // ========================================================================
+
+    private static function sessionA_L15(string $phase): array
+    {
+        $b0 = self::block0(15, $phase, 'session_a');
+
+        return match ($phase) {
+            'base' => [
+                'name' => 'Sesión A: Empuje — impossible dip y mantenimiento de élite', 'goal' => 'Impossible dip asistido con banda media; planche push-up y 90° push-up asistido de mantenimiento; ring dip profundo RTO',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Impossible Dip', '3-4', 4),
+                        self::ex('Planche Push Up', '2-3', 3),
+                        self::ex('Assisted 90 Degree Push Up', '1', 2),
+                        self::ex('Bulgarian Ring Dip', '5', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Face Pull', '15', 2),
+                        self::ex('External Rotation', '12/lado', 2),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                        self::ex('Hanging Leg Raise', '8', 2),
+                        self::ex('Couch Stretch', '30s/lado', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Lat Stretch', '40s/lado'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            'progression' => [
+                'name' => 'Sesión A: Empuje — impossible dip con banda mínima y parcial libre', 'goal' => 'Bajar la asistencia del impossible dip; primeros intentos de medio rango libre; mantenimiento de planche push-up y 90° push-up asistido',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Impossible Dip', '2-3', 4),
+                        // Hito del nivel: impossible dip parcial libre.
+                        // Ejercicio nuevo; se reportará si no está en el catálogo.
+                        self::ex('Partial Impossible Dip', '1', 2),
+                        self::ex('Planche Push Up', '3', 3),
+                        self::ex('Assisted 90 Degree Push Up', '1', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Face Pull', '15', 3),
+                        self::ex('External Rotation', '12/lado', 3),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                        self::ex('Hanging Leg Raise', '8', 3),
+                        self::ex('Couch Stretch', '30s/lado', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Lat Stretch', '40s/lado'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            // NOTA: rotación de pico por ciclo en Fase 3-A.
+            // - Ciclos impares: pica el impossible dip (5×1) y el tiger bend trabaja
+            //   contenido en la sesión D.
+            // - Ciclos pares: el impossible mantiene (asistido 3×2-3) y el tiger bend
+            //   pica en la sesión D.
+            // El generador NO recibe la paridad; se devuelve la variante de ciclo
+            // impar ('odd'). Cuando se wiree la paridad, cambiar el valor del match.
+            'intensification' => match ('odd') {
+                'odd' => [
+                    'name' => 'Sesión A: Empuje — intentos de marca de impossible dip', 'goal' => 'Ciclo impar: marca de test de impossible dip (1 mínimo / 3 objetivo); planche push-up y ring dip profundo RTO de mantenimiento',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Marca de test del nivel.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Impossible Dip', '1', 5),
+                            self::ex('Planche Push Up', '3', 2),
+                            self::ex('Bulgarian Ring Dip', '5', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Face Pull', '15', 2),
+                            self::ex('External Rotation', '12/lado', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Arch Hold', '20s', 2),
+                            self::ex('Hanging Leg Raise', '8', 2),
+                            self::ex('Couch Stretch', '30s/lado', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Lat Stretch', '40s/lado'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+                'even' => [
+                    'name' => 'Sesión A: Empuje — impossible dip de mantenimiento (ciclo par)', 'goal' => 'Ciclo par: impossible dip asistido sin máximos; planche push-up y ring dip profundo RTO de mantenimiento; el tiger bend pica en la sesión D',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            self::ex('Assisted Impossible Dip', '2-3', 3),
+                            self::ex('Planche Push Up', '3', 2),
+                            self::ex('Bulgarian Ring Dip', '5', 2),
+                        ], 180),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Face Pull', '15', 2),
+                            self::ex('External Rotation', '12/lado', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Arch Hold', '20s', 2),
+                            self::ex('Hanging Leg Raise', '8', 2),
+                            self::ex('Couch Stretch', '30s/lado', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Lat Stretch', '40s/lado'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+            },
+            'deload' => [
+                'name' => 'Sesión A: Empuje ligero', 'goal' => 'Volumen al 50%: impossible dip asistido con banda generosa a rango cómodo; planche push-up ligero; ring dip cómodo; sin máximos',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Impossible Dip', '2', 2),
+                        self::ex('Planche Push Up', '2', 2),
+                        self::ex('Ring Dip', '6', 2),
+                    ], 120),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Face Pull', '15', 3),
+                        self::ex('External Rotation', '12/lado', 3),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '15s', 2),
+                        self::ex('Couch Stretch', '40s/lado', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '45s'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            default => throw new \InvalidArgumentException(),
+        };
+    }
+
+    private static function sessionB_L15(string $phase): array
+    {
+        $b0 = self::block0(15, $phase, 'session_b');
+
+        return match ($phase) {
+            'base' => [
+                'name' => 'Sesión B: Tracción — construcción de la vía OAP', 'goal' => 'OAP asistido con banda gruesa en prona; negativa prona; dominada lastrada +45-50% BW; typewriter prono y contrapeso horizontal lastrado',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        // OAP asistido con banda gruesa. Ejercicio nuevo; se reportará si no está en el catálogo.
+                        self::ex('Assisted One Arm Pull Up', '1/lado', 5),
+                        self::ex('One Arm Pull Up Negative', '1/lado', 3),
+                        self::ex('Weighted Pull Up', '2', 4),
+                        self::ex('Typewriter Pull Up', '2/lado', 2),
+                        self::ex('Archer Ring Row', '6-8/lado', 3),
+                        self::ex('Weighted Ring Row', '8', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Band Pull-Apart', '15', 2),
+                        self::ex('Prone Y Raise', '8', 2),
+                        self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                        self::ex('Seated Leg Raise', '10s', 2),
+                        self::ex('Couch Stretch', '30s/lado', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Lat Stretch', '40s/lado'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            'progression' => [
+                'name' => 'Sesión B: Tracción — OAP con dedos y +50% ×2', 'goal' => 'OAP asistido con dedos; negativa prona larga; dominada lastrada +50% BW; front lever raises de mantenimiento; contrapeso horizontal lastrado',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        // OAP asistido con dedos. Se mapea al mismo ejercicio de catálogo que el asistido con banda.
+                        self::ex('Assisted One Arm Pull Up', '1/lado', 5),
+                        self::ex('One Arm Pull Up Negative', '1/lado', 3),
+                        self::ex('Weighted Pull Up', '2', 4),
+                        self::ex('Front Lever Raise', '3', 3),
+                        self::ex('Archer Ring Row', '8/lado', 3),
+                        self::ex('Scapular Pull Up', '6', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Band Pull-Apart', '15', 3),
+                        self::ex('Prone Y Raise', '8', 3),
+                        self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                        self::ex('Seated Leg Raise', '10s', 3),
+                        self::ex('Couch Stretch', '30s/lado', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Lat Stretch', '40s/lado'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            // NOTA: rotación de pico por ciclo en Fase 3-B.
+            // - Ciclos impares: pica el OAP (3-4×1/lado) y el lastre +50% mantiene (2×1-2).
+            // - Ciclos pares: pica el lastre +50% (4×3) y el OAP mantiene con dedos (3×1/lado).
+            // El generador NO recibe la paridad; se devuelve la variante de ciclo
+            // impar ('odd'). Cuando se wiree la paridad, cambiar el valor del match.
+            'intensification' => match ('odd') {
+                'odd' => [
+                    'name' => 'Sesión B: Tracción — intentos de marca de OAP', 'goal' => 'Ciclo impar: marca de test de one-arm pull-up (1 mínimo / 2 objetivo); lastre +50% de mantenimiento; typewriter y archer rows ligeros',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            // Cima del programa cerrado.
+                            self::ex('One Arm Pull Up', '1/lado', 4),
+                            self::ex('Weighted Pull Up', '1-2', 2),
+                            self::ex('Typewriter Pull Up', '2/lado', 2),
+                            self::ex('Archer Ring Row', '8/lado', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Band Pull-Apart', '15', 2),
+                            self::ex('Prone Y Raise', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Arch Hold', '20s', 2),
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Couch Stretch', '30s/lado', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Lat Stretch', '45s/lado'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+                'even' => [
+                    'name' => 'Sesión B: Tracción — intentos de marca de dominada lastrada +50% (ciclo par)', 'goal' => 'Ciclo par: marca de test de dominada lastrada +50% BW (3 mínimo / 5 objetivo); OAP asistido con dedos de mantenimiento; contrapeso horizontal ligero',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            self::ex('Assisted One Arm Pull Up', '1/lado', 3),
+                            self::ex('Weighted Pull Up', '3', 4),
+                            self::ex('Typewriter Pull Up', '2/lado', 2),
+                            self::ex('Archer Ring Row', '8/lado', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Band Pull-Apart', '15', 2),
+                            self::ex('Prone Y Raise', '8', 2),
+                            self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Arch Hold', '20s', 2),
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Couch Stretch', '30s/lado', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Lat Stretch', '45s/lado'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        ], 20),
+                    ],
+                ],
+            },
+            'deload' => [
+                'name' => 'Sesión B: Tracción ligera', 'goal' => 'Volumen al 50%: dominada lastrada ligera, L-sit pull-up técnico, typewriter técnico; sin OAP ni negativas esta fase; descarga extendida de antebrazo',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Weighted Pull Up', '3', 2),
+                        self::ex('L-Sit Pull Up', '4', 2),
+                        self::ex('Typewriter Pull Up', '2/lado', 2),
+                        self::ex('Ring Row - Elevated Feet', '8', 2),
+                        self::ex('Scapular Pull Up', '8', 2),
+                    ], 120),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Band Pull-Apart', '15', 3),
+                        self::ex('Prone Y Raise', '8', 3),
+                        self::ex('Chest Doorway Stretch', '30s/lado', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Hanging Leg Raise', '6', 2),
+                        self::ex('Arch Hold', '15s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '45s'),
+                        self::ex('Lat Stretch', '45s/lado'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                    ], 20),
+                ],
+            ],
+            default => throw new \InvalidArgumentException(),
+        };
+    }
+
+    private static function sessionC_L15(string $phase): array
+    {
+        $b0 = self::block0(15, $phase, 'session_c');
+
+        return match ($phase) {
+            'base' => [
+                'name' => 'Sesión C: Circuito de pierna y core — mantenimiento de élite', 'goal' => '4 rondas; Nordic de mantenimiento; pistol, dragon pistol/skater y V-sit; goblet squat ligero; excéntrica de gemelo; salud postural integrada en el circuito',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 4, 120, 50, [
+                        self::ex('Nordic Curl Negative', '1-2'),
+                        self::ex('Pistol Squat', '3/lado'),
+                        // Alternar por ronda: se fija dragon pistol por simplicidad del generador.
+                        self::ex('Dragon Pistol Squat', '2/lado'),
+                        self::ex('V-Sit Hold', '10s'),
+                        self::ex('Goblet Squat', '8'),
+                        self::ex('Eccentric Calf Raise', '10/lado'),
+                        self::ex('Face Pull', '15'),
+                        self::ex('YTW', '8'),
+                    ], 1),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '30s'),
+                        self::ex('Standing Quad Stretch', '30s/lado', 2),
+                        self::ex('Kneeling Hip Flexor Stretch', '30s/lado', 2),
+                    ], 20),
+                ],
+            ],
+            'progression' => [
+                'name' => 'Sesión C: Circuito de pierna y core — mantenimiento de élite', 'goal' => '4-5 rondas (se fijan 4); Nordic de mantenimiento; pistol y dragon pistol/skater alternados; V-sit; zancada ligera con mochila; excéntrica de gemelo',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 4, 120, 50, [
+                        self::ex('Nordic Curl Negative', '1-2'),
+                        self::ex('Pistol Squat', '3/lado'),
+                        // Alternar por ronda: se usa skater squat como variante unilateral.
+                        self::ex('Skater Squat', '2/lado'),
+                        self::ex('V-Sit Hold', '10-12s'),
+                        // Zancada ligera bilateral: se mapea a goblet squat (carga bilateral).
+                        self::ex('Goblet Squat', '8'),
+                        self::ex('Eccentric Calf Raise', '10/lado'),
+                        self::ex('Face Pull', '15'),
+                        self::ex('YTW', '10'),
+                    ], 1),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '30s'),
+                        self::ex('Standing Quad Stretch', '30s/lado', 2),
+                        self::ex('Kneeling Hip Flexor Stretch', '30s/lado', 2),
+                    ], 20),
+                ],
+            ],
+            'intensification' => [
+                'name' => 'Sesión C: Circuito de pierna y core — mantenimiento de élite', 'goal' => '5 rondas; Nordic de mantenimiento a dosis mínima efectiva; pistol y dragon pistol a dosis mínima; V-sit; hip thrust con mochila; excéntrica de gemelo',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 5, 120, 50, [
+                        self::ex('Nordic Curl Negative', '1-2'),
+                        self::ex('Pistol Squat', '3/lado'),
+                        self::ex('Dragon Pistol Squat', '2/lado'),
+                        self::ex('V-Sit Hold', '12s'),
+                        self::ex('Hip Thrust', '10'),
+                        self::ex('Eccentric Calf Raise', '12/lado'),
+                        self::ex('Face Pull', '15'),
+                        self::ex('YTW', '10'),
+                    ], 1),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '20s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '30s'),
+                        self::ex('Standing Quad Stretch', '30s/lado', 2),
+                        self::ex('Kneeling Hip Flexor Stretch', '30s/lado', 2),
+                    ], 20),
+                ],
+            ],
+            'deload' => [
+                'name' => 'Sesión C: Circuito suave', 'goal' => '2 rondas regenerativas; Nordic excéntrica suave; pistol y V-sit asistidos; goblet squat ligero; gemelo bilateral suave; descarga extendida con movilidad de cadera e isquiosural',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 2, 120, 50, [
+                        self::ex('Nordic Curl Negative', '2'),
+                        self::ex('Pistol Squat', '2/lado'),
+                        self::ex('V-Sit Hold', '8s'),
+                        self::ex('Goblet Squat', '8'),
+                        self::ex('Standing Calf Raise', '12'),
+                        self::ex('Face Pull', '12'),
+                        self::ex('YTW', '8'),
+                    ], 1),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '15s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Kneeling Hip Flexor Stretch', '40s/lado', 2),
+                        self::ex('Standing Quad Stretch', '40s/lado', 2),
+                        self::ex('Knee-to-Wall Rocks', '8/lado'),
+                    ], 20),
+                ],
+            ],
+            default => throw new \InvalidArgumentException(),
+        };
+    }
+
+    private static function sessionD_L15(string $phase): array
+    {
+        $b0 = self::block0(15, $phase, 'session_d');
+
+        return match ($phase) {
+            'base' => [
+                'name' => 'Sesión D: Skills — élite de anillas y tiger bend', 'goal' => 'Iron cross asistido con banda generosa; maltese asistido con banda máxima (técnico); tiger bend hold y negativa; falso agarre colgado; handstand libre de mantenimiento',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Iron Cross', '4-6s', 5),
+                        self::ex('Assisted Maltese', '4-6s', 3),
+                        self::ex('Tiger Bend Hold', '8-12s', 3),
+                        self::ex('Tiger Bend Negative', '1', 2),
+                        self::ex('False Grip Hang', '15s', 2),
+                        self::ex('Freestanding Handstand', '10-12s', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Wall Slide', '10', 2),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Seated Leg Raise', '10s', 2),
+                        self::ex('Arch Hold', '20s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 20),
+                ],
+            ],
+            'progression' => [
+                'name' => 'Sesión D: Skills — cross y maltese en progresión, tiger bend asistido', 'goal' => 'Iron cross asistido con banda media; maltese asistido con banda media; tiger bend asistido (hito del nivel); falso agarre colgado; handstand libre',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Iron Cross', '5-8s', 5),
+                        self::ex('Assisted Maltese', '5-8s', 3),
+                        // Hito del nivel: tiger bend asistido con banda / rango parcial.
+                        // Ejercicio nuevo; se reportará si no está en el catálogo.
+                        self::ex('Assisted Tiger Bend Push Up', '1-2', 4),
+                        self::ex('Tiger Bend Hold', '10s', 2),
+                        self::ex('False Grip Hang', '15-20s', 2),
+                        self::ex('Freestanding Handstand', '12s', 2),
+                    ], 180),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Wall Slide', '10', 3),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Seated Leg Raise', '10s', 3),
+                        self::ex('Arch Hold', '20s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '40s'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 20),
+                ],
+            ],
+            // NOTA: rotación de pico por ciclo en Fase 3-D.
+            // - Ciclos impares: cross recibe foco pesado (5×5-8s), maltese técnico
+            //   (3×4-5s) y tiger bend asistido/contenido (3×1-2).
+            // - Ciclos pares: maltese recibe foco pesado (4×3-5s), cross técnico
+            //   (4×4-5s) y tiger bend push-up pica (4×1).
+            // El generador NO recibe la paridad; se devuelve la variante de ciclo
+            // impar ('odd'). Cuando se wiree la paridad, cambiar el valor del match.
+            'intensification' => match ('odd') {
+                'odd' => [
+                    'name' => 'Sesión D: Skills — marcas de anillas y tiger bend contenido', 'goal' => 'Ciclo impar: intentos de marca de iron cross asistido (5 s mínimo / 8 s objetivo); maltese asistido técnico; tiger bend asistido sin máximos; falso agarre y handstand libre',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            self::ex('Assisted Iron Cross', '5-8s', 5),
+                            self::ex('Assisted Maltese', '4-5s', 3),
+                            self::ex('Assisted Tiger Bend Push Up', '1-2', 3),
+                            self::ex('False Grip Hang', '15s', 2),
+                            self::ex('Freestanding Handstand', '10s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 2),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 20),
+                    ],
+                ],
+                'even' => [
+                    'name' => 'Sesión D: Skills — marcas de maltese y tiger bend push-up (ciclo par)', 'goal' => 'Ciclo par: intentos de marca de maltese asistido (3 s mínimo / 5 s objetivo); cross asistido técnico; tiger bend push-up (1 mínimo / 3 objetivo); falso agarre y handstand libre',
+                    'blocks' => [
+                        $b0,
+                        self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                            self::ex('Assisted Iron Cross', '4-5s', 4),
+                            self::ex('Assisted Maltese', '3-5s', 4),
+                            // Marca de test del nivel.
+                            // Ejercicio nuevo; se reportará si no está en el catálogo.
+                            self::ex('Tiger Bend Push Up', '1', 4),
+                            self::ex('False Grip Hang', '15s', 2),
+                            self::ex('Freestanding Handstand', '10s', 2),
+                        ], 240),
+                        self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                            self::ex('Wall Slide', '10', 2),
+                            self::ex('Cuban Rotation', '8', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 50),
+                        self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                            self::ex('Seated Leg Raise', '10s', 2),
+                            self::ex('Arch Hold', '20s', 2),
+                        ], 60),
+                        self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                            self::ex('Diaphragmatic Breathing', '120s'),
+                            self::ex('Standing Pike Stretch', '40s'),
+                            self::ex('Straddle Fold', '40s'),
+                            self::ex('Wrist Extension Stretch', '30s', 2),
+                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            self::ex('Ring Chest Stretch', '30s', 2),
+                        ], 20),
+                    ],
+                ],
+            },
+            'deload' => [
+                'name' => 'Sesión D: Skills ligero', 'goal' => 'Volumen al 50%: cross hold con banda generosa ligero; maltese asistido ligero; tiger bend hold solo; falso agarre; handstand libre de juego; movilidad larga protagonista',
+                'blocks' => [
+                    $b0,
+                    self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
+                        self::ex('Assisted Iron Cross', '5s', 2),
+                        self::ex('Assisted Maltese', '4s', 2),
+                        self::ex('Tiger Bend Hold', '8s', 2),
+                        self::ex('False Grip Hang', '15s', 2),
+                        self::ex('Freestanding Handstand', '10-15s', 2),
+                        self::ex('Cross-Body Shoulder Stretch', '45s/lado', 2),
+                        self::ex('Chest Doorway Stretch', '45s/lado', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '45s', 2),
+                        self::ex('Shoulder Dislocate', '10', 2),
+                    ], 120),
+                    self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
+                        self::ex('Wall Slide', '10', 3),
+                        self::ex('Cuban Rotation', '8', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
+                    ], 50),
+                    self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
+                        self::ex('Arch Hold', '15s', 2),
+                    ], 60),
+                    self::block(TrainingRound::BLOCK_DESCARGA, 1, 1, 15, [
+                        self::ex('Diaphragmatic Breathing', '120s'),
+                        self::ex('Standing Pike Stretch', '40s'),
+                        self::ex('Straddle Fold', '45s'),
+                        self::ex('Wrist Extension Stretch', '30s', 2),
+                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        self::ex('Ring Chest Stretch', '30s', 2),
                     ], 20),
                 ],
             ],
