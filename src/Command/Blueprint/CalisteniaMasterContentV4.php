@@ -9,12 +9,13 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-12).
+ * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-16).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_niveles_01-03.md,
  * docs/detalle_niveles_04-06.md, docs/detalle_niveles_07-09.md,
- * docs/detalle_niveles_10-12.md y de docs/arquitectura_niveles_calistenia.md.
+ * docs/detalle_niveles_10-12.md, docs/detalle_niveles_13-15_olimpo.md
+ * y de docs/arquitectura_niveles_calistenia.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -36,6 +37,10 @@ class CalisteniaMasterContentV4
             10 => self::level10(),
             11 => self::level11(),
             12 => self::level12(),
+            13 => self::level13(),
+            14 => self::level14(),
+            15 => self::level15(),
+            16 => self::level16(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -1604,6 +1609,144 @@ class CalisteniaMasterContentV4
                         ['name' => 'Re-test G6 — Pike / isquiosurales', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'De pie, palmas completas al suelo con piernas extendidas; alternativa sentado: pecho a muslos', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G6'],
                     ],
                 ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 13 — FUERZA UNILATERAL
+    // ========================================================================
+
+    private static function level13(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el lastre entra despacio a propósito. +10-15% con técnica de dominada estricta vale más que +25% con tirón: estás construyendo el codo que el one-arm necesitará en N14-N15, y los tendones maduran en una escala de años, no de ciclos (§1.6).',
+                'Fase 2 (Progresión): la negativa a un brazo es tu primera cita con el one-arm: trátala como skill, no como ejercicio más. Fresco (tras el lastre, nunca al final), pocas reps, descansos de 3 min, y si el codo protesta a la mañana siguiente, la vía unilateral se congela un ciclo y todo lo demás sigue.',
+                'Fase 3 (Intensificación): las marcas van primeras y frescas. Un intento de flag tras cuarenta minutos de sesión mide tu fatiga, no tu flag. Registra el lado: el flag se testea en tu mejor lado, pero se entrena en los dos — cuando quieras el flag a ambos lados (Olimpo) lo agradecerás.',
+                'Fase 4 (Recuperación): la torácica en extensión y la apertura straddle son el trabajo real de esta fase. El straddle press de tu próximo ciclo depende más de lo que abras aquí que de lo que empujes en F3.',
+                'Si fallas el test — diagnóstico: (a) El flag cae del lado del brazo inferior: el fallo es de empuje (serrato/dorsal del brazo de abajo), no de core: retrocede a bandera vertical y 45° con holds más largos y añade support press laterales. (b) El +25% se atranca: alterna un ciclo de volumen con peso corporal alto (8-10 reps estrictas) con un ciclo de lastre: la tracción responde a la alternancia. (c) La L-sit pull-up pierde la L: el freno es la compresión, no la tracción: más V-sit, compresión sentada y la variante con una pierna. (d) El straddle press no despega: revisión honesta de apertura straddle (Bloque 0) y de G5/G6; el 80% del press es compresión y cadera alta. (e) El Nordic se "rompe" a media subida: normal: la cima del rango es lo último en llegar. Sigue con el semicompleto con banda y reduce la asistencia, no el rango.',
+                'Advertencias de seguridad: el lastre y la vía unilateral cargan el codo y el bíceps como nunca hasta ahora: dolor matinal >2/10 = congelar esa escalera un ciclo (§1.7). El flag exige hombros perfectamente calientes y el bloque postural religioso: ningún intento sin el Bloque 0 completo. El Nordic es la máxima carga excéntrica de isquiosural del programa: nunca en frío, nunca al fallo excéntrico total, y la molestia detrás de la rodilla es una señal de stop, no de esfuerzo.',
+                'Mapa tendinoso del nivel (§1.7): la línea de codo en tracción (lastre + L-sit PU + vía unilateral) pica SOLO en B, una exposición pesada por microciclo — y dentro de B, en F3, el lastre y el L-sit pull-up rotan el pico por ciclo (nunca dos marcas de codo en la misma sesión; la negativa a un brazo, ya conseguida en F2, baja a mantenimiento) · la línea de apoyo/bíceps distal (planche dinámico) pica SOLO en A · el flag (hombro en abducción lateral + oblicuos) y la línea vertical/press (hombro en flexión) viven en D, con el flag como estático pesado único de la sesión · C es la sesión tendinosa de pierna e isquiosural (Nordic: nunca en frío, nunca al fallo excéntrico) · la negativa a un brazo se introduce en F2, nunca antes de que el typewriter pesado esté limpio · molestia matinal en codo o bíceps >2/10 = congelar la escalera de lastre/unilateral un ciclo (el resto sigue).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Lastre entra conservador (+10-15%); bandera 45° (hito); V-sit y straddle press asistidos; Nordic excéntrica larga', 'note' => 'Máximo un frente estático pesado por sesión; línea de codo en tracción pica SOLO en B', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Lastre +15-20%; negativa a un brazo (hito); flag horizontal con apoyo; straddle press con asistencia mínima', 'note' => 'Entrena el flag en ambos lados aunque el test se mida en el mejor lado', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Marcas de test: +25%, L-sit PU, flag horizontal, V-sit, straddle press, Nordic completo — siempre frescos', 'note' => 'En B rotan los picos de codo por ciclo: impares lastre +25%, pares L-sit PU', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista (torácica + straddle); dosis mínimas de mantenimiento; sin intentos de marca', 'note' => 'El trabajo real de esta fase es la apertura, no el empuje', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Dominada lastrada +25% BW', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta desde brazos extendidos hasta barbilla sobre la barra, cero impulso de piernas', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'L-sit pull-up', 'minimum' => 5, 'target' => 8, 'unit' => 'repeticiones', 'form' => 'Desde colgado activo con piernas extendidas en L, tracciona hasta barbilla sobre la barra sin perder la L ni balancearte', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Human flag', 'minimum' => 3, 'target' => 5, 'unit' => 'segundos', 'form' => 'Cuerpo horizontal lateral a la barra, brazos rectos, hombro inferior empuja, core rígido, sin arqueo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'V-sit', 'minimum' => 10, 'target' => 15, 'unit' => 'segundos', 'form' => 'En el suelo, manos a los lados de las caderas, piernas extendidas y despegadas del suelo, compresión máxima, lumbar neutra', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Straddle press to handstand', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Desde straddle stand, compresión y elevación controlada al pino sin impulso de piernas; piernas abiertas hasta juntarlas en vertical', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Nordic curl completo', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde rodillas, caída controlada hacia adelante con talones fijos, recuperación completa sin ayuda de manos', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 14 — ONE-ARM CHIN-UP
+    // ========================================================================
+
+    private static function level14(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el OAC asistido con banda gruesa parece ridículo de fácil: perfecto. Estás enseñando al sistema nervioso el patrón unilateral completo, no demostrando nada. La fuerza ya la tienes (o la tendrás del lastre); lo que se construye aquí es el mapa motor del gesto.',
+                'Fase 2 (Progresión): registra cada asistencia (grosor de banda, nº de dedos) como si fuera un lastre: la retirada de asistencia ES la progresión del nivel. Y respeta el orden de B: OAC primero, negativa después, lastre al final. El skill siempre en fresco.',
+                'Fase 3 (Intensificación): respeta las rotaciones de pico sin excepciones: en ciclo impar no se intenta el 90° máximo ni el lastre +50%, en ciclo par no se intenta el planche PU máximo ni el OAC. Cada par de gestos cuelga del mismo tendón; intentar los dos picos en el mismo microciclo es la receta más rápida para una tendinopatía de bíceps o de codo. La sesión B de marcas es larga (100-120 min) precisamente porque los descansos no se negocian: si el tiempo aprieta, se recorta volumen de accesorios, nunca descanso.',
+                'Fase 4 (Recuperación): es la única fase sin exposición unilateral pesada: apróvechala. La salud capsular (cross-body, ER a 90°, rotaciones cubanas) y el antebrazo en suelo son el entrenamiento real de esta fase.',
+                'Si fallas el test — diagnóstico: (a) El OAC se queda a media altura: la negativa a un brazo es tu mejor aliada (5-8 s de bajada controlada); retrocede a banda media y negativas largas un ciclo. (b) El OAC no arranca desde abajo: más lastre pesado a dos brazos (el techo del one-arm es la fuerza a dos brazos) y asistencia con dedos en lugar de banda (enseña el arranque real). (c) El planche push-up no sale: casi siempre es un full planche demasiado corto: alarga el hold (4-5 s) antes de añadir flexiones. (d) El 90° se queda en el fondo: más parciales de medio rango y más descenso a straddle planche; el fondo del 90° es fuerza de planche, no de tríceps. (e) Los FL raises se balancean: reduce el rango (raise a straddle) y gana control; el balanceo aprendido invalida la rep.',
+                'Advertencias de seguridad: el one-arm chin-up es el ejercicio más agresivo del programa para el tendón del bíceps y el hombro: una sola exposición pesada por microciclo, nunca en frío, nunca con molestia previa. Cualquier dolor en la cara anterior del hombro detiene la vía unilateral y los estáticos de anillas (se sigue entrenando todo lo demás). El tiger bend y el impossible dip tienen umbral de dolor cero en el codo: a la primera punzada se retrocede un peldaño sin negociación. Los estáticos de anillas (cross, maltese) solo tras el Bloque 0 completo y con asistencias honestas: aquí la progresión se mide en milímetros por ciclo.',
+                'Mapa tendinoso del nivel (§1.7 — la zona más delicada del programa): el one-arm chin-up es el ejercicio más agresivo del catálogo para el tendón del bíceps y el hombro: una sola exposición pesada unilateral por microciclo (sesión B), nunca en sesiones consecutivas, nunca en frío · el planche PU (bíceps distal) y el 90° PU (hombro en flexión + bíceps) comparten tendón: nunca se intensifican en la misma fase — de ahí la rotación de picos por ciclo en F3 · el OAC y el lastre +50% también rotan el pico por ciclo en F3 (comparten sesión B y el mismo codo en tracción: nunca dos marcas pesadas de tracción en la misma sesión) · el tiger bend hold (codo/antebrazo) vive en D, separado del impossible dip asistido (A): los dos gestos más lesivos para el codo del catálogo no coinciden nunca en la misma sesión, y en ciclo par de F3 (pico de 90°) el tiger bend se queda en hold, sin negativos · anillas élite (cross hold, maltese con banda): brazo recto, volumen bajo, descansos largos, solo tras el Bloque 0 completo, y rotan el foco pesado por ciclo como en N15 (mismo tendón: hombro/bíceps en brazo recto lateral — nunca progresan los dos a la vez; en ciclo par de F3 ambos trabajan técnicos porque el 90° es el pico de D) · cualquier dolor en la cara anterior del hombro detiene la vía unilateral y los estáticos de anillas (se sigue entrenando el resto con normalidad).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Vía OAC: archer pesado + typewriter + OAC asistido técnico; hitos de peldaño (90° asistido, cross con banda, tiger bend hold, impossible asistido)', 'note' => 'Bloque 0 más largo del programa; salud capsular y antebrazo en suelo innegociables', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'OAC asistido con menos banda + negativa larga; lastre +40%; FL raises; 90° parcial (hito); tiger bend negativo (hito)', 'note' => 'La retirada de asistencia es la progresión real del nivel', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Rotación de picos por ciclo: impares pica planche PU (A) y OAC (B); pares pica 90° PU (D) y +50% (B)', 'note' => 'Nunca dos picos del mismo tendón en la misma fase; descansos de 4-5 min', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista (cápsula de hombro + antebrazo); dosis mínimas; sin intentos de marca', 'note' => 'Aprovecha para salud capsular y antebrazo en suelo', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'One-arm chin-up', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Cuelga de una mano en supinación con el hombro activo; tracciona hasta barbilla sobre la barra, torso apenas rotado, sin impulso de piernas; descenso controlado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Planche push-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde full planche estable, flexiona manteniendo la horizontal y la protracción; la rep que rompe la posición no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => '90° push-up', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Desde handstand libre, descenso controlado hasta straddle planche y empuje de vuelta al pino, sin impulso de piernas; rango completo en ambas direcciones', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Front lever raises', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde colgado activo con brazos rectos y retroversión, eleva el cuerpo extendido hasta full front lever, mantén 1 s y baja controlado; sin balanceo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dominada lastrada +50% BW', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta, barbilla sobre la barra, cero impulso de piernas', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 15 — ONE-ARM PULL-UP
+    // ========================================================================
+
+    private static function level15(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el OAP en prona se aprende desde cero aunque el OAC sea tuyo: acepta la banda gruesa sin vergüenza. Lo que estás comprando con esa asistencia es un codo sano dentro de diez años.',
+                'Fase 2 (Progresión): cambia la asistencia del OAP a dedos lo antes posible: 1-2 dedos en tu propia muñeca enseñan el arranque real que la banda no enseña. Registra dedos y grosores como registrarías kilos.',
+                'Fase 3 (Intensificación): tres rotaciones de pico, cero excepciones: impossible/tiger bend, cross/maltese y OAP/lastre +50% — ninguna pareja pica junta. En este nivel la disciplina de NO hacer es lo que te lleva al test: el que lo intenta todo cada sesión no llega a Olimpo, llega al fisio. La sesión B de marcas dura 100-120 min porque los descansos de 4-5 min no se negocian: si el tiempo aprieta, se recorta volumen de accesorios, nunca descanso.',
+                'Fase 4 (Recuperación): es la fase más importante del nivel más lesivo. La movilidad de recuperación es el entrenamiento: cápsula posterior, pectoral, antebrazo en suelo, dislocates. Sal de esta fase mejor de lo que entraste, no solo menos cansado.',
+                'Si fallas el test — diagnóstico: (a) El OAP no arranca desde abajo: cambia la asistencia a dedos (patrón real) y sube el lastre a dos brazos; el arranque es fuerza absoluta de dorsal/braquial. (b) El OAP muere a media altura: negativa prona de 8 s y más typewriter prono; el tramo medio se construye excéntricamente. (c) El tiger bend no empuja de vuelta: más asistido y más hold; la salida del fondo es tríceps en un ángulo que solo se construye con reps asistidas perfectas. (d) El impossible dip duele por delante: sube la asistencia y baja el rango; la cápsula anterior no perdona la prisa — la progresión se mide en centímetros por ciclo. (e) El cross o el maltese tiemblan en exceso: demasiado ángulo o poca banda; sube la asistencia y alarga los descansos a 4 min. Un estático tembloroso no construye: solo fatiga.',
+                'Advertencias de seguridad: es el nivel más lesivo del catálogo. Reglas innegociables: dolor matinal en codo u hombro >2/10 = congelar esa escalera un ciclo · ningún estático de anillas ni unilateral sin el Bloque 0 completo · tiger bend e impossible dip: umbral de dolor cero · iron cross y maltese, incluso asistidos, son los movimientos más lesivos del programa si se fuerzan: bandas honestas, rangos parciales, hombros perfectamente calientes · la descarga larga no es opcional. El ONE-ARM PULL-UP es la celebración máxima del programa cerrado: llega entero, no lesionado.',
+                'Mapa tendinoso del nivel (§1.7 — máxima alerta del catálogo): el OAP carga el codo en prona (menos ayuda del bíceps, más braquial/dorsal, pero el codo sigue siendo el eslabón débil): una exposición pesada por microciclo (B), siempre primero y fresco · la sesión B (OAP + +50% ×3) es la de mayor carga de codo del programa: en F3 sus dos marcas rotan el pico por ciclo (impar: OAP; par: +50% — nunca las dos en la misma sesión), su descarga es obligatoria y nunca va seguida de otra sesión pesada de codo · iron cross y maltese, incluso asistidos, son los movimientos más lesivos del catálogo si se fuerzan: bandas honestas, rangos parciales, hombros perfectamente calientes, y rotan el foco pesado por ciclo en F3 (nunca los dos al máximo en la misma sesión) · tiger bend (D) vs. impossible dip (A): anti-coincidencia explícita §1.7 — nunca se intensifican en la misma fase (mismo tendón, mismo vector) · el falso agarre se mantiene vivo en toda sesión D (la línea iniciada en N6 nunca se abandona) · dolor matinal >2/10 en codo u hombro = congelar esa escalera un ciclo; aquí no se negocia.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Vía OAP: asistido banda gruesa + negativa; cross/maltese con bandas generosas; impossible con banda media; tiger bend hold', 'note' => 'Bloque 0 más largo del catálogo; mantenimiento integral G1-G6', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'OAP asistido con dedos; +50% ×2; cross/maltese con banda media; tiger bend asistido (hito)', 'note' => 'Cambia la asistencia a dedos lo antes posible para enseñar el arranque real', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Rotación de picos por ciclo: impares pica impossible (A), tiger bend contenido (D), OAP (B); pares pica tiger bend (D), impossible mantiene (A), +50% (B); cross/maltese rotan foco', 'note' => 'Tres rotaciones de pico, cero excepciones; descansos 4-5 min', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad de recuperación como protagonista; la fase más importante del nivel más lesivo', 'note' => 'Dosis mínimas; movilidad de recuperación es el entrenamiento', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'One-arm pull-up (prona)', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Cuelga de una mano en pronación con el hombro activo; tracciona con dorsal y braquial, torso apenas rotado, hasta barbilla sobre la barra; descenso controlado, sin impulso', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dominada lastrada +50% BW', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta, barbilla sobre la barra, cero impulso; la base de fuerza a dos brazos del OAP', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Tiger bend push-up', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Desde handstand libre, descenso controlado hasta apoyo sobre antebrazos y empuje de vuelta al pino, codos al frente, sin impulso de piernas; rango completo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Impossible dip', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'En anillas, descenso inclinando el cuerpo hacia atrás hasta que las anillas quedan por delante del torso y empuje de vuelta al apoyo; rango ganado progresivamente, sin dolor anterior', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Iron cross asistido (banda mínima)', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'En anillas con falso agarre y banda mínima bajo los pies, brazos extendidos lateralmente hasta la cruz; hold limpio, simétrico, sin temblor extremo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Maltese asistido (banda)', 'minimum' => 3, 'target' => 5, 'unit' => 'segundos', 'form' => 'En anillas con banda a la cadera, cuerpo proyectado hacia delante y brazos rectos abiertos lateralmente hasta la horizontal ganada; hold limpio, sin arqueo', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 16 — OLIMPO (BLOQUE ÉLITE ABIERTO)
+    // ========================================================================
+
+    private static function level16(): array
+    {
+        return [
+            'tips' => [
+                'Filosofía del bloque: elige 1-2 objetivos legendarios por ciclo (nunca más), respetando siempre la matriz de compatibilidad tendinosa.',
+                'El resto del catálogo pasa a modo mantenimiento de élite: cada skill ya conseguido se conserva con dosis mínimas efectivas.',
+                'Al superar el test parcial del objetivo se desbloquea el siguiente peldaño de ese micro-programa y se puede rotar de especialización.',
+                'La movilidad del Bloque 0 se personaliza según la especialización activa (iron cross → falso agarre profundo + pectoral; maltese → extensión de hombro + muñeca; OAP múltiple → salud capsular + bíceps; lastre legendario → agarre + dorsal).',
+                'Al entrar a Olimpo: resiste la tentación de elegir dos objetivos grandes (cross + OAP múltiple es la trampa clásica). Elige UNO durante tu primer ciclo: aprende el ritmo de especialización antes de doblar la apuesta.',
+                'Al elegir especialización: prioriza la que más te ilusiona, no la que deberías; la adherencia es el motor del bloque infinito. La matriz de compatibilidad solo vetó combinaciones lesivas, no preferencias.',
+                'En cada Fase 3: los tests parciales van frescos y primeros. Un TP intentado al final de la sesión mide tu fatiga. Si fallas un TP dos ciclos seguidos, el peldaño anterior necesita más tiempo bajo tensión: retrocede sin drama.',
+                'En la rotación: cambiar de especialización tras superar un TP no es abandono, es el diseño. El mantenimiento de élite conserva lo construido mientras atacas otra montaña.',
+                'Los combos son descanso activo de élite: el slot de estilo es la recompensa lúdica del nivel más duro. Úsalo: la maestría también se entrena jugando.',
+                'Advertencia final: Olimpo es el bloque donde los egos se lesionan. Todas las reglas tendinosas que te trajeron hasta aquí valen el doble ahora. El objetivo no es conseguirlo todo: es seguir entrenando dentro de veinte años.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Peldaño actual del objetivo con asistencia/volumen técnico; mantenimiento de élite completo; movilidad personalizada', 'note' => 'Mantenimiento de élite del resto del catálogo con dosis mínimas efectivas', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Peldaño actual con carga real; reducción de asistencias; mantenimiento de élite', 'note' => 'Reduce asistencia antes de aumentar volumen', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Test parcial del peldaño, fresco y primer ejercicio de su sesión; si se supera → siguiente peldaño desbloqueado; mantenimiento', 'note' => 'Nunca intentar el TP al final de la sesión', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista; dosis mínimas; ventana de rotación para cambiar de especialización', 'note' => 'Fase más importante del bloque infinito; decide las próximas décadas de entrenamiento', 'intensity' => '50%'],
             ],
         ];
     }
