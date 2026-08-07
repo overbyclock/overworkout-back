@@ -9,12 +9,12 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-6).
+ * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-12).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_niveles_01-03.md,
- * docs/detalle_niveles_04-06.md y de
- * docs/arquitectura_niveles_calistenia.md.
+ * docs/detalle_niveles_04-06.md, docs/detalle_niveles_07-09.md,
+ * docs/detalle_niveles_10-12.md y de docs/arquitectura_niveles_calistenia.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -30,6 +30,12 @@ class CalisteniaMasterContentV4
             4 => self::level4(),
             5 => self::level5(),
             6 => self::level6(),
+            7 => self::level7(),
+            8 => self::level8(),
+            9 => self::level9(),
+            10 => self::level10(),
+            11 => self::level11(),
+            12 => self::level12(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -46,6 +52,12 @@ class CalisteniaMasterContentV4
             4 => self::achievementsL4(),
             5 => self::achievementsL5(),
             6 => self::achievementsL6(),
+            7 => self::achievementsL7(),
+            8 => self::achievementsL8(),
+            9 => self::achievementsL9(),
+            10 => self::achievementsL10(),
+            11 => self::achievementsL11(),
+            12 => self::achievementsL12(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -145,6 +157,12 @@ class CalisteniaMasterContentV4
             4 => self::EXERCISE_NOTES_L4,
             5 => self::EXERCISE_NOTES_L5,
             6 => self::EXERCISE_NOTES_L6,
+            7 => self::EXERCISE_NOTES_L7,
+            8 => self::EXERCISE_NOTES_L8,
+            9 => self::EXERCISE_NOTES_L9,
+            10 => self::EXERCISE_NOTES_L10,
+            11 => self::EXERCISE_NOTES_L11,
+            12 => self::EXERCISE_NOTES_L12,
             default => [],
         };
 
@@ -784,6 +802,963 @@ class CalisteniaMasterContentV4
     }
 
     // ========================================================================
+    // LEVEL 7 — TUCK Y EXTENSIÓN
+    // ========================================================================
+
+    private static function level7(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): graba tus holds de tuck planche y adv tuck FL; en brazo recto la forma se degrada antes que la fuerza y el vídeo es el único juez honesto. Acumula tiempo bajo tensión con asistencia generosa: los tendones aprenden por exposición, no por heroicas.',
+                'Fase 2 (Progresión): los primeros intentos libres de tuck planche y L-sit serán de 1-3 s. Es lo esperado: cada intento corto y perfecto vale más que uno largo y roto. Descansa de verdad los 2-4 min.',
+                'Fase 3 (Intensificación): respeta la anti-coincidencia: no intentes récord de adv tuck FL el mismo microciclo que el récord de tuck planche. El bíceps distal solo admite un pico.',
+                'Fase 4 (Recuperación): no conviertas el deload en un test encubierto. La movilidad de esta fase (Jefferson curl, pike) es tu seguro para la puerta G6 de N9.',
+                'Regla de sobrecarga entre ciclos: al repetir un ciclo, la Fase 1 no debe ser una fotocopia del ciclo anterior: progrésala ligeramente (+1 rep por serie en el trabajo dinámico, +2-3 s en los holds, o un peldaño menos de asistencia) manteniendo la técnica limpia. Las Fases 2-4 heredan ese pequeño avance.',
+                'Si fallas el test: (a) tuck planche <5 s: retrocede un peldaño §1.6 (banda o puntas) y acumula tiempo allí — el tendón del bíceps marca el ritmo, no el ánimo. (b) L-sit que no despega: no es core, son flexores de cadera y tríceps de apoyo: más compresión sentada y más support hold. (c) Adv tuck FL que falla: revisa la retroversión pélvica — sin ella el lever no existe. (d) German hang con pinzamiento: vuelve al asistido y a los dislocates un ciclo; nunca "empujes" a través del pinzamiento.',
+                'Seguridad N7: skin the cat y German hang siempre con anillas a altura de escape y tras el Bloque 0 completo; la tuck planche pesada (A) y el adv tuck FL pesado (B) nunca en sesiones consecutivas — intercala la sesión C o un descanso entre ambas; dolor matinal de tendón >2/10 = congelar esa escalera un ciclo (§1.7) y seguir el resto con normalidad.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Volumen técnico; peldaños con asistencia generosa', 'note' => 'Tuck planche con puntas, tuck FL espalda plana, L-sit en tuck avanzado', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Suben holds y reps; entran los intentos libres de tuck planche y L-sit', 'note' => 'Hitos: pistol al cajón alto 5/pierna, single-leg RDL, primer clap push-up', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Pico: tuck planche + L-sit + German hang', 'note' => 'Adv tuck FL consolida (anti-coincidencia de bíceps); hito German hang 20 s', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Deload; movilidad protagonista (Jefferson curl, pike)', 'note' => 'Re-verificación G4/G5 y test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Tuck planche', 'minimum' => 5, 'target' => 10, 'unit' => 'segundos', 'form' => 'Brazos rectos, proyección escapular máxima, rodillas al pecho, cadera a la altura de los hombros (gate conservador §1.6)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Advanced tuck front lever', 'minimum' => 8, 'target' => 12, 'unit' => 'segundos', 'form' => 'Espalda paralela al suelo en tuck, retroversión pélvica activa, brazos rectos', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'L-sit completo', 'minimum' => 5, 'target' => 10, 'unit' => 'segundos', 'form' => 'Brazos rectos, hombros deprimidos, piernas extendidas y juntas sin tocar el suelo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Skin the cat', 'minimum' => 2, 'target' => 4, 'unit' => 'repeticiones', 'form' => 'Anillas, ida y vuelta controladas = 1 rep; paso lento por el punto de máxima extensión', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'German hang libre', 'minimum' => 10, 'target' => 20, 'unit' => 'segundos', 'form' => 'Pies libres, respiración continua, hombros relajados, cero pinzamiento anterior', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Ring push-up', 'minimum' => 8, 'target' => 12, 'unit' => 'repeticiones', 'form' => 'Cuerpo en línea, pecho a la altura de las anillas, turnout claro arriba', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL7(): array
+    {
+        return [
+            [
+                'code' => 'v4-n7-tuck-planche',
+                'name' => 'TUCK PLANCHE',
+                'description' => 'Tuck planche libre de 5 s limpios: brazos rectos, proyección máxima, rodillas al pecho. El primer estático de brazo recto en apoyo del programa.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Tuck planche',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n7-l-sit',
+                'name' => '¡L-SIT!',
+                'description' => 'L-sit completo de 5 s: piernas extendidas y juntas, brazos rectos. La compresión de la puerta G5 convertida en skill.',
+                'category' => 'skill', 'icon' => '🪑', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'L-sit completo',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n7-adv-tuck-fl',
+                'name' => 'Advanced tuck FL',
+                'description' => 'Supera el mínimo de advanced tuck front lever (8 s) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '🛡️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Advanced tuck front lever',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-primer-skin-the-cat',
+                'name' => 'Primer skin the cat',
+                'description' => 'Supera el mínimo de skin the cat (2 reps controladas) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '🔄', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Skin the cat',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-german-hang-10s',
+                'name' => 'German hang libre 10 s',
+                'description' => 'Supera el mínimo de German hang libre (10 s) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '🧗', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'German hang libre',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-tuck-planche-puntas',
+                'name' => 'Tuck planche con apoyo de puntas',
+                'description' => 'Tuck planche con apoyo de puntas de pies: brazos rectos y proyección máxima, las puntas solo equilibran. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🐸', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-german-hang-20s',
+                'name' => 'German hang libre 20 s',
+                'description' => 'German hang libre de 20 s con respiración continua: consolida el objetivo del test. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-primer-clap-push-up',
+                'name' => 'Primer clap push-up',
+                'description' => 'Primera flexión con palmada: despegue claro de ambas manos y aterrizaje suave con los codos amortiguando. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '👏', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-pike-push-up-elevado',
+                'name' => 'Pike push-up elevado (pies en cajón)',
+                'description' => 'Primera serie limpia de pike push-up con los pies en cajón: continuidad de la línea vertical hacia el HSPU de N10. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🔺', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-pistol-cajon-alto',
+                'name' => 'Pistol al cajón alto 5/pierna',
+                'description' => 'Cinco pistol al cajón alto limpias por pierna: tocar el cajón sin desplomarse y subir sin impulso. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🦵', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n7-single-leg-rdl',
+                'name' => 'Single-leg RDL',
+                'description' => 'Single-leg RDL con carga y técnica limpia: cadera cuadrada y rango sin redondear la lumbar. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⚖️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 8 — POTENCIA
+    // ========================================================================
+
+    private static function level8(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): la potencia se construye con descansos largos y pocas reps: si tus C2B se convierten en dominadas normales, la serie ha terminado. La velocidad es el objetivo, no el agotamiento.',
+                'Fase 2 (Progresión): respeta el orden de picos: es el ciclo del ring dip; el SBD aún es técnico. Quien intensifica los dos a la vez se gana una molestia de hombro anterior, no un test superado.',
+                'Fase 3 (Intensificación): fase del C2B y de la rotación SBD/adv tuck planche: un solo pico de codo/empuje por ciclo (impares = planche, pares = SBD, modelo N14). El ring dip, el archer y el tuck BL se mantienen sin vergüenza: mantener también es entrenar. Revisa el tendón del bíceps cada mañana (>2/10 = congelar esa escalera, §1.7).',
+                'Fase 4 (Recuperación): la puerta G3 se gana aquí tanto como en las fases duras: knee-to-wall medido en cada sesión D. Si estás en 8-9 cm, repite un ciclo corto de movilidad de tobillo antes de presentarte al test.',
+                'Regla de sobrecarga entre ciclos: al repetir un ciclo, la Fase 1 no debe ser una fotocopia del ciclo anterior: progrésala ligeramente (+1 rep por serie en el trabajo dinámico, +2-3 s en los holds, o un peldaño menos de asistencia) manteniendo la técnica limpia. Las Fases 2-4 heredan ese pequeño avance.',
+                'Si fallas el test: (a) C2B que no llega: el problema es velocidad de salida, no fuerza máxima — dominadas explosivas con menos reps y más descanso. (b) Adv tuck planche <5 s: retrocede un peldaño §1.6 (banda o puntas con cadera abierta) y acumula holds de calidad. (c) Archer torcido: baja el volumen y usa banda — el archer mal hecho enseña asimetrías que cuestan ciclos corregir. (d) Tuck BL con pinzamiento: vuelve al German hang y a los dislocates; la puerta G4 está ganada, úsala. (e) G3 no superada: ciclo corto de movilidad de tobillo, no de fuerza.',
+                'Seguridad N8: el chest-to-bar es el primer gesto balístico del programa: nunca con fatiga acumulada de codos. Profundidad de fondos limitada (hombro al nivel del codo) durante todo el nivel: el rango completo llega en N9, cuando el hombro está listo.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Técnica de los gestos nuevos; ring dip protagonista en A', 'note' => 'SBD solo técnico; explosivas a media altura; archer asistido', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Suben C2B, ring dip y tuck BL; archer con menos asistencia', 'note' => 'Hitos: dips explosivos, false grip hang 10-15 s, pistol cajón bajo + excéntrica, dragon flag excéntrico', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Pico de C2B + rotación por ciclo del pico de codo/empuje (modelo N14)', 'note' => 'Ciclos impares pica la adv tuck planche, ciclos pares el SBD; ring dip, archer y tuck BL mantienen', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Deload; movilidad protagonista (straddle + tobillo)', 'note' => 'Test de nivel + puerta G3 al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Chest-to-bar pull-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Contacto real pecho-barra (no cuello), sin pataleo ni kipping, bajada controlada', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Advanced tuck planche', 'minimum' => 5, 'target' => 10, 'unit' => 'segundos', 'form' => 'Espalda paralela al suelo, brazos rectos, rodillas fuera del pecho (gate conservador §1.6)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Tuck back lever', 'minimum' => 8, 'target' => 12, 'unit' => 'segundos', 'form' => 'Cuerpo horizontal boca abajo, brazos rectos pegados al cuerpo, cero pinzamiento anterior', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Ring dip', 'minimum' => 5, 'target' => 8, 'unit' => 'repeticiones', 'form' => 'Profundidad hombro a la altura del codo (nunca más abajo en este nivel), turnout claro arriba', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Straight bar dip', 'minimum' => 5, 'target' => 8, 'unit' => 'repeticiones', 'form' => 'Rango seguro: hombro a la altura del codo; cuerpo rígido, transición de peso por delante de la barra', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Archer pull-up', 'minimum' => 2, 'target' => 3, 'unit' => 'repeticiones/lado', 'form' => 'El brazo recto guía pero no empuja; reps simétricas a ambos lados', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Puerta G3 — Dorsiflexión de tobillo', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Knee-to-wall ≥10 cm sin despegar el talón (ideal 12 cm, diferencia entre lados <2 cm)', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'G3'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL8(): array
+    {
+        return [
+            [
+                'code' => 'v4-n8-chest-to-bar',
+                'name' => 'CHEST-TO-BAR',
+                'description' => 'Primer chest-to-bar estricto en el test: el pecho toca la barra, no solo la barbilla la supera. El primer gesto balístico del programa.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Chest-to-bar pull-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n8-adv-tuck-planche',
+                'name' => 'Advanced tuck planche',
+                'description' => 'Supera el mínimo de advanced tuck planche (5 s) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '📐', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Advanced tuck planche',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-tuck-back-lever',
+                'name' => 'Tuck back lever',
+                'description' => 'Supera el mínimo de tuck back lever (8 s) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '🛡️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Tuck back lever',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-primer-ring-dip',
+                'name' => 'Primer ring dip',
+                'description' => 'Supera el mínimo de ring dip (5 reps) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '💍', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Ring dip',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-primer-archer-pull-up',
+                'name' => 'Primer archer pull-up',
+                'description' => 'Supera el mínimo de archer pull-up (2 reps/lado) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '🏹', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Archer pull-up',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-tobillo-libre-g3',
+                'name' => 'Tobillo libre (G3)',
+                'description' => 'Puerta de dorsiflexión superada: knee-to-wall ≥10 cm sin despegar el talón. Desbloquea el pistol de N9.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta G3 — Dorsiflexión de tobillo',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-dips-explosivos',
+                'name' => 'Dips explosivos',
+                'description' => 'Fondos en paralelas con subida balística y bajada controlada (despegue de manos opcional). Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '💥', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-false-grip-hang',
+                'name' => 'False grip hang 10-15 s',
+                'description' => 'Colgado en falso agarre de 10-15 s con la muñeca sobre la anilla: la llave de los skills de anillas. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤝', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-pistol-cajon-bajo-excentrica',
+                'name' => 'Pistol al cajón bajo + excéntrica 5 s',
+                'description' => 'Hito doble: pistol al cajón bajo y excéntrica de 5 s controlada por pierna. Último peldaño antes del pistol libre. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🦵', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-adv-tuck-fl-10s',
+                'name' => 'Adv tuck front lever 10-12 s',
+                'description' => 'Advanced tuck front lever de 10-12 s: consolida el objetivo de N7 y mantiene viva la línea FL antes del one-leg de N9. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-wall-handstand-40s',
+                'name' => 'Wall handstand 30-40 s',
+                'description' => 'Wall handstand de 30-40 s: consolida el objetivo de N5 y mantiene viva la línea vertical. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n8-dragon-flag-excentrico',
+                'name' => 'Tuck dragon flag / dragon flag excéntrico',
+                'description' => 'Primer peldaño del dragon flag: versión tuck y bajada excéntrica de 3-4 s sin colapsar la lumbar. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🐉', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 9 — MUSCLE-UP
+    // ========================================================================
+
+    private static function level9(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el muscle-up se gana en las piezas, no en los intentos. Un ciclo entero de C2B alto + transición + SBD vale más que cincuenta intentos fallidos: cada intento fallido con kipping desesperado entrena el patrón equivocado y castiga el codo.',
+                'Fase 2 (Progresión): cuando lleguen los primeros intentos completos, limítalos (6×1, descanso largo). El MU aparece "de repente", en una sesión cualquiera, para quien acumuló piezas con paciencia. Igual con el pistol: el primer rep libre suele salir tras el apoyo de un dedo, no desde cero.',
+                'Fase 3 (Intensificación): respeta la anti-coincidencia: el pico de codo es del MU; el SBD se mantiene aunque te sientas fuerte. Si el codo amanece cargado (>2/10), congela la escalera del MU ese microciclo y trabaja pierna y FL (§1.7).',
+                'Fase 4 (Recuperación): ensaya las puertas tal como se evaluarán (G6, G1, G2). La G6 se construye desde N3: si falla, no es falta de esfuerzo, es falta de exposición — ciclo corto de isquiosurales, no de fuerza.',
+                'Regla de sobrecarga entre ciclos: al repetir un ciclo, la Fase 1 no debe ser una fotocopia del ciclo anterior: progrésala ligeramente (+1 rep por serie en el trabajo dinámico, +2-3 s en los holds, o un peldaño menos de asistencia) manteniendo la técnica limpia. Las Fases 2-4 heredan ese pequeño avance.',
+                'Si fallas el test: (a) MU que no sale: casi siempre muere en la transición (el pecho no supera la barra) — más C2B altos y transiciones asistidas con banda, no más intentos completos. (b) Pistol que no sale: tres sospechosos — (1) dorsiflexión (vuelve al trabajo de tobillo y reintenta G3; mientras, cajón bajo), (2) fuerza de cuádriceps unilateral (Bulgarian pesado y step-up alto), (3) equilibrio/control (pistol asistida y excéntrica de 5 s). (c) One-leg FL que cae: revisa la retroversión y acumula adv tuck con una pierna. (d) Dragon flag con dolor lumbar: regresa al excéntrico; la lumbar que se arquea es aviso, no molestia a ignorar.',
+                'Seguridad N9: el MU completo solo tras el Bloque 0 + activación específica, nunca como primera actividad; negativas de HSPU siempre con colchoneta/parallettes (el cuello no toca el suelo); dragon flag con apoyo en hombros, jamás cargando el cuello.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Construcción del muscle-up por piezas (C2B alto + transición + SBD)', 'note' => 'Peldaños de one-leg FL y dragon flag; negativas de HSPU parciales', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Primeros intentos completos de MU; pistol a asistencia mínima', 'note' => 'Hitos: negativas HSPU rango completo, adv tuck planche 10 s, adv tuck BL 5-8 s, false grip 15-18 s', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Picos: MU + pistol + dragon flag', 'note' => 'Mantienen SBD (anti-coincidencia de codo) y adv tuck BL', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Deload; pike protagonista (puerta G6)', 'note' => 'Test de nivel + G6 + re-tests G1/G2 al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Muscle-up en barra', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Sin kipping desesperado, transición continua y simétrica, final en apoyo estable sobre la barra', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'One-leg front lever', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'Espalda paralela, brazos rectos, retroversión pélvica; la pierna extendida empuja la línea', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Pistol squat (cada pierna)', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Talón pegado, bajada controlada, arranque sin impulso del brazo ni rebote', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dragon flag', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Cuerpo en línea apoyado en hombros (nunca en el cuello), lumbar sin arquear', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Puerta G6 — Pike / isquiosurales', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'De pie, piernas extendidas, palmas completas al suelo; alternativa sentado: pecho a muslos', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'G6'],
+                        ['name' => 'Re-test G1 — Flexión de hombro', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'De pie contra pared, espalda y lumbar pegadas, brazos tocan la pared sin arquear ni separar', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G1'],
+                        ['name' => 'Re-test G2 — Extensión de muñeca 90°', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Palma en suelo, dedos hacia rodillas, antebrazo vertical, 20 s sin dolor', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G2'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL9(): array
+    {
+        return [
+            [
+                'code' => 'v4-n9-muscle-up',
+                'name' => '¡MUSCLE-UP EN BARRA!',
+                'description' => 'Primer muscle-up en barra: tracción explosiva, transición limpia y fondo hasta el apoyo. El segundo gran hito emocional del programa: celebración máxima.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Muscle-up en barra',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n9-pistol-squat',
+                'name' => '¡PISTOL SQUAT!',
+                'description' => 'Pistol squat libre por pierna: talón pegado, bajada controlada y arranque sin impulso. Hito cultural de pierna.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Pistol squat (cada pierna)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n9-one-leg-front-lever',
+                'name' => 'One-leg front lever',
+                'description' => 'Supera el mínimo de one-leg front lever (5 s) en el test de Nivel 9.',
+                'category' => 'progress', 'icon' => '🛡️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'One-leg front lever',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-primer-dragon-flag',
+                'name' => 'Primer dragon flag',
+                'description' => 'Supera el mínimo de dragon flag (3 reps) en el test de Nivel 9.',
+                'category' => 'progress', 'icon' => '🐉', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Dragon flag',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-puerta-pike-g6',
+                'name' => 'Puerta de pike superada (G6)',
+                'description' => 'Puerta de pike/isquiosurales superada: palmas completas al suelo de pie con las piernas extendidas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta G6 — Pike / isquiosurales',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-adv-tuck-planche-10s',
+                'name' => 'Adv tuck planche 10 s',
+                'description' => 'Advanced tuck planche de 10 s: consolida el objetivo de N8 y mantiene viva la línea planche. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-adv-tuck-back-lever',
+                'name' => 'Adv tuck back lever 5-8 s',
+                'description' => 'Advanced tuck back lever de 5-8 s: primer peldaño de la escalera hacia el full back lever de N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🛡️', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-negativas-hspu',
+                'name' => 'Negativas de HSPU en pared',
+                'description' => 'Negativa de HSPU a rango completo de 4-6 s con colchoneta/parallettes: peldaño previo real del HSPU de N10. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n9-false-grip-hang-15s',
+                'name' => 'False grip hang 15-18 s',
+                'description' => 'False grip hang de 15-18 s (o false grip ring rows con pausa): continuidad de la línea de falso agarre hacia el gate de N10. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤝', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 10 — VERTICAL FUERTE
+    // ========================================================================
+
+    private static function level10(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): enamórate de las negativas. El HSPU se gana bajando lento y con la línea cerrada mucho antes de subir. No persigas la rep completa antes de tiempo: cada negativa perfecta es un ladrillo.',
+                'Fase 2 (Progresión): es la fase de los "primeros": primera HSPU completa, primer false grip pull-up, primer straddle BL. Celébralos (son logros de hito) y no los conviertas en volumen el mismo ciclo: un primer logro se consolida, no se machaca.',
+                'Fase 3 (Intensificación): los estáticos se testean frescos, nunca al final de la sesión. Si el false grip hang de 20 s tiembla al segundo intento, ya no cuenta: descansa más o déjalo para el próximo ciclo.',
+                'Fase 4 (Recuperación): no te saltes el re-test G4. El full back lever de N11 es la máxima exigencia de extensión de hombro del programa y llega cinco niveles después de su puerta: si el German hang ha involucionado, el ciclo corto de movilidad es obligatorio, no opcional.',
+                'Regla de sobrecarga entre ciclos: al repetir ciclo, la Fase 1 arranca con una progresión ligera respecto al ciclo anterior: +1 rep por serie, o −1 nivel de asistencia (banda, agarre, altura de apoyo), o +2 s por hold — solo una palanca a la vez y siempre con técnica limpia. Si ninguna es posible sin perder calidad, se mantiene la dosis: el estímulo se gana con otro ciclo, no con grinders.',
+                'Si fallas el test: (a) HSPU que no cierra los últimos centímetros: trabaja medias reps en la zona débil en lugar de más intentos completos. (b) HS libre que no pasa de 2-3 s: el fallo es de dedos, no de hombros — vuelve al salvado con dedos contra pared hasta que sea reflejo. (c) False grip hang bajo 20 s: casi nunca es espalda, es antebrazo/agarre — hangs cortos y frecuentes (8-12 s) + wrist curls en el Bloque 0, nunca intentos máximos a diario. (d) Press negativo que colapsa: retrocede al cajón y refuerza la compresión en pike; es un problema de compresión, no de hombros.',
+                'Seguridad N10: nivel press-dominante extremo — el contrapeso horizontal pesado de la sesión B no es negociable (6-10 series por microciclo). Molestia matinal en el tendón del bíceps >2/10 = congelar planche y pseudo planche un ciclo. Nunca HSPU con el cuello fatigado ni falso agarre sin el Bloque 0 completo.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Técnica y acumulación: negativas de HSPU, peldaños asistidos, holds cortos', 'note' => 'Pirueta de salida automática antes de soltar la pared', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Primeras reps completas de HSPU y false grip pull-up; holds se alargan', 'note' => 'Hitos: straddle/one-leg BL, L-sit 10-15 s, one-leg FL 8 s, false grip pull-up', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Marcas de test; pico de planche SIN pico de back lever (anti-coincidencia bíceps)', 'note' => 'Rotación de picos por ciclo en B: marca de MU (impares) / gate de false grip (pares)', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen e intensidad; movilidad protagonista', 'note' => 'Test de nivel + re-test G4 integrado en sesión D al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'HSPU en pared (rango completo)', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Pecho a pared, parallettes o colchoneta entre las manos; coronilla roza sin cargar peso, codos a ~45°, extensión completa', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Handstand libre', 'minimum' => 5, 'target' => 10, 'unit' => 'segundos', 'form' => 'Sin apoyo de pared, línea recta, corrección con dedos y hombros; solo cuentan holds con salida controlada (pirueta)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Muscle-up en barra', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Reps frescas y sin kip, transición continua; la segunda rep sale del impulso de la primera sin balanceo extra', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Pistol squat (cada pierna)', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Talón pegado, bajada controlada, arranque sin impulso ni balanceo del torso', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Pike press negativo (bajada 5 s)', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Piernas extendidas bajan en 5 s sin caída libre, cadera alta el máximo tiempo, codos ceden sincronizados', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Archer push-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones por lado', 'form' => 'Brazo asistente extendido solo equilibra, torso sin rotación, pecho cerca de la mano que trabaja', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'False grip hang (gate)', 'minimum' => 20, 'target' => 30, 'unit' => 'segundos', 'form' => 'Muñeca SOBRE la anilla, hombros activos, respiración nasal bajo tensión; se testea fresco, nunca en frío', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Re-test G4 — Extensión de hombro', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'German hang asistido (anillas, pies apoyados) 15 s sin dolor ni pinzamiento', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G4'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL10(): array
+    {
+        return [
+            [
+                'code' => 'v4-n10-primer-hspu-pared',
+                'name' => 'Primer HSPU en pared',
+                'description' => 'Primera flexión vertical completa en pared: rango completo con la línea cerrada y el cuello siempre libre de carga. La cima del empuje vertical del programa.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'HSPU en pared (rango completo)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-primer-handstand-libre',
+                'name' => 'PRIMER HANDSTAND LIBRE',
+                'description' => 'Primer handstand sin pared de 5 s con salida controlada: el equilibrio libre deja de ser un miedo y pasa a ser un skill. Celebración máxima.',
+                'category' => 'skill', 'icon' => '🙌', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Handstand libre',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n10-muscle-up-x3',
+                'name' => 'Muscle-up ×3',
+                'description' => 'Tres muscle-ups en barra en el test: el gesto conquistado en N9 convertido en marca consolidada.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Muscle-up en barra',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-pistol-x3-por-pierna',
+                'name' => 'Pistol ×3 por pierna',
+                'description' => 'Tres pistol squats con cada pierna: fuerza unilateral de pierna consolidada.',
+                'category' => 'skill', 'icon' => '🦵', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Pistol squat (cada pierna)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-primer-press-negativo',
+                'name' => 'Primer press negativo',
+                'description' => 'Pike press negativo de 5 s sin caída libre: la compresión y el empuje empiezan a hablar el mismo idioma camino del press to handstand.',
+                'category' => 'skill', 'icon' => '⬇️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Pike press negativo (bajada 5 s)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-archer-push-up',
+                'name' => 'Archer push-up',
+                'description' => 'Archer push-up completa en el test: torso sin rotación y el brazo asistente solo equilibrando. Puente hacia la one-arm.',
+                'category' => 'skill', 'icon' => '🏹', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Archer push-up',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-false-grip-hang-20s',
+                'name' => 'False grip hang 20 s',
+                'description' => 'Gate conservador de falso agarre superado: 20 s con la muñeca sobre la anilla. El billete de entrada al muscle-up en anillas de N11.',
+                'category' => 'skill', 'icon' => '🤝', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'False grip hang (gate)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-hombro-libre-retest-g4',
+                'name' => 'Hombro libre re-verificado (G4)',
+                'description' => 'Re-test de extensión de hombro superado: German hang asistido 15 s sin dolor, listo para la línea back lever que viene.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Re-test G4 — Extensión de hombro',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-shrimp-squat',
+                'name' => 'Shrimp squat',
+                'description' => 'Shrimp squat libre: la rodilla trasera roza el suelo sin golpearlo y el talón delantero pegado. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🦐', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-false-grip-pull-up',
+                'name' => 'False grip pull-up',
+                'description' => 'Primera dominada en anillas con falso agarre profundo: peldaño directo del muscle-up en anillas de N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤝', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-nordic-excentrica',
+                'name' => 'Nordic excéntrica',
+                'description' => 'Primera Nordic excéntrica completa de 5 s: el puente al Nordic curl de N13 empieza aquí. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-one-leg-fl-8s',
+                'name' => 'One-leg front lever 8 s',
+                'description' => 'One-leg front lever de 8 s: consolida el objetivo de N9 y deja la línea lista para el straddle FL de N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🛡️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-adv-tuck-planche-abierta',
+                'name' => 'Adv tuck planche 10-12 s / adv tuck con cadera abierta',
+                'description' => 'Adv tuck planche de 10-12 s o con la cadera abierta: continuidad de la línea planche y pre-peldaño del straddle de N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-straddle-one-leg-back-lever',
+                'name' => 'Straddle o one-leg back lever',
+                'description' => 'Segundo peldaño hacia el full back lever de N11: horizontal con una pierna o en straddle, sin pinzamiento anterior. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⚓', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-l-sit-10-15s',
+                'name' => 'L-sit 10-15 s',
+                'description' => 'L-sit de 10-15 s limpios: la línea de compresión que desembocará en el V-sit de N13. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🪑', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-archer-pull-up-x3-4',
+                'name' => 'Archer pull-up ×3-4/lado',
+                'description' => 'Archer pull-up de 3-4 reps por lado: la vía unilateral que alimenta el typewriter de N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🎯', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n10-primer-pancake',
+                'name' => 'Primer pancake con pecho al suelo',
+                'description' => 'Primer pancake con el pecho al suelo: hito opcional de movilidad straddle que pagará dividendos en N11. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🥞', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 11 — STRADDLE Y ANILLAS
+    // ========================================================================
+
+    private static function level11(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): las bandas y las puntas de pies no son trampa, son el programa. La straddle planche y el full BL se ganan acumulando segundos asistidos de calidad; quien se salta los peldaños §1.6 vuelve a ellos en dos ciclos, con el tendón quejándose.',
+                'Fase 2 (Progresión): fase de banderas: straddle con banda, MU asistido, full BL asistida. Registra cuánta banda usas (color/grosor): la progresión se mide en asistencia retirada, no solo en segundos.',
+                'Fase 3 (Intensificación): los cinco gates se testean frescos. En D, el MU en anillas va primero: un intento de MU tras el full BL es un intento muerto. Respeta los descansos de 3-4 min: en esta fase el descanso ES el entrenamiento.',
+                'Fase 4 (Recuperación): revisión personal de las seis puertas. Si alguna amarillea (molestia, rango perdido), añade el protocolo corto de esa puerta al siguiente ciclo: el mantenimiento religioso de este nivel es el seguro del HSPU libre y del press de N12.',
+                'Regla de sobrecarga entre ciclos: al repetir ciclo, la Fase 1 arranca con una progresión ligera respecto al ciclo anterior: +1 rep por serie, o −1 nivel de asistencia (banda, puntas de pies, altura de apoyo), o +2 s por hold — solo una palanca a la vez y siempre con técnica limpia. Si ninguna es posible sin perder calidad, se mantiene la dosis: el estímulo se gana con otro ciclo, no con grinders.',
+                'Si fallas el test: (a) MU en anillas que muere en la transición: falso agarre demasiado superficial — agarre más profundo y anillas más bajas para ensayar; más transiciones con pies en suelo, menos intentos completos. (b) Straddle planche bajo 5 s: retrocede un peldaño §1.6 (banda o puntas) o cierra la apertura; el mínimo bajo existe para que este estático no frene tu camino al MU y al full BL. (c) Straddle FL inestable: abre menos y revisa la retroversión pélvica; sin pelvis posterior no hay lever. (d) Full BL con pinzamiento: German hang en cada Bloque 0 y regresión a straddle BL un ciclo; el hombro anterior no negocia. (e) Typewriter asimétrico: baja el volumen y trabaja con banda; la asimetría aprendida aquí cuesta ciclos en la vía one-arm.',
+                'Seguridad N11: tres líneas de brazo recto conviven en este nivel — la alternancia pesada/ligera del mapa tendinoso es innegociable. Dolor matinal de bíceps >2/10 = congelar planche un ciclo. Nunca MU en anillas ni full BL sin el Bloque 0 completo (falso agarre y German hang incluidos).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Peldaños de entrada: straddle con puntas/banda, transición de MU con pies en suelo', 'note' => 'Una sola exposición pesada por línea de brazo recto por microciclo', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Bandas se retiran; primeras straddle libres y MU asistido completo', 'note' => 'Hitos: straddle planche y full BL con banda, HS libre 15 s, HSPU 8, ring dip ×10', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Marcas de test; picos de straddle planche y MU anillas SIN pico de back lever (anti-coincidencia bíceps)', 'note' => 'Los cinco gates se testean frescos; el MU en anillas va primero en D', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen e intensidad; movilidad straddle protagonista', 'note' => 'Test de nivel al final + revisión personal de puertas G1-G6 (mantenimiento, sin re-tests formales)', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Straddle front lever', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'Espalda paralela, brazos rectos, retroversión pélvica, apertura estable durante todo el hold; progresa por apertura, no por tiempo a la desesperada', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Straddle planche (gate conservador)', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'Cuerpo horizontal, brazos rectos sin hiperextensión, proyección máxima; un straddle cerrado sólido vale más que uno abierto temblando', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Muscle-up en anillas', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Falso agarre profundo (muñeca sobre la anilla), jalón explosivo, transición continua sin kip, fondo final con giro externo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Full back lever', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'Entrada por skin the cat/German hang, horizontal real sin pike ni arco lumbar, brazos rectos pegados al cuerpo, sin pinzamiento anterior', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Typewriter pull-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Barbilla sobre la barra durante todo el desplazamiento lateral, simetría estricta (mismo número a cada lado), sin balanceo', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL11(): array
+    {
+        return [
+            [
+                'code' => 'v4-n11-straddle-front-lever',
+                'name' => 'STRADDLE FRONT LEVER',
+                'description' => 'Straddle front lever de 5 s en el test: horizontal con apertura estable y retroversión innegociable. Primer estático straddle del programa.',
+                'category' => 'skill', 'icon' => '🛡️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Straddle front lever',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n11-straddle-planche',
+                'name' => 'STRADDLE PLANCHE',
+                'description' => 'Straddle planche de 5 s (gate conservador): la línea planche iniciada en N5 alcanza su primer estático de élite.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Straddle planche (gate conservador)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n11-muscle-up-anillas',
+                'name' => '¡MUSCLE-UP EN ANILLAS!',
+                'description' => 'Muscle-up en anillas sobre falso agarre profundo: la segunda cima de anillas del programa. Celebración máxima.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Muscle-up en anillas',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n11-full-back-lever',
+                'name' => 'FULL BACK LEVER',
+                'description' => 'Full back lever de 5 s: la máxima exigencia de extensión de hombro del programa, superada con la G4 vigilada.',
+                'category' => 'skill', 'icon' => '⚓', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Full back lever',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n11-primer-typewriter',
+                'name' => 'Primer typewriter',
+                'description' => 'Primer typewriter pull-up con simetría estricta: la barbilla viaja de lado a lado sin bajar de la barra.',
+                'category' => 'skill', 'icon' => '⌨️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Typewriter pull-up',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-straddle-planche-banda',
+                'name' => 'Straddle planche asistida con banda',
+                'description' => 'Straddle planche con banda a la cadera: el peldaño §1.6 donde se acumulan los segundos que luego serán libres. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-full-back-lever-banda',
+                'name' => 'Full back lever asistida con banda',
+                'description' => 'Full back lever con banda: la horizontal completa ensayada con red de seguridad antes del estático libre. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⚓', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-skater-cossack-carga',
+                'name' => 'Skater squat / cossack con carga',
+                'description' => 'Skater squat libre y cossack con carga: pierna unilateral y apertura straddle bajo carga, base del dragon pistol de N12. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⛸️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-handstand-libre-15s',
+                'name' => 'Handstand libre 15 s',
+                'description' => 'Handstand libre de 15 s: el prerequisito de equilibrio del HSPU libre de N12. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🙌', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-hspu-pared-8',
+                'name' => 'HSPU en pared 8 reps',
+                'description' => 'Ocho HSPU en pared: el prerequisito de fuerza del HSPU libre de N12. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-ring-dip-x10',
+                'name' => 'Ring dip ×10 / ring dip lastrado +10%',
+                'description' => 'Diez fondos en anillas con RTO o lastre del +10%: continuidad de la familia de fondos hacia el impossible dip. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⭕', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n11-one-arm-asistida-archer-x5',
+                'name' => 'One-arm push-up asistida / archer push-up ×5/lado',
+                'description' => 'One-arm push-up asistida con mano elevada o archer ×5 por lado: el peldaño previo del one-arm push-up de N12. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 12 — FULL LEVERS
+    // ========================================================================
+
+    private static function level12(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): no tengas prisa por quitar la straddle. Los hitos de 8-10 s de straddle planche y 8 s de straddle FL son el combustible del full: cada segundo de straddle limpio son centímetros de full futuro.',
+                'Fase 2 (Progresión): la banda es tu laboratorio. Registra grosor y punto de anclaje (cadera vs. pies) en cada sesión: la retirada de asistencia es la progresión real de esta fase, aunque los segundos parezcan iguales.',
+                'Fase 3 (Intensificación): los intentos de full van primeros, frescos y con 4 min de descanso. Un intento de full planche tras la sesión de empuje no mide tu planche: mide tu fatiga. Si la marca no llega, NO añadas intentos: añade ciclos.',
+                'Fase 4 (Recuperación): los re-tests G3/G5/G6 son el peaje del dragon pistol (G3) y del V-sit y el straddle press de N13 (G5/G6). Una dorsiflexión, una compresión o un pike deteriorados convierten el pistol y el press en ejercicios de rodilla y lumbar: si fallan, ciclo corto de movilidad sin repetir fuerza.',
+                'Regla de sobrecarga entre ciclos: al repetir ciclo, la Fase 1 arranca con una progresión ligera respecto al ciclo anterior: +1 rep por serie, o −1 nivel de asistencia (grosor de banda, roce de pared, apoyo de puntas), o +2 s por hold — solo una palanca a la vez y siempre con técnica limpia. Si ninguna es posible sin perder calidad, se mantiene la dosis: en este nivel el estímulo se gana con otro ciclo, no con grinders.',
+                'Si fallas el test: (a) Full planche que no pasa de 1-2 s: vuelve a straddle con holds más largos, no a más intentos de full; este estático escala mal con el peso corporal y el mínimo bajo (3 s) existe para no frenarte. (b) Full FL que se desploma: revisa retroversión y retracción; retrocede al straddle 8 s y al full con banda. (c) HSPU libre que no cierra: separa equilibrio y fuerza — HS libre 15 s y HSPU pared 8 deben estar vivos; entrénalos por separado un ciclo y reúnelos después. (d) Press que no despega: es compresión, no hombros — más V-sit asistido, compresión en pike y revisión honesta de G5/G6. (e) One-arm con rotación: baja un peldaño y gana reps limpias; la rotación aprendida se paga en hombro. (f) Dragon pistol que pierde el arco: más skater y más excéntrica de gemelo; el fallo suele ser tobillo/cadera, no cuádriceps.',
+                'Seguridad N12: es el nivel de mayor carga tendinosa absoluta del programa (bíceps en planche, hombro en FL, muñecas en HSPU libre). Máximo un frente estático pesado por sesión. Molestia matinal de bíceps >2/10 = congelar planche un ciclo (el resto sigue). Ningún estático pesado en frío. La descarga extra de muñeca no es opcional.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Consolidación straddle (hitos 8-10 s) + peldaños asistidos de full', 'note' => 'Máximo un frente estático pesado por sesión', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Full con banda como protagonista; HSPU libre asistido; press con asistencia', 'note' => 'Hitos: full planche y full FL con banda, Bulgarian dip / ring dip RTO', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Intentos de full FL y full planche frescos; marcas de test', 'note' => 'Rotación de pico por ciclo en D: HSPU libre (impares) / press (pares)', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen e intensidad; movilidad protagonista', 'note' => 'Test de nivel + re-tests G3, G5 y G6 integrados en sesión D al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Full front lever', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'Piernas juntas y extendidas, horizontal real (hombros-cadera-tobillos en línea), brazos rectos, retroversión pélvica; intentos frescos', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Full planche', 'minimum' => 3, 'target' => 5, 'unit' => 'segundos', 'form' => 'Piernas juntas, cuerpo horizontal (ni cadera alta ni caída), brazos rectos, proyección escapular máxima; cada intento cuenta, sin grinders', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'HSPU libre (sin pared)', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Estabiliza 1-2 s antes de bajar; rango completo sin apoyo de pared en ningún punto; la rep solo cuenta con equilibrio mantenido o salida en pirueta limpia', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Press to handstand (pike)', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Desde el suelo, sin salto ni impulso visible de piernas; la compresión hace el 80% del trabajo, cadera alta y brazos que empujan desde el primer grado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'One-arm push-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones por lado', 'form' => 'Pies abiertos, cero rotación de cadera/torso, rango completo, cuerpo en línea de cabeza a talones', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dragon pistol squat', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'La pierna libre dibuja el arco completo por detrás sin tocar el suelo, talón del apoyo pegado, subida controlada sin rebote', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Re-test G3 — Dorsiflexión de tobillo', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Knee-to-wall ≥10 cm sin despegar el talón, simetría <2 cm entre lados', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G3'],
+                        ['name' => 'Re-test G5 — Compresión de cadera', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Sentado, piernas extendidas y juntas despegadas 10 s, manos solo apoyo ligero, lumbar neutra', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G5'],
+                        ['name' => 'Re-test G6 — Pike / isquiosurales', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'De pie, palmas completas al suelo con piernas extendidas; alternativa sentado: pecho a muslos', 'type' => TestItemType::ReTest->value, 'gateCode' => 'G6'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL12(): array
+    {
+        return [
+            [
+                'code' => 'v4-n12-full-front-lever',
+                'name' => '¡FULL FRONT LEVER!',
+                'description' => 'Full front lever de 5 s con las piernas juntas: una de las dos cimas estáticas del programa. Años de línea FL condensados en un hold: celebración máxima.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Full front lever',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n12-full-planche',
+                'name' => '¡FULL PLANCHE!',
+                'description' => 'Full planche de 3 s: la cima de la línea planche y el estático más exigente para el bíceps del programa. Celebración máxima.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Full planche',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n12-hspu-libre',
+                'name' => 'HSPU LIBRE',
+                'description' => 'HSPU sin pared: la fuerza del empuje vertical y el equilibrio libre unidos en un solo gesto. El skill que define el nivel.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'HSPU libre (sin pared)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n12-press-to-handstand',
+                'name' => 'PRESS TO HANDSTAND',
+                'description' => 'Press to handstand en pike: subir al pino desde el suelo sin impulso, pura compresión y hombros.',
+                'category' => 'skill', 'icon' => '🚀', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Press to handstand (pike)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n12-one-arm-push-up',
+                'name' => 'ONE-ARM PUSH-UP',
+                'description' => 'One-arm push-up completa por lado con cero rotación: la cima del empuje horizontal unilateral.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'One-arm push-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n12-dragon-pistol',
+                'name' => 'Dragon pistol',
+                'description' => 'Dragon pistol squat: la pierna libre dibuja el arco completo sin tocar el suelo. Fuerza y movilidad de pierna en un solo gesto.',
+                'category' => 'skill', 'icon' => '🐉', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Dragon pistol squat',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-tobillo-retest-g3',
+                'name' => 'Tobillo re-verificado (G3)',
+                'description' => 'Re-test de dorsiflexión superado: knee-to-wall ≥10 cm con simetría, seguro del dragon pistol.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Re-test G3 — Dorsiflexión de tobillo',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-compresion-retest-g5',
+                'name' => 'Compresión re-verificada (G5)',
+                'description' => 'Re-test de compresión superado: piernas extendidas despegadas 10 s, listo para el V-sit de N13.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Re-test G5 — Compresión de cadera',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-pike-retest-g6',
+                'name' => 'Pike re-verificado (G6)',
+                'description' => 'Re-test de pike superado: palmas completas al suelo, seguro del press y del straddle press de N13.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Re-test G6 — Pike / isquiosurales',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-straddle-planche-8-10s',
+                'name' => 'Straddle planche 8-10 s',
+                'description' => 'Straddle planche de 8-10 s consolidado: el combustible del full, peldaño §1.6 previo a los intentos libres. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-full-planche-banda',
+                'name' => 'Full planche asistida con banda',
+                'description' => 'Full planche con banda a la cadera y piernas juntas: el laboratorio donde se gana el estático libre. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🎗️', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-straddle-fl-8s',
+                'name' => 'Straddle front lever 8 s',
+                'description' => 'Straddle front lever de 8 s: la consolidación que precede siempre al full FL con banda. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🛡️', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-full-fl-banda',
+                'name' => 'Full front lever asistida con banda',
+                'description' => 'Full front lever con banda: la horizontal completa con piernas juntas, ensayada antes del estático libre. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⚓', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-v-sit-asistido',
+                'name' => 'V-sit asistido',
+                'description' => 'V-sit asistido (una mano, una pierna o manos apoyadas): peldaño previo del V-sit de N13. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🪑', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-bandera-vertical',
+                'name' => 'Bandera vertical / support press laterales',
+                'description' => 'Bandera vertical con apoyo o support press laterales a ambos lados: primer peldaño del human flag de N13. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '🚩', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n12-bulgarian-dip-rto',
+                'name' => 'Bulgarian dip / ring dip profundo RTO',
+                'description' => 'Fondo profundo en anillas con RTO completo o Bulgarian dip: continuidad hacia el impossible dip de N15. Se desbloquea en sesión.',
+                'category' => 'skill', 'icon' => '⭕', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
     // NOTAS TÉCNICAS POR EJERCICIO (fichas del documento de detalle)
     // ========================================================================
 
@@ -903,6 +1878,186 @@ class CalisteniaMasterContentV4
         'Fingertip Push Up' => 'Flexión sobre las yemas (de rodillas al inicio); escalón de fuerza de muñeca del nivel; dosificación conservadora, nunca al fallo.',
     ];
 
+    /** Notas de los ejercicios principales de N7. */
+    private const EXERCISE_NOTES_L7 = [
+        'Tuck Planche Toe Support' => 'Brazos rectos, proyección máxima, rodillas al pecho: las puntas solo equilibran, no empujan. Si los dedos se clavan, hay demasiado peso atrás.',
+        'Tuck Planche' => 'Gate conservador §1.6: cada intento corto y perfecto vale más que uno largo y roto; meta 5 s limpios. Molestia de bíceps distal = peldaño atrás (banda o puntas).',
+        'Band Assisted Tuck Planche' => 'Trabajo técnico ligero con banda generosa y forma perfecta (la pesada va en A). En deload: mantenimiento sin fatiga.',
+        'Advanced Tuck Front Lever' => 'Espalda paralela al suelo en tuck, retroversión pélvica constante, brazos rectos; si la espalda cae, se recorta el hold, no se "aguanta feo". En F3 consolida: el pico de bíceps es de la planche.',
+        'Tuck Front Lever' => 'Regresión activa de deload: cero fatiga, técnica perfecta.',
+        'L-Sit' => 'Brazos rectos, hombros deprimidos, piernas extendidas y juntas; intentos completos aunque sean 1-2 s al inicio de cada serie. Si falla, series mixtas L-sit + tuck avanzado.',
+        'L-Sit One Leg' => 'Peldaño hacia el L-sit: una pierna extendida o alternas; empuja el suelo lejos y deprime los hombros.',
+        'Tuck L-Sit' => 'Peldaño de entrada (avanzado): rodillas al pecho, una pierna extendida si se puede; en deload es la versión cómoda del L-sit.',
+        'Skin The Cat' => 'Siempre caliente, anillas a altura que permita tocar el suelo con los pies; ida y vuelta controladas = 1 rep; nunca forzar el punto de máxima extensión.',
+        'German Hang' => 'Libre y escalonado: progresión de segundos (10→20 s), respiración continua, hombros relajados; pinzamiento anterior = volver al asistido.',
+        'Clap Push Up' => 'Primero, en fresco: el trabajo balístico y su recepción se entrenan sin fatiga de hombro. Despegue claro, palmada delante del pecho, aterrizaje con codos amortiguando.',
+        'Explosive Push Up' => 'Peldaño del clap push-up: flexión explosiva con despegue de manos; cuerpo rígido durante el vuelo.',
+        'Elevated Pike Push Up' => 'Pies en cajón, cadera alta, cabeza entre las manos (colchoneta o parallettes); codos a ~45°. Sube la altura del cajón solo con 10 reps limpias. Hito del nivel camino al HSPU.',
+        'Ring Push Up' => 'Turnout estricto arriba, cuerpo en línea, pecho a la altura de las anillas; meta de test 8-12.',
+        'Pseudo Planche Push Up' => 'Manos junto a la cadera, hombros por delante de las manos; aumenta el lean antes que las reps.',
+        'Box Pistol Squat' => 'Baja controlado 2-3 s hasta tocar el cajón (nunca desplomarte), sube sin impulso con el talón pegado. La altura del cajón baja ciclo a ciclo: 5/pierna en el cajón alto = hito.',
+        'Single Leg Romanian Deadlift' => 'Hito del nivel: cadera cuadrada, rango sin redondear la lumbar; la carga (mochila) sube +2-4 kg por fase.',
+        'Hanging Leg Raise' => 'Colgado activo, piernas juntas y extendidas hasta la horizontal, bajada controlada de 2-3 s sin balanceo: camino de compresión hacia el L-sit.',
+        'Jefferson Curl' => 'Movilidad con carga ligera (mochila 2-5 kg): enrolla vértebra a vértebra, lento y controlado, sin rebote. Pista de la puerta G6.',
+        'Seated Pike Stretch' => 'Con los pies en cajón (pista G6); alarga desde la cadera, tensión en isquios, no en lumbar.',
+        'Strict Pull Up' => 'Rango completo, sin balanceo: mantén la base de 5+.',
+        'Ring Row - Elevated Feet' => 'Contrapeso horizontal del volumen de apoyos; eleva más los pies o añade mochila para progresar.',
+        'False Grip Ring Row' => 'Mantenimiento de la línea de falso agarre: muñeca sobre la anilla, pecho a las anillas.',
+        'False Grip Support Hold' => 'Mantenimiento del falso agarre en apoyo; baja antes de que el agarre se degrade.',
+        'Chest to Wall Handstand' => 'Mantenimiento de la línea vertical (testada en N5): cuerpo en línea, respiración continua.',
+    ];
+
+    /** Notas de los ejercicios principales de N8. */
+    private const EXERCISE_NOTES_L8 = [
+        'Advanced Tuck Planche' => 'Desde la tuck planche de N7, abre la cadera gradualmente (banda o puntas, cada vez menos asistencia). Gate conservador §1.6: 5 s limpios; progresa por apertura y asistencia, nunca por intentos máximos. En F3 rota el pico por ciclo (impares).',
+        'Ring Dip' => 'Protagonista F1-F2, pico de volumen en F2 y MANTIENE en F3 (§1.7: nunca intensifica junto al SBD). Profundidad: hombro a la altura del codo, nunca más abajo; turnout arriba.',
+        'Straight Bar Dips' => 'Solo técnico en F1-F2 con profundidad limitada (hombro al nivel del codo); pica en F3 en los ciclos pares (rotación modelo N14). Cuerpo detrás de la barra, transición de peso hacia delante arriba: puente mecánico al muscle-up.',
+        'Chest to Bar Pull Up' => 'Pecho a la barra de verdad (no el cuello), sin pataleo; pocas reps, máxima velocidad, descanso largo. Si la velocidad cae, termina la serie. Pico en F3: meta 3-5.',
+        'Chest to Bar Practice' => 'Dominadas explosivas (peldaño C2B a media altura): velocidad máxima de salida y bajada controlada; si no llega al pecho, máxima altura posible.',
+        'Archer Pull Up' => 'El brazo recto guía pero no empuja; alterna lados y empieza por el débil. Si sale torcido, más banda y menos ego. Meta de test: 2/lado.',
+        'Weighted Ring Row' => 'Filas pesadas con mochila (o archer rows): contrapeso horizontal pesado permanente del nivel press-dominante (6-10 series por microciclo).',
+        'Ring Row - Elevated Feet' => 'Segundo bloque de tracción horizontal; pecho a las anillas.',
+        'False Grip Hang' => 'Camino al hito 10-15 s (F2): muñeca sobre la anilla, hombros activos, nunca en frío. Molestia en la cara anterior de la muñeca = reduce volumen ese ciclo.',
+        'False Grip Ring Row' => 'Pecho a las anillas manteniendo el falso agarre profundo.',
+        'Explosive Dips' => 'Hito del nivel: subida balística, bajada controlada (despegue de manos opcional); series cortas con descanso suficiente.',
+        'Tuck Back Lever' => 'Entrada siempre por skin the cat (usa la puerta G4); brazos rectos pegados al cuerpo, rodillas al pecho, cero pinzamiento anterior. Asistencia decreciente (banda o pies); en F3 consolida 8-10 s sin máximos.',
+        'Box Pistol Squat' => 'Último peldaño antes del pistol libre: el cajón bajo casi no quita rango; toca sin desplomarte, talón pegado. Cajón a su altura mínima en F3.',
+        'Pistol Squat Negative' => 'Hito del nivel (junto al cajón bajo): bajada lenta de 5 s hasta el fondo, talón pegado y rodilla alineada; sube con ayuda si hace falta.',
+        'Eccentric Calf Raise' => 'Nuevo en N8: bajada de 3 s por debajo del nivel del escalón, una pierna; sube con las dos. Acondiciona el tobillo para la dorsiflexión extrema unilateral del pistol.',
+        'Dragon Flag' => 'Versión tuck (rodillas al pecho): cuerpo rígido apoyado solo en hombros/cuello alto, bajada sin colapsar la lumbar. Primer peldaño del dragon flag de N9.',
+        'Dragon Flag Negative' => 'Bajada de 3-4 s desde la vertical con el cuerpo extendido; apoyo en hombros, nunca en el cuello. Si la lumbar se arquea, vuelve al tuck.',
+        'Advanced Tuck Front Lever' => 'Mantenimiento de la línea FL (hito 10-12 s en F3): consolida el objetivo de N7 y la deja viva para el one-leg de N9.',
+        'Chest to Wall Handstand' => 'Camino al hito 30-40 s (F2): consolida el objetivo de N5 y mantiene viva la línea vertical.',
+        'German Hang' => 'Mantenimiento de la línea de extensión (base del back lever): 10-20 s según fase.',
+        'Frog Stretch' => 'Apertura straddle progresiva: 30-40 s con respiración profunda, sin rebotes.',
+        'Straddle Fold' => 'Plegaria sentado en straddle: la flexión nace de la cadera, rodillas y puntas al techo.',
+        'Adductor Rockback' => 'Movilidad activa de aductores: balanceo lento atrás con la pierna extendida al lado, sin rebotes.',
+    ];
+
+    /** Notas de los ejercicios principales de N9. */
+    private const EXERCISE_NOTES_L9 = [
+        'Bar Muscle Up' => 'Intentos completos: series de 1 rep, frescos y espaciados (3-4 min). Si el pecho no supera la barra, vuelve a C2B alto esa serie; 3 fallos seguidos = cerrar con transiciones. Meta: 1 rep limpia (gate) → 2 (objetivo).',
+        'Assisted Muscle Up Transition' => 'La pieza central del MU: banda sobre la barra (quita el 20-30%) o barra baja con salto controlado; codos de abajo a arriba, lento y técnico; practica también la bajada. Reduce la asistencia entre ciclos.',
+        'Muscle Up Negative' => 'Desde el apoyo sobre la barra, baja 3-4 s por el camino del MU: la transición también se aprende de vuelta.',
+        'Chest to Bar Pull Up' => 'C2B alto: pecho sobre la barra, cadera a la barra; el MU nace de la altura, no solo del contacto.',
+        'Straight Bar Dips' => 'Desde N9 se abre el rango completo (hombro por debajo del codo con control). En F3 MANTIENE: el pico de codo es del MU (§1.7).',
+        'One Leg Front Lever Hold' => 'Desde el adv tuck, extiende una pierna (alterna cada serie): espalda paralela, retroversión pélvica, la pierna extendida empuja la línea. Asegura el gate de 5 s sin buscar máximos.',
+        'Advanced Tuck Back Lever' => 'Abre la cadera gradualmente desde el tuck BL; entrada por skin the cat; hito 5-8 s en F2, luego se conserva (anti-coincidencia con el MU). Pinzamiento = German hang ese ciclo.',
+        'HSPU Negative' => 'Parallettes o colchoneta entre las manos: el cuello no toca el suelo jamás. Bajada uniforme (parcial 3-4 s → completa 4-6 s), codos a ~45°. Hito en F2; técnica consolidada en F3.',
+        'Advanced Tuck Planche' => 'Modo mantenimiento-consolidación camino al hito de 10 s (F2); la línea planche se mantiene viva sin exigirla en test.',
+        'Elevated Pike Push Up' => 'Cajón alto: base del HSPU de N10.',
+        'Ring Push Up' => 'Con pausa abajo: mantenimiento de anillas.',
+        'Pistol Squat' => 'Pico del nivel junto al MU: al inicio de la ronda, fresco. Meta 1/pierna (gate) → 3 (objetivo). Talón pegado, bajada controlada, arranque sin impulso.',
+        'Assisted Pistol Squat' => 'Cajón muy bajo o apoyo de un dedo: la G3 está superada, se acabó el margen; equilibrio, no fuerza bruta.',
+        'Box Pistol Squat' => 'Regresión de deload al cajón bajo.',
+        'Bulgarian Split Squat' => 'Accesorio de fuerza unilateral para el arranque del pistol (alternativa: step-up alto).',
+        'Dragon Flag' => 'Completo: cuerpo en línea apoyado en hombros (nunca en el cuello), baja hasta rozar la horizontal sin tocar el banco. Primeras reps en F2, pico en F3 (meta 3-5).',
+        'Dragon Flag Negative' => 'Excéntrico largo de 4-5 s: peldaño previo a las reps completas; dolor lumbar = regresa aquí.',
+        'False Grip Hang' => 'Camino al hito 15-18 s (F2): continuidad de la línea hacia el gate de 20 s de N10.',
+        'False Grip Ring Row' => 'Con pausa de 2 s con el pecho en las anillas (hito del nivel en camino).',
+        'Strict Pull Up' => 'Mantenimiento de la dominada estricta (§1.3): la base que el lastre de niveles posteriores necesita.',
+        'Weighted Ring Row' => 'Contrapeso horizontal de la sesión de tracción.',
+        'German Hang' => 'Mantenimiento de la línea de extensión.',
+        'Standing Pike Stretch' => 'Puerta G6: de pie, piernas extendidas, palmas completas al suelo con pausa; ensáyala tal como se evaluará.',
+        'Seated Pike Stretch' => 'Alternativa de la puerta G6: pecho a muslos sentado con agarre de pies.',
+        'Jefferson Curl' => 'Pike intensificado con carga (5-8 kg en N9): lento y segmentario.',
+        'Cuban Rotation' => 'Nuevo desde N9 (era overhead): brazo en abducción de 90°, rota el antebrazo de abajo a arriba con banda o 1-3 kg; codo fijo a la altura del hombro. Es la póliza del trabajo overhead: nunca se recorta.',
+    ];
+
+    /** Notas de los ejercicios principales de N10. */
+    private const EXERCISE_NOTES_L10 = [
+        'Handstand Push Up' => 'HSPU en pared (test 3/5): parallettes o colchoneta entre las manos, la coronilla roza sin cargar peso, codos a ~45°, extensión completa. Primeras reps completas en F2; nunca con el cuello fatigado.',
+        'HSPU Negative' => 'Continuidad del peldaño de N9: en F1 es el trabajo pesado del empuje vertical, bajada uniforme con el cuello siempre libre de carga. Si los últimos centímetros se atrancan, trabaja medias reps en esa zona en lugar de más intentos completos.',
+        'Elevated Pike Push Up' => 'Base de fuerza del HSPU: cajón alto y rango completo; la altura sube solo con las reps limpias. En intensificación cede volumen al HSPU.',
+        'Advanced Tuck Planche' => 'Pico del nivel (hito 10-12 s en F3) con series recortadas por convivencia con el HSPU; opción de cadera abierta como pre-peldaño del straddle de N11. Molestia matinal de bíceps >2/10 = congelar planche un ciclo.',
+        'Pseudo Planche Push Up' => 'En F3 solo mantenimiento (anti-coincidencia con el pico de planche): la proyección manda sobre las reps.',
+        'Archer Push Up' => 'Test del nivel (3/5 por lado): el brazo asistente extendido solo equilibra, torso sin rotación, pecho cerca de la mano que trabaja. Puente hacia la one-arm de N12.',
+        'Bar Muscle Up' => 'De la conquista (N9) a la marca: 3/5 reps frescas y sin kip, la segunda rep sale del impulso limpio de la primera. Rotación de picos por ciclo en F3: impares marca de MU, pares gate de falso agarre.',
+        'Archer Pull Up' => 'Camino del hito 3-4/lado (F2): la vía unilateral que alimentará el typewriter de N11. El brazo recto guía pero no empuja; empieza por el lado débil.',
+        'Weighted Ring Row' => 'Contrapeso horizontal pesado permanente (6-10 series por microciclo): no negociable en un nivel press-dominante.',
+        'Archer Ring Row' => 'Segunda pieza del contrapeso horizontal: un brazo tira y el otro guía extendido, cuerpo en línea sin rotar.',
+        'Strict Pull Up' => 'Mantenimiento de la base de dominada (§1.3): reps limpias y sin balanceo.',
+        'False Grip Hang' => 'Gate del nivel: 20 s (objetivo 30) con la muñeca SOBRE la anilla, hombros activos y respiración nasal; se testea fresco en los ciclos pares de F3. Si falla, casi nunca es espalda: hangs cortos y frecuentes + wrist curls, nunca máximos a diario.',
+        'One Leg Front Lever Hold' => 'Camino del hito 8 s (F2): consolida el gate de N9 y deja la línea lista para el straddle FL de N11. Retroversión pélvica constante; la pierna extendida empuja la línea.',
+        'Pistol Squat' => 'Marca de test 5/pierna en F3 (pico del circuito C): talón pegado, bajada controlada, arranque sin impulso.',
+        'Shrimp Squat' => 'Nuevo en N10 (logro de hito): la rodilla trasera roza el suelo sin golpearlo y el talón delantero pegado; primero asistida, libre al final del ciclo.',
+        'Nordic Curl Negative' => 'Introducción conservadora: 4-6 excéntricas totales por sesión en F1, la carga la marca el rango; en F3, bajada de 5 s a rango completo (logro de hito). Puente al Nordic curl de N13.',
+        'Dragon Flag' => 'Continuidad del anti-extensión: 5-8 reps en el circuito, cuerpo en línea apoyado en hombros (nunca en el cuello), lumbar sellada.',
+        'Seated Leg Raise' => 'Mantenimiento de la compresión (G5): 15-25 s en el circuito, lumbar neutra.',
+        'Handstand Bail Out' => 'La pirueta de salida a ambos lados, automática e innegociable antes de soltar la pared: se entrena hasta que es reflejo, no habilidad.',
+        'Freestanding Handstand' => 'Test del nivel (5/10 s): línea recta, corrección con dedos y hombros; solo cuentan holds con salida controlada. Si no pasa de 2-3 s, el fallo es de dedos: vuelve al salvado con dedos contra pared.',
+        'Pike Press Negative' => 'Test del nivel (3/5 reps, bajada 5 s): cadera alta el máximo tiempo, codos ceden sincronizados, sin caída libre. Si colapsa, es compresión, no hombros: cajón y pike.',
+        'Straddle Back Lever' => 'Peldaño del full BL de N11: entrada siempre por skin the cat, horizontal con apertura, cero pinzamiento anterior. En F3 consolida 6-8 s sin récord (anti-coincidencia con el pico de planche).',
+        'False Grip Pull Up' => 'Hito del nivel en F2 (primera dominada en falso agarre): con banda o pies en cajón al inicio; peldaño directo del muscle-up en anillas de N11.',
+        'L-Sit' => 'Camino del hito 10-15 s: brazos rectos y hombros deprimidos; la línea de compresión que desembocará en el V-sit de N13.',
+        'German Hang' => 'Re-test G4 integrado en el deload: 15 s asistido sin dolor ni pinzamiento; si falla, ciclo corto de movilidad sin repetir fuerza — el full BL de N11 lo exige.',
+        'Single Leg Romanian Deadlift' => 'Mantenimiento de la bisagra unilateral en el bloque de cadena posterior: cadera cuadrada, espalda neutra.',
+        'Planche Lean' => 'Sustituto de la adv tuck en deload: proyección máxima sin fatiga del estático.',
+    ];
+
+    /** Notas de los ejercicios principales de N11. */
+    private const EXERCISE_NOTES_L11 = [
+        'Straddle Planche' => 'Gate conservador §1.6 (test 5/8 s): escalera puntas → banda → cerrado → abierto; la banda se reduce antes de aumentar la apertura. Única exposición pesada de planche del microciclo (sesión A); dolor matinal de bíceps = congelar un ciclo.',
+        'Straddle Front Lever Hold' => 'Test 5/8 s: desde el one-leg de N10, apertura mínima al inicio y progresiva por ciclos, retroversión pélvica activa. Si el hold se desploma, cierra 5 cm la apertura antes que añadir intentos. Única pesada de FL (sesión B).',
+        'Ring Muscle Up' => 'La cima del nivel (test 1/2): falso agarre profundo revisado en cada serie, jalón explosivo, transición continua sin kip, fondo con giro externo. Siempre fresco y primero en D: un intento tras el full BL es un intento muerto.',
+        'Ring Muscle Up Transition' => 'Drill de patrón con anillas bajas y pies en el suelo: codos atrás-arriba y pecho sobre las manos con ayuda mínima de piernas; 4×2-3 perfectas, no es trabajo de fatiga. Reduce la ayuda de pies ciclo a ciclo.',
+        'Back Lever Hold' => 'Full back lever (test 5/8 s): entrada siempre por skin the cat/German hang, horizontal sin pike ni arco lumbar. Única pesada de BL del microciclo; pinzamiento anterior = German hang y regresión a straddle un ciclo.',
+        'Typewriter Pull Up' => 'Test 3/5: barbilla sobre la barra durante todo el viaje lateral, simetría estricta (el volumen lo marca el lado débil) y lado de inicio alterno por serie. Asimetría = banda, no reps feas.',
+        'Skater Squat' => 'Hito del nivel: la pierna libre viaja atrás hasta rozar el suelo con la rodilla (cojín en las primeras exposiciones), talón delantero pegado, sin rebote. Base del dragon pistol de N12.',
+        'Cossack Squat with Load' => 'Cossack con mochila/mancuerna: apertura straddle bajo carga, la otra mitad del hito de pierna del nivel. La carga solo sube si la técnica es idéntica a la versión libre.',
+        'One Arm Push Up' => 'Versión asistida con la mano en superficie elevada (peldaño del test de N12): cuerpo en tabla, cero rotación de cadera; la progresión es bajar la superficie, no la velocidad.',
+        'Handstand Push Up' => 'Camino del hito 8 reps en pared (prerequisito de fuerza del HSPU libre de N12): rango completo y técnica limpia; en deload, técnica sin fatiga.',
+        'Freestanding Handstand' => 'Camino del hito 15 s (prerequisito de equilibrio del HSPU libre de N12): salida en pirueta siempre disponible; en F4 es juego de equilibrio.',
+        'Ring Dip' => 'Hito ×10 o lastre +10% ×5-6: profundidad hombro-codo con control y giro externo completo arriba en cada rep. Continuidad hacia el impossible dip de N15.',
+        'False Grip Hang' => 'Consolidación de la profundidad del agarre (15-20 s): ligero-moderado en B — el pico de falso agarre vive en D con el MU. En F3, mantenimiento ligero del gate de N10.',
+        'False Grip Ring Row' => 'Filas con falso agarre y pecho a las anillas: profundidad de agarre más retracción, siempre ligero-moderadas.',
+        'Archer Ring Row' => 'Contrapeso horizontal 1/2 del nivel press-dominante (6-10 series por microciclo).',
+        'Weighted Ring Row' => 'Contrapeso horizontal 2/2: filas con pies elevados y mochila.',
+        'Chest to Bar Pull Up' => 'Dominada explosiva opcional (§5): potencia que alimenta el typewriter y el MU; series cortas a máxima velocidad, si la velocidad cae, termina la serie.',
+        'Pistol Squat' => 'Mantenimiento en el circuito (2-3/pierna): la fuerza de pierna ya testada no se enfría.',
+        'Nordic Curl Negative' => 'Continuidad N9-N11: bajada de 4-5 s hasta rango casi completo en F2 y completo en F3.',
+        'Dragon Flag' => 'En circuito, 5-8 reps: cuerpo en línea apoyado en hombros, nunca en el cuello.',
+        'L-Sit' => '10-15 s limpios; opción §5: ring L-sit como hito. Empuja el suelo lejos y deprime los hombros.',
+        'Advanced Tuck Planche' => 'Regresión ligera de la línea en deload: sin straddle esta fase, técnica perfecta sin fatiga.',
+        'One Leg Front Lever Hold' => 'Regresión ligera de la línea FL en deload.',
+        'Pseudo Planche Push Up' => 'Mantenimiento dinámico ligero de la proyección.',
+        'Single Leg Romanian Deadlift' => 'Bloque de cadena posterior: bisagra unilateral con cadera cuadrada.',
+        'Straddle Fold' => 'Foco nuevo del nivel (§1.8): straddle bajo tensión — pancake activo con elevaciones alternas de piernas; la apertura ya no es solo movilidad, es posición de trabajo.',
+        'German Hang' => 'Mantenimiento crítico de la G4 (full BL este nivel): asistido en el Bloque 0 de B y D, siempre antes del back lever.',
+    ];
+
+    /** Notas de los ejercicios principales de N12. */
+    private const EXERCISE_NOTES_L12 = [
+        'Planche' => 'Full planche, cima de la línea (test 3/5 s): intentos frescos y primeros de la sesión con 4 min de descanso; cada intento cuenta, sin grinders. Si no pasa de 1-2 s, la respuesta es más straddle de calidad, no más full. Molestia matinal de bíceps >2/10 = ciclo congelado.',
+        'Full Front Lever Hold' => 'Cima estática (test 5/8 s): la primera serie es un hold libre al máximo limpio con objetivo ≥5 s, el resto acumula con banda; retroversión y retracción innegociables. Si se desploma, vuelve al straddle de 8 s.',
+        'Straddle Planche' => 'Consolidación del hito 8-10 s: el combustible del full; precede siempre al primer full con banda y no se abandona aunque el full llegue.',
+        'Straddle Front Lever Hold' => 'Consolidación del hito 8 s: la base que precede siempre al full FL con banda.',
+        'Freestanding Handstand Push Up' => 'HSPU libre (test 1/3): solo con los dos prerequisitos vivos (HS libre 15 s + HSPU pared 8); estabiliza 1-2 s antes de bajar, la rep cuenta con equilibrio mantenido o pirueta limpia. Rotación de pico por ciclo en D: impares marca de HSPU, pares contenido.',
+        'Handstand Push Up' => 'Peldaño con despegues (un pie / roce mínimo de pared): la fuerza de N11 empieza a unirse al equilibrio; el roce es la red de seguridad, no el motor.',
+        'Pike Press to Handstand' => 'Press en pike (test 1/2): la compresión hace el 80% del trabajo, cadera alta y brazos que empujan desde el primer grado; se apoya en las G5/G6 re-verificadas. Rotación de pico: pares marca de press, impares contenido. Si no despega, más V-sit y compresión, no más intentos.',
+        'Pike Press Negative' => 'Mantenimiento de la línea press (bajada 4-5 s): la base nunca se pierde.',
+        'Freestanding Handstand' => 'Mantenimiento del hito de N11 y recalibración de equilibrio entre intentos de HSPU; en F4, juego de equilibrio sin HSPU.',
+        'One Arm Push Up' => 'Test 3/5 por lado: pies abiertos, cero rotación de cadera/torso, rango completo. Una rep limpia vale más que cinco con rotación; si rota, vuelve a la asistida en superficie baja.',
+        'Dragon Pistol Squat' => 'Test 3/5: la pierna libre dibuja el arco completo por detrás sin tocar el suelo, talón del apoyo pegado. Progresión asistida → excéntrica libre → completa; exige la G3 viva y el acondicionamiento de gemelo de las sesiones C.',
+        'Pistol Squat' => 'Mantenimiento en circuito (2-3/pierna).',
+        'V-Sit Hold' => 'Versión asistida (manos apoyadas / una pierna), hito del nivel y peldaño del V-sit de N13: pecho alto, lumbar neutra, las manos asisten, no empujan. Se apoya en la G5.',
+        'Vertical Flag' => 'Hito del nivel (10-20 s, ambos lados desde la primera sesión): el brazo inferior empuja y el superior tracciona, línea lateral estricta; primer peldaño del human flag de N13. Progresa por tiempo, no por ángulo.',
+        'Bulgarian Ring Dip' => 'Hito del nivel (alternativa al ring dip profundo RTO): rango máximo SIN dolor anterior, giro externo completo arriba, sin rebote en el fondo; el rango se gana en ciclos, no en sesiones. Camino al impossible dip de N15.',
+        'Ring Dip' => 'Fondo profundo RTO como variante del hito de fondos; en deload, rango cómodo sin fatiga.',
+        'Nordic Curl Negative' => 'Excéntrica completa con asistencia mínima al final (tirón con banda en F2): puente al Nordic curl de N13.',
+        'Dragon Flag' => 'Mantenimiento en circuito (5-8 reps).',
+        'Archer Ring Row' => 'Contrapeso horizontal 1/2: pesado permanente (6-10 series por microciclo).',
+        'Weighted Ring Row' => 'Contrapeso horizontal 2/2: filas lastradas con pies elevados.',
+        'Strict Pull Up' => 'Mantenimiento (§1.3): la base viva que el lastre de N13 necesita.',
+        'Typewriter Pull Up' => 'Mantenimiento ligero: la vía unilateral no se enfría antes de N13.',
+        'Scapular Pull Up' => 'Salud escapular de la línea FL: brazos rectos, solo se mueven las escápulas.',
+        'Single Leg Romanian Deadlift' => 'Bloque de cadena posterior: bisagra unilateral con cadera cuadrada.',
+        'Eccentric Calf Raise' => 'Acondicionamiento del tobillo para la dorsiflexión extrema bajo carga del dragon pistol: nunca se recorta en las sesiones C.',
+        'Knee-to-Wall Rocks' => 'Re-test G3 en el test del nivel: ≥10 cm sin despegar el talón y simetría <2 cm; ensáyalo tal como se evaluará.',
+        'Seated Leg Raise' => 'Re-test G5 en el test del nivel: piernas extendidas y juntas despegadas 10 s, manos solo apoyo ligero, lumbar neutra.',
+        'Standing Pike Stretch' => 'Re-test G6 en el test del nivel: palmas completas al suelo con piernas extendidas (o pecho a muslos sentado).',
+    ];
+
     /** Notas genéricas de movilidad y descarga (comunes a todos los niveles). */
     private const GENERIC_EXERCISE_NOTES = [
         'Active March' => 'Marcha suave elevando rodillas: activación general.',
@@ -929,5 +2084,27 @@ class CalisteniaMasterContentV4
         'Lat Stretch' => 'Alarga el costado sin rotar el tronco.',
         'Diaphragmatic Breathing' => 'Inhala por la nariz expandiendo costillas a los lados y atrás; exhala por la boca dejándolas caer.',
         "Child's Pose" => 'Respiración lateral hacia la espalda baja; relaja hombros y frente.',
+        'Frog Stretch' => 'Rodillas abiertas y pies juntos, cadera atrás con respiración profunda; apertura progresiva sin rebotes.',
+        'Straddle Fold' => 'Sentado en straddle, pliega desde la cadera con la espalda larga; rodillas y puntas al techo.',
+        'Adductor Rockback' => 'Pierna extendida al lado, cadera atrás con control; movilidad activa sin rebotes.',
+        'Standing Pike Stretch' => 'Piernas extendidas, pliega desde la cadera buscando las palmas completas al suelo; sin rebotes.',
+        'Jefferson Curl' => 'Enrolla vértebra a vértebra con carga ligera, lento y sin rebote; movilidad con carga, no fuerza.',
+        'Eccentric Calf Raise' => 'Bajada de 3 s por debajo del escalón sobre una pierna; sube con las dos. Sin rebote en el fondo.',
+        'Hanging Leg Raise' => 'Colgado activo, piernas juntas hasta la horizontal, bajada controlada sin balanceo.',
+        'Air Squat' => 'Talón pegado; profundidad cómoda; rodillas siguen la punta de los pies.',
+        'Jumping Jacks' => 'Pulsos ligeros de activación general: ritmo suave y aterrizaje silencioso.',
+        'Back-of-Hand Stretch' => 'Dorso de la mano en el suelo, dedos hacia ti; estiramiento leve-moderado de 20-30 s, nunca dolor.',
+        'Wrist Curl' => 'Antebrazo apoyado, palma arriba, carga muy ligera; rango completo sin rebote.',
+        'Reverse Wrist Curl' => 'Palma abajo, misma dosis que el curl; equilibra flexores y extensores.',
+        'Wrist Extension Stretch' => 'Palma en suelo con dedos hacia las rodillas; extensión progresiva sin dolor.',
+        'Seated Leg Raise' => 'Compresión sentada con piernas extendidas; lumbar neutra, manos solo apoyo ligero.',
+        'Fingertip Hold' => 'Plancha sobre las yemas, las cinco cargando parejo; dosificación conservadora.',
+        'Chest to Wall Handstand' => 'Pecho a pared, dedos abiertos, costillas abajo; salida siempre controlada en pirueta.',
+        'Shoulder Dislocate' => 'Agarre amplio con banda o palo; arco completo sin doblar codos ni dolor.',
+        'German Hang' => 'Extensión de hombro en anillas, asistida con los pies si hace falta; nunca en frío ni con pinzamiento.',
+        'Pike Push Up' => 'Cadera alta, cabeza entre las manos, codos a ~45°; activación del empuje vertical.',
+        'Scapular Pull Up' => 'Brazos rectos: solo se mueven las escápulas; activación de la tracción.',
+        'Band Monster Walk' => 'Rodillas semiflexionadas, banda tensa todo el recorrido; activación de glúteo medio.',
+        'Dumbbell Romanian Deadlift' => 'Bisagra de cadera con carga ligera: espalda neutra, isquios tensos.',
     ];
 }

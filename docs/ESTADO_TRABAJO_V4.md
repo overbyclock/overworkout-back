@@ -1,4 +1,4 @@
-# Estado del trabajo — Calistenia Master v4.0 (27 jul 2026)
+# Estado del trabajo — Calistenia Master v4.0 (7 ago 2026)
 
 > Nota de contexto para retomar el trabajo en una sesión nueva. Léela junto a
 > `docs/arquitectura_niveles_calistenia.md` (fuente de verdad) y la sección
@@ -48,6 +48,25 @@
 - Verificación: back verde (805 tests, PHPStan y CS-Fixer limpios); front verde (360 tests, 40 archivos).
 - Follow-up pendiente (decisión del usuario): la intro (`user-train-intro`) hoy solo se alcanza desde el Home; falta decidir si LevelView/ProgramDetailView llevan también a la intro con training id.
 
+**Bloque 7 — Niveles 7-9 GENERADOS (30 jul 2026):**
+- Mismo comando con `--levels=7,8,9` (sin `--delete-existing`; niveles 1-6 y v3 intactos). En BD: niveles 7 ("Tuck y Extensión"), 8 ("Potencia") y 9 ("Muscle-Up"), 48 trainings (240 rounds, 5 bloques tipados por sesión), 32 logros nuevos (11+12+9; "TUCK PLANCHE", "¡L-SIT!" y "CHEST-TO-BAR" épicos; "¡MUSCLE-UP EN BARRA!" legendario con 200 XP; "¡PISTOL SQUAT!" épico). skillFocus relleno en los 3.
+- Tests: N7 6 ítems fuerza sin puertas (G4/G5 se re-verifican informalmente); N8 6 fuerza + puerta G3; N9 4 fuerza + puerta G6 + re-tests de G1/G2 (ítems `type: re_test` + `gateCode`). Puertas G1-G6 reutilizadas, sin duplicados.
+- 7 ejercicios nuevos en el seeder (Hanging Leg Raise, Tuck Back Lever, Advanced Tuck Back Lever, Assisted Muscle Up Transition, Straddle Fold, Adductor Rockback, Standing Pike Stretch). Ningún ejercicio omitido: todos los nombres del blueprint resuelven contra el catálogo.
+- Mapeos destacados: pistol al cajón → `Box Pistol Squat`; dominadas explosivas → `Chest to Bar Practice`; muscle-up → `Bar Muscle Up`; tuck dragon flag → `Dragon Flag`; pike push-up elevado → `Elevated Pike Push Up`; wall handstand → `Chest to Wall Handstand`. Los "5 patrones de transición de pie" del Bloque 0 (N8/N9) se omiten como ejercicio (drill sin carga, anotado en comentario del código).
+- Fase 3 de N8 (rotación de picos por ciclo): el blueprint es estático → sesión A con dosificación intermedia y la rotación impar/par explicada en `goal` y tips.
+- Duraciones calculadas: N7 55-110 min, N8 59-112, N9 57-130 (la sesión B de N9 es la más larga del programa: singles de MU a 3 min, fiel al doc). Inflación sobre el doc similar al precedente aceptado de N6 (~+45-55% en las sesiones pesadas; los Bloque 0 de ~20 ítems con holds pesan en el cálculo). Ordenación relativa correcta (B > A > D > C, F4 más corta).
+- Pendiente de commit: niveles 7-9 (blueprint + content + seeder) y este documento.
+
+**Bloque 8 — Niveles 10-12 GENERADOS (7 ago 2026):**
+- Mismo comando con `--levels=10,11,12` (sin `--delete-existing`; niveles 1-9 y v3 intactos). En BD: niveles 10 ("Vertical Fuerte"), 11 ("Straddle y Anillas") y 12 ("Full Levers"), 48 trainings (240 rounds, 5 bloques tipados por sesión), 45 logros nuevos (17+12+16). skillFocus relleno en los 3.
+- Tests: N10 7 fuerza (HSPU pared 3/5, HS libre 5/10 s, MU 3/5, pistol 3/5 por pierna, press negativo 3/5, archer 3/5 por lado, false grip hang 20/30 s) + re-test G4; N11 5 fuerza (straddle FL 5 s, straddle planche 5 s, MU anillas 1, full BL 5 s, typewriter 3); N12 6 fuerza + re-tests G3/G5/G6. Los re-tests son ítems `type: re_test` + `gateCode`.
+- ~20 ejercicios nuevos en el seeder (Pike Press Negative, False Grip Pull Up, Straddle Back Lever, Ring Muscle Up Transition, Vertical Flag, Handstand Push Up, Freestanding Handstand, Archer Push Up, Shrimp Squat, Nordic Curl Negative, Straddle Front Lever Hold, Straddle Planche, Ring Muscle Up, Back Lever Hold, Full Front Lever Hold, Planche, Freestanding Handstand Push Up, One Arm Push Up, Dragon Pistol Squat, Bulgarian Ring Dip). 0 nombres del blueprint sin resolver contra el catálogo.
+- Omisión documentada (comentario en el código): "dominada explosiva" opcional de N11-B (sin equivalente en catálogo). Variantes asistidas del doc mapeadas al ejercicio base del catálogo con la asistencia explicada en el `goal` (p. ej. full planche con banda → `Planche`); "pancake activo" → `Straddle Fold`.
+- Migración nueva `Version20260807084654`: amplía el CHECK `training_levels_chk_1` de `difficulty_rating` 1-10 a 1-15 (los niveles 11-12 violaban el CHECK; la arquitectura prevé 15 niveles). Aplicada en dev. **Ojo:** la BD de test NO se construye desde migraciones (las de 2024 no son replayables desde cero: falla `Version20241112220658` por columna `sets`); se recrea con `doctrine:database:drop/create --env=test` + `doctrine:schema:create --env=test` + `migrations:sync-metadata-storage` + `migrations:version --add --all`, por lo que el CHECK no existe en test (igual que antes).
+- Duraciones calculadas coherentes con N7-N9 (misma escala): N10 61-118 min, N11 45-113, N12 44-112. Ordenación relativa correcta (B/D más largas, C circuito más corta, F4 la más corta).
+- Verificación: back verde (805 tests, PHPStan y CS-Fixer limpios).
+- Pendiente de commit: niveles 7-12 (blueprint + content + seeder + migración nueva) y este documento.
+
 ## Decisiones tomadas por el usuario
 
 1. v4 = programa nuevo en paralelo (`calistenia-master-v4`); v3 no se toca. Estructura universal y flexible.
@@ -59,8 +78,8 @@
 
 ## Siguiente paso (pendiente de decidir al retomar)
 
-- Que el usuario pase `detalle_niveles_07-09.md` y generar niveles 7-9 con el mismo comando (`--levels=7,8,9`), extendiendo blueprint y content. **Antes, leer "Convenciones del blueprint v4" en `AGENTS.md`** (Bloque 0 fluido, restAfterBlock 60 s, revisión de tiempos tras generar). Ojo: N7 trae la tuck planche libre (gate 5 s) y el L-sit completo; en N8 se testea la puerta G3 (dorsiflexión) y entra el false grip hang (hito); en N9 se testean G6 (pike) y re-tests de G1/G2 (ítems `type: re_test` + `gateCode`).
-- Pendiente de commit: TODA la plataforma v4 + generador + migración `Version20260727125311` + niveles 4-6 (back) y los cambios de `overworkout-front`.
+- Commit pendiente: niveles 7-12 (back: blueprint + content + seeder + migración `Version20260807084654` + docs nuevos `detalle_niveles_07-09.md` y `detalle_niveles_10-12.md`) y los cambios de `overworkout-front` (bloques 3 y 6).
+- Después: niveles 13-15 cuando el usuario pase su detalle (la arquitectura prevé 15 niveles + Olimpo; el CHECK de `difficulty_rating` ya admite 1-15). Mismo procedimiento: leer "Convenciones del blueprint v4" en `AGENTS.md`, extender blueprint/content/seeder, generar con `--levels=13,14,15` y revisar duraciones.
 
 ## Notas sueltas
 
