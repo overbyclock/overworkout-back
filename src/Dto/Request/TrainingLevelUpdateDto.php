@@ -33,7 +33,7 @@ readonly class TrainingLevelUpdateDto
 
         #[Assert\Range(
             min: 1,
-            max: 10,
+            max: 16,
             notInRangeMessage: 'La dificultad debe estar entre {{ min }} y {{ max }}'
         )]
         public ?int $difficultyRating = null,
