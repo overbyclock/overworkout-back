@@ -37,6 +37,7 @@ class TrainingLevelCreateDtoTest extends TestCase
             testRequirements: ['pushups' => 10],
             skillFocus: 'Wall Handstand',
             programVersion: 'v1',
+            isInfinite: true,
             isLockedByDefault: true,
         );
 
@@ -108,6 +109,7 @@ class TrainingLevelCreateDtoTest extends TestCase
 
         $this->assertEquals(12, $dto->estimatedDurationWeeks);
         $this->assertEquals('v1', $dto->programVersion);
+        $this->assertNull($dto->isInfinite);
         $this->assertTrue($dto->isLockedByDefault);
     }
 }

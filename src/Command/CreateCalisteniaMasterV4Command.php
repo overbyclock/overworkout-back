@@ -220,6 +220,7 @@ class CreateCalisteniaMasterV4Command extends Command
         $level->setRequirementsSummary($meta['requirementsSummary']);
         $level->setSkillFocus($meta['skillFocus'] ?? null);
         $level->setProgramVersion('v4');
+        $level->setIsInfinite(16 === $levelNum);
         $level->setCyclesCompleted(0);
 
         // Aplicar contenido educativo (tips, weekInfos, test requirements)

@@ -36,6 +36,7 @@ class TrainingLevelUpdateDtoTest extends TestCase
             testRequirements: ['test' => 5],
             skillFocus: 'Planche',
             programVersion: 'v2',
+            isInfinite: true,
             isLockedByDefault: false,
         );
 
@@ -63,6 +64,13 @@ class TrainingLevelUpdateDtoTest extends TestCase
     public function testHasChangesReturnsTrueWithAnyField(): void
     {
         $dto = new TrainingLevelUpdateDto(name: 'Updated');
+
+        $this->assertTrue($dto->hasChanges());
+    }
+
+    public function testHasChangesReturnsTrueWithIsInfinite(): void
+    {
+        $dto = new TrainingLevelUpdateDto(isInfinite: true);
 
         $this->assertTrue($dto->hasChanges());
     }

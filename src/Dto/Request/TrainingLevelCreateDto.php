@@ -74,6 +74,8 @@ readonly class TrainingLevelCreateDto
         )]
         public ?string $programVersion = 'v1',
 
+        public ?bool $isInfinite = null,
+
         public bool $isLockedByDefault = true,
     ) {
     }

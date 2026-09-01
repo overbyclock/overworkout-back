@@ -41,6 +41,7 @@ readonly class TrainingLevelMapper
         $level->setTestRequirements($dto->testRequirements);
         $level->setSkillFocus($dto->skillFocus);
         $level->setProgramVersion($dto->programVersion);
+        $level->setIsInfinite($dto->isInfinite);
         $level->setIsLockedByDefault($dto->isLockedByDefault);
 
         return $level;
@@ -102,6 +103,10 @@ readonly class TrainingLevelMapper
 
         if (null !== $dto->programVersion) {
             $level->setProgramVersion($dto->programVersion);
+        }
+
+        if (null !== $dto->isInfinite) {
+            $level->setIsInfinite($dto->isInfinite);
         }
 
         if (null !== $dto->isLockedByDefault) {

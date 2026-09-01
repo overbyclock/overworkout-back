@@ -68,6 +68,8 @@ readonly class TrainingLevelUpdateDto
         )]
         public ?string $programVersion = null,
 
+        public ?bool $isInfinite = null,
+
         public ?bool $isLockedByDefault = null,
     ) {
     }
@@ -88,6 +90,7 @@ readonly class TrainingLevelUpdateDto
             || null !== $this->testRequirements
             || null !== $this->skillFocus
             || null !== $this->programVersion
+            || null !== $this->isInfinite
             || null !== $this->isLockedByDefault;
     }
 }

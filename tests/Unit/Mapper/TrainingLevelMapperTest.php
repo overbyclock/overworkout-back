@@ -60,6 +60,7 @@ class TrainingLevelMapperTest extends TestCase
             testRequirements: ['test' => 5],
             skillFocus: 'HS',
             programVersion: 'v1',
+            isInfinite: true,
             isLockedByDefault: true,
         );
 
@@ -81,6 +82,7 @@ class TrainingLevelMapperTest extends TestCase
         $this->assertEquals(['test' => 5], $level->getTestRequirements());
         $this->assertEquals('HS', $level->getSkillFocus());
         $this->assertEquals('v1', $level->getProgramVersion());
+        $this->assertTrue($level->isInfinite());
         $this->assertTrue($level->isIsLockedByDefault());
     }
 
@@ -135,6 +137,19 @@ class TrainingLevelMapperTest extends TestCase
         $this->assertEquals('Original', $level->getName());
         $this->assertEquals(1, $level->getLevelNumber());
         $this->assertEquals('Updated', $level->getDescription());
+    }
+
+    public function testUpdateFromDtoSetsIsInfinite(): void
+    {
+        $level = new TrainingLevel();
+        $level->setName('Original');
+        $level->setLevelNumber(1);
+
+        $dto = new TrainingLevelUpdateDto(isInfinite: true);
+
+        $this->mapper->updateFromDto($level, $dto);
+
+        $this->assertTrue($level->isInfinite());
     }
 
     public function testHasChanges(): void

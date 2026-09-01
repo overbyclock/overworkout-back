@@ -79,6 +79,14 @@ class TrainingLevel
     #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
     private ?string $programVersion = 'v1';
 
+    /**
+     * Indica si el nivel es un bloque élite abierto (sin test de salida ni final).
+     * Ejemplo: Bloque Élite "Olimpo" del programa Calistenia Master v4.
+     */
+    #[ORM\Column(nullable: true)]
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    private ?bool $isInfinite = null;
+
     #[ORM\Column]
     private ?bool $isLockedByDefault = true;
 
@@ -304,6 +312,19 @@ class TrainingLevel
     public function setProgramVersion(?string $programVersion): static
     {
         $this->programVersion = $programVersion;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, TrainingProgram::GROUP_DETAIL])]
+    public function isInfinite(): ?bool
+    {
+        return $this->isInfinite;
+    }
+
+    public function setIsInfinite(?bool $isInfinite): static
+    {
+        $this->isInfinite = $isInfinite;
 
         return $this;
     }
