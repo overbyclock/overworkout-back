@@ -1295,7 +1295,7 @@ class CalisteniaMasterBlueprintV4
         }
         // Pancake activo: sesiones C y D, diario si el press se resiste
         if (\in_array($sessionKey, ['session_c', 'session_d'], true)) {
-            $exercises[] = self::ex('Active Pancake', '20s', 2);
+            // Omisión: Active Pancake 2×20s (estiramiento sin equivalente en el catálogo).
         }
         // Específico por sesión
         if ('session_a' === $sessionKey) {
@@ -1303,7 +1303,7 @@ class CalisteniaMasterBlueprintV4
             $exercises[] = self::ex('Planche Lean', '15s');
         }
         if ('session_b' === $sessionKey) {
-            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Scapular Pull Up', '6');
             $exercises[] = self::ex('Dead Hang', '20s');
             $exercises[] = self::ex('Retract Row', '8');
         }
@@ -1336,11 +1336,11 @@ class CalisteniaMasterBlueprintV4
             // Omisión: "giros con carga" 2×8/lado no tiene equivalente directo en catálogo
             self::ex('Fingertip Hold', '10s', 2),
             // Primer contacto con antebrazo en suelo
-            self::ex('Forearm Floor Wrist Stretch', '15s', 2),
+            // Omisión: Forearm Floor Wrist Stretch 2×15s (estiramiento sin equivalente en el catálogo).
             // Hombro — salud capsular (foco del nivel)
-            self::ex('Shoulder ER Band', '12/lado', 2),
+            // Omisión: Shoulder ER Band 2×12/lado (drill de salud capsular sin carga significativa; sin equivalente en el catálogo).
             self::ex('Cuban Rotation', '8/lado', 2),
-            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            // Omisión: Cross-Body Shoulder Stretch 2×30s/lado (estiramiento sin equivalente en el catálogo).
             self::ex('Shoulder Dislocate', '10'),
             // G1-G3 (mantenimiento)
             self::ex('Wall Slide', '8', 2),
@@ -1356,9 +1356,9 @@ class CalisteniaMasterBlueprintV4
             $exercises[] = self::ex('German Hang', '10s');
         }
         // Antebrazo en suelo: dolphin stretch en todas las sesiones; presión dorsal extra en D
-        $exercises[] = self::ex('Dolphin Stretch', '20s', 2);
+        // Omisión: Dolphin Stretch 2×20s (estiramiento sin equivalente en el catálogo).
         if ('session_d' === $sessionKey) {
-            $exercises[] = self::ex('Forearm Floor Wrist Stretch', '15s', 2);
+            // Omisión: Forearm Floor Wrist Stretch 2×15s (estiramiento sin equivalente en el catálogo).
         }
         // Straddle fold (mantenimiento G6) en D
         if ('session_d' === $sessionKey) {
@@ -1370,7 +1370,7 @@ class CalisteniaMasterBlueprintV4
             $exercises[] = self::ex('Planche Lean', '15s');
         }
         if ('session_b' === $sessionKey) {
-            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Scapular Pull Up', '6');
             $exercises[] = self::ex('Dead Hang', '20s');
             $exercises[] = self::ex('Strict Pull Up', '3');
         }
@@ -1403,13 +1403,13 @@ class CalisteniaMasterBlueprintV4
             self::ex('Reverse Wrist Curl', '12', 2),
             // Omisión: "giros con carga" 2×8/lado no tiene equivalente directo en catálogo
             self::ex('Fingertip Hold', '10s', 2),
-            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
             // Hombro — salud capsular (era OAP + anillas élite)
-            self::ex('Shoulder ER Band', '12/lado', 2),
+            // Omisión: Shoulder ER Band 2×12/lado (drill de salud capsular sin carga significativa; sin equivalente en el catálogo).
             self::ex('Cuban Rotation', '8/lado', 2),
-            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            // Omisión: Cross-Body Shoulder Stretch 2×30s/lado (estiramiento sin equivalente en el catálogo).
             self::ex('Shoulder Dislocate', '10'),
-            self::ex('Ring Chest Stretch', '30s', 2),
+            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
             // G1-G3 (mantenimiento)
             self::ex('Wall Slide', '8', 2),
             self::ex('Wrist Extension Stretch', '30s'),
@@ -1430,10 +1430,10 @@ class CalisteniaMasterBlueprintV4
         // Específico por sesión
         if ('session_a' === $sessionKey) {
             $exercises[] = self::ex('Band Pull-Apart', '15');
-            $exercises[] = self::ex('Ring Support Hold RTO', '15s');
+            $exercises[] = self::ex('Ring Support Hold', '15s');
         }
         if ('session_b' === $sessionKey) {
-            $exercises[] = self::ex('Scapular Pull', '6');
+            $exercises[] = self::ex('Scapular Pull Up', '6');
             $exercises[] = self::ex('Dead Hang', '20s');
             $exercises[] = self::ex('Strict Pull Up', '3');
         }
@@ -1443,7 +1443,7 @@ class CalisteniaMasterBlueprintV4
         }
         if ('session_d' === $sessionKey) {
             // Activación extra de manguito: se pliega en más ER de banda
-            $exercises[] = self::ex('Shoulder ER Band', '12/lado', 2);
+            // Omisión: Shoulder ER Band 2×12/lado (drill de salud capsular sin carga significativa; sin equivalente en el catálogo).
         }
 
         return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
@@ -1466,13 +1466,13 @@ class CalisteniaMasterBlueprintV4
             self::ex('Wrist Curl', '12', 2),
             self::ex('Reverse Wrist Curl', '12', 2),
             self::ex('Fingertip Hold', '10s', 2),
-            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
             // Hombro — salud capsular y extensión
-            self::ex('Shoulder ER Band', '12/lado', 2),
+            // Omisión: Shoulder ER Band 2×12/lado (drill de salud capsular sin carga significativa; sin equivalente en el catálogo).
             self::ex('Cuban Rotation', '8/lado', 2),
-            self::ex('Cross-Body Shoulder Stretch', '30s/lado', 2),
+            // Omisión: Cross-Body Shoulder Stretch 2×30s/lado (estiramiento sin equivalente en el catálogo).
             self::ex('Shoulder Dislocate', '10'),
-            self::ex('Ring Chest Stretch', '30s', 2),
+            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
             self::ex('German Hang', '10s'),
             // Falso agarre profundo (común en especializaciones de anillas)
             self::ex('False Grip Hang', '15s', 2),
@@ -7922,7 +7922,7 @@ class CalisteniaMasterBlueprintV4
                 'blocks' => [
                     $b0,
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 4, 120, 50, [
-                        self::ex('Nordic Curl Assisted', '3'),
+                        self::ex('Nordic Curl with Band', '3'),
                         self::ex('Skater Squat', '3/lado'),
                         self::ex('Dragon Pistol Squat', '2/lado'),
                         self::ex('V-Sit Hold', '8-10s'),
@@ -7948,7 +7948,7 @@ class CalisteniaMasterBlueprintV4
                 'blocks' => [
                     $b0,
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 5, 120, 50, [
-                        self::ex('Nordic Curl Complete', '2-3'),
+                        self::ex('Nordic Curl', '2-3'),
                         self::ex('Pistol Squat', '3/lado'),
                         self::ex('Dragon Pistol Squat', '2/lado'),
                         self::ex('V-Sit Hold', '10s'),
@@ -8011,7 +8011,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Handstand Lower to Straddle Planche', '1-2', 4),
                         self::ex('Human Flag 45 Degree', '4-6s/lado', 4),
                         self::ex('Vertical Flag', '15s/lado', 2),
-                        self::ex('Straddle Press to Handstand', '1-2', 4),
+                        self::ex('Straddle Press Handstand', '1-2', 4),
                         self::ex('V-Sit Hold', '5-8s', 4),
                     ], 180),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
@@ -8041,7 +8041,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Human Flag 45 Degree', '6-8s/lado', 3),
                         self::ex('Tuck Flag', '4-6s/lado', 3),
                         self::ex('Human Flag', '3-5s/lado', 3),
-                        self::ex('Straddle Press to Handstand', '1-2', 4),
+                        self::ex('Straddle Press Handstand', '1-2', 4),
                         self::ex('V-Sit Hold', '8-10s', 4),
                     ], 180),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
@@ -8069,7 +8069,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Human Flag', '2-4s/lado', 5),
                         self::ex('Human Flag 45 Degree', '6s/lado', 2),
-                        self::ex('Straddle Press to Handstand', '1', 4),
+                        self::ex('Straddle Press Handstand', '1', 4),
                         self::ex('Handstand Lower to Straddle Planche', '1-2', 2),
                         self::ex('V-Sit Hold', '10-15s', 3),
                     ], 240),
@@ -8098,7 +8098,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Vertical Flag', '12s/lado', 2),
                         self::ex('Human Flag 45 Degree', '4s/lado', 2),
-                        self::ex('Straddle Press to Handstand', '1', 2),
+                        self::ex('Straddle Press Handstand', '1', 2),
                         self::ex('V-Sit Hold', '8s', 2),
                         self::ex('Freestanding Handstand', '10-15s', 2),
                         self::ex('Standing Pike Stretch', '45s', 2),
@@ -8605,7 +8605,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Assisted Maltese', '4-6s', 2),
                             // Hito del nivel: tiger bend hold.
                             // Ejercicio nuevo; se reportará si no está en el catálogo.
-                            self::ex('Tiger Bend Hold', '5-10s', 3),
+                            self::ex('Tiger Bend Handstand', '5-10s', 3),
                             self::ex('Forearm Stand', '10-15s', 2),
                             self::ex('Freestanding Handstand', '10-15s', 2),
                         ], 240),
@@ -8623,7 +8623,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8640,7 +8640,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Assisted Maltese', '4-6s', 3),
                             // Hito del nivel: tiger bend hold.
                             // Ejercicio nuevo; se reportará si no está en el catálogo.
-                            self::ex('Tiger Bend Hold', '5-10s', 3),
+                            self::ex('Tiger Bend Handstand', '5-10s', 3),
                             self::ex('Forearm Stand', '10-15s', 2),
                             self::ex('Freestanding Handstand', '10-15s', 2),
                         ], 240),
@@ -8658,7 +8658,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8701,7 +8701,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8737,7 +8737,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8776,7 +8776,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8789,7 +8789,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('90 Degree Push Up', '1', 5),
                             self::ex('Assisted Iron Cross', '5-6s', 2),
                             self::ex('Assisted Maltese', '5-6s', 2),
-                            self::ex('Tiger Bend Hold', '8-10s', 2),
+                            self::ex('Tiger Bend Handstand', '8-10s', 2),
                             self::ex('Freestanding Handstand', '12s', 2),
                         ], 240),
                         self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
@@ -8806,7 +8806,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8819,11 +8819,11 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Handstand Lower to Straddle Planche', '1', 2),
                         self::ex('Assisted Iron Cross', '5s', 2),
-                        self::ex('Tiger Bend Hold', '8s', 2),
+                        self::ex('Tiger Bend Handstand', '8s', 2),
                         self::ex('Forearm Stand', '15-20s', 2),
                         self::ex('Freestanding Handstand', '10-15s', 2),
-                        self::ex('Cross-Body Shoulder Stretch', '45s/lado', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '45s', 2),
+                        // Omisión: Cross-Body Shoulder Stretch 2×45s/lado (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Forearm Floor Wrist Stretch 1×45s (estiramiento sin equivalente en el catálogo).
                         self::ex('Straddle Fold', '45s', 2),
                     ], 120),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
@@ -8839,7 +8839,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -8870,7 +8870,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 2),
                         self::ex('External Rotation', '12/lado', 2),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '20s', 2),
@@ -8883,7 +8883,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -8903,7 +8903,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 3),
                         self::ex('External Rotation', '12/lado', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '20s', 2),
@@ -8916,7 +8916,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -8942,7 +8942,7 @@ class CalisteniaMasterBlueprintV4
                         self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                             self::ex('Face Pull', '15', 2),
                             self::ex('External Rotation', '12/lado', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 50),
                         self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                             self::ex('Arch Hold', '20s', 2),
@@ -8955,7 +8955,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Lat Stretch', '40s/lado'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -8971,7 +8971,7 @@ class CalisteniaMasterBlueprintV4
                         self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                             self::ex('Face Pull', '15', 2),
                             self::ex('External Rotation', '12/lado', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 50),
                         self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                             self::ex('Arch Hold', '20s', 2),
@@ -8984,7 +8984,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Lat Stretch', '40s/lado'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -9002,7 +9002,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 3),
                         self::ex('External Rotation', '12/lado', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '15s', 2),
@@ -9013,7 +9013,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9055,7 +9055,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9088,7 +9088,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9125,7 +9125,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Lat Stretch', '45s/lado'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -9155,7 +9155,7 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Lat Stretch', '45s/lado'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -9186,7 +9186,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Lat Stretch', '45s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9317,7 +9317,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Assisted Iron Cross', '4-6s', 5),
                         self::ex('Assisted Maltese', '4-6s', 3),
-                        self::ex('Tiger Bend Hold', '8-12s', 3),
+                        self::ex('Tiger Bend Handstand', '8-12s', 3),
                         self::ex('Tiger Bend Negative', '1', 2),
                         self::ex('False Grip Hang', '15s', 2),
                         self::ex('Freestanding Handstand', '10-12s', 2),
@@ -9325,7 +9325,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 2),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Seated Leg Raise', '10s', 2),
@@ -9336,8 +9336,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9351,14 +9351,14 @@ class CalisteniaMasterBlueprintV4
                         // Hito del nivel: tiger bend asistido con banda / rango parcial.
                         // Ejercicio nuevo; se reportará si no está en el catálogo.
                         self::ex('Assisted Tiger Bend Push Up', '1-2', 4),
-                        self::ex('Tiger Bend Hold', '10s', 2),
+                        self::ex('Tiger Bend Handstand', '10s', 2),
                         self::ex('False Grip Hang', '15-20s', 2),
                         self::ex('Freestanding Handstand', '12s', 2),
                     ], 180),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Seated Leg Raise', '10s', 3),
@@ -9369,8 +9369,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9396,7 +9396,7 @@ class CalisteniaMasterBlueprintV4
                         self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                             self::ex('Wall Slide', '10', 2),
                             self::ex('Cuban Rotation', '8', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 50),
                         self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                             self::ex('Seated Leg Raise', '10s', 2),
@@ -9407,8 +9407,8 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -9428,7 +9428,7 @@ class CalisteniaMasterBlueprintV4
                         self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                             self::ex('Wall Slide', '10', 2),
                             self::ex('Cuban Rotation', '8', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 50),
                         self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                             self::ex('Seated Leg Raise', '10s', 2),
@@ -9439,8 +9439,8 @@ class CalisteniaMasterBlueprintV4
                             self::ex('Standing Pike Stretch', '40s'),
                             self::ex('Straddle Fold', '40s'),
                             self::ex('Wrist Extension Stretch', '30s', 2),
-                            self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                            self::ex('Ring Chest Stretch', '30s', 2),
+                            // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                            // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                         ], 20),
                     ],
                 ],
@@ -9452,18 +9452,18 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Assisted Iron Cross', '5s', 2),
                         self::ex('Assisted Maltese', '4s', 2),
-                        self::ex('Tiger Bend Hold', '8s', 2),
+                        self::ex('Tiger Bend Handstand', '8s', 2),
                         self::ex('False Grip Hang', '15s', 2),
                         self::ex('Freestanding Handstand', '10-15s', 2),
-                        self::ex('Cross-Body Shoulder Stretch', '45s/lado', 2),
+                        // Omisión: Cross-Body Shoulder Stretch 2×45s/lado (estiramiento sin equivalente en el catálogo).
                         self::ex('Chest Doorway Stretch', '45s/lado', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '45s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 1×45s (estiramiento sin equivalente en el catálogo).
                         self::ex('Shoulder Dislocate', '10', 2),
                     ], 120),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '15s', 2),
@@ -9473,8 +9473,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9513,7 +9513,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 3),
                         self::ex('External Rotation', '12/lado', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '20s', 2),
@@ -9526,7 +9526,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9546,7 +9546,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 3),
                         self::ex('External Rotation', '12/lado', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '20s', 2),
@@ -9559,7 +9559,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9575,7 +9575,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Face Pull', '15', 2),
                         self::ex('External Rotation', '12/lado', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '20s', 2),
@@ -9588,7 +9588,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9606,7 +9606,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Face Pull', '15', 3),
                         self::ex('External Rotation', '12/lado', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '15s', 2),
@@ -9617,7 +9617,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9661,7 +9661,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9694,7 +9694,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '40s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9724,7 +9724,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Lat Stretch', '45s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9754,7 +9754,7 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Lat Stretch', '45s/lado'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9886,15 +9886,15 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Assisted Iron Cross', '4-6s', 5),
                         self::ex('Human Flag', '3-5s/lado', 2),
                         self::ex('Assisted Maltese', '4-6s', 3),
-                        self::ex('Tiger Bend Hold', '8-12s', 3),
+                        self::ex('Tiger Bend Handstand', '8-12s', 3),
                         self::ex('Tiger Bend Negative', '1', 2),
-                        self::ex('Straddle Press to Handstand', '1', 2),
+                        self::ex('Straddle Press Handstand', '1', 2),
                         self::ex('Freestanding Handstand', '10-12s', 2),
                     ], 180),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 2),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Seated Leg Raise', '10s', 2),
@@ -9905,8 +9905,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9919,14 +9919,14 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Human Flag', '3-5s/lado', 2),
                         self::ex('Assisted Maltese', '5-8s', 3),
                         self::ex('Assisted Tiger Bend Push Up', '1-2', 4),
-                        self::ex('Tiger Bend Hold', '10s', 2),
-                        self::ex('Straddle Press to Handstand', '1', 2),
+                        self::ex('Tiger Bend Handstand', '10s', 2),
+                        self::ex('Straddle Press Handstand', '1', 2),
                         self::ex('Freestanding Handstand', '12s', 2),
                     ], 180),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Seated Leg Raise', '10s', 3),
@@ -9937,8 +9937,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9957,7 +9957,7 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 2),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Seated Leg Raise', '10s', 2),
@@ -9968,8 +9968,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '40s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
@@ -9980,18 +9980,18 @@ class CalisteniaMasterBlueprintV4
                     self::block(TrainingRound::BLOCK_PRINCIPAL, 1, 1, 45, [
                         self::ex('Assisted Iron Cross', '5s', 2),
                         self::ex('Assisted Maltese', '4s', 2),
-                        self::ex('Tiger Bend Hold', '8s', 2),
+                        self::ex('Tiger Bend Handstand', '8s', 2),
                         self::ex('False Grip Hang', '15s', 2),
                         self::ex('Freestanding Handstand', '10-15s', 2),
-                        self::ex('Cross-Body Shoulder Stretch', '45s/lado', 2),
+                        // Omisión: Cross-Body Shoulder Stretch 2×45s/lado (estiramiento sin equivalente en el catálogo).
                         self::ex('Chest Doorway Stretch', '45s/lado', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '45s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 1×45s (estiramiento sin equivalente en el catálogo).
                         self::ex('Shoulder Dislocate', '10', 2),
                     ], 120),
                     self::block(TrainingRound::BLOCK_POSTURAL, 1, 1, 45, [
                         self::ex('Wall Slide', '10', 3),
                         self::ex('Cuban Rotation', '8', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 50),
                     self::block(TrainingRound::BLOCK_CADENA_POSTERIOR, 1, 1, 45, [
                         self::ex('Arch Hold', '15s', 2),
@@ -10001,8 +10001,8 @@ class CalisteniaMasterBlueprintV4
                         self::ex('Standing Pike Stretch', '40s'),
                         self::ex('Straddle Fold', '45s'),
                         self::ex('Wrist Extension Stretch', '30s', 2),
-                        self::ex('Forearm Floor Wrist Stretch', '20s', 2),
-                        self::ex('Ring Chest Stretch', '30s', 2),
+                        // Omisión: Forearm Floor Wrist Stretch 2×20s (estiramiento sin equivalente en el catálogo).
+                        // Omisión: Ring Chest Stretch 2×30s (estiramiento sin equivalente en el catálogo).
                     ], 20),
                 ],
             ],
