@@ -39,7 +39,7 @@ readonly class TrainingLevelCreateDto
 
         #[Assert\Range(
             min: 1,
-            max: 10,
+            max: 16,
             notInRangeMessage: 'La dificultad debe estar entre {{ min }} y {{ max }}'
         )]
         public ?int $difficultyRating = null,
@@ -73,6 +73,8 @@ readonly class TrainingLevelCreateDto
             maxMessage: 'La versión del programa no puede tener más de {{ limit }} caracteres'
         )]
         public ?string $programVersion = 'v1',
+
+        public ?bool $isInfinite = null,
 
         public bool $isLockedByDefault = true,
     ) {

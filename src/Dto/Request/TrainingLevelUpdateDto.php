@@ -33,7 +33,7 @@ readonly class TrainingLevelUpdateDto
 
         #[Assert\Range(
             min: 1,
-            max: 10,
+            max: 16,
             notInRangeMessage: 'La dificultad debe estar entre {{ min }} y {{ max }}'
         )]
         public ?int $difficultyRating = null,
@@ -68,6 +68,8 @@ readonly class TrainingLevelUpdateDto
         )]
         public ?string $programVersion = null,
 
+        public ?bool $isInfinite = null,
+
         public ?bool $isLockedByDefault = null,
     ) {
     }
@@ -88,6 +90,7 @@ readonly class TrainingLevelUpdateDto
             || null !== $this->testRequirements
             || null !== $this->skillFocus
             || null !== $this->programVersion
+            || null !== $this->isInfinite
             || null !== $this->isLockedByDefault;
     }
 }

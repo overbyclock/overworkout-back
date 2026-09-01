@@ -74,6 +74,16 @@
 - Test de contrato nuevo: `tests/Functional/Api/TrainingProgramDetailTest.php` (niveles + trainings básicos presentes, `trainingRounds` ausente).
 - **Pendiente conocido:** `GET /training-programs/{id}/levels` (admin) sigue serializando el grafo completo (9,4 MB); no lo usa el front actual. Si se usa algún día, aplicar el mismo criterio.
 
+**Bloque 10 — Niveles 13-15 + Bloque Élite Olimpo (nivel 16) GENERADOS:**
+- Campo `isInfinite` añadido a `TrainingLevel` (con DTOs, mapper, tests y migración `Version20260831121316`) para modelar Olimpo como nivel 16 sin test de salida.
+- Comando `php bin/console app:create-calistenia-master-v4 --levels=13,14,15,16` generó sin omisiones: niveles 13 ("Fuerza Unilateral"), 14 ("One-Arm Chin-Up"), 15 ("One-Arm Pull-Up") y 16 ("Olimpo"), 64 trainings en total (16 por nivel), 320 rounds con 5 bloques tipados por sesión. Olimpo guarda `isInfinite = true`.
+- 11 fichas nuevas añadidas al seeder (`Advanced Tuck Planche Push Up`, `Retract Row`, `Miniband Lateral Walk`, `Lateral Plank Raise`, `Human Flag 45 Degree`, `Straddle Planche Push Up`, `One Arm Pull Up Negative`, `Assisted One Arm Pull Up`, `Partial 90 Degree Push Up`, `Partial Impossible Dip`, `Assisted Tiger Bend Push Up`); el resto de ejercicios del blueprint resolvieron contra ejercicios ya existentes del catálogo (variantes asistidas/parciales mapeadas a fichas madre con la asistencia explicada en el `goal` de la sesión).
+- Tests: N13 6 fuerza (dominada +25% BW, L-sit pull-up, human flag, V-sit, straddle press, Nordic curl); N14 5 fuerza (OAC, planche PU, 90° PU, front lever raises, +50% BW) + hitos de peldaño; N15 6 fuerza (OAP, +50% ×3, tiger bend, impossible dip, iron cross asistido, maltese asistido); N16 sin test de salida, con logros de rangos Bronce→Diamante, combos de estilo y hitos.
+- 88 logros nuevos en total: 10 (N13) + 12 (N14) + 7 (N15) + 59 (Olimpo, incluyendo rangos de 9 skills legendarios).
+- Duraciones calculadas coherentes con la escala N10-N12: N13 ~40-113 min, N14 ~38-124 min, N15 ~39-107 min, N16 ~39-111 min. Ordenación relativa correcta (B/D más largas, C más corta, F4 la más corta).
+- Verificación: back verde (809 tests, PHPStan y CS-Fixer limpios).
+- Commit pendiente de merge a `main`.
+
 ## Decisiones tomadas por el usuario
 
 1. v4 = programa nuevo en paralelo (`calistenia-master-v4`); v3 no se toca. Estructura universal y flexible.
@@ -86,7 +96,7 @@
 ## Siguiente paso (pendiente de decidir al retomar)
 
 - Todo commiteado (back y front). Queda pendiente de decisión: si LevelView/ProgramDetailView llevan también a la intro (`user-train-intro`) con training id (hoy solo se entra desde el Home).
-- Después: niveles 13-15 cuando el usuario pase su detalle (la arquitectura prevé 15 niveles + Olimpo; el CHECK de `difficulty_rating` ya admite 1-15). Mismo procedimiento: leer "Convenciones del blueprint v4" en `AGENTS.md`, extender blueprint/content/seeder, generar con `--levels=13,14,15` y revisar duraciones.
+- La arquitectura v4 de calistenia está completa hasta el Bloque Élite Olimpo (15 niveles + Olimpo). Nuevos programas o ajustes de gamificación quedan para futuras iteraciones.
 
 ## Notas sueltas
 

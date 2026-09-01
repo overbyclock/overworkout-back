@@ -9,12 +9,13 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-12).
+ * Contenido educativo del programa Calistenia Master v4.0 (niveles 1-16).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_niveles_01-03.md,
  * docs/detalle_niveles_04-06.md, docs/detalle_niveles_07-09.md,
- * docs/detalle_niveles_10-12.md y de docs/arquitectura_niveles_calistenia.md.
+ * docs/detalle_niveles_10-12.md, docs/detalle_niveles_13-15_olimpo.md
+ * y de docs/arquitectura_niveles_calistenia.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -36,6 +37,10 @@ class CalisteniaMasterContentV4
             10 => self::level10(),
             11 => self::level11(),
             12 => self::level12(),
+            13 => self::level13(),
+            14 => self::level14(),
+            15 => self::level15(),
+            16 => self::level16(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -58,6 +63,10 @@ class CalisteniaMasterContentV4
             10 => self::achievementsL10(),
             11 => self::achievementsL11(),
             12 => self::achievementsL12(),
+            13 => self::achievementsL13(),
+            14 => self::achievementsL14(),
+            15 => self::achievementsL15(),
+            16 => self::achievementsL16(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -163,6 +172,10 @@ class CalisteniaMasterContentV4
             10 => self::EXERCISE_NOTES_L10,
             11 => self::EXERCISE_NOTES_L11,
             12 => self::EXERCISE_NOTES_L12,
+            13 => self::EXERCISE_NOTES_L13,
+            14 => self::EXERCISE_NOTES_L14,
+            15 => self::EXERCISE_NOTES_L15,
+            16 => self::EXERCISE_NOTES_L16,
             default => [],
         };
 
@@ -1608,6 +1621,144 @@ class CalisteniaMasterContentV4
         ];
     }
 
+    // ========================================================================
+    // LEVEL 13 — FUERZA UNILATERAL
+    // ========================================================================
+
+    private static function level13(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el lastre entra despacio a propósito. +10-15% con técnica de dominada estricta vale más que +25% con tirón: estás construyendo el codo que el one-arm necesitará en N14-N15, y los tendones maduran en una escala de años, no de ciclos (§1.6).',
+                'Fase 2 (Progresión): la negativa a un brazo es tu primera cita con el one-arm: trátala como skill, no como ejercicio más. Fresco (tras el lastre, nunca al final), pocas reps, descansos de 3 min, y si el codo protesta a la mañana siguiente, la vía unilateral se congela un ciclo y todo lo demás sigue.',
+                'Fase 3 (Intensificación): las marcas van primeras y frescas. Un intento de flag tras cuarenta minutos de sesión mide tu fatiga, no tu flag. Registra el lado: el flag se testea en tu mejor lado, pero se entrena en los dos — cuando quieras el flag a ambos lados (Olimpo) lo agradecerás.',
+                'Fase 4 (Recuperación): la torácica en extensión y la apertura straddle son el trabajo real de esta fase. El straddle press de tu próximo ciclo depende más de lo que abras aquí que de lo que empujes en F3.',
+                'Si fallas el test — diagnóstico: (a) El flag cae del lado del brazo inferior: el fallo es de empuje (serrato/dorsal del brazo de abajo), no de core: retrocede a bandera vertical y 45° con holds más largos y añade support press laterales. (b) El +25% se atranca: alterna un ciclo de volumen con peso corporal alto (8-10 reps estrictas) con un ciclo de lastre: la tracción responde a la alternancia. (c) La L-sit pull-up pierde la L: el freno es la compresión, no la tracción: más V-sit, compresión sentada y la variante con una pierna. (d) El straddle press no despega: revisión honesta de apertura straddle (Bloque 0) y de G5/G6; el 80% del press es compresión y cadera alta. (e) El Nordic se "rompe" a media subida: normal: la cima del rango es lo último en llegar. Sigue con el semicompleto con banda y reduce la asistencia, no el rango.',
+                'Advertencias de seguridad: el lastre y la vía unilateral cargan el codo y el bíceps como nunca hasta ahora: dolor matinal >2/10 = congelar esa escalera un ciclo (§1.7). El flag exige hombros perfectamente calientes y el bloque postural religioso: ningún intento sin el Bloque 0 completo. El Nordic es la máxima carga excéntrica de isquiosural del programa: nunca en frío, nunca al fallo excéntrico total, y la molestia detrás de la rodilla es una señal de stop, no de esfuerzo.',
+                'Mapa tendinoso del nivel (§1.7): la línea de codo en tracción (lastre + L-sit PU + vía unilateral) pica SOLO en B, una exposición pesada por microciclo — y dentro de B, en F3, el lastre y el L-sit pull-up rotan el pico por ciclo (nunca dos marcas de codo en la misma sesión; la negativa a un brazo, ya conseguida en F2, baja a mantenimiento) · la línea de apoyo/bíceps distal (planche dinámico) pica SOLO en A · el flag (hombro en abducción lateral + oblicuos) y la línea vertical/press (hombro en flexión) viven en D, con el flag como estático pesado único de la sesión · C es la sesión tendinosa de pierna e isquiosural (Nordic: nunca en frío, nunca al fallo excéntrico) · la negativa a un brazo se introduce en F2, nunca antes de que el typewriter pesado esté limpio · molestia matinal en codo o bíceps >2/10 = congelar la escalera de lastre/unilateral un ciclo (el resto sigue).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Lastre entra conservador (+10-15%); bandera 45° (hito); V-sit y straddle press asistidos; Nordic excéntrica larga', 'note' => 'Máximo un frente estático pesado por sesión; línea de codo en tracción pica SOLO en B', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Lastre +15-20%; negativa a un brazo (hito); flag horizontal con apoyo; straddle press con asistencia mínima', 'note' => 'Entrena el flag en ambos lados aunque el test se mida en el mejor lado', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Marcas de test: +25%, L-sit PU, flag horizontal, V-sit, straddle press, Nordic completo — siempre frescos', 'note' => 'En B rotan los picos de codo por ciclo: impares lastre +25%, pares L-sit PU', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista (torácica + straddle); dosis mínimas de mantenimiento; sin intentos de marca', 'note' => 'El trabajo real de esta fase es la apertura, no el empuje', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Dominada lastrada +25% BW', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta desde brazos extendidos hasta barbilla sobre la barra, cero impulso de piernas', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'L-sit pull-up', 'minimum' => 5, 'target' => 8, 'unit' => 'repeticiones', 'form' => 'Desde colgado activo con piernas extendidas en L, tracciona hasta barbilla sobre la barra sin perder la L ni balancearte', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Human flag', 'minimum' => 3, 'target' => 5, 'unit' => 'segundos', 'form' => 'Cuerpo horizontal lateral a la barra, brazos rectos, hombro inferior empuja, core rígido, sin arqueo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'V-sit', 'minimum' => 10, 'target' => 15, 'unit' => 'segundos', 'form' => 'En el suelo, manos a los lados de las caderas, piernas extendidas y despegadas del suelo, compresión máxima, lumbar neutra', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Straddle press to handstand', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Desde straddle stand, compresión y elevación controlada al pino sin impulso de piernas; piernas abiertas hasta juntarlas en vertical', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Nordic curl completo', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde rodillas, caída controlada hacia adelante con talones fijos, recuperación completa sin ayuda de manos', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 14 — ONE-ARM CHIN-UP
+    // ========================================================================
+
+    private static function level14(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el OAC asistido con banda gruesa parece ridículo de fácil: perfecto. Estás enseñando al sistema nervioso el patrón unilateral completo, no demostrando nada. La fuerza ya la tienes (o la tendrás del lastre); lo que se construye aquí es el mapa motor del gesto.',
+                'Fase 2 (Progresión): registra cada asistencia (grosor de banda, nº de dedos) como si fuera un lastre: la retirada de asistencia ES la progresión del nivel. Y respeta el orden de B: OAC primero, negativa después, lastre al final. El skill siempre en fresco.',
+                'Fase 3 (Intensificación): respeta las rotaciones de pico sin excepciones: en ciclo impar no se intenta el 90° máximo ni el lastre +50%, en ciclo par no se intenta el planche PU máximo ni el OAC. Cada par de gestos cuelga del mismo tendón; intentar los dos picos en el mismo microciclo es la receta más rápida para una tendinopatía de bíceps o de codo. La sesión B de marcas es larga (100-120 min) precisamente porque los descansos no se negocian: si el tiempo aprieta, se recorta volumen de accesorios, nunca descanso.',
+                'Fase 4 (Recuperación): es la única fase sin exposición unilateral pesada: apróvechala. La salud capsular (cross-body, ER a 90°, rotaciones cubanas) y el antebrazo en suelo son el entrenamiento real de esta fase.',
+                'Si fallas el test — diagnóstico: (a) El OAC se queda a media altura: la negativa a un brazo es tu mejor aliada (5-8 s de bajada controlada); retrocede a banda media y negativas largas un ciclo. (b) El OAC no arranca desde abajo: más lastre pesado a dos brazos (el techo del one-arm es la fuerza a dos brazos) y asistencia con dedos en lugar de banda (enseña el arranque real). (c) El planche push-up no sale: casi siempre es un full planche demasiado corto: alarga el hold (4-5 s) antes de añadir flexiones. (d) El 90° se queda en el fondo: más parciales de medio rango y más descenso a straddle planche; el fondo del 90° es fuerza de planche, no de tríceps. (e) Los FL raises se balancean: reduce el rango (raise a straddle) y gana control; el balanceo aprendido invalida la rep.',
+                'Advertencias de seguridad: el one-arm chin-up es el ejercicio más agresivo del programa para el tendón del bíceps y el hombro: una sola exposición pesada por microciclo, nunca en frío, nunca con molestia previa. Cualquier dolor en la cara anterior del hombro detiene la vía unilateral y los estáticos de anillas (se sigue entrenando todo lo demás). El tiger bend y el impossible dip tienen umbral de dolor cero en el codo: a la primera punzada se retrocede un peldaño sin negociación. Los estáticos de anillas (cross, maltese) solo tras el Bloque 0 completo y con asistencias honestas: aquí la progresión se mide en milímetros por ciclo.',
+                'Mapa tendinoso del nivel (§1.7 — la zona más delicada del programa): el one-arm chin-up es el ejercicio más agresivo del catálogo para el tendón del bíceps y el hombro: una sola exposición pesada unilateral por microciclo (sesión B), nunca en sesiones consecutivas, nunca en frío · el planche PU (bíceps distal) y el 90° PU (hombro en flexión + bíceps) comparten tendón: nunca se intensifican en la misma fase — de ahí la rotación de picos por ciclo en F3 · el OAC y el lastre +50% también rotan el pico por ciclo en F3 (comparten sesión B y el mismo codo en tracción: nunca dos marcas pesadas de tracción en la misma sesión) · el tiger bend hold (codo/antebrazo) vive en D, separado del impossible dip asistido (A): los dos gestos más lesivos para el codo del catálogo no coinciden nunca en la misma sesión, y en ciclo par de F3 (pico de 90°) el tiger bend se queda en hold, sin negativos · anillas élite (cross hold, maltese con banda): brazo recto, volumen bajo, descansos largos, solo tras el Bloque 0 completo, y rotan el foco pesado por ciclo como en N15 (mismo tendón: hombro/bíceps en brazo recto lateral — nunca progresan los dos a la vez; en ciclo par de F3 ambos trabajan técnicos porque el 90° es el pico de D) · cualquier dolor en la cara anterior del hombro detiene la vía unilateral y los estáticos de anillas (se sigue entrenando el resto con normalidad).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Vía OAC: archer pesado + typewriter + OAC asistido técnico; hitos de peldaño (90° asistido, cross con banda, tiger bend hold, impossible asistido)', 'note' => 'Bloque 0 más largo del programa; salud capsular y antebrazo en suelo innegociables', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'OAC asistido con menos banda + negativa larga; lastre +40%; FL raises; 90° parcial (hito); tiger bend negativo (hito)', 'note' => 'La retirada de asistencia es la progresión real del nivel', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Rotación de picos por ciclo: impares pica planche PU (A) y OAC (B); pares pica 90° PU (D) y +50% (B)', 'note' => 'Nunca dos picos del mismo tendón en la misma fase; descansos de 4-5 min', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista (cápsula de hombro + antebrazo); dosis mínimas; sin intentos de marca', 'note' => 'Aprovecha para salud capsular y antebrazo en suelo', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'One-arm chin-up', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Cuelga de una mano en supinación con el hombro activo; tracciona hasta barbilla sobre la barra, torso apenas rotado, sin impulso de piernas; descenso controlado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Planche push-up', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde full planche estable, flexiona manteniendo la horizontal y la protracción; la rep que rompe la posición no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => '90° push-up', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Desde handstand libre, descenso controlado hasta straddle planche y empuje de vuelta al pino, sin impulso de piernas; rango completo en ambas direcciones', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Front lever raises', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Desde colgado activo con brazos rectos y retroversión, eleva el cuerpo extendido hasta full front lever, mantén 1 s y baja controlado; sin balanceo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dominada lastrada +50% BW', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta, barbilla sobre la barra, cero impulso de piernas', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 15 — ONE-ARM PULL-UP
+    // ========================================================================
+
+    private static function level15(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): el OAP en prona se aprende desde cero aunque el OAC sea tuyo: acepta la banda gruesa sin vergüenza. Lo que estás comprando con esa asistencia es un codo sano dentro de diez años.',
+                'Fase 2 (Progresión): cambia la asistencia del OAP a dedos lo antes posible: 1-2 dedos en tu propia muñeca enseñan el arranque real que la banda no enseña. Registra dedos y grosores como registrarías kilos.',
+                'Fase 3 (Intensificación): tres rotaciones de pico, cero excepciones: impossible/tiger bend, cross/maltese y OAP/lastre +50% — ninguna pareja pica junta. En este nivel la disciplina de NO hacer es lo que te lleva al test: el que lo intenta todo cada sesión no llega a Olimpo, llega al fisio. La sesión B de marcas dura 100-120 min porque los descansos de 4-5 min no se negocian: si el tiempo aprieta, se recorta volumen de accesorios, nunca descanso.',
+                'Fase 4 (Recuperación): es la fase más importante del nivel más lesivo. La movilidad de recuperación es el entrenamiento: cápsula posterior, pectoral, antebrazo en suelo, dislocates. Sal de esta fase mejor de lo que entraste, no solo menos cansado.',
+                'Si fallas el test — diagnóstico: (a) El OAP no arranca desde abajo: cambia la asistencia a dedos (patrón real) y sube el lastre a dos brazos; el arranque es fuerza absoluta de dorsal/braquial. (b) El OAP muere a media altura: negativa prona de 8 s y más typewriter prono; el tramo medio se construye excéntricamente. (c) El tiger bend no empuja de vuelta: más asistido y más hold; la salida del fondo es tríceps en un ángulo que solo se construye con reps asistidas perfectas. (d) El impossible dip duele por delante: sube la asistencia y baja el rango; la cápsula anterior no perdona la prisa — la progresión se mide en centímetros por ciclo. (e) El cross o el maltese tiemblan en exceso: demasiado ángulo o poca banda; sube la asistencia y alarga los descansos a 4 min. Un estático tembloroso no construye: solo fatiga.',
+                'Advertencias de seguridad: es el nivel más lesivo del catálogo. Reglas innegociables: dolor matinal en codo u hombro >2/10 = congelar esa escalera un ciclo · ningún estático de anillas ni unilateral sin el Bloque 0 completo · tiger bend e impossible dip: umbral de dolor cero · iron cross y maltese, incluso asistidos, son los movimientos más lesivos del programa si se fuerzan: bandas honestas, rangos parciales, hombros perfectamente calientes · la descarga larga no es opcional. El ONE-ARM PULL-UP es la celebración máxima del programa cerrado: llega entero, no lesionado.',
+                'Mapa tendinoso del nivel (§1.7 — máxima alerta del catálogo): el OAP carga el codo en prona (menos ayuda del bíceps, más braquial/dorsal, pero el codo sigue siendo el eslabón débil): una exposición pesada por microciclo (B), siempre primero y fresco · la sesión B (OAP + +50% ×3) es la de mayor carga de codo del programa: en F3 sus dos marcas rotan el pico por ciclo (impar: OAP; par: +50% — nunca las dos en la misma sesión), su descarga es obligatoria y nunca va seguida de otra sesión pesada de codo · iron cross y maltese, incluso asistidos, son los movimientos más lesivos del catálogo si se fuerzan: bandas honestas, rangos parciales, hombros perfectamente calientes, y rotan el foco pesado por ciclo en F3 (nunca los dos al máximo en la misma sesión) · tiger bend (D) vs. impossible dip (A): anti-coincidencia explícita §1.7 — nunca se intensifican en la misma fase (mismo tendón, mismo vector) · el falso agarre se mantiene vivo en toda sesión D (la línea iniciada en N6 nunca se abandona) · dolor matinal >2/10 en codo u hombro = congelar esa escalera un ciclo; aquí no se negocia.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Vía OAP: asistido banda gruesa + negativa; cross/maltese con bandas generosas; impossible con banda media; tiger bend hold', 'note' => 'Bloque 0 más largo del catálogo; mantenimiento integral G1-G6', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'OAP asistido con dedos; +50% ×2; cross/maltese con banda media; tiger bend asistido (hito)', 'note' => 'Cambia la asistencia a dedos lo antes posible para enseñar el arranque real', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Rotación de picos por ciclo: impares pica impossible (A), tiger bend contenido (D), OAP (B); pares pica tiger bend (D), impossible mantiene (A), +50% (B); cross/maltese rotan foco', 'note' => 'Tres rotaciones de pico, cero excepciones; descansos 4-5 min', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad de recuperación como protagonista; la fase más importante del nivel más lesivo', 'note' => 'Dosis mínimas; movilidad de recuperación es el entrenamiento', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'One-arm pull-up (prona)', 'minimum' => 1, 'target' => 2, 'unit' => 'repeticiones', 'form' => 'Cuelga de una mano en pronación con el hombro activo; tracciona con dorsal y braquial, torso apenas rotado, hasta barbilla sobre la barra; descenso controlado, sin impulso', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Dominada lastrada +50% BW', 'minimum' => 3, 'target' => 5, 'unit' => 'repeticiones', 'form' => 'Lastre asegurado en la cadera, dominada estricta, barbilla sobre la barra, cero impulso; la base de fuerza a dos brazos del OAP', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Tiger bend push-up', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'Desde handstand libre, descenso controlado hasta apoyo sobre antebrazos y empuje de vuelta al pino, codos al frente, sin impulso de piernas; rango completo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Impossible dip', 'minimum' => 1, 'target' => 3, 'unit' => 'repeticiones', 'form' => 'En anillas, descenso inclinando el cuerpo hacia atrás hasta que las anillas quedan por delante del torso y empuje de vuelta al apoyo; rango ganado progresivamente, sin dolor anterior', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Iron cross asistido (banda mínima)', 'minimum' => 5, 'target' => 8, 'unit' => 'segundos', 'form' => 'En anillas con falso agarre y banda mínima bajo los pies, brazos extendidos lateralmente hasta la cruz; hold limpio, simétrico, sin temblor extremo', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Maltese asistido (banda)', 'minimum' => 3, 'target' => 5, 'unit' => 'segundos', 'form' => 'En anillas con banda a la cadera, cuerpo proyectado hacia delante y brazos rectos abiertos lateralmente hasta la horizontal ganada; hold limpio, sin arqueo', 'type' => TestItemType::Fuerza->value],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 16 — OLIMPO (BLOQUE ÉLITE ABIERTO)
+    // ========================================================================
+
+    private static function level16(): array
+    {
+        return [
+            'tips' => [
+                'Filosofía del bloque: elige 1-2 objetivos legendarios por ciclo (nunca más), respetando siempre la matriz de compatibilidad tendinosa.',
+                'El resto del catálogo pasa a modo mantenimiento de élite: cada skill ya conseguido se conserva con dosis mínimas efectivas.',
+                'Al superar el test parcial del objetivo se desbloquea el siguiente peldaño de ese micro-programa y se puede rotar de especialización.',
+                'La movilidad del Bloque 0 se personaliza según la especialización activa (iron cross → falso agarre profundo + pectoral; maltese → extensión de hombro + muñeca; OAP múltiple → salud capsular + bíceps; lastre legendario → agarre + dorsal).',
+                'Al entrar a Olimpo: resiste la tentación de elegir dos objetivos grandes (cross + OAP múltiple es la trampa clásica). Elige UNO durante tu primer ciclo: aprende el ritmo de especialización antes de doblar la apuesta.',
+                'Al elegir especialización: prioriza la que más te ilusiona, no la que deberías; la adherencia es el motor del bloque infinito. La matriz de compatibilidad solo vetó combinaciones lesivas, no preferencias.',
+                'En cada Fase 3: los tests parciales van frescos y primeros. Un TP intentado al final de la sesión mide tu fatiga. Si fallas un TP dos ciclos seguidos, el peldaño anterior necesita más tiempo bajo tensión: retrocede sin drama.',
+                'En la rotación: cambiar de especialización tras superar un TP no es abandono, es el diseño. El mantenimiento de élite conserva lo construido mientras atacas otra montaña.',
+                'Los combos son descanso activo de élite: el slot de estilo es la recompensa lúdica del nivel más duro. Úsalo: la maestría también se entrena jugando.',
+                'Advertencia final: Olimpo es el bloque donde los egos se lesionan. Todas las reglas tendinosas que te trajeron hasta aquí valen el doble ahora. El objetivo no es conseguirlo todo: es seguir entrenando dentro de veinte años.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Peldaño actual del objetivo con asistencia/volumen técnico; mantenimiento de élite completo; movilidad personalizada', 'note' => 'Mantenimiento de élite del resto del catálogo con dosis mínimas efectivas', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Peldaño actual con carga real; reducción de asistencias; mantenimiento de élite', 'note' => 'Reduce asistencia antes de aumentar volumen', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Test parcial del peldaño, fresco y primer ejercicio de su sesión; si se supera → siguiente peldaño desbloqueado; mantenimiento', 'note' => 'Nunca intentar el TP al final de la sesión', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Movilidad protagonista; dosis mínimas; ventana de rotación para cambiar de especialización', 'note' => 'Fase más importante del bloque infinito; decide las próximas décadas de entrenamiento', 'intensity' => '50%'],
+            ],
+        ];
+    }
+
     private static function achievementsL12(): array
     {
         return [
@@ -1759,6 +1910,383 @@ class CalisteniaMasterContentV4
     }
 
     // ========================================================================
+    // ========================================================================
+    // LEVEL 13 — FUERZA UNILATERAL
+    // ========================================================================
+
+    private static function achievementsL13(): array
+    {
+        return [
+            [
+                'code' => 'v4-n13-dominada-mas-25pct-bw',
+                'name' => 'Dominada +25% BW',
+                'description' => 'Dominada lastrada con el 25% del peso corporal añadido: fuerza absoluta de tracción a dos brazos.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Dominada lastrada +25% BW',
+                'xpReward' => 75,
+            ],
+            [
+                'code' => 'v4-n13-l-sit-pull-up',
+                'name' => 'L-sit pull-up',
+                'description' => 'Dominada en posición L-sit: tracción y compresión de cadera simultáneas.',
+                'category' => 'skill', 'icon' => '🪑', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'L-sit pull-up',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-human-flag',
+                'name' => '¡HUMAN FLAG!',
+                'description' => 'Bandera humana horizontal: uno de los estáticos laterales más espectaculares de la calistenia.',
+                'category' => 'skill', 'icon' => '🚩', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Human flag',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n13-v-sit',
+                'name' => 'V-sit',
+                'description' => 'V-sit limpio con piernas extendidas y compresión máxima de cadera.',
+                'category' => 'skill', 'icon' => '🪑', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'V-sit',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-straddle-press',
+                'name' => 'STRADDLE PRESS',
+                'description' => 'Press to handstand desde straddle: compresión, hombros y apertura en un solo gesto.',
+                'category' => 'skill', 'icon' => '🚀', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Straddle press to handstand',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-nordic-curl',
+                'name' => 'Nordic curl',
+                'description' => 'Nordic curl completo: control excéntrico total de la cadena posterior.',
+                'category' => 'skill', 'icon' => '🦵', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Nordic curl completo',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-bandera-45',
+                'name' => 'Bandera a 45°',
+                'description' => 'Bandera humana a 45° consolidada en ambos lados: peldaño clásico hacia la horizontal.',
+                'category' => 'skill', 'icon' => '🚩', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-negativa-un-brazo-5s',
+                'name' => 'Negativa a un brazo 5 s',
+                'description' => 'Bajada controlada de 5 s a un brazo: peldaño adelantado de la vía one-arm.',
+                'category' => 'skill', 'icon' => '⬇️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-hs-lower-straddle-planche-hspu-deficit',
+                'name' => 'Handstand lower to straddle planche / HSPU con déficit',
+                'description' => 'Descenso controlado desde pino a straddle planche, o HSPU con déficit: primer peldaño hacia el 90° push-up.',
+                'category' => 'skill', 'icon' => '⬇️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n13-adv-tuck-straddle-planche-pu',
+                'name' => 'Adv tuck/straddle planche PU',
+                'description' => 'Planche push-up desde tuck avanzado o straddle asistido: cierre de la escalera planche dinámica.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 14 — ONE-ARM CHIN-UP
+    // ========================================================================
+
+    private static function achievementsL14(): array
+    {
+        return [
+            [
+                'code' => 'v4-n14-one-arm-chin-up',
+                'name' => '¡ONE-ARM CHIN-UP!',
+                'description' => 'Dominada completa a un brazo en supinación: la cima unilateral de la tracción.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'One-arm chin-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n14-planche-push-up',
+                'name' => 'PLANCHE PUSH-UP',
+                'description' => 'Flexión en planche completa: la dinámica más dura de la línea de apoyo.',
+                'category' => 'skill', 'icon' => '📐', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Planche push-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n14-90-push-up',
+                'name' => '90° PUSH-UP',
+                'description' => '90° push-up completo: desde handstand hasta planche y de vuelta, hombro en su máxima flexión.',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => '90° push-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n14-front-lever-raises',
+                'name' => 'Front lever raises',
+                'description' => 'Elevaciones controladas hasta front lever: dominio dinámico de la horizontal.',
+                'category' => 'skill', 'icon' => '🛡️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Front lever raises',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-mas-50pct-bw',
+                'name' => '+50% BW',
+                'description' => 'Dominada lastrada con el 50% del peso corporal añadido: techo de fuerza a dos brazos.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Dominada lastrada +50% BW',
+                'xpReward' => 75,
+            ],
+            [
+                'code' => 'v4-n14-90-push-up-asistido',
+                'name' => '90° push-up asistido',
+                'description' => '90° push-up con banda a la cadera: primer peldaño de la escalera hacia el libre.',
+                'category' => 'skill', 'icon' => '🎗️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-90-push-up-parcial',
+                'name' => '90° push-up parcial',
+                'description' => '90° push-up en medio rango: control del tramo más exigente del recorrido.',
+                'category' => 'skill', 'icon' => '➖', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-tiger-bend-hold-negativo',
+                'name' => 'Tiger bend hold / negativo',
+                'description' => 'Apoyo sobre antebrazos desde handstand o negativo controlado: base del tiger bend.',
+                'category' => 'skill', 'icon' => '🐯', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-impossible-dip-asistido',
+                'name' => 'Impossible dip asistido',
+                'description' => 'Impossible dip con banda generosa: primer peldaño del fondo más profundo en anillas.',
+                'category' => 'skill', 'icon' => '⭕', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-cross-hold-banda',
+                'name' => 'Cross hold con banda',
+                'description' => 'Hold en cruz con banda generosa: primer contacto con la escalera del iron cross.',
+                'category' => 'skill', 'icon' => '⚜️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-ring-planche-lean-maltese',
+                'name' => 'Ring planche lean / maltese',
+                'description' => 'Proyección máxima en anillas con banda: base de la planche de anillas y el maltese.',
+                'category' => 'skill', 'icon' => '🦅', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'v4-n14-dolphin-forearm-stand',
+                'name' => 'Dolphin / forearm stand',
+                'description' => 'Equilibrio sobre antebrazos o dolphin pose: base de muñeca y codo para el tiger bend.',
+                'category' => 'skill', 'icon' => '🐬', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 15 — ONE-ARM PULL-UP
+    // ========================================================================
+
+    private static function achievementsL15(): array
+    {
+        return [
+            [
+                'code' => 'v4-n15-one-arm-pull-up',
+                'name' => '¡ONE-ARM PULL-UP!',
+                'description' => 'Dominada completa a un brazo en pronación: la celebración máxima del programa cerrado.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'One-arm pull-up (prona)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n15-mas-50pct-x3',
+                'name' => '+50% ×3',
+                'description' => 'Tres repeticiones limpias de dominada lastrada con el 50% del peso corporal.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Dominada lastrada +50% BW',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n15-tiger-bend',
+                'name' => 'TIGER BEND',
+                'description' => 'Tiger bend push-up completo: descenso y empuje desde antebrazos en handstand.',
+                'category' => 'skill', 'icon' => '🐯', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Tiger bend push-up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n15-impossible-dip',
+                'name' => 'IMPOSSIBLE DIP',
+                'description' => 'Impossible dip completo en anillas: el fondo más profundo y exigente del programa.',
+                'category' => 'skill', 'icon' => '⭕', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Impossible dip',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'v4-n15-iron-cross-asistido',
+                'name' => 'Iron cross asistido',
+                'description' => 'Iron cross con banda mínima: la puerta de entrada a la cruz completa.',
+                'category' => 'skill', 'icon' => '⚜️', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Iron cross asistido (banda mínima)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n15-maltese-asistido',
+                'name' => 'Maltese asistido',
+                'description' => 'Maltese con banda: la evolución definitiva de la planche sobre anillas.',
+                'category' => 'skill', 'icon' => '🦅', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Maltese asistido (banda)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'v4-n15-tiger-bend-asistido',
+                'name' => 'Tiger bend asistido',
+                'description' => 'Tiger bend push-up asistido con banda o rango parcial: peldaño previo al completo.',
+                'category' => 'skill', 'icon' => '🎗️', 'tier' => Achievement::TIER_POCO_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 16 — OLIMPO
+    // ========================================================================
+
+    private static function achievementsL16(): array
+    {
+        $achievements = [];
+
+        $rangeSkills = [
+            ['key' => 'iron-cross', 'name' => 'Iron cross', 'icon' => '⚜️'],
+            ['key' => 'maltese', 'name' => 'Maltese', 'icon' => '🦅'],
+            ['key' => 'oap-multiple', 'name' => 'One-arm pull-up múltiple', 'icon' => '💪'],
+            ['key' => 'lastre-dominada', 'name' => 'Dominada lastrada', 'icon' => '🏋️'],
+            ['key' => '90-push-up', 'name' => '90° push-up', 'icon' => '🔥'],
+            ['key' => 'planche-push-up', 'name' => 'Planche push-up', 'icon' => '📐'],
+            ['key' => 'hspu-libre', 'name' => 'HSPU libre', 'icon' => '🤸'],
+            ['key' => 'human-flag', 'name' => 'Human flag', 'icon' => '🚩'],
+            ['key' => 'front-lever', 'name' => 'Front lever', 'icon' => '🛡️'],
+        ];
+        $ranges = [
+            'Bronce' => ['key' => 'bronce', 'tier' => Achievement::TIER_COMUN, 'xp' => 50],
+            'Plata' => ['key' => 'plata', 'tier' => Achievement::TIER_POCO_COMUN, 'xp' => 75],
+            'Oro' => ['key' => 'oro', 'tier' => Achievement::TIER_RARO, 'xp' => 100],
+            'Platino' => ['key' => 'platino', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+            'Diamante' => ['key' => 'diamante', 'tier' => Achievement::TIER_LEGENDARIO, 'xp' => 200],
+        ];
+
+        foreach ($rangeSkills as $skill) {
+            foreach ($ranges as $rangeName => $rangeData) {
+                $achievements[] = [
+                    'code' => 'v4-n16-'.$skill['key'].'-'.$rangeData['key'],
+                    'name' => $skill['name'].' — '.$rangeName,
+                    'description' => 'Rango '.$rangeName.' de '.$skill['name'].' en Olimpo.',
+                    'category' => 'skill', 'icon' => $skill['icon'], 'tier' => $rangeData['tier'], 'type' => Achievement::TYPE_HITO,
+                    'specialCelebration' => false,
+                    'requirementType' => null, 'requirementKey' => null,
+                    'xpReward' => $rangeData['xp'],
+                ];
+            }
+        }
+
+        $combos = [
+            ['code' => 'v4-n16-mu-fl', 'name' => 'MU + FL', 'icon' => '🔗', 'description' => 'Muscle-up en barra enlazado a front lever sin soltar.'],
+            ['code' => 'v4-n16-giro-completo', 'name' => 'GIRO COMPLETO', 'icon' => '🔄', 'description' => 'Giro completo alrededor de la barra (360° / giant).'],
+            ['code' => 'v4-n16-la-cadena-real', 'name' => 'LA CADENA REAL', 'icon' => '👑', 'description' => 'Handstand → press → planche encadenados sin tocar el suelo.'],
+            ['code' => 'v4-n16-bandera-total', 'name' => 'BANDERA TOTAL', 'icon' => '🚩', 'description' => 'Human flag 3+ s ejecutado a ambos lados en la misma sesión.'],
+            ['code' => 'v4-n16-coreografo', 'name' => 'COREÓGRAFO', 'icon' => '🎭', 'description' => 'Secuencia libre de ≥4 skills encadenados sin tocar el suelo.'],
+        ];
+        foreach ($combos as $combo) {
+            $achievements[] = [
+                'code' => $combo['code'],
+                'name' => $combo['name'],
+                'description' => $combo['description'],
+                'category' => 'style', 'icon' => $combo['icon'], 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ];
+        }
+
+        $hitoLegendarios = [
+            ['code' => 'v4-n16-iron-cross-completo', 'name' => 'Iron cross completo', 'icon' => '⚜️', 'tier' => Achievement::TIER_LEGENDARIO, 'xp' => 200],
+            ['code' => 'v4-n16-maltese-completo', 'name' => 'Maltese completo', 'icon' => '🦅', 'tier' => Achievement::TIER_LEGENDARIO, 'xp' => 200],
+            ['code' => 'v4-n16-oap-x2', 'name' => 'OAP ×2', 'icon' => '💪', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+            ['code' => 'v4-n16-oap-x3', 'name' => 'OAP ×3', 'icon' => '💪', 'tier' => Achievement::TIER_LEGENDARIO, 'xp' => 200],
+            ['code' => 'v4-n16-tu-peso-encima', 'name' => 'TU PESO ENCIMA (+100%)', 'icon' => '🏋️', 'tier' => Achievement::TIER_LEGENDARIO, 'xp' => 200],
+            ['code' => 'v4-n16-dominada-mas-75pct', 'name' => 'Dominada +75%', 'icon' => '🏋️', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+            ['code' => 'v4-n16-90-push-up-x3', 'name' => '90° push-up ×3', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+            ['code' => 'v4-n16-planche-push-up-x10', 'name' => 'Planche push-up ×10', 'icon' => '📐', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+            ['code' => 'v4-n16-hspu-libre-x10', 'name' => 'HSPU libre ×10', 'icon' => '🤸', 'tier' => Achievement::TIER_EPICO, 'xp' => 150],
+        ];
+        foreach ($hitoLegendarios as $hito) {
+            $achievements[] = [
+                'code' => $hito['code'],
+                'name' => $hito['name'],
+                'description' => $hito['name'].' desbloqueado en sesión de Olimpo.',
+                'category' => 'skill', 'icon' => $hito['icon'], 'tier' => $hito['tier'], 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => $hito['xp'],
+            ];
+        }
+
+        return $achievements;
+    }
+
     // NOTAS TÉCNICAS POR EJERCICIO (fichas del documento de detalle)
     // ========================================================================
 
@@ -2056,6 +2584,65 @@ class CalisteniaMasterContentV4
         'Knee-to-Wall Rocks' => 'Re-test G3 en el test del nivel: ≥10 cm sin despegar el talón y simetría <2 cm; ensáyalo tal como se evaluará.',
         'Seated Leg Raise' => 'Re-test G5 en el test del nivel: piernas extendidas y juntas despegadas 10 s, manos solo apoyo ligero, lumbar neutra.',
         'Standing Pike Stretch' => 'Re-test G6 en el test del nivel: palmas completas al suelo con piernas extendidas (o pecho a muslos sentado).',
+    ];
+
+    /** Notas de los ejercicios principales de N13. */
+    private const EXERCISE_NOTES_L13 = [
+        'Advanced Tuck Planche Push-Up' => 'Cierra la cadena hacia el planche PU de N14: proyección constante, codos a ~45°, brazos rectos arriba; nunca al fallo del bíceps distal.',
+        'Weighted Pull Up' => 'Dominada estricta con lastre; +10-15% limpio vale más que +25% con tirón. Construye el codo que el one-arm necesitará.',
+        'L-Sit Pull Up' => 'Rango completo desde extensión manteniendo la L-sit; pecho alto y escápulas activas en cada rep.',
+        'Human Flag' => 'Brazo inferior empuja y el superior tracciona; línea lateral estricta. Testea en tu mejor lado, entrena ambos.',
+        'Straddle Press to Handstand' => 'La compresión hace el 80% del trabajo: cadera alta, piernas abiertas, brazos que empujan desde el primer grado.',
+        'Nordic Curl' => 'Completo con control excéntrico; el talón está fijo y el cuerpo baja en línea. Si falla el final, asiste con banda.',
+        'One Arm Pull Up Negative' => 'Salida a dos brazos, bajada a uno con control total 4-5 s. Si no controlas 3 s, apoyo de dedos en la muñeca.',
+        'V-Sit Hold' => 'Pecho alto, lumbar neutra, piernas extendidas y juntas; manos solo apoyo ligero. Puerta G5 viva.',
+        'Typewriter Pull Up' => 'Mantenimiento cargado del patrón unilateral: barbilla sobre la barra todo el recorrido, lado débil marca el volumen.',
+        'Straddle Planche' => 'Consolidación del full planche de N12: apertura controlada, proyección máxima, brazos rectos.',
+        'Handstand Lower to Straddle Planche' => 'Descenso controlado desde handstand a straddle planche: el primer peldaño hacia el 90° push-up de N14.',
+    ];
+
+    /** Notas de los ejercicios principales de N14. */
+    private const EXERCISE_NOTES_L14 = [
+        'One Arm Chin Up' => 'Cima de la tracción supina: una sola exposición pesada unilateral por microciclo, siempre fresco. Dolor anterior de hombro = stop de la vía unilateral.',
+        'Planche Push Up' => 'Full planche como base; la proyección manda sobre las reps. Si no sale, alarga el hold antes de añadir flexiones.',
+        '90 Degree Push Up' => 'Handstand lower controlado a straddle planche y empuje de vuelta. Codos que ceden sincronizados, sin caída libre.',
+        'Front Lever Raise' => 'Desde colgado activo hasta full FL y bajada controlada. Brazos rectos, retroversión pélvica, sin balanceo.',
+        'Tiger Bend Hold' => 'Apoyo sobre antebrazos con cuerpo invertido en línea; base del tiger bend de N15. Sin dolor de codo — el umbral es cero.',
+        'Tiger Bend Negative' => 'Desde handstand, descenso controlado hasta apoyo de antebrazos. Cualquier punzada de codo = quedarse solo en hold.',
+        'Impossible Dip' => 'Fondo profundo en anillas con brazos rectos detrás; asistido con banda. Rango se gana en ciclos, no en sesiones.',
+        'Cross Hold' => 'Anillas con brazos extendidos lateralmente (~60-70°), asistido con banda. Hombros perfectamente calientes, falso agarre consolidado.',
+        'Maltese' => 'Proyección de planche sobre anillas con apertura lateral; banda máxima al inicio. Brazo recto estricto, cuerpo horizontal.',
+        'Dolphin' => 'Postura del delfín sobre antebrazos: base de muñeca y antebrazo para el tiger bend. Cuello libre de carga.',
+        'Forearm Stand' => 'Equilibrio invertido sobre antebrazos frente a pared si hace falta; pista de aterrizaje segura del tiger bend.',
+        'Weighted Pull Up' => '+50% BW: el techo de fuerza a dos brazos que sostiene el one-arm. Técnica idéntica a la dominada estricta.',
+    ];
+
+    /** Notas de los ejercicios principales de N15. */
+    private const EXERCISE_NOTES_L15 = [
+        'One Arm Pull Up' => 'Cima del programa cerrado en prona: una exposición pesada por microciclo, primero y fresco. Máximo 2 fallos encadenados.',
+        'Tiger Bend Push Up' => 'Desde handstand: descenso a antebrazos y empuje de vuelta. Codos apuntan al frente; asistencia con banda o rango parcial al inicio.',
+        'Impossible Dip' => 'Test del nivel: fondo profundo controlado en anillas, hombros estables, giro externo arriba. Nunca forzar rango con dolor anterior.',
+        'Iron Cross' => 'Cruz de hierro asistido con banda mínima: brazos rectos laterales, falso agarre profundo. El ángulo baja en milímetros por ciclo.',
+        'Maltese' => 'Maltese asistido con banda ligera: apertura lateral, cuerpo horizontal, brazos rectos. Progresa por reducción de banda, no por tiempo forzado.',
+        'Weighted Pull Up' => '+50% BW ×3: volumen con el mismo lastre, no más kilos. Técnica estricta en cada rep, descanso completo.',
+        'Tiger Bend' => 'Mantenimiento del hito: hold sobre antebrazos con cuerpo en línea. Base técnica del push-up.',
+    ];
+
+    /** Notas de los ejercicios principales de N16 (Bloque Élite "Olimpo"). */
+    private const EXERCISE_NOTES_L16 = [
+        'Olimpo Push Slot' => 'Slot de especialización de empuje: 1-2 objetivos legendarios por ciclo, frescos, primer bloque tras el Bloque 0. La disciplina de NO hacer es la norma.',
+        'Olimpo Pull Slot' => 'Slot de especialización de tracción: skill antes que fuerza bruta; descansos de 4-5 min no se negocian.',
+        'Olimpo Rings Slot' => 'Slot de especialización en anillas: iron cross / maltese con bandas honestas, hombros calientes, volumen bajo.',
+        'Olimpo Legs Slot' => 'Slot de especialización de piernas: mantenimiento del dragon pistol, shrimp squat y cadena posterior con dosis mínimas efectivas.',
+        'One Arm Pull Up' => 'Mantenimiento de élite: 2 series de calidad por microciclo conservan el skill; sin él, el peldaño baja rápido.',
+        'One Arm Chin Up' => 'Mantenimiento de élite: dosis mínimas efectivas; unos pocos ciclos sin tocarlo lo devuelven a asistencia.',
+        'Planche' => 'Mantenimiento de élite: full planche 2×3-5 s por microciclo; calidad sobre cantidad eternamente.',
+        'Planche Push Up' => 'Mantenimiento de élite: 2×2-3 reps limpias; conserva la proyección y el control del fondo.',
+        'Handstand Push Up' => 'Mantenimiento de élite: HSPU libre o asistido 2×1-2; la fuerza vertical no se abandona.',
+        'Iron Cross' => 'Mantenimiento de élite: cross asistido 2×5 s con banda honesta; el estático más exigente exige el mayor respeto.',
+        'Maltese' => 'Mantenimiento de élite: maltese asistido 2×3-5 s; apertura lateral con brazos rectos y cuerpo horizontal.',
+        'Tiger Bend Push Up' => 'Mantenimiento de élite: 1-2 reps limpias o asistidas; el codo nunca se fuerza tras el impossible dip.',
+        'Impossible Dip' => 'Mantenimiento de élite: asistido 2×2 si no pica en la rotación; rango que se gana en décadas, no en semanas.',
     ];
 
     /** Notas genéricas de movilidad y descarga (comunes a todos los niveles). */

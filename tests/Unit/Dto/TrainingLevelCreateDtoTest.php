@@ -37,6 +37,7 @@ class TrainingLevelCreateDtoTest extends TestCase
             testRequirements: ['pushups' => 10],
             skillFocus: 'Wall Handstand',
             programVersion: 'v1',
+            isInfinite: true,
             isLockedByDefault: true,
         );
 
@@ -86,16 +87,27 @@ class TrainingLevelCreateDtoTest extends TestCase
 
     public function testDifficultyRatingRange(): void
     {
-        $dto = new TrainingLevelCreateDto(
+        $tooHigh = new TrainingLevelCreateDto(
             name: 'Nivel 1',
             programId: 1,
             levelNumber: 1,
-            difficultyRating: 11,
+            difficultyRating: 17,
         );
 
-        $violations = $this->validator->validate($dto);
+        $violations = $this->validator->validate($tooHigh);
 
         $this->assertCount(1, $violations);
+
+        $atMax = new TrainingLevelCreateDto(
+            name: 'Nivel 16: Olimpo',
+            programId: 1,
+            levelNumber: 16,
+            difficultyRating: 16,
+        );
+
+        $violations = $this->validator->validate($atMax);
+
+        $this->assertCount(0, $violations);
     }
 
     public function testDefaultValues(): void
@@ -108,6 +120,7 @@ class TrainingLevelCreateDtoTest extends TestCase
 
         $this->assertEquals(12, $dto->estimatedDurationWeeks);
         $this->assertEquals('v1', $dto->programVersion);
+        $this->assertNull($dto->isInfinite);
         $this->assertTrue($dto->isLockedByDefault);
     }
 }

@@ -36,6 +36,7 @@ class TrainingLevelUpdateDtoTest extends TestCase
             testRequirements: ['test' => 5],
             skillFocus: 'Planche',
             programVersion: 'v2',
+            isInfinite: true,
             isLockedByDefault: false,
         );
 
@@ -67,13 +68,32 @@ class TrainingLevelUpdateDtoTest extends TestCase
         $this->assertTrue($dto->hasChanges());
     }
 
+    public function testHasChangesReturnsTrueWithIsInfinite(): void
+    {
+        $dto = new TrainingLevelUpdateDto(isInfinite: true);
+
+        $this->assertTrue($dto->hasChanges());
+    }
+
     public function testDifficultyRatingRange(): void
     {
-        $dto = new TrainingLevelUpdateDto(difficultyRating: 0);
+        $tooLow = new TrainingLevelUpdateDto(difficultyRating: 0);
 
-        $violations = $this->validator->validate($dto);
+        $violations = $this->validator->validate($tooLow);
 
         $this->assertCount(1, $violations);
+
+        $tooHigh = new TrainingLevelUpdateDto(difficultyRating: 17);
+
+        $violations = $this->validator->validate($tooHigh);
+
+        $this->assertCount(1, $violations);
+
+        $atMax = new TrainingLevelUpdateDto(difficultyRating: 16);
+
+        $violations = $this->validator->validate($atMax);
+
+        $this->assertCount(0, $violations);
     }
 
     public function testLevelNumberMustBePositive(): void
