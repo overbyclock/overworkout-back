@@ -19,7 +19,7 @@ class UserMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->passwordHashService = $this->createMock(UserPasswordHashService::class);
+        $this->passwordHashService = $this->createStub(UserPasswordHashService::class);
         $this->mapper = new UserMapper($this->passwordHashService);
     }
 
@@ -93,15 +93,18 @@ class UserMapperTest extends TestCase
         $user = new User();
         $hashedPassword = 'hashed_password_123';
 
-        $this->passwordHashService
+        $passwordHashService = $this->createMock(UserPasswordHashService::class);
+        $passwordHashService
             ->expects($this->once())
             ->method('hashPassword')
             ->with($user, 'NewPass123')
             ->willReturn($hashedPassword);
 
+        $mapper = new UserMapper($passwordHashService);
+
         $dto = new UserUpdateDto(password: 'NewPass123');
 
-        $this->mapper->updateFromDto($user, $dto);
+        $mapper->updateFromDto($user, $dto);
 
         $this->assertEquals($hashedPassword, $user->getPassword());
     }

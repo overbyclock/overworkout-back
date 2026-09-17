@@ -22,7 +22,7 @@ class TrainingSkillMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
         $this->mapper = new TrainingSkillMapper($this->entityManager);
     }
 
@@ -39,11 +39,11 @@ class TrainingSkillMapperTest extends TestCase
         $level->setLevelNumber(1);
         $level->setProgram($program);
 
-        $programRepo = $this->createMock(EntityRepository::class);
-        $programRepo->expects($this->any())->method('find')->with(1)->willReturn($program);
+        $programRepo = $this->createStub(EntityRepository::class);
+        $programRepo->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $program : null);
 
-        $levelRepo = $this->createMock(EntityRepository::class);
-        $levelRepo->expects($this->any())->method('find')->with(1)->willReturn($level);
+        $levelRepo = $this->createStub(EntityRepository::class);
+        $levelRepo->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $level : null);
 
         $this->entityManager->method('getRepository')
             ->willReturnMap([
@@ -78,12 +78,11 @@ class TrainingSkillMapperTest extends TestCase
 
     public function testFromCreateDtoThrowsWhenProgramNotFound(): void
     {
-        $programRepo = $this->createMock(EntityRepository::class);
+        $programRepo = $this->createStub(EntityRepository::class);
         $programRepo->method('find')->willReturn(null);
 
-        $this->entityManager->expects($this->any())->method('getRepository')
-            ->with(TrainingProgram::class)
-            ->willReturn($programRepo);
+        $this->entityManager->method('getRepository')
+            ->willReturnCallback(fn (string $class) => TrainingProgram::class === $class ? $programRepo : null);
 
         $dto = new TrainingSkillCreateDto(
             name: 'Test',

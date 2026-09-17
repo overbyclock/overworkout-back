@@ -76,7 +76,7 @@ final class UserFavoriteProgramVoterTest extends TestCase
         $favorite = new UserFavoriteProgram();
         $favorite->setUser($user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token->method('getUser')->willReturn(null);
 
         self::assertSame(Voter::ACCESS_DENIED, $this->voter->vote($token, $favorite, [UserFavoriteProgramVoter::MANAGE]));

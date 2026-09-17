@@ -23,14 +23,12 @@ class TrainingWeekInfoMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->levelRepository = $this->createMock(EntityRepository::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->levelRepository = $this->createStub(EntityRepository::class);
 
         $this->entityManager
-            ->expects($this->any())
             ->method('getRepository')
-            ->with(TrainingLevel::class)
-            ->willReturn($this->levelRepository);
+            ->willReturnCallback(fn (string $class) => TrainingLevel::class === $class ? $this->levelRepository : null);
 
         $this->mapper = new TrainingWeekInfoMapper($this->entityManager);
     }
@@ -41,10 +39,8 @@ class TrainingWeekInfoMapperTest extends TestCase
         $level->setName('Nivel 1');
 
         $this->levelRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(1)
-            ->willReturn($level);
+            ->willReturnCallback(fn ($id) => 1 === $id ? $level : null);
 
         $dto = new TrainingWeekInfoCreateDto(
             name: 'Semana 1',
@@ -69,9 +65,7 @@ class TrainingWeekInfoMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidLevel(): void
     {
         $this->levelRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(999)
             ->willReturn(null);
 
         $dto = new TrainingWeekInfoCreateDto(

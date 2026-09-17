@@ -15,13 +15,14 @@ use App\Service\AchievementUnlockService;
 use App\Service\LevelProgressService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class LevelProgressServiceTest extends TestCase
 {
     private LevelProgressService $service;
 
-    /** @var EntityManagerInterface&MockObject */
+    /** @var EntityManagerInterface&Stub */
     private EntityManagerInterface $entityManager;
 
     /** @var UserLevelProgressRepository&MockObject */
@@ -32,15 +33,15 @@ final class LevelProgressServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
         $this->progressRepository = $this->createMock(UserLevelProgressRepository::class);
         $this->trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
 
         $this->service = new LevelProgressService(
             $this->entityManager,
             $this->progressRepository,
-            $this->createMock(TrainingLevelRepository::class),
-            $this->createMock(AchievementUnlockService::class),
+            $this->createStub(TrainingLevelRepository::class),
+            $this->createStub(AchievementUnlockService::class),
             $this->trainingLogRepository,
         );
     }

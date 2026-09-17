@@ -19,7 +19,7 @@ class UserVoterTest extends TestCase
     protected function setUp(): void
     {
         $this->voter = new UserVoter();
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = $this->createStub(TokenInterface::class);
     }
 
     public function testViewOwnProfile(): void

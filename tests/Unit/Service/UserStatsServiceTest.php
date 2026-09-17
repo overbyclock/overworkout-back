@@ -17,19 +17,15 @@ class UserStatsServiceTest extends TestCase
 {
     private UserStatsService $service;
 
-    /** @var EntityManagerInterface&MockObject */
-    private EntityManagerInterface $entityManager;
-
     /** @var UserTrainingLogRepository&MockObject */
     private UserTrainingLogRepository $trainingLogRepository;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
 
         $this->service = new UserStatsService(
-            $this->entityManager,
+            $this->createStub(EntityManagerInterface::class),
             $this->trainingLogRepository,
         );
     }
@@ -39,11 +35,14 @@ class UserStatsServiceTest extends TestCase
         $user = new User();
         $training = new Training();
 
-        $this->entityManager->expects(self::once())
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->service = new UserStatsService($entityManager, $this->trainingLogRepository);
+
+        $entityManager->expects(self::once())
             ->method('persist')
             ->with(self::isInstanceOf(UserTrainingLog::class));
 
-        $this->entityManager->expects(self::once())
+        $entityManager->expects(self::once())
             ->method('flush');
 
         $this->trainingLogRepository->expects(self::once())
@@ -67,10 +66,13 @@ class UserStatsServiceTest extends TestCase
         $training = new Training();
         $completedAt = new \DateTimeImmutable('2026-06-25 10:00:00');
 
-        $this->entityManager->expects(self::once())
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->service = new UserStatsService($entityManager, $this->trainingLogRepository);
+
+        $entityManager->expects(self::once())
             ->method('persist');
 
-        $this->entityManager->expects(self::once())
+        $entityManager->expects(self::once())
             ->method('flush');
 
         $this->trainingLogRepository->expects(self::once())

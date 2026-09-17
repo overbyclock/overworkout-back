@@ -17,13 +17,13 @@ class BenchmarkMapperTest extends TestCase
 {
     private BenchmarkMapper $mapper;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject&ExercisesRepository */
+    /** @var \PHPUnit\Framework\MockObject\Stub&ExercisesRepository */
     private $exercisesRepository;
 
     protected function setUp(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject&ExercisesRepository $repo */
-        $repo = $this->createMock(ExercisesRepository::class);
+        /** @var \PHPUnit\Framework\MockObject\Stub&ExercisesRepository $repo */
+        $repo = $this->createStub(ExercisesRepository::class);
         $this->exercisesRepository = $repo;
         $this->mapper = new BenchmarkMapper($this->exercisesRepository);
     }
@@ -76,9 +76,8 @@ class BenchmarkMapperTest extends TestCase
         $exercise = new Exercises();
         $exercise->setName('Clean and Jerk');
 
-        $this->exercisesRepository->expects($this->any())->method('find')
-            ->with(1)
-            ->willReturn($exercise);
+        $this->exercisesRepository->method('find')
+            ->willReturnCallback(fn ($id) => 1 === $id ? $exercise : null);
 
         $dto = new BenchmarkCreateDto(
             name: 'Abbate',
@@ -100,9 +99,7 @@ class BenchmarkMapperTest extends TestCase
 
     public function testFromCreateDtoThrowsOnInvalidExercise(): void
     {
-        $this->exercisesRepository->expects($this->any())->method('find')
-            ->with(999)
-            ->willReturn(null);
+        $this->exercisesRepository->method('find')->willReturn(null);
 
         $dto = new BenchmarkCreateDto(
             name: 'Abbate',
@@ -137,9 +134,8 @@ class BenchmarkMapperTest extends TestCase
         $exercise = new Exercises();
         $exercise->setName('Run');
 
-        $this->exercisesRepository->expects($this->any())->method('find')
-            ->with(2)
-            ->willReturn($exercise);
+        $this->exercisesRepository->method('find')
+            ->willReturnCallback(fn ($id) => 2 === $id ? $exercise : null);
 
         $benchmark = new Benchmark();
         $benchmark->setName('Test');

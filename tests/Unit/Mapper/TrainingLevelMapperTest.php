@@ -23,14 +23,12 @@ class TrainingLevelMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->programRepository = $this->createMock(EntityRepository::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->programRepository = $this->createStub(EntityRepository::class);
 
         $this->entityManager
-            ->expects($this->any())
             ->method('getRepository')
-            ->with(TrainingProgram::class)
-            ->willReturn($this->programRepository);
+            ->willReturnCallback(fn (string $class) => TrainingProgram::class === $class ? $this->programRepository : null);
 
         $this->mapper = new TrainingLevelMapper($this->entityManager);
     }
@@ -41,10 +39,8 @@ class TrainingLevelMapperTest extends TestCase
         $program->setName('Test Program');
 
         $this->programRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(1)
-            ->willReturn($program);
+            ->willReturnCallback(fn ($id) => 1 === $id ? $program : null);
 
         $dto = new TrainingLevelCreateDto(
             name: 'Nivel 1',
@@ -91,9 +87,7 @@ class TrainingLevelMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidProgram(): void
     {
         $this->programRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(999)
             ->willReturn(null);
 
         $dto = new TrainingLevelCreateDto(

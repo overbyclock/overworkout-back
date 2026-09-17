@@ -20,7 +20,7 @@ class TrainingVoterTest extends TestCase
     protected function setUp(): void
     {
         $this->voter = new TrainingVoter();
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = $this->createStub(TokenInterface::class);
     }
 
     public function testViewPublicTraining(): void

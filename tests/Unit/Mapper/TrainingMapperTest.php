@@ -37,20 +37,15 @@ class TrainingMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->exerciseRepository = $this->createMock(EntityRepository::class);
-        $this->roundRepository = $this->createMock(EntityRepository::class);
-        $this->configRepository = $this->createMock(EntityRepository::class);
-        $this->timeCalculator = $this->createMock(TrainingTimeCalculator::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->exerciseRepository = $this->createStub(EntityRepository::class);
+        $this->roundRepository = $this->createStub(EntityRepository::class);
+        $this->configRepository = $this->createStub(EntityRepository::class);
+        $this->timeCalculator = $this->createStub(TrainingTimeCalculator::class);
 
         $this->entityManager
             ->method('getRepository')
-            ->willReturnMap([
-                [Exercises::class, $this->exerciseRepository],
-                [TrainingRound::class, $this->roundRepository],
-                [TrainingExerciseConfiguration::class, $this->configRepository],
-                [TrainingLevel::class, $this->createMock(EntityRepository::class)],
-            ]);
+            ->willReturnMap($this->createRepositoryMap());
 
         $this->timeCalculator
             ->method('calculate')
@@ -59,15 +54,23 @@ class TrainingMapperTest extends TestCase
         $this->mapper = new TrainingMapper($this->entityManager, $this->timeCalculator);
     }
 
+    private function createRepositoryMap(): array
+    {
+        return [
+            [Exercises::class, $this->exerciseRepository],
+            [TrainingRound::class, $this->roundRepository],
+            [TrainingExerciseConfiguration::class, $this->configRepository],
+            [TrainingLevel::class, $this->createStub(EntityRepository::class)],
+        ];
+    }
+
     public function testFromCreateDtoCreatesTraining(): void
     {
         $exercise = new Exercises();
         $exercise->setName('Push Up');
         $this->exerciseRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(1)
-            ->willReturn($exercise);
+            ->willReturnCallback(fn ($id) => 1 === $id ? $exercise : null);
 
         $dto = new TrainingCreateDto(
             discipline: 'calisthenics',
@@ -126,9 +129,7 @@ class TrainingMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidExercise(): void
     {
         $this->exerciseRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(999)
             ->willReturn(null);
 
         $dto = new TrainingCreateDto(
@@ -258,9 +259,14 @@ class TrainingMapperTest extends TestCase
             ]),
         ]);
 
-        $this->entityManager->expects($this->once())->method('remove')->with($oldRound);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->method('getRepository')
+            ->willReturnMap($this->createRepositoryMap());
+        $entityManager->expects($this->once())->method('remove')->with($oldRound);
 
-        $this->mapper->updateFromDto($training, $dto);
+        $mapper = new TrainingMapper($entityManager, $this->timeCalculator);
+        $mapper->updateFromDto($training, $dto);
 
         $this->assertCount(1, $training->getTrainingRounds());
         $this->assertEquals(90, $training->getTrainingRounds()->first()->getRestBetweenRounds());
@@ -283,10 +289,8 @@ class TrainingMapperTest extends TestCase
         $idProp->setValue($existingRound, 200);
 
         $this->roundRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(200)
-            ->willReturn($existingRound);
+            ->willReturnCallback(fn ($id) => 200 === $id ? $existingRound : null);
 
         $dto = new TrainingUpdateDto(rounds: [
             new TrainingRoundDto(round: 2, restBetweenRounds: 120, id: 200, exercises: [], name: 'Salud postural', description: 'Cuidado del hombro.'),
@@ -318,10 +322,8 @@ class TrainingMapperTest extends TestCase
         $idProp->setValue($round, 300);
 
         $this->roundRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(300)
-            ->willReturn($round);
+            ->willReturnCallback(fn ($id) => 300 === $id ? $round : null);
 
         $oldExercise = new TrainingExerciseConfiguration();
         $oldExercise->setSets(3);
@@ -342,9 +344,14 @@ class TrainingMapperTest extends TestCase
             ]),
         ]);
 
-        $this->entityManager->expects($this->once())->method('remove')->with($oldExercise);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->method('getRepository')
+            ->willReturnMap($this->createRepositoryMap());
+        $entityManager->expects($this->once())->method('remove')->with($oldExercise);
 
-        $this->mapper->updateFromDto($training, $dto);
+        $mapper = new TrainingMapper($entityManager, $this->timeCalculator);
+        $mapper->updateFromDto($training, $dto);
 
         $this->assertCount(1, $round->getTrainingExerciseConfigurations());
         $this->assertEquals(4, $round->getTrainingExerciseConfigurations()->first()->getSets());

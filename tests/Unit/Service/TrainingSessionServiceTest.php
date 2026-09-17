@@ -19,34 +19,10 @@ use App\Service\LevelProgressService;
 use App\Service\TrainingSessionExpander;
 use App\Service\TrainingSessionService;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class TrainingSessionServiceTest extends TestCase
 {
-    private TrainingSessionService $service;
-
-    /** @var EntityManagerInterface&MockObject */
-    private EntityManagerInterface $entityManager;
-
-    /** @var UserTrainingLogRepository&MockObject */
-    private UserTrainingLogRepository $trainingLogRepository;
-
-    protected function setUp(): void
-    {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
-
-        $this->service = new TrainingSessionService(
-            $this->entityManager,
-            $this->createMock(UserLevelProgressRepository::class),
-            $this->trainingLogRepository,
-            $this->createMock(TrainingLevelRepository::class),
-            $this->createMock(LevelProgressService::class),
-            new TrainingSessionExpander(),
-        );
-    }
-
     public function testStartSessionCreatesLogWithInProgressStatus(): void
     {
         // Un log abandoned ya no lo devuelve el repositorio como activo:
@@ -54,12 +30,15 @@ final class TrainingSessionServiceTest extends TestCase
         $user = new User();
         $training = $this->createMinimalTraining();
 
-        $this->trainingLogRepository->expects(self::once())
+        $trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
+
+        $trainingLogRepository->expects(self::once())
             ->method('findActiveByUserAndTraining')
             ->with($user, $training)
             ->willReturn(null);
 
-        $result = $this->service->startSession($user, $training);
+        $result = $service->startSession($user, $training);
 
         self::assertTrue($result['created']);
         self::assertSame(UserTrainingLog::STATUS_IN_PROGRESS, $result['log']->getStatus());
@@ -74,13 +53,17 @@ final class TrainingSessionServiceTest extends TestCase
         $existing->setUser($user);
         $existing->setTraining($training);
 
-        $this->trainingLogRepository->expects(self::once())
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
+        $service = $this->createService($entityManager, $trainingLogRepository);
+
+        $trainingLogRepository->expects(self::once())
             ->method('findActiveByUserAndTraining')
             ->willReturn($existing);
 
-        $this->entityManager->expects(self::never())->method('persist');
+        $entityManager->expects(self::never())->method('persist');
 
-        $result = $this->service->startSession($user, $training);
+        $result = $service->startSession($user, $training);
 
         self::assertFalse($result['created']);
         self::assertSame($existing, $result['log']);
@@ -94,9 +77,11 @@ final class TrainingSessionServiceTest extends TestCase
         $log->setUser($user);
         $log->setTraining($training);
 
-        $this->trainingLogRepository->method('findActiveByUserAndTraining')->willReturn($log);
+        $trainingLogRepository = $this->createStub(UserTrainingLogRepository::class);
+        $trainingLogRepository->method('findActiveByUserAndTraining')->willReturn($log);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
 
-        $result = $this->service->completeSession($user, $training, 600, 50);
+        $result = $service->completeSession($user, $training, 600, 50);
 
         self::assertSame(UserTrainingLog::STATUS_COMPLETED, $result->getStatus());
         self::assertNotNull($result->getCompletedAt());
@@ -108,12 +93,14 @@ final class TrainingSessionServiceTest extends TestCase
     {
         // Una sesión abandonada no es activa: el repositorio no la devuelve
         // y completarla debe fallar igual que si no existiera.
-        $this->trainingLogRepository->method('findActiveByUserAndTraining')->willReturn(null);
+        $trainingLogRepository = $this->createStub(UserTrainingLogRepository::class);
+        $trainingLogRepository->method('findActiveByUserAndTraining')->willReturn(null);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No hay una sesión activa para este entrenamiento.');
 
-        $this->service->completeSession(new User(), $this->createMinimalTraining(), null, 50);
+        $service->completeSession(new User(), $this->createMinimalTraining(), null, 50);
     }
 
     public function testApplyStepActionFailsOnAbandonedSession(): void
@@ -124,7 +111,7 @@ final class TrainingSessionServiceTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('abandonada');
 
-        $this->service->applyStepAction($log, new UserTrainingSessionStep(), 'complete', 'step');
+        $this->createService()->applyStepAction($log, new UserTrainingSessionStep(), 'complete', 'step');
     }
 
     public function testGoBackFailsOnAbandonedSession(): void
@@ -135,7 +122,7 @@ final class TrainingSessionServiceTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('abandonada');
 
-        $this->service->goBack($log);
+        $this->createService()->goBack($log);
     }
 
     public function testAbandonOpenSessionsForProgramReturnsMarkedCount(): void
@@ -143,12 +130,29 @@ final class TrainingSessionServiceTest extends TestCase
         $user = new User();
         $program = new TrainingProgram();
 
-        $this->trainingLogRepository->expects(self::once())
+        $trainingLogRepository = $this->createMock(UserTrainingLogRepository::class);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
+
+        $trainingLogRepository->expects(self::once())
             ->method('abandonOpenSessionsForProgram')
             ->with($user, $program)
             ->willReturn(2);
 
-        self::assertSame(2, $this->service->abandonOpenSessionsForProgram($user, $program));
+        self::assertSame(2, $service->abandonOpenSessionsForProgram($user, $program));
+    }
+
+    private function createService(
+        ?EntityManagerInterface $entityManager = null,
+        ?UserTrainingLogRepository $trainingLogRepository = null,
+    ): TrainingSessionService {
+        return new TrainingSessionService(
+            $entityManager ?? $this->createStub(EntityManagerInterface::class),
+            $this->createStub(UserLevelProgressRepository::class),
+            $trainingLogRepository ?? $this->createStub(UserTrainingLogRepository::class),
+            $this->createStub(TrainingLevelRepository::class),
+            $this->createStub(LevelProgressService::class),
+            new TrainingSessionExpander(),
+        );
     }
 
     private function createMinimalTraining(): Training

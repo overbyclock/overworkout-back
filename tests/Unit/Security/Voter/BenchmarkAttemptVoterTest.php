@@ -25,15 +25,13 @@ class BenchmarkAttemptVoterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->attemptRepository = $this->createMock(UserBenchmarkAttemptRepository::class);
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->attemptRepository = $this->createStub(UserBenchmarkAttemptRepository::class);
+        $this->token = $this->createStub(TokenInterface::class);
 
         $this->entityManager
-            ->expects($this->any())
             ->method('getRepository')
-            ->with(UserBenchmarkAttempt::class)
-            ->willReturn($this->attemptRepository);
+            ->willReturnCallback(fn (string $className) => UserBenchmarkAttempt::class === $className ? $this->attemptRepository : null);
 
         $this->voter = new BenchmarkAttemptVoter($this->entityManager);
     }
@@ -96,7 +94,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $attempt = $this->createAttempt($user);
 
         $this->token->method('getUser')->willReturn($user);
-        $this->attemptRepository->expects($this->any())->method('find')->with(1)->willReturn($attempt);
+        $this->attemptRepository->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $attempt : null);
 
         $result = $this->voter->vote($this->token, 1, [BenchmarkAttemptVoter::VIEW]);
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $result);
@@ -109,7 +107,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $attempt = $this->createAttempt($owner);
 
         $this->token->method('getUser')->willReturn($otherUser);
-        $this->attemptRepository->expects($this->any())->method('find')->with(1)->willReturn($attempt);
+        $this->attemptRepository->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $attempt : null);
 
         $result = $this->voter->vote($this->token, 1, [BenchmarkAttemptVoter::VIEW]);
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $result);
@@ -120,7 +118,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $user = $this->createUser(1);
 
         $this->token->method('getUser')->willReturn($user);
-        $this->attemptRepository->expects($this->any())->method('find')->with(999)->willReturn(null);
+        $this->attemptRepository->method('find')->willReturn(null);
 
         $result = $this->voter->vote($this->token, 999, [BenchmarkAttemptVoter::VIEW]);
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $result);
@@ -132,7 +130,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $attempt = $this->createAttempt($user);
 
         $this->token->method('getUser')->willReturn($user);
-        $this->attemptRepository->expects($this->any())->method('find')->with(1)->willReturn($attempt);
+        $this->attemptRepository->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $attempt : null);
 
         $result = $this->voter->vote($this->token, 1, [BenchmarkAttemptVoter::EDIT]);
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $result);
@@ -144,7 +142,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $attempt = $this->createAttempt($user, UserBenchmarkAttempt::STATUS_IN_PROGRESS);
 
         $this->token->method('getUser')->willReturn($user);
-        $this->attemptRepository->expects($this->any())->method('find')->with(1)->willReturn($attempt);
+        $this->attemptRepository->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $attempt : null);
 
         $result = $this->voter->vote($this->token, 1, [BenchmarkAttemptVoter::DELETE]);
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $result);
@@ -156,7 +154,7 @@ class BenchmarkAttemptVoterTest extends TestCase
         $attempt = $this->createAttempt($user, UserBenchmarkAttempt::STATUS_COMPLETED);
 
         $this->token->method('getUser')->willReturn($user);
-        $this->attemptRepository->expects($this->any())->method('find')->with(1)->willReturn($attempt);
+        $this->attemptRepository->method('find')->willReturnCallback(fn ($id) => 1 === $id ? $attempt : null);
 
         $result = $this->voter->vote($this->token, 1, [BenchmarkAttemptVoter::DELETE]);
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $result);

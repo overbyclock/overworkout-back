@@ -23,14 +23,12 @@ class ExerciseMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->equipmentRepository = $this->createMock(EntityRepository::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->equipmentRepository = $this->createStub(EntityRepository::class);
 
         $this->entityManager
-            ->expects($this->any())
             ->method('getRepository')
-            ->with(Equipments::class)
-            ->willReturn($this->equipmentRepository);
+            ->willReturnCallback(fn (string $class) => Equipments::class === $class ? $this->equipmentRepository : null);
 
         $this->mapper = new ExerciseMapper($this->entityManager);
     }
@@ -83,10 +81,8 @@ class ExerciseMapperTest extends TestCase
         $equipment->setName('Barra');
 
         $this->equipmentRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(1)
-            ->willReturn($equipment);
+            ->willReturnCallback(fn ($id) => 1 === $id ? $equipment : null);
 
         $dto = new ExerciseCreateDto(
             name: 'Dominadas',
@@ -103,9 +99,7 @@ class ExerciseMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidEquipment(): void
     {
         $this->equipmentRepository
-            ->expects($this->any())
             ->method('find')
-            ->with(999)
             ->willReturn(null);
 
         $dto = new ExerciseCreateDto(
