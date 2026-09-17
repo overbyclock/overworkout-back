@@ -20,6 +20,10 @@ class UserTrainingLog
     public const SOURCE_FREE = 'free';
     public const SOURCE_BENCHMARK = 'benchmark';
 
+    public const STATUS_IN_PROGRESS = 'in_progress';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_ABANDONED = 'abandoned';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -39,6 +43,10 @@ class UserTrainingLog
     #[ORM\Column(length: 30)]
     #[Groups([self::GROUP_READ])]
     private string $source = self::SOURCE_PROGRAM;
+
+    #[ORM\Column(length: 20, options: ['default' => self::STATUS_IN_PROGRESS])]
+    #[Groups([self::GROUP_READ])]
+    private string $status = self::STATUS_IN_PROGRESS;
 
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
     #[Groups([self::GROUP_READ])]
@@ -111,6 +119,18 @@ class UserTrainingLog
     public function setSource(string $source): static
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

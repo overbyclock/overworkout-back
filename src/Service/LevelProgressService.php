@@ -11,6 +11,7 @@ use App\Entity\UserLevelProgress;
 use App\Enum\TestItemType;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
+use App\Repository\UserTrainingLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LevelProgressService
@@ -20,6 +21,7 @@ class LevelProgressService
         private readonly UserLevelProgressRepository $progressRepository,
         private readonly TrainingLevelRepository $levelRepository,
         private readonly AchievementUnlockService $achievementUnlockService,
+        private readonly UserTrainingLogRepository $trainingLogRepository,
     ) {
     }
 
@@ -84,6 +86,7 @@ class LevelProgressService
     /**
      * Abandona uno o todos los programas activos del usuario.
      * Si se indica un programa, solo se abandona ese. En caso contrario se abandonan todos los activos.
+     * Las sesiones de entrenamiento en curso de los programas abandonados pasan a estado abandoned.
      */
     public function abandonActiveProgram(User $user, ?TrainingProgram $program = null): void
     {
@@ -93,6 +96,8 @@ class LevelProgressService
             foreach ($programProgresses as $progress) {
                 $progress->abandon();
             }
+
+            $this->trainingLogRepository->abandonOpenSessionsForProgram($user, $program);
 
             $this->entityManager->flush();
 
@@ -105,8 +110,18 @@ class LevelProgressService
             throw new \InvalidArgumentException('No tienes ningún programa activo para abandonar.');
         }
 
+        $programs = [];
         foreach ($activeProgresses as $progress) {
             $progress->abandon();
+
+            $progressProgram = $progress->getTrainingLevel()?->getProgram();
+            if (null !== $progressProgram) {
+                $programs[spl_object_id($progressProgram)] = $progressProgram;
+            }
+        }
+
+        foreach ($programs as $abandonedProgram) {
+            $this->trainingLogRepository->abandonOpenSessionsForProgram($user, $abandonedProgram);
         }
 
         $this->entityManager->flush();

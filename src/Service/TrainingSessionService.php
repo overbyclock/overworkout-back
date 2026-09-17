@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Training;
 use App\Entity\TrainingLevel;
+use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Entity\UserTrainingLog;
@@ -76,6 +77,7 @@ readonly class TrainingSessionService
 
         $now = new \DateTimeImmutable();
         $log->setCompletedAt($now);
+        $log->setStatus(UserTrainingLog::STATUS_COMPLETED);
         $log->setDurationSeconds($durationSeconds);
         $log->setXpEarned($xpEarned);
 
@@ -141,10 +143,19 @@ readonly class TrainingSessionService
     }
 
     /**
+     * Marca como abandonadas todas las sesiones en curso del usuario que
+     * pertenecen al programa indicado. Devuelve cuántas se han marcado.
+     */
+    public function abandonOpenSessionsForProgram(User $user, TrainingProgram $program): int
+    {
+        return $this->trainingLogRepository->abandonOpenSessionsForProgram($user, $program);
+    }
+
+    /**
      * Aplica una acción (complete|skip) sobre un paso de la sesión y avanza
      * el puntero de posición al siguiente paso pendiente.
      *
-     * @throws \DomainException          si la sesión ya está completada
+     * @throws \DomainException          si la sesión ya está completada o abandonada
      * @throws \InvalidArgumentException si se pide scope exercise sobre un paso de descanso
      */
     public function applyStepAction(UserTrainingLog $log, UserTrainingSessionStep $step, string $action, string $scope): void
@@ -168,7 +179,7 @@ readonly class TrainingSessionService
     /**
      * Retrocede al paso anterior de la sesión y lo reabre (vuelve a pendiente).
      *
-     * @throws \DomainException          si la sesión ya está completada
+     * @throws \DomainException          si la sesión ya está completada o abandonada
      * @throws \InvalidArgumentException si no hay paso anterior
      */
     public function goBack(UserTrainingLog $log): void
@@ -279,9 +290,10 @@ readonly class TrainingSessionService
             ->select('COUNT(log.id)')
             ->where('log.user = :user')
             ->andWhere('log.training = :training')
-            ->andWhere('log.completedAt IS NOT NULL')
+            ->andWhere('log.status = :completed')
             ->setParameter('user', $user)
             ->setParameter('training', $training)
+            ->setParameter('completed', UserTrainingLog::STATUS_COMPLETED)
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -357,6 +369,10 @@ readonly class TrainingSessionService
 
     private function assertSessionIsActive(UserTrainingLog $log): void
     {
+        if (UserTrainingLog::STATUS_ABANDONED === $log->getStatus()) {
+            throw new \DomainException('La sesión está abandonada.');
+        }
+
         if (null !== $log->getCompletedAt()) {
             throw new \DomainException('La sesión ya está completada.');
         }

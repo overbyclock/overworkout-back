@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Training;
 use App\Entity\TrainingLevel;
+use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserTrainingLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -64,16 +65,17 @@ class UserTrainingLogRepository extends ServiceEntityRepository
     }
 
     /**
-     * Devuelve la sesión de entrenamiento iniciada pero no completada más reciente
-     * de un usuario, o null si no tiene ninguna.
+     * Devuelve la sesión de entrenamiento en curso (status in_progress) más
+     * reciente de un usuario, o null si no tiene ninguna.
      */
     public function findStartedButNotCompletedByUser(User $user): ?UserTrainingLog
     {
         return $this->createQueryBuilder('log')
             ->where('log.user = :user')
             ->andWhere('log.startedAt IS NOT NULL')
-            ->andWhere('log.completedAt IS NULL')
+            ->andWhere('log.status = :inProgress')
             ->setParameter('user', $user)
+            ->setParameter('inProgress', UserTrainingLog::STATUS_IN_PROGRESS)
             ->orderBy('log.startedAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
@@ -81,20 +83,45 @@ class UserTrainingLogRepository extends ServiceEntityRepository
     }
 
     /**
-     * Devuelve la sesión activa (iniciada y no completada) de un usuario para
-     * un entrenamiento concreto, o null si no existe.
+     * Devuelve la sesión en curso (status in_progress) de un usuario para un
+     * entrenamiento concreto, o null si no existe.
      */
     public function findActiveByUserAndTraining(User $user, Training $training): ?UserTrainingLog
     {
         return $this->createQueryBuilder('log')
             ->where('log.user = :user')
             ->andWhere('log.training = :training')
-            ->andWhere('log.completedAt IS NULL')
+            ->andWhere('log.status = :inProgress')
             ->setParameter('user', $user)
             ->setParameter('training', $training)
+            ->setParameter('inProgress', UserTrainingLog::STATUS_IN_PROGRESS)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Marca como abandonadas todas las sesiones en curso (status in_progress)
+     * del usuario cuyo entrenamiento pertenece al programa indicado.
+     *
+     * @return int número de sesiones marcadas
+     */
+    public function abandonOpenSessionsForProgram(User $user, TrainingProgram $program): int
+    {
+        return $this->getEntityManager()->createQuery(
+            'UPDATE App\Entity\UserTrainingLog log SET log.status = :abandoned
+             WHERE log.user = :user AND log.status = :inProgress
+             AND EXISTS (
+                 SELECT t.id FROM App\Entity\Training t
+                 INNER JOIN t.trainingLevel level
+                 WHERE t = log.training AND level.program = :program
+             )'
+        )
+            ->setParameter('abandoned', UserTrainingLog::STATUS_ABANDONED)
+            ->setParameter('user', $user)
+            ->setParameter('inProgress', UserTrainingLog::STATUS_IN_PROGRESS)
+            ->setParameter('program', $program)
+            ->execute();
     }
 
     /**
@@ -109,10 +136,11 @@ class UserTrainingLogRepository extends ServiceEntityRepository
             ->where('log.user = :user')
             ->andWhere('training.trainingLevel = :level')
             ->andWhere('training.weekNumber = :weekNumber')
-            ->andWhere('log.completedAt IS NOT NULL')
+            ->andWhere('log.status = :completed')
             ->setParameter('user', $user)
             ->setParameter('level', $level)
             ->setParameter('weekNumber', $weekNumber)
+            ->setParameter('completed', UserTrainingLog::STATUS_COMPLETED)
             ->getQuery()
             ->getResult();
     }

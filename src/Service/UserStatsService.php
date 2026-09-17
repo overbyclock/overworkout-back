@@ -39,6 +39,7 @@ class UserStatsService
         }
 
         $log->setCompletedAt($context['completedAt'] ?? new \DateTimeImmutable());
+        $log->setStatus(UserTrainingLog::STATUS_COMPLETED);
 
         $user->addUserTrainingLog($log);
         $user->addXp($log->getXpEarned());

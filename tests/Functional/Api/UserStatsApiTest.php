@@ -237,6 +237,7 @@ class UserStatsApiTest extends WebTestCase
         $log = new UserTrainingLog();
         $log->setUser($this->testUser);
         $log->setTraining($this->testTraining);
+        $log->setStatus(UserTrainingLog::STATUS_COMPLETED);
         $log->setCompletedAt($today);
         $log->setXpEarned(50);
         $this->testUser->addXp(50);

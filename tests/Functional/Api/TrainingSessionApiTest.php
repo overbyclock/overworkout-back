@@ -391,6 +391,7 @@ final class TrainingSessionApiTest extends WebTestCase
         $log->setUser($this->testUser);
         $log->setTraining($completedTraining);
         $log->setSource(UserTrainingLog::SOURCE_PROGRAM);
+        $log->setStatus(UserTrainingLog::STATUS_COMPLETED);
         $log->setCompletedAt(new \DateTimeImmutable());
         $log->setXpEarned(50);
         $this->entityManager->persist($log);
@@ -1174,6 +1175,253 @@ final class TrainingSessionApiTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame(3, $data['stepsCompleted']);
         $this->assertSame(0, $data['stepsSkipped']);
+    }
+
+    public function testAbandonProgramMarksOpenSessionAsAbandonedAndHidesFromNext(): void
+    {
+        $program = $this->createTrainingProgram();
+        $level = $this->createTrainingLevel($program);
+        $training = $this->createTraining('Lifecycle Training', $level, 0);
+
+        $logId = $this->startSessionAndGetLogId($training);
+
+        // La sesión abierta aparece como "continuar"
+        $this->client->request(
+            'GET',
+            '/user/trainings/next',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('continue', $data['session']['type']);
+        $this->assertSame($logId, $data['session']['logId']);
+
+        // Abandonar el programa
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$program->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // El log queda abandoned
+        $this->entityManager->clear();
+        $log = $this->entityManager->getRepository(UserTrainingLog::class)->find($logId);
+        $this->assertSame(UserTrainingLog::STATUS_ABANDONED, $log->getStatus());
+
+        // GET /user/trainings/next ya no la ofrece
+        $this->client->request(
+            'GET',
+            '/user/trainings/next',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('No hay sesiones pendientes', $data['message']);
+        $this->assertNull($data['session']);
+    }
+
+    public function testAbandonProgramOnlyMarksInProgressSessionsOfThatProgram(): void
+    {
+        $programA = $this->createTrainingProgram('Program A', 'program-a');
+        $levelA = $this->createTrainingLevel($programA);
+        $trainingA = $this->createTraining('Training A', $levelA, 0);
+
+        $programB = $this->createTrainingProgram('Program B', 'program-b');
+        $levelB = $this->createTrainingLevel($programB);
+        $trainingB = $this->createTraining('Training B', $levelB, 0);
+
+        $progressA = new UserLevelProgress();
+        $progressA->setUser($this->testUser);
+        $progressA->setTrainingLevel($levelA);
+        $progressA->setStatus(UserLevelProgress::STATUS_IN_PROGRESS);
+        $this->entityManager->persist($progressA);
+
+        // Log completado en el programa A
+        $completedLogA = new UserTrainingLog();
+        $completedLogA->setUser($this->testUser);
+        $completedLogA->setTraining($trainingA);
+        $completedLogA->setSource(UserTrainingLog::SOURCE_PROGRAM);
+        $completedLogA->setStatus(UserTrainingLog::STATUS_COMPLETED);
+        $completedLogA->setCompletedAt(new \DateTimeImmutable());
+        $completedLogA->setXpEarned(50);
+        $this->entityManager->persist($completedLogA);
+
+        // Log abierto en el programa A
+        $openLogA = new UserTrainingLog();
+        $openLogA->setUser($this->testUser);
+        $openLogA->setTraining($trainingA);
+        $openLogA->setSource(UserTrainingLog::SOURCE_PROGRAM);
+        $this->entityManager->persist($openLogA);
+
+        // Log abierto en el programa B (no debe tocarse)
+        $openLogB = new UserTrainingLog();
+        $openLogB->setUser($this->testUser);
+        $openLogB->setTraining($trainingB);
+        $openLogB->setSource(UserTrainingLog::SOURCE_PROGRAM);
+        $this->entityManager->persist($openLogB);
+
+        $this->entityManager->flush();
+
+        $completedLogAId = $completedLogA->getId();
+        $openLogAId = $openLogA->getId();
+        $openLogBId = $openLogB->getId();
+
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$programA->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->entityManager->clear();
+        $repository = $this->entityManager->getRepository(UserTrainingLog::class);
+
+        $this->assertSame(UserTrainingLog::STATUS_COMPLETED, $repository->find($completedLogAId)->getStatus());
+        $this->assertSame(UserTrainingLog::STATUS_ABANDONED, $repository->find($openLogAId)->getStatus());
+        $this->assertSame(UserTrainingLog::STATUS_IN_PROGRESS, $repository->find($openLogBId)->getStatus());
+    }
+
+    public function testCompleteSessionFailsAfterProgramAbandoned(): void
+    {
+        $program = $this->createTrainingProgram();
+        $level = $this->createTrainingLevel($program);
+        $training = $this->createTraining('Abandoned Complete Training', $level, 0);
+
+        $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$program->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 300])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(400, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('No hay una sesión activa para este entrenamiento.', $data['error']);
+    }
+
+    public function testStepActionFailsAfterProgramAbandoned(): void
+    {
+        $program = $this->createTrainingProgram();
+        $level = $this->createTrainingLevel($program);
+        $training = $this->createTraining('Abandoned Step Training', $level, 0);
+
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$program->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request(
+            'PATCH',
+            '/user/sessions/'.$logId.'/steps/'.$steps[0]['id'],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['action' => 'complete'])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(409, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertStringContainsString('abandonada', $data['error']);
+    }
+
+    public function testStartSessionAfterAbandonCreatesNewSession(): void
+    {
+        $program = $this->createTrainingProgram();
+        $level = $this->createTrainingLevel($program);
+        $training = $this->createTraining('Restart Training', $level, 0);
+
+        $firstLogId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'DELETE',
+            '/user/programs/active/'.$program->getId(),
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // El log abandoned no se reutiliza: se crea una sesión nueva
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(201, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertNotSame($firstLogId, $data['logId']);
+        $this->assertSame(UserTrainingLog::STATUS_IN_PROGRESS, $data['log']['status']);
     }
 
     /**
