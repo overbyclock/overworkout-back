@@ -27,6 +27,7 @@ class TrainingLevelMapperTest extends TestCase
         $this->programRepository = $this->createMock(EntityRepository::class);
 
         $this->entityManager
+            ->expects($this->any())
             ->method('getRepository')
             ->with(TrainingProgram::class)
             ->willReturn($this->programRepository);
@@ -40,6 +41,7 @@ class TrainingLevelMapperTest extends TestCase
         $program->setName('Test Program');
 
         $this->programRepository
+            ->expects($this->any())
             ->method('find')
             ->with(1)
             ->willReturn($program);
@@ -89,6 +91,7 @@ class TrainingLevelMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidProgram(): void
     {
         $this->programRepository
+            ->expects($this->any())
             ->method('find')
             ->with(999)
             ->willReturn(null);

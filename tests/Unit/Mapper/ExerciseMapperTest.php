@@ -27,6 +27,7 @@ class ExerciseMapperTest extends TestCase
         $this->equipmentRepository = $this->createMock(EntityRepository::class);
 
         $this->entityManager
+            ->expects($this->any())
             ->method('getRepository')
             ->with(Equipments::class)
             ->willReturn($this->equipmentRepository);
@@ -82,6 +83,7 @@ class ExerciseMapperTest extends TestCase
         $equipment->setName('Barra');
 
         $this->equipmentRepository
+            ->expects($this->any())
             ->method('find')
             ->with(1)
             ->willReturn($equipment);
@@ -101,6 +103,7 @@ class ExerciseMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidEquipment(): void
     {
         $this->equipmentRepository
+            ->expects($this->any())
             ->method('find')
             ->with(999)
             ->willReturn(null);

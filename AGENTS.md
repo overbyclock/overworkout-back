@@ -28,28 +28,28 @@ El frontend es una SPA con Vue 3 + Quasar Framework que consume esta API. Cualqu
 | Capa | Tecnología | Versión |
 |------|-----------|---------|
 | Lenguaje | PHP | >= 8.2 |
-| Framework | Symfony | 8.0.* |
+| Framework | Symfony | 8.1.* |
 | ORM | Doctrine ORM | 3.6+ |
 | Base de datos | MySQL / MariaDB | 8.0 / 10.6+ |
-| Autenticación | JWT (firebase/php-jwt) | 6.10+ |
+| Autenticación | JWT (firebase/php-jwt) | 7.1+ |
 | API | Controladores Symfony personalizados (no API Platform activo a pesar de estar instalado) |
 | CORS | NelmioCorsBundle | 2.6+ |
-| Templates | Twig | 8.0.* |
+| Templates | Twig | 8.1.* |
 
 ### Dependencias principales de producción
 
-- `symfony/framework-bundle` (8.0.*) - Core de Symfony
+- `symfony/framework-bundle` (8.1.*) - Core de Symfony
 - `api-platform/doctrine-orm` y `api-platform/symfony` (4.0.*) - Instalado pero no activo en recursos actualmente
 - `doctrine/orm` (3.6+), `doctrine/dbal` (4+), `doctrine/doctrine-migrations-bundle` (4.0+) - Persistencia
 - `firebase/php-jwt` (^6.10) - Generación y validación de tokens JWT
 - `nelmio/cors-bundle` (^2.6) - Configuración CORS
-- `symfony/security-bundle` (8.0.*) - Sistema de seguridad
-- `symfony/validator` (8.0.*) - Validación de DTOs
-- `symfony/serializer` (8.0.*) - Normalización de entidades a JSON
+- `symfony/security-bundle` (8.1.*) - Sistema de seguridad
+- `symfony/validator` (8.1.*) - Validación de DTOs
+- `symfony/serializer` (8.1.*) - Normalización de entidades a JSON
 
 ### Dependencias de desarrollo
 
-- `phpunit/phpunit` (^11.4) - Testing
+- `phpunit/phpunit` (^13.3) - Testing
 - `friendsofphp/php-cs-fixer` (^3.66) - Formateo de código
 - `phpstan/phpstan` (^2.1) + `phpstan/phpstan-symfony` (^2.0) - Análisis estático
 - `dama/doctrine-test-bundle` (^8.6) - Rollback de transacciones en tests

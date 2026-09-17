@@ -27,6 +27,7 @@ class TrainingWeekInfoMapperTest extends TestCase
         $this->levelRepository = $this->createMock(EntityRepository::class);
 
         $this->entityManager
+            ->expects($this->any())
             ->method('getRepository')
             ->with(TrainingLevel::class)
             ->willReturn($this->levelRepository);
@@ -40,6 +41,7 @@ class TrainingWeekInfoMapperTest extends TestCase
         $level->setName('Nivel 1');
 
         $this->levelRepository
+            ->expects($this->any())
             ->method('find')
             ->with(1)
             ->willReturn($level);
@@ -67,6 +69,7 @@ class TrainingWeekInfoMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidLevel(): void
     {
         $this->levelRepository
+            ->expects($this->any())
             ->method('find')
             ->with(999)
             ->willReturn(null);

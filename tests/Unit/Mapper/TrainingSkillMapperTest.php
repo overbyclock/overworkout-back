@@ -40,10 +40,10 @@ class TrainingSkillMapperTest extends TestCase
         $level->setProgram($program);
 
         $programRepo = $this->createMock(EntityRepository::class);
-        $programRepo->method('find')->with(1)->willReturn($program);
+        $programRepo->expects($this->any())->method('find')->with(1)->willReturn($program);
 
         $levelRepo = $this->createMock(EntityRepository::class);
-        $levelRepo->method('find')->with(1)->willReturn($level);
+        $levelRepo->expects($this->any())->method('find')->with(1)->willReturn($level);
 
         $this->entityManager->method('getRepository')
             ->willReturnMap([
@@ -81,7 +81,7 @@ class TrainingSkillMapperTest extends TestCase
         $programRepo = $this->createMock(EntityRepository::class);
         $programRepo->method('find')->willReturn(null);
 
-        $this->entityManager->method('getRepository')
+        $this->entityManager->expects($this->any())->method('getRepository')
             ->with(TrainingProgram::class)
             ->willReturn($programRepo);
 

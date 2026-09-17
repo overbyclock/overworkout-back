@@ -76,7 +76,7 @@ class BenchmarkMapperTest extends TestCase
         $exercise = new Exercises();
         $exercise->setName('Clean and Jerk');
 
-        $this->exercisesRepository->method('find')
+        $this->exercisesRepository->expects($this->any())->method('find')
             ->with(1)
             ->willReturn($exercise);
 
@@ -100,7 +100,7 @@ class BenchmarkMapperTest extends TestCase
 
     public function testFromCreateDtoThrowsOnInvalidExercise(): void
     {
-        $this->exercisesRepository->method('find')
+        $this->exercisesRepository->expects($this->any())->method('find')
             ->with(999)
             ->willReturn(null);
 
@@ -137,7 +137,7 @@ class BenchmarkMapperTest extends TestCase
         $exercise = new Exercises();
         $exercise->setName('Run');
 
-        $this->exercisesRepository->method('find')
+        $this->exercisesRepository->expects($this->any())->method('find')
             ->with(2)
             ->willReturn($exercise);
 

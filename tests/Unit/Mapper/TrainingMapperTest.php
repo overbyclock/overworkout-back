@@ -64,6 +64,7 @@ class TrainingMapperTest extends TestCase
         $exercise = new Exercises();
         $exercise->setName('Push Up');
         $this->exerciseRepository
+            ->expects($this->any())
             ->method('find')
             ->with(1)
             ->willReturn($exercise);
@@ -125,6 +126,7 @@ class TrainingMapperTest extends TestCase
     public function testFromCreateDtoThrowsExceptionForInvalidExercise(): void
     {
         $this->exerciseRepository
+            ->expects($this->any())
             ->method('find')
             ->with(999)
             ->willReturn(null);
@@ -281,6 +283,7 @@ class TrainingMapperTest extends TestCase
         $idProp->setValue($existingRound, 200);
 
         $this->roundRepository
+            ->expects($this->any())
             ->method('find')
             ->with(200)
             ->willReturn($existingRound);
@@ -315,6 +318,7 @@ class TrainingMapperTest extends TestCase
         $idProp->setValue($round, 300);
 
         $this->roundRepository
+            ->expects($this->any())
             ->method('find')
             ->with(300)
             ->willReturn($round);
