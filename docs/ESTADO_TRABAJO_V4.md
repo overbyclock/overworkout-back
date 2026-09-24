@@ -113,6 +113,15 @@
 - **Fix funcional**: `UserProfileService::PROGRAM_SLUG_CALISTHENICS` apuntaba a `calisthenia-master-v3` (recomendación del onboarding) → ahora `calistenia-master-v4`. Sin este fix el recomendador devolvía null.
 - Se mantiene: comando/blueprints v4, `testEvaluationMode: legacy` (lo usan handstand y front-lever), migraciones históricas.
 
+## Bloque 13 — Muscle Up Mastery (sep 2026)
+
+- Decisión del usuario: los programas de skill son **especializaciones pequeñas del Master v4** para usuarios que no quieren el master completo (mismo nivel de detalle, formato corto). Contenido minado del Master, no inventado.
+- Nuevo programa `muscle-up-mastery` ("Muscle Up Mastery", slug `muscle-up-mastery`): comando `app:create-muscle-up-mastery` + `MuscleUpBlueprint` + `MuscleUpContent` (réplica exacta de la arquitectura Front Lever: 6 niveles × 4 fases × 4 sesiones = 96 trainings, nivel = 4 semanas, legacy mode, sin calendario, icono `accessibility_new`).
+- Niveles: 1 Base de tracción/empuje · 2 Piezas (C2B alto + transición + SBD, del peldaño del N9) · 3 Primera MU (6×1 a 3-4 min, fiel al N9) · 4 Consistencia · 5 Anillas (false grip, del N11) · 6 Dominio (lastrada/L-sit/variedades, del N13+). Reglas §1.7 importadas al codo en tips y descansos.
+- 1 ejercicio nuevo en catálogo: `Dip` (no existía en plano; solo Ring Dip). Todo lo demás resolvió contra catálogo v4 (MU exercises sembrados en su día).
+- En BD dev: 6 niveles, 96 trainings, duraciones 6-58 min (la B de L3 con singles a 3-4 min es la más larga, coherente con el propio N9 del Master). Tests de dominio con mínimos/objetivos por nivel.
+- Verificación: suite verde, PHPStan/CS-Fixer limpios.
+
 ## Notas sueltas
 
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
