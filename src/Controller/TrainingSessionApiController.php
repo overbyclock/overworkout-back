@@ -174,6 +174,28 @@ final class TrainingSessionApiController extends AbstractController
         ]);
     }
 
+    #[Route('/user/sessions/{logId}/abandon', name: 'training_session_abandon', requirements: ['logId' => '\\d+'], methods: ['POST'])]
+    public function abandonSession(int $logId): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $log = $this->findLogOr404($logId);
+        $this->assertLogOwnership($log, $user);
+
+        try {
+            $this->sessionService->abandonSession($user, $log);
+        } catch (\DomainException $e) {
+            return $this->json(['error' => $e->getMessage()], 409);
+        }
+
+        return $this->json([
+            'message' => 'Sesión abandonada correctamente',
+            'logId' => $log->getId(),
+            'status' => $log->getStatus(),
+        ]);
+    }
+
     #[Route('/user/sessions/{logId}/back', name: 'training_session_back', requirements: ['logId' => '\\d+'], methods: ['POST'])]
     public function goBack(int $logId): JsonResponse
     {

@@ -1424,6 +1424,213 @@ final class TrainingSessionApiTest extends WebTestCase
         $this->assertSame(UserTrainingLog::STATUS_IN_PROGRESS, $data['log']['status']);
     }
 
+    public function testAbandonSessionMarksLogAsAbandoned(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('Sesión abandonada correctamente', $data['message']);
+        $this->assertSame($logId, $data['logId']);
+        $this->assertSame('abandoned', $data['status']);
+
+        $this->entityManager->clear();
+        $log = $this->entityManager->getRepository(UserTrainingLog::class)->find($logId);
+        $this->assertSame(UserTrainingLog::STATUS_ABANDONED, $log->getStatus());
+    }
+
+    public function testAbandonSessionDoesNotTouchStepsNorXp(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+        $steps = $this->getSessionSteps($logId);
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $stepsAfter = $this->getSessionSteps($logId);
+        $this->assertCount(\count($steps), $stepsAfter);
+        foreach ($stepsAfter as $step) {
+            $this->assertSame('pending', $step['status']);
+        }
+
+        $this->entityManager->clear();
+        $user = $this->entityManager->getRepository(User::class)->find($this->testUser->getId());
+        $this->assertSame(0, $user->getXp());
+        $this->assertSame(0, $user->getTotalWorkouts());
+    }
+
+    public function testAbandonSessionReturns403ForOtherUsersSession(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $otherUser = new User();
+        $otherUser->setNick('otherabandon');
+        $otherUser->setEmail('otherabandon@test.com');
+        $otherUser->setPassword($this->passwordHasher->hashPassword($otherUser, 'Test123!'));
+        $otherUser->setRoles(['ROLE_USER']);
+        $this->entityManager->persist($otherUser);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'POST',
+            '/login',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode(['email' => 'otherabandon@test.com', 'password' => 'Test123!'])
+        );
+        $otherToken = json_decode($this->client->getResponse()->getContent(), true)['token'];
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$otherToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testAbandonSessionReturns404ForNonExistentSession(): void
+    {
+        $this->client->request(
+            'POST',
+            '/user/sessions/999999/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testAbandonSessionReturns409WhenSessionCompleted(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/complete',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode(['durationSeconds' => 300])
+        );
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$logId.'/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(409, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('La sesión ya está cerrada.', $data['error']);
+    }
+
+    public function testAbandonSessionReturns409WhenAlreadyAbandoned(): void
+    {
+        $training = $this->createTraining();
+        $logId = $this->startSessionAndGetLogId($training);
+
+        $headers = [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            'HTTP_ACCEPT' => 'application/json',
+        ];
+
+        $this->client->request('POST', '/user/sessions/'.$logId.'/abandon', [], [], $headers);
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('POST', '/user/sessions/'.$logId.'/abandon', [], [], $headers);
+
+        $response = $this->client->getResponse();
+        $this->assertSame(409, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('La sesión ya está cerrada.', $data['error']);
+    }
+
+    public function testStartSessionAfterAbandonSessionCreatesNewLog(): void
+    {
+        $training = $this->createTraining();
+        $firstLogId = $this->startSessionAndGetLogId($training);
+
+        $this->client->request(
+            'POST',
+            '/user/sessions/'.$firstLogId.'/abandon',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        // Tras abandonar, iniciar de nuevo crea un log nuevo
+        $this->client->request(
+            'POST',
+            '/user/trainings/'.$training->getId().'/start',
+            [],
+            [],
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+                'HTTP_ACCEPT' => 'application/json',
+            ]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(201, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertNotSame($firstLogId, $data['logId']);
+        $this->assertSame(UserTrainingLog::STATUS_IN_PROGRESS, $data['log']['status']);
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */

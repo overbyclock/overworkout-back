@@ -143,6 +143,24 @@ readonly class TrainingSessionService
     }
 
     /**
+     * Abandona una sesión en curso: la marca como abandonada sin tocar pasos
+     * ni XP, para que el usuario pueda repetir el entrenamiento otro día.
+     *
+     * @throws \DomainException si la sesión no está en curso
+     */
+    public function abandonSession(User $user, UserTrainingLog $log): UserTrainingLog
+    {
+        if (UserTrainingLog::STATUS_IN_PROGRESS !== $log->getStatus()) {
+            throw new \DomainException('La sesión ya está cerrada.');
+        }
+
+        $log->setStatus(UserTrainingLog::STATUS_ABANDONED);
+        $this->entityManager->flush();
+
+        return $log;
+    }
+
+    /**
      * Marca como abandonadas todas las sesiones en curso del usuario que
      * pertenecen al programa indicado. Devuelve cuántas se han marcado.
      */
