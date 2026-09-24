@@ -98,6 +98,13 @@
 - Todo commiteado (back y front). Queda pendiente de decisión: si LevelView/ProgramDetailView llevan también a la intro (`user-train-intro`) con training id (hoy solo se entra desde el Home).
 - La arquitectura v4 de calistenia está completa hasta el Bloque Élite Olimpo (15 niveles + Olimpo). Nuevos programas o ajustes de gamificación quedan para futuras iteraciones.
 
+## Bloque 11 — Benchmarks CrossFit (oct 2026)
+
+- Nuevo seeder `scripts/seeders/seed_benchmarks_crossfit_v2.php`: 31 fichas transcritas de `docs/catalogo_benchmarks_crossfit.md` (5 Ladder, 5 EMOM, 3 Tabata, 4 Chipper, 3 Interval stations, 5 AMRAP —incl. Nate hero—, 6 Heroes for_time: Daniel, Josh, Gunny, Jerry, Whitten, Wittman). Ejecutado en dev e idempotente (re-corrible, find-or-update por nombre).
+- Ojo: el resumen del doc anuncia 32 WODs/71 totales, pero solo hay 31 fichas especificadas (interval_stations cuenta 4 y lista 3). En BD queda: for_time 38, amrap 8, emom 6, tabata 4, chipper 5, interval_stations 4, ladder 5 = **70**.
+- Convenciones aplicadas: tiempos de referencia = punto medio del rango del doc en 'MM:SS'; puntuaciones no temporales (rondas/pts/reps) como texto ('25+ rounds', '400+ pts'); ladder y pirámides desplegados en filas por nivel (criterio JT); `timerConfig` del doc para emom/tabata/amrap/interval y null para stopwatch (consistente con el catálogo existente); partitioningAllowed false en todos.
+- 34 ejercicios resueltos estrictos contra el catálogo (ninguno creado). Front sin cambios: los filtros por formato ya funcionan con los datos.
+
 ## Notas sueltas
 
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
