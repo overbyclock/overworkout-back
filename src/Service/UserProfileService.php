@@ -9,7 +9,7 @@ use App\Repository\TrainingProgramRepository;
 
 class UserProfileService
 {
-    private const PROGRAM_SLUG_CALISTHENICS = 'calisthenia-master-v3';
+    private const PROGRAM_SLUG_CALISTHENICS = 'calistenia-master-v4';
     private const PROGRAM_SLUG_HANDSTAND = 'handstand-balance-mastery';
     private const PROGRAM_SLUG_FRONT_LEVER = 'front-lever-mastery';
 

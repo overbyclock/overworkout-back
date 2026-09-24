@@ -105,6 +105,14 @@
 - Convenciones aplicadas: tiempos de referencia = punto medio del rango del doc en 'MM:SS'; puntuaciones no temporales (rondas/pts/reps) como texto ('25+ rounds', '400+ pts'); ladder y pirámides desplegados en filas por nivel (criterio JT); `timerConfig` del doc para emom/tabata/amrap/interval y null para stopwatch (consistente con el catálogo existente); partitioningAllowed false en todos.
 - 34 ejercicios resueltos estrictos contra el catálogo (ninguno creado). Front sin cambios: los filtros por formato ya funcionan con los datos.
 
+## Bloque 12 — Eliminación de Calistenia Master v3 (sep 2026)
+
+- Decisión del usuario: **v4 es la versión definitiva; v3 eliminada por completo** (revierte la decisión histórica "v3 no se toca" de AGENTS.md/§decisiones).
+- Datos: script `scripts/migrations/delete_calistenia_master_v3.php` (con `backup_pre_v3_delete.php` ejecutado antes; dump en `var/backups/`). Borró 2.345 registros (12 niveles, 192 trainings, 416 rondas, 1.647 configs, 48 week info, 9 skills, 21 logros + programa). Protección anti-datos-de-usuario: aborta si detecta progresos/tests/logs/favoritos/logros desbloqueados (en dev había 0). Programas en BD: handstand-balance-mastery, front-lever-mastery, calistenia-master-v4.
+- Código eliminado: 9 comandos legacy (`app:create-calistenia-master{,-level1,-v2,-v3}`, `app:patch-calistenia-master-v3`, `app:fix-calistenia-master-program`, `app:setup-calistenia-schema`, `app:fix-training-phase-names`, `app:seed-program-skills-achievements`), 6 clases Blueprint/Content v1-v3 + 2 tests unitarios, `scripts/generate_calistenia_report.php`. Recuperables desde git si hiciera falta.
+- **Fix funcional**: `UserProfileService::PROGRAM_SLUG_CALISTHENICS` apuntaba a `calisthenia-master-v3` (recomendación del onboarding) → ahora `calistenia-master-v4`. Sin este fix el recomendador devolvía null.
+- Se mantiene: comando/blueprints v4, `testEvaluationMode: legacy` (lo usan handstand y front-lever), migraciones históricas.
+
 ## Notas sueltas
 
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
