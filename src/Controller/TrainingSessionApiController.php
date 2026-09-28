@@ -147,6 +147,20 @@ final class TrainingSessionApiController extends AbstractController
         ]);
     }
 
+    #[Route('/user/trainings/{trainingId}/preview', name: 'training_session_preview', requirements: ['trainingId' => '\\d+'], methods: ['GET'])]
+    public function getTrainingPreview(int $trainingId): JsonResponse
+    {
+        $training = $this->findTrainingOr404($trainingId);
+
+        return $this->json([
+            'message' => 'Vista previa de la sesión',
+            'session' => [
+                'type' => 'next',
+                'training' => $this->sessionService->getTrainingPreview($training),
+            ],
+        ]);
+    }
+
     #[Route('/user/sessions/{logId}/steps/{stepId}', name: 'training_session_step_action', requirements: ['logId' => '\\d+', 'stepId' => '\\d+'], methods: ['PATCH'])]
     public function applyStepAction(int $logId, int $stepId, #[MapRequestPayload] SessionStepActionDto $dto): JsonResponse
     {

@@ -100,6 +100,17 @@ readonly class TrainingSessionService
     }
 
     /**
+     * Resumen de un entrenamiento concreto para la pantalla previa a la sesión
+     * (misma forma que el training del siguiente sesión: bloques + ejercicios).
+     *
+     * @return array<string, mixed>
+     */
+    public function getTrainingPreview(Training $training): array
+    {
+        return $this->trainingSummary($training);
+    }
+
+    /**
      * Devuelve la siguiente sesión pendiente del usuario: la sesión iniciada que
      * aún no ha completado, o el siguiente entrenamiento pendiente de su semana actual.
      *
@@ -230,12 +241,29 @@ readonly class TrainingSessionService
     {
         $blocks = [];
         foreach ($training->getTrainingRounds() as $index => $round) {
-            $blocks[] = [
+            $block = [
                 'blockNumber' => $index + 1,
                 'blockType' => $round->getBlockType(),
                 'name' => $round->getName(),
                 'description' => $round->getDescription(),
+                'exercises' => [],
             ];
+
+            $laps = $round->getSetsForRound();
+            if (null !== $laps && $laps > 1) {
+                $block['laps'] = $laps;
+            }
+
+            foreach ($round->getTrainingExerciseConfigurations() as $config) {
+                $block['exercises'][] = [
+                    'name' => $config->getExercise()?->getName() ?? 'Ejercicio',
+                    'sets' => $config->getSets() ?? 1,
+                    'reps' => $config->getReps(),
+                    'durationSeconds' => $config->getMaxTimeForReps(),
+                ];
+            }
+
+            $blocks[] = $block;
         }
 
         return [

@@ -141,6 +141,103 @@ final class TrainingSessionServiceTest extends TestCase
         self::assertSame(2, $service->abandonOpenSessionsForProgram($user, $program));
     }
 
+    public function testGetNextSessionIncludesExercisesPerBlock(): void
+    {
+        $user = new User();
+        $training = $this->createMinimalTraining();
+        $log = new UserTrainingLog();
+        $log->setUser($user);
+        $log->setTraining($training);
+
+        $trainingLogRepository = $this->createStub(UserTrainingLogRepository::class);
+        $trainingLogRepository->method('findStartedButNotCompletedByUser')->willReturn($log);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
+
+        $result = $service->getNextSessionForUser($user);
+
+        self::assertSame('continue', $result['type']);
+        $blocks = $result['training']['blocks'];
+        self::assertCount(1, $blocks);
+        self::assertSame(
+            [['name' => 'Push Up', 'sets' => 1, 'reps' => 10, 'durationSeconds' => null]],
+            $blocks[0]['exercises'],
+        );
+        // Con una sola vuelta no se expone laps
+        self::assertArrayNotHasKey('laps', $blocks[0]);
+    }
+
+    public function testGetNextSessionExposesLapsWhenRoundHasMultipleLaps(): void
+    {
+        $user = new User();
+        $training = $this->createMinimalTraining();
+        $training->getTrainingRounds()->first()->setSetsForRound(3);
+
+        $log = new UserTrainingLog();
+        $log->setUser($user);
+        $log->setTraining($training);
+
+        $trainingLogRepository = $this->createStub(UserTrainingLogRepository::class);
+        $trainingLogRepository->method('findStartedButNotCompletedByUser')->willReturn($log);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
+
+        $result = $service->getNextSessionForUser($user);
+
+        self::assertSame(3, $result['training']['blocks'][0]['laps']);
+    }
+
+    public function testGetNextSessionExposesDurationForTimeBasedExercises(): void
+    {
+        $user = new User();
+        $training = new Training();
+        $training->setName('Time Based Training');
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setRestBetweenRounds(60);
+
+        $exercise = new Exercises();
+        $exercise->setName('Plancha');
+
+        $config = new TrainingExerciseConfiguration();
+        $config->setExercise($exercise);
+        $config->setMaxTimeForReps(40);
+        $config->setSets(3);
+        $config->setRestBetweenSets(30);
+        $config->setRestBetweenExercises(30);
+
+        $round->addTrainingExerciseConfiguration($config);
+        $training->addTrainingRound($round);
+
+        $log = new UserTrainingLog();
+        $log->setUser($user);
+        $log->setTraining($training);
+
+        $trainingLogRepository = $this->createStub(UserTrainingLogRepository::class);
+        $trainingLogRepository->method('findStartedButNotCompletedByUser')->willReturn($log);
+        $service = $this->createService(trainingLogRepository: $trainingLogRepository);
+
+        $result = $service->getNextSessionForUser($user);
+
+        self::assertSame(
+            [['name' => 'Plancha', 'sets' => 3, 'reps' => null, 'durationSeconds' => 40]],
+            $result['training']['blocks'][0]['exercises'],
+        );
+    }
+
+    public function testGetTrainingPreviewReturnsSummaryWithExercises(): void
+    {
+        $service = $this->createService();
+
+        $preview = $service->getTrainingPreview($this->createMinimalTraining());
+
+        self::assertSame('Minimal Training', $preview['name']);
+        self::assertCount(1, $preview['blocks']);
+        self::assertSame(
+            [['name' => 'Push Up', 'sets' => 1, 'reps' => 10, 'durationSeconds' => null]],
+            $preview['blocks'][0]['exercises'],
+        );
+    }
+
     private function createService(
         ?EntityManagerInterface $entityManager = null,
         ?UserTrainingLogRepository $trainingLogRepository = null,
