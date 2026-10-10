@@ -276,6 +276,95 @@ class TestResultTest extends TestCase
         $this->assertFalse($results[1]['passed']);
     }
 
+    public function testEvaluateLegacyBenchmarkLtePassed(): void
+    {
+        // Benchmark de tiempo (Fran en segundos): cuanto MENOR, mejor
+        $this->testResult->setResults([
+            ['name' => 'Fran', 'value' => 240],
+        ]);
+
+        $this->testResult->evaluate([
+            ['name' => 'Fran', 'minimum' => 300, 'direction' => 'lte', 'type' => 'benchmark'],
+        ]);
+
+        $this->assertTrue($this->testResult->isOverallPassed());
+
+        $results = $this->testResult->getResults();
+        $this->assertTrue($results[0]['passed']);
+        $this->assertSame('lte', $results[0]['direction']);
+    }
+
+    public function testEvaluateLegacyBenchmarkLteFailed(): void
+    {
+        $this->testResult->setResults([
+            ['name' => 'Fran', 'value' => 320],
+        ]);
+
+        $this->testResult->evaluate([
+            ['name' => 'Fran', 'minimum' => 300, 'direction' => 'lte', 'type' => 'benchmark'],
+        ]);
+
+        $this->assertFalse($this->testResult->isOverallPassed());
+
+        $results = $this->testResult->getResults();
+        $this->assertFalse($results[0]['passed']);
+    }
+
+    public function testEvaluateLegacyWithoutDirectionKeepsGteBehavior(): void
+    {
+        // Ítem sin direction: comportamiento actual (value >= minimum) intacto
+        $this->testResult->setResults([
+            ['name' => 'Pull-ups', 'value' => 10],
+        ]);
+
+        $this->testResult->evaluate([
+            ['name' => 'Pull-ups', 'minimum' => 8],
+        ]);
+
+        $this->assertTrue($this->testResult->isOverallPassed());
+
+        $results = $this->testResult->getResults();
+        $this->assertTrue($results[0]['passed']);
+        $this->assertSame('gte', $results[0]['direction']);
+    }
+
+    public function testEvaluateStrictGatesBenchmarkCountsAsStrength(): void
+    {
+        // Benchmark + puerta: el benchmark cuenta como fuerza en strict_gates
+        $this->testResult->setResults([
+            ['name' => 'Fran', 'value' => 240],
+            ['name' => 'Puerta G1', 'value' => 1],
+        ]);
+
+        $this->testResult->evaluate([
+            ['name' => 'Fran', 'minimum' => 300, 'direction' => 'lte', 'type' => 'benchmark'],
+            ['name' => 'Puerta G1', 'minimum' => 1, 'type' => 'puerta_movilidad', 'gateCode' => 'G1'],
+        ], TrainingProgram::TEST_EVAL_STRICT_GATES);
+
+        $this->assertTrue($this->testResult->isOverallPassed());
+        $this->assertTrue($this->testResult->isStrengthPassed());
+        $this->assertTrue($this->testResult->isMobilityPassed());
+
+        $results = $this->testResult->getResults();
+        $this->assertSame('benchmark', $results[0]['type']);
+        $this->assertTrue($results[0]['passed']);
+
+        // Y si el benchmark falla, la fuerza no se supera
+        $this->testResult->setResults([
+            ['name' => 'Fran', 'value' => 400],
+            ['name' => 'Puerta G1', 'value' => 1],
+        ]);
+
+        $this->testResult->evaluate([
+            ['name' => 'Fran', 'minimum' => 300, 'direction' => 'lte', 'type' => 'benchmark'],
+            ['name' => 'Puerta G1', 'minimum' => 1, 'type' => 'puerta_movilidad', 'gateCode' => 'G1'],
+        ], TrainingProgram::TEST_EVAL_STRICT_GATES);
+
+        $this->assertFalse($this->testResult->isOverallPassed());
+        $this->assertFalse($this->testResult->isStrengthPassed());
+        $this->assertTrue($this->testResult->isMobilityPassed());
+    }
+
     public function testEvaluateGatesOnlyRetest(): void
     {
         // Re-test tras bloqueo: solo se evalúan puertas, la fuerza se da por superada

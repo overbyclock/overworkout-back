@@ -222,7 +222,9 @@ class TestResult
      *
      * results: [{name, value, minimum, unit}].
      *
-     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string}> $requirements
+     * direction ('gte' por defecto, 'lte' para marcas de tiempo en segundos) define la comparación.
+     *
+     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string, direction?: string}> $requirements
      */
     public function evaluate(array $requirements, string $mode = TrainingProgram::TEST_EVAL_LEGACY): static
     {
@@ -236,13 +238,15 @@ class TestResult
         foreach ($this->results as $result) {
             $req = array_find($requirements, fn ($r) => $r['name'] === $result['name']);
             $minimum = $req['minimum'] ?? 0;
-            $passed = $result['value'] >= $minimum;
+            $direction = $req['direction'] ?? 'gte';
+            $passed = 'lte' === $direction ? $result['value'] <= $minimum : $result['value'] >= $minimum;
             if ($passed) {
                 ++$passedCount;
             }
             $evaluatedResults[] = array_merge($result, [
                 'minimum' => $minimum,
                 'passed' => $passed,
+                'direction' => $direction,
             ]);
         }
 
@@ -261,7 +265,7 @@ class TestResult
     /**
      * Evaluación estricta (v4): itera los requisitos; un requisito sin resultado cuenta como fallo.
      *
-     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string}> $requirements
+     * @param array<int, array{name: string, minimum?: int|float, type?: string, gateCode?: string, direction?: string}> $requirements
      */
     private function evaluateStrict(array $requirements, bool $gatesOnly): static
     {
@@ -273,8 +277,9 @@ class TestResult
         foreach ($requirements as $req) {
             $type = TestItemType::fromNullable($req['type'] ?? null);
             $minimum = $req['minimum'] ?? 0;
+            $direction = $req['direction'] ?? 'gte';
             $result = array_find($this->results, fn ($r) => $r['name'] === $req['name']);
-            $passed = null !== $result && $result['value'] >= $minimum;
+            $passed = null !== $result && ('lte' === $direction ? $result['value'] <= $minimum : $result['value'] >= $minimum);
 
             if ($type->isGate()) {
                 if (!$passed) {
@@ -289,6 +294,7 @@ class TestResult
                 'minimum' => $minimum,
                 'passed' => $passed,
                 'type' => $type->value,
+                'direction' => $direction,
             ]);
             if (isset($req['gateCode'])) {
                 $evaluated['gateCode'] = $req['gateCode'];
