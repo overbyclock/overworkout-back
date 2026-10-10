@@ -9,10 +9,11 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa CrossFit Master v1 (niveles 1-3).
+ * Contenido educativo del programa CrossFit Master v1 (niveles 1-6).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
- * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md.
+ * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md y
+ * docs/detalle_crossfit_niveles_04-06.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -28,6 +29,9 @@ class CrossfitMasterContent
             1 => self::level1(),
             2 => self::level2(),
             3 => self::level3(),
+            4 => self::level4(),
+            5 => self::level5(),
+            6 => self::level6(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -41,6 +45,9 @@ class CrossfitMasterContent
             1 => self::achievementsL1(),
             2 => self::achievementsL2(),
             3 => self::achievementsL3(),
+            4 => self::achievementsL4(),
+            5 => self::achievementsL5(),
+            6 => self::achievementsL6(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -111,6 +118,24 @@ class CrossfitMasterContent
                 'session_b' => 'Las negativas de F2 son el primer peldaño hacia la dominada estricta de N4-N6: baja en 3 segundos sin desplomarte. Primero estricto, luego dinámico (§1.7-CrossFit §10.1).',
                 'session_c' => 'Fran escalada de F3 es el ensayo general del test: anota el tiempo y el escalado usado, y compáralo con las referencias del catálogo.',
                 'session_d' => 'Cindy escalada enseña lo que un AMRAP largo pide: repartir, no fundirse. Anota tus rondas; en N4-N6 volverá como test.',
+            ],
+            4 => [
+                'session_a' => 'El wall ball es sentadilla + press de piernas + throw: si CF1 o CF2 no están hoy, la bola baja de peso o de diana. La puerta manda sobre el ego.',
+                'session_b' => 'La primera estricta se construye despacio: negativas de 5-6 s, banda cada vez más fina, y paciencia. Primero estricto, luego dinámico — el kipping de N5 no llega sin esta base (§1.7-CrossFit §10.1).',
+                'session_c' => 'Tracción en metcon = agarre primero: si los antebrazos explotan antes que la espalda, alterna pull-up con box jump over y vuelve. Rondas completas > reps heroicas.',
+                'session_d' => 'Cindy escalada de F2 es el ensayo general del test: anota rondas y escalado usado. Y en el T2B manda el core, no el columpio — todavía.',
+            ],
+            5 => [
+                'session_a' => 'Hoy el RDL trabaja la bisagra que el test N6 te pedirá bajo fatiga (CF7): si la lumbar se redondea en la serie, termina la serie. Calidad por encima de kilos.',
+                'session_b' => 'El power clean no se gana con la espalda: es extensión de cadera + tirón rápido + recepción. Con la barra ligera de hoy construye el gesto que N6 cargará y N10+ pesará (§1.7-CrossFit §10.2).',
+                'session_c' => 'Annie escalada de F3 es un test de ritmo, no de héroe: los singles deben ser automáticos para que los dobles de F2-F3 de las próximas sesiones salgan solos.',
+                'session_d' => 'El T2B con kipping nace del hollow: si al acabar el AMRAP no puedes mantener un Hollow Body Hold de 20 s, el kipping era columpio, no técnica.',
+            ],
+            6 => [
+                'session_a' => 'El push jerk es el S2OH que el N7 usará con carga: hoy se aprende con barra ligera. Lumbar neutra, codos rápidos, y si la muñeca en recepción protesta >2/10 matinal, se congela el gesto (§10.3).',
+                'session_b' => 'Clean y jerk en el mismo metcon es la letra pequeña de todos los WODs RX que vienen: hoy se practica la transición con cargas que perdonan.',
+                'session_c' => 'Helen RX de F2 es el hito del tramo entero: si las pull-ups se rompen técnicamente a mitad, la marca RX no cuenta — escala a banda y deja constancia. Primero estricto, luego dinámico, y siempre técnica (§1.7-CrossFit §10.1/§10.4).',
+                'session_d' => 'Cierra el tramo como empezaste: movilidad densa, carries honestos y un metcon que se disfruta. El test de N6 es una celebración del trabajo de N1 a N6, no un examen sorpresa.',
             ],
             default => [],
         };
@@ -506,6 +531,400 @@ class CrossfitMasterContent
                 'specialCelebration' => false,
                 'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta CF4 — Dorsiflexión de tobillo',
                 'xpReward' => 100,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 4 — PRIMERA TRACCIÓN
+    // ========================================================================
+
+    private static function level4(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): back squat 50/35 de trabajo, primer Bench Press, negativas de 5 s + banda en tracción, primeros Knee Raise; wall ball ligero (6/4 kg) y Box Jump bajo en metcons.',
+                'Fase 2 (Progresión): banda de asistencia más fina o primeras Pull Up sueltas; Hanging Leg Raise → primeros Toes to Bar Strict; primer AMRAP de 12\' con wall ball; ensayo de CF2/CF3 en Bloque 0.',
+                'Fase 3 (Intensificación): back squat 60/40 ensayando el test; volumen de tracción estricta moderado (tope 15-20 reps totales por sesión); Toes to Bar Strict en AMRAP; Cindy escalada como hito de sesión D.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (CF2/CF3 a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit: primero estricto, luego dinámico — el kipping de N5 exige base estricta (objetivo de 5 dominadas); en N4 no hay kipping. Nada balístico sobre un hombro sin base.',
+                'Puertas CF2 y CF3: se evalúan en el test de este nivel (requisito efectivo del N5: Power Clean, wall ball a diana, S2OH). Ensayos integrados en Bloque 0 de las sesiones A/B (CF2) y B/C (CF3). Si fuerza superada + puerta fallada → mobility_blocked (ciclo corto de movilidad).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Back squat 50/35 de trabajo; primer Bench Press', 'note' => 'Negativas de 5 s + banda; primeros Knee Raise; wall ball ligero y Box Jump bajo', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Banda más fina o primeras Pull Up sueltas', 'note' => 'Hanging Leg Raise → primeros Toes to Bar Strict; primer AMRAP 12\' con wall ball', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Back squat 60/40 ensayando el test', 'note' => 'Tope 15-20 reps de tracción estricta por sesión; Cindy escalada como hito', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (CF2/CF3 a dosis F4)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Pull Up (estricta)', 'minimum' => 2, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Dominada estricta limpia; admite asistencia mínima con banda fina si aún no enlaza 2 limpias, pero el logro de primera dominada exige banda cero; el objetivo de 5 es la base mínima que N5 exige antes del kipping (§10.1)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Back Squat (60/40 kg)', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Profundidad con talones pegados (CF1); si la lumbar se va, baja carga antes que profundidad', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Toes to Bar Strict', 'minimum' => 5, 'target' => 10, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Contacto pies-barra sin balanceo de kipping; si no llega, Hanging Leg Raise + toque a la altura posible', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Cindy (benchmark escalado)', 'minimum' => 8, 'target' => 12, 'unit' => 'rounds', 'direction' => 'gte', 'form' => 'Cindy AMRAP 20\' en Scaled: 5 Band Assisted Pull Up (o Jumping Pull Up controlado) + 10 Push Up + 15 Air Squat por ronda; marca con scalingUsed = scaled', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Cindy'],
+                        ['name' => 'Puerta CF2 — Overhead (hombro)', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Shoulder Dislocate con banda/PVC ×15 sin compensar la lumbar; Overhead Squat con PVC/barra vacía ×10 en profundidad', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'CF2'],
+                        ['name' => 'Puerta CF3 — Muñeca en front rack', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Front rack con barra vacía 30 s/lado sin dolor ni desviación activa', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'CF3'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL4(): array
+    {
+        return [
+            [
+                'code' => 'cf-n4-primera-dominada-estricta',
+                'name' => 'Primera dominada estricta',
+                'description' => 'Primera dominada estricta libre (banda cero) en el test de Nivel 4. Celebra la primera dominada libre de la vida del usuario.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Pull Up (estricta)',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n4-sentadilla-60-40',
+                'name' => 'Sentadilla de 60/40 kg',
+                'description' => 'Supera el mínimo de Back Squat a 60/40 kg (5 reps) en el test de Nivel 4.',
+                'category' => 'progress', 'icon' => '🦵', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Back Squat (60/40 kg)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n4-primer-t2b-test',
+                'name' => 'Primer T2B estricto de test',
+                'description' => 'Supera el mínimo de Toes to Bar Strict (5 reps) en el test de Nivel 4.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Toes to Bar Strict',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n4-cindy-registrada',
+                'name' => 'Cindy escalada registrada',
+                'description' => 'Registra Cindy en modalidad Scaled (mínimo 8 rondas) dentro de un envío de test del Nivel 4.',
+                'category' => 'progress', 'icon' => '🏅', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Cindy (benchmark escalado)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n4-puerta-cf2',
+                'name' => 'Puerta CF2 superada',
+                'description' => 'Supera la puerta de movilidad CF2 (Overhead, hombro) en el test de Nivel 4.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta CF2 — Overhead (hombro)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n4-puerta-cf3',
+                'name' => 'Puerta CF3 superada',
+                'description' => 'Supera la puerta de movilidad CF3 (Muñeca en front rack) en el test de Nivel 4.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta CF3 — Muñeca en front rack',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n4-banda-fina',
+                'name' => 'Banda fina, dominada cerca',
+                'description' => 'Primer Band Assisted Pull Up con la banda más fina disponible, recorrido completo.',
+                'category' => 'skill', 'icon' => '🎽', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n4-negativa-6s',
+                'name' => 'Negativa de 6 segundos',
+                'description' => 'Primer Negative Pull Up con bajada de 6 s controlada.',
+                'category' => 'skill', 'icon' => '⏳', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n4-primer-t2b',
+                'name' => 'Primer Toes to Bar',
+                'description' => 'Primer Toes to Bar Strict con contacto pies-barra, sin balanceo.',
+                'category' => 'skill', 'icon' => '🏅', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n4-primer-wall-ball',
+                'name' => 'Primer wall ball',
+                'description' => 'Primer Wall Ball a diana con sentadilla profunda válida (CF1).',
+                'category' => 'skill', 'icon' => '🏐', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n4-primer-bench',
+                'name' => 'Primer bench press',
+                'description' => 'Primer Bench Press con barra de 30/20 kg y técnica validada.',
+                'category' => 'skill', 'icon' => '🛋️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 5 — MOTOR Y GIMNÁSTICOS
+    // ========================================================================
+
+    private static function level5(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): power clean de técnica con 30/20 kg; kipping en bloques cortos (tope 20 reps/sesión) solo si hay ≥5 estrictas; Double Under Practice en dosis de 10-15 intentos; T2B estricto consolidado.',
+                'Fase 2 (Progresión): power clean 40/25 kg; primeros EMOM con kipping pull-up; primeros sets de 2-3 Double Unders; primer AMRAP de 15\'; Annie escalada como hito de sesión C.',
+                'Fase 3 (Intensificación): power clean 50/35 kg ensayando el gesto del test N6; kipping en AMRAP con tope de volumen; Double Unders en singles sueltos dentro de WODs cortos; ensayo de test integrado.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (CF6/CF7 a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (kipping condicionado): el kipping pull-up solo con ≥5 estrictas validadas; si el test N4 salió por debajo, sigue en progresión estricta (Band Assisted Pull Up → Pull Up) hasta conseguirlas. Volumen de kipping por sesión limitado a 20-30 reps, con al menos una sesión completa entre exposiciones intensas; dolor de hombro matinal >2/10 = congelar kipping un ciclo.',
+                'Puertas: ninguna evaluada en N5. Se siembra CF6 (Wrist Push-Up con más volumen + apoyo en extensión) y CF7 (bisagra bajo fatiga en WODs con swing); se evalúan en N6.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Power clean técnico 30/20 kg; T2B estricto consolidado', 'note' => 'Kipping corto (tope 20 reps/sesión) solo con ≥5 estrictas; Double Under Practice 10-15 intentos', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Power clean 40/25 kg; primeros EMOM con kipping', 'note' => 'Primeros sets de 2-3 Double Unders; primer AMRAP 15\'; Annie escalada como hito', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Power clean 50/35 kg ensayando el gesto del test N6', 'note' => 'Kipping en AMRAP con tope de volumen; ensayo de test integrado', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (CF6/CF7 a dosis F4)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Kipping Pull Up', 'minimum' => 10, 'target' => 15, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Kipping pull-up con arco controlado; si llegaste a N5 sin las 5 estrictas de base, este ítem se evalúa como Pull Up estricta ×5-8 y el kipping sigue bloqueado hasta superarlo (§10.1)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Toes to Bar', 'minimum' => 12, 'target' => 20, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Toes to Bar con kipping controlado nacido del hollow; si el balanceo sustituye al core, se valida como Toes to Bar Strict', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Power Clean (40/25 kg)', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción en power (sin squat clean) y front rack sin dolor (CF3); si la técnica se rompe, la rep no cuenta aunque se levante (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Annie (benchmark escalado)', 'minimum' => 960, 'target' => 720, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Annie FOR_TIME en Scaled: 50-40-30-20-10 de Single Unders + Sit-up; marca con scalingUsed = scaled', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Annie'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL5(): array
+    {
+        return [
+            [
+                'code' => 'cf-n5-kipping-de-10',
+                'name' => 'Kipping de 10',
+                'description' => 'Supera el mínimo de Kipping Pull Up (10 reps) en el test de Nivel 5.',
+                'category' => 'progress', 'icon' => '🌀', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Kipping Pull Up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n5-t2b-de-12',
+                'name' => 'T2B de 12',
+                'description' => 'Supera el mínimo de Toes to Bar (12 reps) en el test de Nivel 5.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Toes to Bar',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n5-power-clean-test',
+                'name' => 'Primer power clean de test',
+                'description' => 'Supera el mínimo de Power Clean a 40/25 kg (5 reps) en el test de Nivel 5.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Power Clean (40/25 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n5-annie-registrada',
+                'name' => 'Annie escalada registrada',
+                'description' => 'Registra Annie en modalidad Scaled (mínimo 16:00) dentro de un envío de test del Nivel 5.',
+                'category' => 'progress', 'icon' => '🏃', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Annie (benchmark escalado)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n5-primer-kipping',
+                'name' => 'Primer kipping pull-up',
+                'description' => 'Primer Kipping Pull Up conectado, arco controlado, sin dolor de hombro. Solo sobre base estricta (≥5 dominadas).',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n5-primer-doble',
+                'name' => 'Primer doble',
+                'description' => 'Primer Double Under conectado (1-2 seguidos cuentan).',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n5-dobles-de-5',
+                'name' => 'Dobles de 5',
+                'description' => 'Primer set de 5 Double Unders sin fallo.',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n5-t2b-amrap',
+                'name' => 'T2B kipping en AMRAP',
+                'description' => 'Primer AMRAP completado con Toes to Bar (kipping) sin romper el hollow.',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n5-clean-tecnico',
+                'name' => 'Clean técnico validado',
+                'description' => 'Primer Power Clean con recepción y front rack validados por el criterio del test.',
+                'category' => 'skill', 'icon' => '✅', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 6 — UMBRAL RX
+    // ========================================================================
+
+    private static function level6(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): push jerk de técnica con 30/20 kg; power clean 45/30 kg; wall ball a diana de referencia (bola 9/6 kg en F3); Helen RX como hito de sesión C (primera toma de contacto, sin exigencia).',
+                'Fase 2 (Progresión): push jerk 40/25 kg; power clean 50/35 kg; primer metcon con wall ball RX; Helen RX repetida como hito con objetivo de mejora de marca.',
+                'Fase 3 (Intensificación): jerk + clean a cargas de test; ensayo de CF6/CF7 a dosis máximas; Helen RX como último ensayo antes del test; volumen de tracción dinámica alto pero acotado.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (CF6/CF7 a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit: O-lifts y deadlifts pesados nunca en fatiga alta; el Power Clean de N5-N6 es técnico y con barra ligera-moderada; dolor matinal >2/10 = congelar el gesto un ciclo. En WODs con carga, cuando falla la forma se baja la dosis (§10.4).',
+                'Puertas CF6 y CF7: se evalúan en el test de este nivel (requisito efectivo del N7: HSPU, handstand, deadlifts en fatiga, O-lifts). Ensayos integrados: bloque muñeca CF6 en Bloque 0 de todas las sesiones (dosis máximas en F3) y bisagra bajo fatiga en los WODs con swing (sesiones A/C).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Push jerk técnico 30/20 kg; power clean 45/30 kg', 'note' => 'Wall ball a diana de referencia; Helen RX como hito (sin exigencia)', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Push jerk 40/25 kg; power clean 50/35 kg', 'note' => 'Primer metcon con wall ball RX; Helen RX repetida con objetivo de mejora', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Jerk + clean a cargas de test', 'note' => 'Ensayo de CF6/CF7 a dosis máximas; Helen RX como último ensayo', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (CF6/CF7 a dosis F4)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Power Clean (50/35 kg)', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción y front rack sin dolor y sin lumbar rota (CF3/CF7); rep con técnica rota no cuenta (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Push Jerk (45/30 kg)', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Impulso de piernas + caída bajo la barra con codos rápidos; bloqueo overhead estable (CF2); si el jerk se convierte en press roto, la rep no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Wall Ball (9/6 kg)', 'minimum' => 15, 'target' => 25, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Wall ball a diana de referencia RX con sentadilla profunda válida (CF1/CF2); si el throw se acorta, baja el peso de la bola', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Helen (benchmark RX)', 'minimum' => 1200, 'target' => 960, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Helen en modalidad RX (scalingUsed = rx): 3 rondas de 400 m Run + Kettlebell Swing Russian ×21 (24/16 kg) + Pull Up ×12; admite kipping controlado o estricta, sin banda; primer benchmark RX completo del programa', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Helen'],
+                        ['name' => 'Puerta CF6 — Muñeca en extensión', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Wrist Push-Up 2×10 suave + apoyo en extensión 60 s sin dolor matinal >2/10', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'CF6'],
+                        ['name' => 'Puerta CF7 — Bisagra lumbar controlada', 'minimum' => 1, 'target' => null, 'unit' => 'boolean', 'form' => 'Dead Bug 2×10/lado + Bird Dog 2×8/lado con pelvis quieta; bisagra bajo fatiga (KB swing ligero) sin perder curva neutra', 'type' => TestItemType::PuertaMovilidad->value, 'gateCode' => 'CF7'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL6(): array
+    {
+        return [
+            [
+                'code' => 'cf-n6-power-clean-50-35',
+                'name' => 'Power clean de 50/35 kg',
+                'description' => 'Supera el mínimo de Power Clean a 50/35 kg (5 reps) en el test de Nivel 6.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Power Clean (50/35 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n6-push-jerk-45-30',
+                'name' => 'Push jerk de 45/30 kg',
+                'description' => 'Supera el mínimo de Push Jerk a 45/30 kg (5 reps) en el test de Nivel 6.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Push Jerk (45/30 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n6-wall-ball-rx-15',
+                'name' => 'Wall ball RX de 15',
+                'description' => 'Supera el mínimo de Wall Ball a 9/6 kg a diana RX (15 reps) en el test de Nivel 6.',
+                'category' => 'progress', 'icon' => '🏐', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Wall Ball (9/6 kg)',
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n6-primer-wod-rx',
+                'name' => 'Primer WOD RX',
+                'description' => 'Registra Helen en modalidad RX dentro de un envío de test del Nivel 6. Celebra el primer benchmark completo en RX del usuario.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Helen (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n6-puerta-cf6',
+                'name' => 'Puerta CF6 superada',
+                'description' => 'Supera la puerta de movilidad CF6 (Muñeca en extensión) en el test de Nivel 6.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta CF6 — Muñeca en extensión',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n6-puerta-cf7',
+                'name' => 'Puerta CF7 superada',
+                'description' => 'Supera la puerta de movilidad CF7 (Bisagra lumbar controlada) en el test de Nivel 6.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Puerta CF7 — Bisagra lumbar controlada',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n6-primer-push-jerk',
+                'name' => 'Primer push jerk',
+                'description' => 'Primer Push Jerk con recepción bajo la barra y bloqueo overhead estable.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n6-clean-jerk-ligero',
+                'name' => 'Clean & jerk ligero',
+                'description' => 'Primer metcon completado con Power Clean + Push Jerk en la misma sesión (EMOM de sesión B F2).',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n6-helen-rx-registrada',
+                'name' => 'Helen RX registrada',
+                'description' => 'Primera ejecución completa de Helen en RX en sesión (hito de sesión C F2, antes del test).',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n6-muneca-extension-60s',
+                'name' => 'Muñeca de extensión 60 s',
+                'description' => 'Primer apoyo en extensión de 60 s sin dolor matinal >2/10 (ensayo CF6).',
+                'category' => 'skill', 'icon' => '🖐️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
             ],
         ];
     }
