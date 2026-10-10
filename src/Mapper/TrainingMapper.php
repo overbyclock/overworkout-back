@@ -183,7 +183,11 @@ readonly class TrainingMapper
                     $round->setBlockType($roundDto->blockType);
                     $round->setName($roundDto->name);
                     $round->setDescription($roundDto->description);
-                    $round->setBenchmark($this->resolveBenchmark($roundDto->benchmarkId));
+                    // benchmarkId null en un PATCH conserva el benchmark existente;
+                    // si se envía un id se resuelve/actualiza (un id inexistente lanza excepción)
+                    if (null !== $roundDto->benchmarkId) {
+                        $round->setBenchmark($this->resolveBenchmark($roundDto->benchmarkId));
+                    }
                     $this->updateExercisesInRound($round, $roundDto->exercises);
                 }
             } else {

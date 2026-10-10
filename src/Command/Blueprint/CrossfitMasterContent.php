@@ -81,7 +81,7 @@ class CrossfitMasterContent
         return match ($blockType) {
             TrainingRound::BLOCK_PREPARACION => 'Movilidad fluida y acumulativa (activación, torácica, tobillo, cadera, hombro y muñeca) sin descansos de fuerza: transiciones de ~5 s.',
             TrainingRound::BLOCK_FUERZA_SKILL => 'Trabajo principal de fuerza y técnica de la sesión.',
-            TrainingRound::BLOCK_WOD => 'WOD del día. El escalado es decisión del usuario en el player y también es protección (§1.7-CrossFit §10.4).',
+            TrainingRound::BLOCK_WOD => 'WOD / Metcon de la sesión. El escalado es decisión del usuario en el player y también es protección (§1.7-CrossFit §10.4).',
             TrainingRound::BLOCK_POSTURAL => 'Prehab de la zona asignada a la sesión (hombro, muñeca, lumbar/core o trío). Calidad por encima de fatiga; nunca al fallo.',
             TrainingRound::BLOCK_DESCARGA => 'Vuelta a la calma: respiración diafragmática, Child\'s Pose y estiramiento suave de la zona trabajada.',
             default => throw new \InvalidArgumentException("Tipo de bloque {$blockType} no definido"),

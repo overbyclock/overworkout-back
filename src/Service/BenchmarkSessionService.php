@@ -116,9 +116,14 @@ readonly class BenchmarkSessionService
 
         $this->entityManager->flush();
 
-        // Auto-evaluación: si el benchmark alimenta el test de un nivel en curso, registrar la marca
+        // Auto-evaluación: si el benchmark alimenta el test de un nivel en curso, registrar la marca.
+        // Un fallo de infra en la auto-evaluación no debe romper el registro de la marca (200).
         if (UserBenchmarkAttempt::STATUS_COMPLETED === $dto->status) {
-            $this->recordBenchmarkInLevelTest($user, $attempt);
+            try {
+                $this->recordBenchmarkInLevelTest($user, $attempt);
+            } catch (\Throwable $e) {
+                error_log('Error en auto-evaluación de benchmark (attempt '.$attempt->getId().'): '.$e->getMessage());
+            }
         }
 
         return $attempt;

@@ -75,7 +75,7 @@ final class TrainingRoundDtoTest extends TestCase
         $violations = iterator_to_array($this->validator->validate($dto));
 
         $this->assertCount(1, $violations);
-        $this->assertSame('', reset($violations)->getPropertyPath());
+        $this->assertSame('exercises', reset($violations)->getPropertyPath());
     }
 
     public function testBenchmarkIdNoPositivoEsInvalido(): void

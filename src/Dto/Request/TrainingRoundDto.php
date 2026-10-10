@@ -51,6 +51,7 @@ readonly class TrainingRoundDto
     {
         if (null === $this->benchmarkId && [] === $this->exercises) {
             $context->buildViolation('El round debe tener un benchmark (benchmarkId) o al menos un ejercicio.')
+                ->atPath('exercises')
                 ->addViolation();
         }
     }

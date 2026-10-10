@@ -247,11 +247,17 @@ class LevelProgressService
 
     /**
      * Registra la marca de un benchmark cerrado en el TestResult del nivel en curso
-     * que lo referencia como ítem de test, y re-evalúa el nivel.
+     * que lo referencia como ítem de test, y re-evalúa el nivel si el test ya está completo.
      *
      * La marca cuenta aunque el scaling del attempt no sea RX: el mínimo es el mínimo.
      * Si $value es null (formato de score no parseable), se registra el ítem con valor
      * null y NO se re-evalúa el test.
+     *
+     * Semántica de auto-evaluación: los intent parciales (marcas acumuladas sin tener
+     * resultado para TODOS los requirements del nivel) persisten el TestResult acumulado
+     * SIN penalización — el outcome (repeat, completed, mobility_blocked) solo se aplica
+     * cuando el test está completo o en la entrega formal vía submitTestResults. Así,
+     * cerrar un WOD de práctica no repite el ciclo ni desbloquea niveles por accidente.
      *
      * Sin match → null, sin ningún efecto colateral.
      */
@@ -311,7 +317,16 @@ class LevelProgressService
 
         $mode = $level->getProgram()?->getTestEvaluationMode() ?? TrainingProgram::TEST_EVAL_LEGACY;
 
-        $this->evaluateAndApplyOutcome($progress, $testResult, $requirements, $mode);
+        // Solo se evalúa y aplica outcome si TODOS los requirements del nivel
+        // tienen un resultado acumulado; en caso contrario es un intent parcial
+        // y el progreso no se toca (sin repeat, sin completed, sin mobility_blocked).
+        $resultNames = array_column($testResult->getResults(), 'name');
+        $hasAllRequirements = [] !== $requirements
+            && [] === array_diff(array_column($requirements, 'name'), $resultNames);
+
+        if ($hasAllRequirements) {
+            $this->evaluateAndApplyOutcome($progress, $testResult, $requirements, $mode);
+        }
 
         $this->entityManager->flush();
 

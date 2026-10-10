@@ -339,6 +339,93 @@ class TrainingCrudTest extends WebTestCase
         $this->assertSame('Updated Name', $data['training']['name']);
     }
 
+    public function testUpdateRoundWithoutBenchmarkIdPreservesBenchmark(): void
+    {
+        $this->client->request(
+            'POST',
+            '/trainings',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode([
+                'name' => 'WOD Training',
+                'discipline' => Discipline::CROSSFIT->value,
+                'target' => TargetWorkout::STRENGTH->value,
+                'rounds' => [
+                    [
+                        'round' => 1,
+                        'restBetweenRounds' => 60,
+                        'blockType' => 'wod',
+                        'benchmarkId' => $this->testBenchmark->getId(),
+                        'exercises' => [
+                            [
+                                'exerciseId' => $this->testExercise->getId(),
+                                'reps' => 10,
+                                'sets' => 3,
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertSame(201, $this->client->getResponse()->getStatusCode());
+        $created = json_decode($this->client->getResponse()->getContent(), true)['training'];
+        $trainingId = $created['id'];
+        $roundId = $created['trainingRounds'][0]['id'];
+
+        // PATCH del nombre del round SIN enviar benchmarkId: el benchmark se conserva
+        $this->client->request(
+            'PATCH',
+            "/trainings/{$trainingId}",
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/merge-patch+json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode([
+                'rounds' => [
+                    [
+                        'id' => $roundId,
+                        'round' => 1,
+                        'restBetweenRounds' => 90,
+                        'blockType' => 'wod',
+                        'name' => 'WOD renombrado',
+                        'exercises' => [
+                            [
+                                'exerciseId' => $this->testExercise->getId(),
+                                'reps' => 12,
+                                'sets' => 3,
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $this->client->request(
+            'GET',
+            "/trainings/{$trainingId}",
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame('WOD renombrado', $data['trainingRounds'][0]['name']);
+        $this->assertSame($this->testBenchmark->getId(), $data['trainingRounds'][0]['benchmarkId']);
+    }
+
     public function testDeleteOwnTraining(): void
     {
         $training = new Training();

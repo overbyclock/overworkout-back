@@ -233,4 +233,130 @@ class BenchmarkTestAutoEvaluationTest extends WebTestCase
         $this->assertSame(UserLevelProgress::STATUS_IN_PROGRESS, $progressOne->getStatus());
         $this->assertSame(0, $progressOne->getCyclesCompleted());
     }
+
+    /**
+     * Intent parcial en modo strict_gates (solo la marca del benchmark, falta el ítem
+     * de fuerza): el TestResult se acumula sin outcome — el progreso sigue in_progress,
+     * el ciclo no se incrementa y no se desbloquea el nivel siguiente.
+     */
+    public function testPartialAttemptInStrictGatesDoesNotApplyOutcome(): void
+    {
+        $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
+
+        $program = new TrainingProgram();
+        $program->setName('Programa CrossFit Strict Gates');
+        $program->setDescription('Test');
+        $program->setSlug('programa-cf-strict-gates');
+        $program->setDiscipline('crossfit');
+        $program->setDifficulty('beginner');
+        $program->setTestEvaluationMode(TrainingProgram::TEST_EVAL_STRICT_GATES);
+        $this->entityManager->persist($program);
+
+        $helen = new Benchmark();
+        $helen->setName('Helen');
+        $helen->setType('girl');
+        $helen->setFormat(BenchmarkFormat::FOR_TIME);
+        $this->entityManager->persist($helen);
+        $this->entityManager->flush();
+
+        $levelOne = new TrainingLevel();
+        $levelOne->setProgram($program);
+        $levelOne->setLevelNumber(1);
+        $levelOne->setName('Nivel 1');
+        $levelOne->setTitle('Nivel 1');
+        $levelOne->setEstimatedDurationWeeks(4);
+        $levelOne->setProgramVersion('v4');
+        $levelOne->setTestRequirements([
+            [
+                'name' => 'Helen',
+                'minimum' => 600,
+                'direction' => 'lte',
+                'unit' => 'segundos',
+                'type' => 'benchmark',
+                'benchmarkId' => $helen->getId(),
+            ],
+            [
+                'name' => 'Fuerza',
+                'minimum' => 10,
+                'direction' => 'gte',
+                'unit' => 'reps',
+            ],
+        ]);
+        $this->entityManager->persist($levelOne);
+
+        $levelTwo = new TrainingLevel();
+        $levelTwo->setProgram($program);
+        $levelTwo->setLevelNumber(2);
+        $levelTwo->setName('Nivel 2');
+        $levelTwo->setTitle('Nivel 2');
+        $levelTwo->setEstimatedDurationWeeks(4);
+        $levelTwo->setProgramVersion('v4');
+        $this->entityManager->persist($levelTwo);
+
+        $user = new User();
+        $user->setNick('cfstrictgates');
+        $user->setEmail('cfstrictgates@test.com');
+        $user->setPassword($passwordHasher->hashPassword($user, 'Test123!'));
+        $user->setRoles(['ROLE_USER']);
+        $this->entityManager->persist($user);
+
+        $progress = new UserLevelProgress();
+        $progress->setUser($user);
+        $progress->setTrainingLevel($levelOne);
+        $progress->setStatus(UserLevelProgress::STATUS_IN_PROGRESS);
+        $this->entityManager->persist($progress);
+        $this->entityManager->flush();
+
+        $this->client->request(
+            'POST',
+            '/login',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode(['email' => 'cfstrictgates@test.com', 'password' => 'Test123!'])
+        );
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $token = $data['token'] ?? null;
+        self::assertNotNull($token);
+
+        // Cerrar Helen por encima del mínimo: marca registrada, pero falta el ítem de fuerza
+        $this->client->request(
+            'POST',
+            '/benchmarks/'.$helen->getId().'/start',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer '.$token],
+            json_encode(['scalingUsed' => 'rx'])
+        );
+        $attemptId = json_decode($this->client->getResponse()->getContent(), true)['attempt']['id'] ?? null;
+        self::assertNotNull($attemptId);
+
+        $this->client->request(
+            'POST',
+            '/benchmarks/attempts/'.$attemptId.'/finish',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer '.$token],
+            json_encode(['status' => 'completed', 'totalTimeSeconds' => 720])
+        );
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+
+        $this->entityManager->clear();
+
+        // TestResult acumulado con el ítem, sin evaluación (overallPassed false por defecto)
+        $storedProgress = $this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndLevel($user, $levelOne);
+        $testResults = $this->entityManager->getRepository(TestResult::class)
+            ->findByUserLevelProgress($storedProgress);
+        $this->assertCount(1, $testResults);
+        $this->assertFalse($testResults[0]->isOverallPassed());
+        $this->assertSame('Helen', $testResults[0]->getResults()[0]['name']);
+        $this->assertSame(720, $testResults[0]->getResults()[0]['value']);
+
+        // Sin outcome: sigue in_progress, ciclo intacto y nivel 2 no desbloqueado
+        $this->assertSame(UserLevelProgress::STATUS_IN_PROGRESS, $storedProgress->getStatus());
+        $this->assertSame(0, $storedProgress->getCyclesCompleted());
+        $this->assertNull($this->entityManager->getRepository(UserLevelProgress::class)
+            ->findByUserAndLevel($user, $levelTwo));
+    }
 }
