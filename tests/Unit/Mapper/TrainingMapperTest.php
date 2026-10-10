@@ -16,6 +16,7 @@ use App\Entity\TrainingRound;
 use App\Entity\User;
 
 use App\Mapper\TrainingMapper;
+use App\Repository\BenchmarkRepository;
 use App\Service\TrainingTimeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -33,6 +34,8 @@ class TrainingMapperTest extends TestCase
 
     private $configRepository;
 
+    private $benchmarkRepository;
+
     private $timeCalculator;
 
     protected function setUp(): void
@@ -41,6 +44,7 @@ class TrainingMapperTest extends TestCase
         $this->exerciseRepository = $this->createStub(EntityRepository::class);
         $this->roundRepository = $this->createStub(EntityRepository::class);
         $this->configRepository = $this->createStub(EntityRepository::class);
+        $this->benchmarkRepository = $this->createStub(BenchmarkRepository::class);
         $this->timeCalculator = $this->createStub(TrainingTimeCalculator::class);
 
         $this->entityManager
@@ -51,7 +55,7 @@ class TrainingMapperTest extends TestCase
             ->method('calculate')
             ->willReturn(['min' => 120, 'max' => 180]);
 
-        $this->mapper = new TrainingMapper($this->entityManager, $this->timeCalculator);
+        $this->mapper = new TrainingMapper($this->entityManager, $this->timeCalculator, $this->benchmarkRepository);
     }
 
     private function createRepositoryMap(): array
@@ -265,7 +269,7 @@ class TrainingMapperTest extends TestCase
             ->willReturnMap($this->createRepositoryMap());
         $entityManager->expects($this->once())->method('remove')->with($oldRound);
 
-        $mapper = new TrainingMapper($entityManager, $this->timeCalculator);
+        $mapper = new TrainingMapper($entityManager, $this->timeCalculator, $this->benchmarkRepository);
         $mapper->updateFromDto($training, $dto);
 
         $this->assertCount(1, $training->getTrainingRounds());
@@ -350,7 +354,7 @@ class TrainingMapperTest extends TestCase
             ->willReturnMap($this->createRepositoryMap());
         $entityManager->expects($this->once())->method('remove')->with($oldExercise);
 
-        $mapper = new TrainingMapper($entityManager, $this->timeCalculator);
+        $mapper = new TrainingMapper($entityManager, $this->timeCalculator, $this->benchmarkRepository);
         $mapper->updateFromDto($training, $dto);
 
         $this->assertCount(1, $round->getTrainingExerciseConfigurations());

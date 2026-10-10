@@ -8,12 +8,14 @@ use App\Dto\Request\TrainingCreateDto;
 use App\Dto\Request\TrainingExerciseConfigDto;
 use App\Dto\Request\TrainingRoundDto;
 use App\Dto\Request\TrainingUpdateDto;
+use App\Entity\Benchmark;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingLevel;
 use App\Entity\TrainingRound;
 use App\Entity\User;
+use App\Repository\BenchmarkRepository;
 use App\Service\TrainingTimeCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -22,6 +24,7 @@ readonly class TrainingMapper
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TrainingTimeCalculator $timeCalculator,
+        private BenchmarkRepository $benchmarkRepository,
     ) {
     }
 
@@ -110,6 +113,7 @@ readonly class TrainingMapper
         $round->setBlockType($dto->blockType);
         $round->setName($dto->name);
         $round->setDescription($dto->description);
+        $round->setBenchmark($this->resolveBenchmark($dto->benchmarkId));
 
         foreach ($dto->exercises as $exerciseDto) {
             $exerciseConfig = $this->createExerciseConfigFromDto($exerciseDto);
@@ -117,6 +121,23 @@ readonly class TrainingMapper
         }
 
         return $round;
+    }
+
+    /**
+     * Resuelve el benchmark de un round (WOD embebido) o null si no se indica.
+     */
+    private function resolveBenchmark(?int $benchmarkId): ?Benchmark
+    {
+        if (null === $benchmarkId) {
+            return null;
+        }
+
+        $benchmark = $this->benchmarkRepository->find($benchmarkId);
+        if (null === $benchmark) {
+            throw new \InvalidArgumentException('Benchmark no encontrado: '.$benchmarkId);
+        }
+
+        return $benchmark;
     }
 
     private function createExerciseConfigFromDto(TrainingExerciseConfigDto $dto): TrainingExerciseConfiguration
@@ -162,6 +183,7 @@ readonly class TrainingMapper
                     $round->setBlockType($roundDto->blockType);
                     $round->setName($roundDto->name);
                     $round->setDescription($roundDto->description);
+                    $round->setBenchmark($this->resolveBenchmark($roundDto->benchmarkId));
                     $this->updateExercisesInRound($round, $roundDto->exercises);
                 }
             } else {

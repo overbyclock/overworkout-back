@@ -79,6 +79,14 @@ class TrainingRound
     #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
     private ?string $description = null;
 
+    /**
+     * Benchmark (WOD con nombre) embebido en el round. Si está presente,
+     * las configuraciones de ejercicios propias del round se ignoran.
+     */
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'benchmark_id', referencedColumnName: 'id', nullable: true)]
+    private ?Benchmark $benchmark = null;
+
     #[ORM\ManyToOne(inversedBy: 'trainingRounds')]
     #[ORM\JoinColumn(name: 'training_id', referencedColumnName: 'id')]
     private ?Training $training = null;
@@ -184,6 +192,24 @@ class TrainingRound
     public function getTraining(): ?Training
     {
         return $this->training;
+    }
+
+    public function getBenchmark(): ?Benchmark
+    {
+        return $this->benchmark;
+    }
+
+    public function setBenchmark(?Benchmark $benchmark): static
+    {
+        $this->benchmark = $benchmark;
+
+        return $this;
+    }
+
+    #[Groups([self::GROUP_READ, Training::GROUP_READ_DETAIL])]
+    public function getBenchmarkId(): ?int
+    {
+        return $this->benchmark?->getId();
     }
 
     public function setTraining(?Training $training): static

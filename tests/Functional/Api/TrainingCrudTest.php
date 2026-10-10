@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
 
+use App\Entity\Benchmark;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\User;
@@ -27,6 +28,8 @@ class TrainingCrudTest extends WebTestCase
 
     private ?Exercises $testExercise = null;
 
+    private ?Benchmark $testBenchmark = null;
+
     private $client;
 
     protected function setUp(): void
@@ -36,7 +39,20 @@ class TrainingCrudTest extends WebTestCase
         $this->passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
         $this->createTestExercise();
+        $this->createTestBenchmark();
         $this->createTestUserAndLogin();
+    }
+
+    private function createTestBenchmark(): void
+    {
+        $benchmark = new Benchmark();
+        $benchmark->setName('Fran Test');
+        $benchmark->setType('girl');
+
+        $this->entityManager->persist($benchmark);
+        $this->entityManager->flush();
+
+        $this->testBenchmark = $benchmark;
     }
 
     private function createTestExercise(): void
@@ -116,6 +132,115 @@ class TrainingCrudTest extends WebTestCase
         $data = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('training', $data);
         $this->assertSame('Test Training', $data['training']['name']);
+    }
+
+    public function testCreateTrainingConRoundBenchmark(): void
+    {
+        $this->client->request(
+            'POST',
+            '/trainings',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode([
+                'name' => 'WOD Training',
+                'discipline' => Discipline::CROSSFIT->value,
+                'target' => TargetWorkout::STRENGTH->value,
+                'rounds' => [
+                    [
+                        'round' => 1,
+                        'restBetweenRounds' => 60,
+                        'blockType' => 'wod',
+                        'benchmarkId' => $this->testBenchmark->getId(),
+                        'exercises' => [],
+                    ],
+                ],
+            ])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(201, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame($this->testBenchmark->getId(), $data['training']['trainingRounds'][0]['benchmarkId']);
+    }
+
+    public function testRecuperarTrainingConRoundBenchmarkMuestraBenchmarkId(): void
+    {
+        $this->client->request(
+            'POST',
+            '/trainings',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode([
+                'name' => 'WOD Training',
+                'discipline' => Discipline::CROSSFIT->value,
+                'target' => TargetWorkout::STRENGTH->value,
+                'rounds' => [
+                    [
+                        'round' => 1,
+                        'restBetweenRounds' => 60,
+                        'blockType' => 'wod',
+                        'benchmarkId' => $this->testBenchmark->getId(),
+                        'exercises' => [],
+                    ],
+                ],
+            ])
+        );
+
+        $this->assertSame(201, $this->client->getResponse()->getStatusCode());
+        $trainingId = json_decode($this->client->getResponse()->getContent(), true)['training']['id'];
+
+        $this->client->request(
+            'GET',
+            "/trainings/{$trainingId}",
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken]
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertSame($this->testBenchmark->getId(), $data['trainingRounds'][0]['benchmarkId']);
+    }
+
+    public function testBenchmarkIdInexistenteDevuelve400(): void
+    {
+        $this->client->request(
+            'POST',
+            '/trainings',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->authToken,
+            ],
+            json_encode([
+                'name' => 'WOD Training',
+                'discipline' => Discipline::CROSSFIT->value,
+                'target' => TargetWorkout::STRENGTH->value,
+                'rounds' => [
+                    [
+                        'round' => 1,
+                        'restBetweenRounds' => 60,
+                        'benchmarkId' => 999999,
+                        'exercises' => [],
+                    ],
+                ],
+            ])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(400, $response->getStatusCode());
     }
 
     public function testListTrainings(): void
