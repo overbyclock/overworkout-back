@@ -97,14 +97,14 @@ Descanso entre ejercicios posturales: 45-60 s. El prehab se mantiene denso: es e
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática tumbado (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática tumbado (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N4)
 
 | Fase | Intensidad | Nota |
 |------|-----------|------|
 | 1 — Base | 55% | Back squat 50/35 de trabajo; primer `Bench Press`; negativas de 5 s + banda en tracción; primeros `Knee Raise`; wall ball ligero (6/4 kg) y `Box Jump` bajo en metcons |
-| 2 — Progresión | 80% | Banda de asistencia más fina o primeras `Pull Up` sueltas; `Hanging Leg Raise` → primeros `Toes to Bar Strict`; primer AMRAP de 14' con wall ball; ensayo de CF2/CF3 en Bloque 0 |
+| 2 — Progresión | 80% | Banda de asistencia más fina o primeras `Pull Up` sueltas; `Hanging Leg Raise` → primeros `Toes to Bar Strict`; primer AMRAP de 12' con wall ball; ensayo de CF2/CF3 en Bloque 0 |
 | 3 — Intensificación | 95% | Back squat 60/40 ensayando el test; series de pull-ups con volumen moderado (tope de 15-20 reps totales de tracción estricta por sesión); `Toes to Bar Strict` en AMRAP; Cindy escalada como hito de sesión D |
 | 4 — Recuperación | 50% | Mitad de volumen; movilidad protagonista (CF2/CF3 a dosis F4); test de nivel al final |
 
@@ -163,7 +163,7 @@ Volumen de tracción por sesión: tope 20 reps estrictas-asistidas entre los dos
 | F3 | EMOM 10' | Impares: 3-5 `Pull Up` (estricta o asistencia mínima); pares: 6 `Hanging Leg Raise` | Primer EMOM de tracción; descansa el tiempo que sobre |
 | F4 | 2 rondas suaves | 5 `Band Assisted Pull Up` + 6 `Knee Raise` | Técnica relajada |
 
-**Tips de sesión:** "La primera estricta se construye despacio: negativas de 5-6 s, banda cada vez más fina, y paciencia. Primero estricto, luego dinámico — el kiping de N5 no llega sin esta base (§1.7-CrossFit §10.1)."
+**Tips de sesión:** "La primera estricta se construye despacio: negativas de 5-6 s, banda cada vez más fina, y paciencia. Primero estricto, luego dinámico — el kipping de N5 no llega sin esta base (§1.7-CrossFit §10.1)."
 
 ### Sesión C — Metcon: wall ball y tracción asistida (todas las fases)
 
@@ -182,8 +182,8 @@ Volumen de tracción por sesión: tope 20 reps estrictas-asistidas entre los dos
 | Fase | Formato | Contenido | Notas |
 |------|---------|-----------|-------|
 | F1 | AMRAP 10' | 8 `Wall Ball` (6/4 kg) + 8 `Box Step Over` + 8 `Sit-up` | Ritmo conversacional |
-| F2 | AMRAP 12' | 8 `Wall Ball` (6/4 kg) + 6 `Band Assisted Pull Up` + 10 `Air Squat` | Primer AMRAP de 14' con tracción; reparte el agarre |
-| F3 | AMRAP 14' | 10 `Wall Ball` (6-9/4-6 kg) + 5 `Pull Up` (estricta o banda) + 10 `Box Jump Over` | Ensayo del motor del test; si las pull-ups mueren, cambia a banda sin parar el reloj |
+| F2 | AMRAP 12' | 8 `Wall Ball` (6/4 kg) + 6 `Band Assisted Pull Up` + 10 `Air Squat` | Tracción asistida en metcon; reparte el agarre |
+| F3 | AMRAP 14' | 10 `Wall Ball` (6-9/4-6 kg) + 5 `Pull Up` (estricta o banda) + 10 `Box Jump Over` | Primer AMRAP de 14' del nivel; ensayo del motor del test; si las pull-ups mueren, cambia a banda sin parar el reloj |
 | F4 | AMRAP 8' suave | 8 `Wall Ball` (6/4 kg) + 6 `Sit-up` | Movimiento; test al final del nivel |
 
 **Tips de sesión:** "Tracción en metcon = agarre primero: si los antebrazos explotan antes que la espalda, alterna pull-up con box jump over y vuelve. Rondas completas > reps heroicas."
@@ -292,7 +292,7 @@ Descanso entre ejercicios posturales: 45-60 s. Progresión: subir una serie al e
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con comba, antebrazo y gemelos). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con comba, antebrazo y gemelos). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N5)
 
@@ -479,7 +479,7 @@ Descanso entre ejercicios posturales: 45-60 s. CF6 se trabaja en doble vía (Blo
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N6)
 
@@ -604,7 +604,7 @@ Superar todos los mínimos de fuerza + benchmark RX + **ambas puertas** (modo `s
 
 Notas del test:
 - Ítem 4: `type: benchmark` sobre `Helen` (id 3, FOR_TIME: 3 rondas de 400 m Run + `Kettlebell Swing Russian` ×21 con 24/16 kg + `Pull Up` ×12). Modalidad **RX** (`scalingUsed = rx`): es el primer benchmark RX completo del programa; en pull-ups se admite kipping controlado o estricta, sin banda.
-- Contraste con referencias de catálogo (consulta 2026-10-10): Helen RX beginner = 17:00 M / 20:00 F; intermediate = 13:00 M / 15:30 F. Para un RX recién estrenado, el mínimo se fija en beginner RX F (20:00, igual que el timeCap implícito de tolerancia de recién llegado) y el objetivo entre beginner RX M y intermediate RX F (16:00) — coherente con "mínimos conservadores" (§1.6) y con el criterio del lote 01-03.
+- Contraste con referencias de catálogo (consulta 2026-10-10): Helen RX beginner = 17:00 M / 20:00 F; intermediate = 13:00 M / 15:30 F. Para un RX recién estrenado, el mínimo se fija en beginner RX F (20:00, un umbral de tolerancia fijado por el programa para el RX recién estrenado — Helen no tiene timeCap en catálogo) y el objetivo entre beginner RX M y intermediate RX F (16:00) — coherente con "mínimos conservadores" (§1.6) y con el criterio del lote 01-03.
 - Ítems 1-2: criterio de validez = recepción y front rack/overhead sin dolor y sin lumbar rota (CF3/CF2/CF7); rep con técnica rota no cuenta (§10.4).
 - Ítem 5-6: criterios textuales exactos de la tabla de puertas; si fuerza superada + puerta fallada → `mobility_blocked` (ciclo corto de movilidad).
 
@@ -629,7 +629,6 @@ Notas del test:
 
 - Nada crítico para N4-N6: todos los ejercicios citados existen en el catálogo con la grafía usada (verificación por SQL 2026-10-10, 833 ejercicios).
 - Mejora sugerida (no bloquea): alias didáctico "PVC Overhead Squat" para el `Overhead Squat` con PVC usado en el ensayo CF2 — el ejercicio existe, solo el texto del criterio de puerta menciona el implemento.
-- Mejora sugerida (no bloquea): el catálogo tiene `Child` (no `Child's Pose`); el lote 01-03 ya usa `Child's Pose` en descarga, así que este documento mantiene la misma grafía por consistencia. Alinear en el seeder o añadir alias al catálogo.
 - Mejora sugerida (no bloquea): la diana de wall ball no es un dato estructurado del ejercicio `Wall Ball`/`Wall Ball Shot`; la altura de referencia (2,75/2,50 m) se describe en texto de nivel y tips. Si el front quiere validarlo, añadir metadata al ejercicio.
 
 ## Decisiones de contenido tomadas (para revisión del controller)
