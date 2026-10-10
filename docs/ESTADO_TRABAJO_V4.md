@@ -122,6 +122,41 @@
 - En BD dev: 6 niveles, 96 trainings, duraciones 6-58 min (la B de L3 con singles a 3-4 min es la más larga, coherente con el propio N9 del Master). Tests de dominio con mínimos/objetivos por nivel.
 - Verificación: suite verde, PHPStan/CS-Fixer limpios.
 
+## Bloque 14 — False Grip Mastery (oct 2026)
+
+- Decisión del usuario: nueva especialización de falso agarre, **8 niveles** (más detalle que MU Mastery) × 4 fases × 4 sesiones = 128 trainings (~32 semanas). Misma filosofía: contenido minado del Master v4 y de MU Mastery, no inventado.
+- Nuevo programa `false-grip-mastery` ("False Grip Mastery", difficulty `advanced`): comando `app:create-false-grip-mastery` + `FalseGripBlueprint` + `FalseGripContent` (réplica de la arquitectura MU Mastery: sesiones A=Strength / B=False Grip / C=Prehab muñeca / D=Skill anillas; legacy mode, sin calendario).
+- Arco: 1 Base de muñeca y agarre (oraciones + wrist push-ups de rodillas + dead hangs, dosis N1-N2) · 2 Introducción al falso agarre (hang 5-10 s + support 5-8 s, dosis N6/N8) · 3 Falso agarre básico (hang 15 s + filas FG 5-8, dosis N8-N9) · 4 Falso agarre estable (hang 20 s = gate N10 + support 10 s, dosis N11-B/N6-D) · 5 Tracción con falso agarre (negativas/asistidas + hang 25 s + German hang 30 s, dosis MU L3/L4) · 6 Primer False Grip Pull-Up (3-5, dosis MU L4-C) · 7 Volumen y anillas (Ring Pull Up FG 5-8 + transición/pimeras ring MU, dosis MU L5/N11-D) · 8 Dominio (ring MU 1-3 + FG PU 8-12 + hang 45-60 s, dosis MU L6/N15-N16). Reglas §1.7 aplicadas a muñeca/codo en tips y descansos.
+- **0 ejercicios nuevos**: todo resolvió contra catálogo (MU Mastery ya sembró `Dip`, `Ring Pull Up - False Grip`, `Ring Muscle Up Transition`, etc.). 0 omisiones (ningún warning al generar).
+- En BD dev: 8 niveles, 128 trainings, duraciones 8.6-45 min, ordenación correcta (intensificación > progresión > base > deload; B/D más largas que A/C; C prehab la más corta). Nivel 8 verificado sesión a sesión.
+- Sin logros (igual que MU Mastery), sin migraciones (solo datos), sin cambios de front.
+- Verificación: 511 tests OK, PHPStan nivel 5 limpio, CS-Fixer 0 fix.
+
+## Bloque 15 — Back Lever Mastery + Flag Mastery (oct 2026)
+
+- Decisión del usuario: dos especializaciones **separadas** de 8 niveles × 4 fases × 4 sesiones (128 trainings, ~32 semanas cada una), con la filosofía redefinida: **base y estructura del Master pero ampliada y más específica** (no solo minería). Verificación automatizada vía agentes; los dos cayeron por límite de cuota API tras escribir los ficheros, la verificación se completó inline.
+- Nuevo programa `back-lever-mastery` ("Back Lever Mastery"): comando `app:create-back-lever-mastery` + `BackLeverBlueprint` + `BackLeverContent`. Arco: 1 Base de extensión de hombro (GH 10-20 s) · 2 Primer tuck (5-8 s) · 3 Tuck consolidado (8-10 s, gate N8) · 4 Advanced tuck (4-8 s, dosis N9) · 5 Straddle entrada (4-6 s, N10) · 6 Straddle sólido (6-8 s) · 7 Full back lever (3-5 s + asistida, N11) · 8 Dominio (full 8-10 s, GH 60 s). Dosis minadas de sessionD de N8-N11 del Master. Duraciones estrictamente crecientes: 8.7→52 min por nivel (min y max monotónicos).
+- Nuevo programa `flag-mastery` ("Flag Mastery"): comando `app:create-flag-mastery` + `FlagBlueprint` + `FlagContent`. El Master casi no desarrolla la bandera (vertical en N12, 3 s en test N13) → ampliación mayor: 1 Base tracción/core lateral · 2 Primer vertical (asistida 5-10 s) · 3 Bandera vertical (10-15 s + raises) · 4 Tuck flag (3-5 s) · 5 Bandera 45° (3-5 s) · 6 45° sólida (5-10 s) · 7 Straddle flag (Human Flag 3-5 s con nota de asistencia) · 8 Bandera horizontal (3-5 s, meta del N13). Duraciones 25→50 min crecientes; anomalía aceptada: la A de intensificación de N3 (pull-up 12-15×4 + chin 12-15×4 + lastrada 6-8×4) pesa más que la de N4, coherente con la progresión de tracción del programa.
+- **0 ejercicios nuevos**: BL resolvió contra catálogo existente (Tuck/Adv Tuck/Straddle Back Lever, Back Lever Hold, Back Lever Row); la escalera completa de bandera ya estaba (Vertical Flag, Tuck Flag, Human Flag 45 Degree, Human Flag, Human Flag Raise, Dragon Flag, side planks, Copenhagen). 0 omisiones en ambos.
+- Sin logros, sin migraciones, sin cambios de front. Reglas §1.7 (brazo recto: hombro/muñeca) en tips de ambos.
+- Verificación: 511 tests OK, PHPStan nivel 5 limpio, CS-Fixer 0 fix, ambos comandos re-ejecutables (idempotentes).
+
+## Bloque 16 — One-Arm Pull-Up Mastery (oct 2026)
+
+- Decisión del usuario: especialización de tracción unilateral élite, 8 niveles × 4 fases × 4 sesiones (128 trainings, ~32 semanas). Filosofía reafirmada por el usuario: **no solo minar el Master, sino ampliar y ser más específico** en la skill concreta (peldaños intermedios que en el Master no son protagonistas).
+- Nuevo programa `one-arm-pull-up-mastery` ("One-Arm Pull-Up Mastery"): comando `app:create-one-arm-pull-up-mastery` + `OneArmPullUpMasteryBlueprint` + `OneArmPullUpMasteryContent`. Sesiones: A=Strength lastrada / B=Unilateral / C=Prehab codo-hombro (codo de golfista = lesión típica del OAP: German hang, face pull, Wrist Roller) / D=Skill.
+- Arco: 1 Base · 2 Fuerza máxima (+15% BW) · 3 Lastrada sólida (+25% ×3, N13) · 4 Unilateral asistida · 5 Camino al OAC (negativas, parciales top/bottom half) · 6 Primer OAC (+50% ×1, N14) · 7 OAC → OAP (negativas 10-15 s) · 8 **One-Arm Pull-Up 1/3 por brazo** (N15) con simetría estricta.
+- Peldaños ampliados mapeados a catálogo con notas (sin inventar ejercicios): colgado a un brazo → `Dead Hang`+nota, one-arm scapular pull → `Scapular Pull Up`+nota, archer hold, parciales de rango → `One Arm Pull Up`+nota. Confirmados en catálogo: `One Arm Chin Up`, `One Arm Pull Up`, `One Arm Pull Up Negative`, `Assisted One Arm Pull Up`. **0 ejercicios nuevos, 0 omisiones.**
+- Duraciones: intensificación > progresión > base > deload en todos los niveles; pico A de N8 ajustado a ~48-53 min (restSets 180 s en N7-8).
+- Verificación: 511 tests OK, PHPStan limpio, CS-Fixer 0 fix.
+
+## Bloque 17 — Planche Mastery (oct 2026)
+
+- Especialización `planche-mastery` ("Planche Mastery", `app:create-planche-mastery` + `PlancheBlueprint` + `PlancheContent`): 8 niveles × 4 fases × 4 sesiones (128 trainings, ~32 semanas, advanced). Sesiones: A=Strength empuje / B=Planche / C=Prehab muñeca-hombro / D=Skill (lean, L-sit, compresión).
+- Arco: 1 Base de empuje y muñeca · 2 Frog y primer tuck (toe-support, dosis N6) · 3 Tuck planche 5-10 s + lean (gate N6/N7) · 4 Advanced tuck + PPPU (N7/N8) · 5 Straddle entrada 4-6 s (N10) · 6 Straddle planche 5-8 s + press (N11) · 7 Full planche con banda 3-5 s (N14) · 8 **Dominio: planche 5-8 s + planche push-up 1-3 + maltese asistido** (N15/Olimpo). Test N1: Push Up 15/20, Pike Push Up 5/8, Wrist Push-Up 5/8.
+- 0 ejercicios nuevos (variantes asistidas → ficha base + nota; `90 Degree Push Up` existe pero se usó `Planche Push Up` con nota). Duraciones: intensificación > progresión > base > deload en los 8 niveles (pico N8 ~127-139 min por fase completa). §1.7 muñeca/hombro en tips.
+- Verificación: 511 tests OK, PHPStan limpio, CS-Fixer 0 fix.
+
 ## Notas sueltas
 
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
