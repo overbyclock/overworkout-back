@@ -6,9 +6,9 @@
 > `docs/superpowers/specs/2026-10-10-crossfit-master-design.md` (§4 arco, §5
 > bloques, §8 puertas CF, §9 logros, §10 regla §1.7-CrossFit).
 >
-> **Estado de redacción:** Nivel 1 completo (16 sesiones). Niveles 2 y 3:
-> objetivo, test, puertas, skillFocus y logros redactados; **sesiones N2 y N3
-> PENDIENTES de redactar** (siguiente lote, tras validación del Nivel 1).
+> **Estado de redacción:** COMPLETO. Niveles 1, 2 y 3 con sus 16 sesiones
+> (4 fases × A/B/C/D), tests, puertas, skillFocus y logros. Pendiente solo la
+> validación de contenido con el usuario (gate humano).
 
 **Convenciones del documento:**
 
@@ -120,10 +120,10 @@ Variantes por tipo de sesión:
 |--------|------|------------|-------|
 | A | Hombro | `Scapular Push Up` + `Prone Y Raise` + `Face Pull` | 2×8 / 2×8 / 2×12 |
 | B | Muñeca | `Wrist Push-Up` (de rodillas si hace falta) + `Wrist Prayer` + `Wrist Extension Stretch` | 2×6 / 2×30 s / 2×30 s |
-
-Notas de progresión del prehab: el valor base es el mínimo; el rango superior va aquí, nunca en la dosis — `Scapular Push Up` sube a 2×10, `Wrist Push-Up` a 2×8 y las dosis en segundos a 45 s cuando la calidad (recorrido completo, sin dolor, lumbar quieta) se mantiene dos sesiones seguidas.
 | C | Lumbar/core | `Dead Bug` + `Bird Dog` + `Pallof Press` (banda ligera) | 2×8/lado / 2×6/lado / 2×10/lado |
 | D | Trío suave | `Band Pull-Apart` + `Wrist Push-Up` + `Dead Bug` | 2×12 / 2×6 / 2×6/lado |
+
+Notas de progresión del prehab: el valor base es el mínimo; el rango superior va aquí, nunca en la dosis — `Scapular Push Up` sube a 2×10, `Wrist Push-Up` a 2×8 y las dosis en segundos a 45 s cuando la calidad (recorrido completo, sin dolor, lumbar quieta) se mantiene dos sesiones seguidas.
 
 Descanso entre ejercicios posturales: 45-60 s. Criterio: calidad por encima de fatiga; es prehab, no trabajo principal.
 
@@ -249,8 +249,153 @@ Ensayo de test en Fase 3: última serie de cada ejercicio con la dosis del test 
 - **Objetivo:** primeros metcons con estructura (intervalos cortos y primer EMOM), primer benchmark escalado como hito de sesión (sin ser test aún), bisagra potente con `Kettlebell Swing` progresivo. Consolidar los patrones de N1 con carga ligera-moderada.
 - **Requisitos de entrada:** mínimos del test N1 (Air Squat ×20, `Plank` 40 s, Goblet ×10, KBDL técnico ×10).
 - **skillFocus:** `Bisagra potente con kettlebell, metcon estructurado y primer benchmark escalado`
-- **Puertas evaluadas:** **CF5** (cadera/bisagra) — requisito de entrada efectivo del N3 (deadlift con carga y swing progresivo). Re-test implícito en cada envío de test. Las sesiones N2 se redactarán con ensayo de CF5 integrado en Bloque 0 de la sesión C.
-- **SESIONES N2: PENDIENTES DE REDACTAR** (lote siguiente).
+- **Puertas evaluadas:** **CF5** (cadera/bisagra) — requisito de entrada efectivo del N3 (deadlift con carga y swing progresivo). Re-test implícito en cada envío de test. Ensayo de CF5 integrado en el Bloque 0 de la sesión C (bisagra con barra vacía).
+
+## Bloques comunes del Nivel 2
+
+### Bloque 0 — Preparación y movilidad (fluida, sin descansos de fuerza; 7-10 min)
+
+Acumulativo de N1 (§1.8: se mantiene toda la movilidad anterior) con dosis subidas y foco nuevo: bisagra (CF5) y sentadilla profunda. Transiciones de ~5 s.
+
+| Componente | Ejercicios (grafía catálogo) | F1 | F2 | F3 | F4 |
+|------------|------------------------------|----|----|----|----|
+| Activación general | `Jumping Jack` + `Active March` + `Arm Circles` + `Hip Circles` | 2 min | 2 min | 2 min | 2 min |
+| Torácica | `Cat-Camel` + `Open Books` + `Foam Roll Thoracic Extension` | 10 + 8/lado + 8 | 10 + 8/lado + 8 | 12 + 10/lado + 10 | 10 + 8/lado + 8 suave |
+| Tobillo (CF4, siembra) | `Calf Stretch Wall` + `Bent-Knee Soleus Stretch` + `Deep Squat Hold` | 30 s/lado + 30 s/lado + 30 s | 30 s/lado + 30 s/lado + 40 s | 30 s/lado + 30 s/lado + 50 s | 30 s/lado + 30 s/lado + 60 s |
+| Cadera/bisagra (CF5, foco nuevo) | `Kneeling Hip Flexor Stretch` + `Adductor Rockback` + `Glute Bridge` | 30 s/lado + 10 + 15 | 30 s/lado + 10 + 15 | 30 s/lado + 12 + 15 | 30 s/lado + 10 + 12 suave |
+| Hombro | `Shoulder Dislocate` + `Band Pull-Apart` | 15 + 12 | 15 + 12 | 15 + 15 | 12 + 12 suave |
+| Muñeca | `Wrist Prayer` + `Wrist Extension Stretch` + `Back-of-Hand Stretch` | 30 s cada uno | 30 s cada uno | 45 s cada uno | 30 s cada uno suave |
+
+Variantes por sesión:
+- **A (Fuerza):** énfasis en muñeca y hombro antes del press; `Deep Squat Hold` final como control diario.
+- **B (Skill):** `Shoulder Dislocate` extra ×5 antes de la barra; respiración diafragmática ×5 ciclos al final.
+- **C (Metcon):** añade ensayo CF5: `Deadlift` con barra vacía 2×5 lento + `Kettlebell Romanian Deadlift` 2×8 pausado; énfasis en tobillo.
+- **D (Mixta):** énfasis en cadera/bisagra y torácica.
+
+### Bloque postural (prehab — selección N2)
+
+| Sesión | Zona | Ejercicios | Dosis |
+|--------|------|------------|-------|
+| A | Hombro | `Scapular Push Up` + `Prone Y Raise` + `Face Pull` | 2×10 / 2×10 / 2×15 |
+| B | Muñeca | `Wrist Push-Up` + `Wrist Prayer` + `Wrist Extension Stretch` | 2×8 / 2×30 s / 2×30 s |
+| C | Lumbar/core | `Dead Bug` + `Bird Dog` + `Pallof Press` | 2×10/lado / 2×8/lado / 2×12/lado |
+| D | Trío suave | `Band Pull-Apart` + `Wrist Push-Up` + `Dead Bug` | 2×15 / 2×6 / 2×8/lado |
+
+Descanso entre ejercicios posturales: 45-60 s. Progresión: subir una serie al ejercicio más fácil cuando la calidad se mantiene dos sesiones seguidas; nunca al fallo.
+
+### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
+
+Igual estructura que N1: respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+
+## Fases del ciclo (N2)
+
+| Fase | Intensidad | Nota |
+|------|-----------|------|
+| 1 — Base | 55% | Primer EMOM y primeros WODs de 2 movimientos; swings con KB de trabajo ligero (16/12 kg); técnica de bisagra bajo la puerta CF5 |
+| 2 — Progresión | 80% | Subir carga mínima (goblet 12/8, swing 20/14); primer AMRAP 10'; Helen escalada como hito de sesión C |
+| 3 — Intensificación | 95% | Swings a 24/16 ensayando el test; WODs de 2 movimientos a ritmo alto; ensayo de test integrado en sesión A |
+| 4 — Recuperación | 50% | Mitad de volumen; movilidad protagonista; test de nivel al final |
+
+## Sesiones del Nivel 2
+
+16 sesiones = 4 fases × tipos A/B/C/D. 5 bloques en orden (`preparacion` → `fuerza_skill` → `wod` → `postural` → `descarga`), `restAfterBlock` 60 s. Bloque 0 y descarga: bloques comunes con variante y dosis de fase; postural: tabla de la sesión.
+
+### Sesión A — Fuerza básica progresiva (todas las fases)
+
+- Tipo: fuerza, series seguidas. Duración estimada: 50-60 min.
+- Bloque 0: variante A. Postural: tabla sesión A (hombro). Descarga: estándar.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas técnicas |
+|-----------|----|----|----|----|----------|----------------|
+| `Goblet Squat` | 3×10 | 4×10 | 4×12 | 2×10 suave | 90 s | KB 12/8 kg; cadera bajo la rodilla; talones pegados; objetivo del test = ×15 con 12/8 |
+| `Strict Press` | 3×5 | 4×5 | 4×5 | 2×5 suave | 90 s | Barra 25/20 kg; glúteo y costillas abajo; extensión completa sin reclinar |
+| `Kettlebell Swing Russian` | 4×8 | 4×10 | 5×10 | 2×8 suave | 90 s | KB 16/12 kg (F3 ensaya 24/16 en la última serie); bisagra visible en cada rep: la puerta CF5 se juega aquí |
+
+Ensayo de test en Fase 3: última serie de goblet a ×15 y última de swings con 24/16 (validación CF5).
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | AMRAP 8' | 10 `Air Squat` + 8 `Sit-up` | Ritmo conversacional |
+| F2 | AMRAP 10' | 8 `Kettlebell Swing Russian` (16/12) + 5 `Push Up` | Primer WOD de 2 movimientos con carga |
+| F3 | AMRAP 10' | 10 `Kettlebell Swing Russian` (16/12) + 6 `Push Up` | Ritmo alto; si la bisagra se rompe, baja KB (§10.4) |
+| F4 | AMRAP 8' suave | 8 `Air Squat` + 8 `Sit-up` | Movimiento, no fatiga; test al final del nivel |
+
+**Tips de sesión:** "El swing no es un squat frontal: es una bisagra. Si las rodillas dominan el gesto, vuelve al `Kettlebell Romanian Deadlift` pausado del Bloque 0."
+
+### Sesión B — Skill: press de potencia y thruster (todas las fases)
+
+- Tipo: técnica, series seguidas, barra primero. Duración estimada: 50-60 min.
+- Bloque 0: variante B. Postural: tabla sesión B (muñeca). Descarga: estándar.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas técnicas |
+|-----------|----|----|----|----|----------|----------------|
+| `Push Press` (barra vacía o 20/15 kg) | 4×5 | 4×5 | 5×5 | 3×5 suave | 90 s | Primera potencia de piernas → brazos; barra recta; no reclinar al bloquear; si la lumbar se redondea al bajar, cuenta como estricto |
+| `Dumbbell Thruster` (mancuernas ligeras) | 3×6 | 3×8 | 4×6 | 2×6 suave | 90 s | Semilla del thruster de Fran: sentadilla profunda + impulso + press en un gesto fluido |
+| `Plank` | 3×40 s | 3×50 s | 3×60 s | 2×40 s | 60 s | Objetivo del test = 60 s; costillas abajo todo el tiempo |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | 4 rondas | 8 `Dumbbell Thruster` (ligero) + 10 `Ring Row - Feet on Ground` | 60-90 s entre rondas |
+| F2 | 4 rondas | 10 `Dumbbell Thruster` + 10 `Ring Row - Feet on Ground` | 60 s entre rondas |
+| F3 | 5 rondas | 8 `Dumbbell Thruster` + 8 `Ring Row - Feet on Ground` + 30 s `Hollow Body Hold` | Core integral bajo fatiga |
+| F4 | 2 rondas suaves | 6 `Dumbbell Thruster` + 8 `Ring Row - Feet on Ground` | Técnica relajada |
+
+**Tips de sesión:** "El push press es el primer gesto dinámico del programa: la potencia sale de las piernas, no de la espalda baja. Lumbar neutra o no cuenta (§1.7-CrossFit §10.2)."
+
+### Sesión C — Metcon estructurado: primer EMOM (todas las fases)
+
+- Tipo: WOD + core. Duración estimada: 45-55 min.
+- Bloque 0: variante C (con ensayo CF5). Postural: tabla sesión C (lumbar). Descarga: estándar.
+
+**Bloque `fuerza_skill` (activación corta):**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas |
+|-----------|----|----|----|----|----------|-------|
+| `Kettlebell Swing Russian` (técnica) | 2×8 | 2×10 | 3×8 | 2×8 | 60 s | 16/12 kg; tres claves: espalda neutra, cadera atrás, cadera al frente con glúteo |
+| `Air Squat` (pausado) | 2×12 | 2×15 | 3×15 | 2×10 suave | 60 s | 2 s abajo; talones pegados |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | EMOM 6' | Minutos impares: 8 `Kettlebell Swing Russian` (16/12); pares: 6 `Air Squat` | Primer EMOM del nivel; descansa el tiempo que sobre cada minuto |
+| F2 | EMOM 10' | Impares: 10 `Kettlebell Swing Russian` (16/12); pares: 5 `Box Step Over` | Si no llegas, reduce reps, no la técnica |
+| F3 | Benchmark: Helen escalada (hito) | `Helen` en modalidad Scaled (ver nota de test N2) | Primera ejecución del benchmark en sesión: logro "Helen escalada"; el tiempo no cuenta aún para el test |
+| F4 | AMRAP 8' suave | 8 `Air Squat` + 6 `Sit-up` | Movimiento; test al final del nivel |
+
+**Tips de sesión:** "El EMOM enseña a gestionar el reloj: termina las reps rápido y usa el resto del minuto para respirar. Rondas completas > reps heroicas."
+
+### Sesión D — Mixta: carries, bisagra y core (todas las fases)
+
+- Tipo: mixta + movilidad extra. Duración estimada: 45-55 min.
+- Bloque 0: variante D. Postural: tabla sesión D (trío). Descarga: ampliada en F4.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas |
+|-----------|----|----|----|----|----------|-------|
+| `Farmer Carry` | 3×30 m | 3×40 m | 4×40 m | 2×30 m | 60 s | Carga que desafíe sin deformar la postura |
+| `Kettlebell Romanian Deadlift` | 3×8 | 3×10 | 4×10 | 2×8 | 60 s | 16/12 kg; 2 s de estiramiento arriba; espejo del swing |
+| `Kettlebell Halo` | 2×8/lado | 2×10/lado | 3×8/lado | 2×8/lado | 45 s | KB ligero alrededor de la cabeza; costillas abajo; hombro móvil |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | 3 rondas | 10 `Box Step Over` + 10 `Mountain Climber` + 10 `Sit-up` | 60-90 s entre rondas |
+| F2 | 4 rondas | 10 `Box Step Over` + 12 `Mountain Climber` + 10 `Glute Bridge` | 60 s entre rondas |
+| F3 | AMRAP 12' | 8 `Kettlebell Swing Russian` (16/12) + 8 `Box Step Over` + 8 `Sit-up` | Primer AMRAP de 3 movimientos y 12' del nivel |
+| F4 | 2 rondas suaves | 8 `Box Step Over` + 8 `Mountain Climber` | Movimiento; test al final del nivel |
+
+**Tips de sesión:** "La bisagra se entrena también cansado: en F3 mira que la lumbar no se redondee al final del AMRAP; ahí es donde CF5 se gana o se pierde."
 
 ## Test de nivel N2 (resumen)
 
@@ -286,8 +431,161 @@ Notas del test:
 - **Objetivo:** consolidar squat/press/hinge con carga ligera-moderada, introducir press de potencia (`Push Press`), `Front Squat` ligero y dobles de mancuernas como semilla de thruster; terminar con al menos un benchmark escalado con marca registrada. Al superar N3, el usuario está listo para el tramo RX escalado (N4-N6) y sus puertas CF1/CF4.
 - **Requisitos de entrada:** mínimos del test N2 (incl. CF5 superada).
 - **skillFocus:** `Consolidación de squat/press/hinge con carga y preparación al RX escalado`
-- **Puertas evaluadas:** **CF1** (sentadilla profunda pegada) y **CF4** (dorsiflexión de tobillo) — requisito de entrada efectivo del N4 (squat cargado progresivo, lunges y wall ball). Las sesiones N3 se redactarán con ensayo de CF1 (Deep Squat Hold creciente) y CF4 (Bloque 0) integrados.
-- **SESIONES N3: PENDIENTES DE REDACTAR** (lote siguiente).
+- **Puertas evaluadas:** **CF1** (sentadilla profunda pegada) y **CF4** (dorsiflexión de tobillo) — requisito de entrada efectivo del N4 (squat cargado progresivo, lunges y wall ball). Ensayos integrados: `Deep Squat Hold` creciente en Bloque 0 de todas las sesiones (CF1) y bloque tobillo completo (CF4) en sesión D.
+
+## Bloques comunes del Nivel 3
+
+### Bloque 0 — Preparación y movilidad (fluida, sin descansos de fuerza; 8-12 min)
+
+Acumulativo de N1+N2 con foco nuevo: sentadilla profunda sostenida (CF1) y dorsiflexión (CF4). Transiciones de ~5 s.
+
+| Componente | Ejercicios (grafía catálogo) | F1 | F2 | F3 | F4 |
+|------------|------------------------------|----|----|----|----|
+| Activación general | `Jumping Jack` + `Active March` + `Arm Circles` + `Hip Circles` | 2 min | 2 min | 2 min | 2 min |
+| Torácica | `Cat-Camel` + `Open Books` + `Foam Roll Thoracic Extension` | 10 + 8/lado + 8 | 12 + 10/lado + 10 | 12 + 10/lado + 10 | 10 + 8/lado + 8 suave |
+| Sentadilla profunda (CF1, foco nuevo) | `Deep Squat Hold` + `Cossack Squat` | 30 s + 6/lado | 45 s + 8/lado | 60 s (ensayo puerta) + 8/lado | 60 s + 6/lado suave |
+| Tobillo (CF4, foco nuevo) | `Calf Stretch Wall` + `Bent-Knee Soleus Stretch` + `Calf Raise on Step` | 30 s/lado + 30 s/lado + 10 | 40 s/lado + 40 s/lado + 12 | 45 s/lado + 45 s/lado + 15 | 30 s/lado + 30 s/lado + 10 suave |
+| Cadera/bisagra (CF5, mantenido) | `Kneeling Hip Flexor Stretch` + `Adductor Rockback` + `Glute Bridge` | 30 s/lado + 10 + 15 | 30 s/lado + 10 + 15 | 30 s/lado + 12 + 15 | 30 s/lado + 10 + 12 suave |
+| Hombro | `Shoulder Dislocate` + `Band Pull-Apart` | 15 + 12 | 15 + 15 | 15 + 15 | 12 + 12 suave |
+| Muñeca | `Wrist Prayer` + `Wrist Extension Stretch` + `Back-of-Hand Stretch` | 30 s cada uno | 30 s cada uno | 45 s cada uno | 30 s cada uno suave |
+
+Variantes por sesión:
+- **A (Fuerza):** `Deep Squat Hold` justo antes de la sentadilla cargada; énfasis en tobillo.
+- **B (Skill):** `Shoulder Dislocate` extra ×5 antes de la barra; respiración diafragmática ×5 ciclos.
+- **C (Metcon):** énfasis en bisagra (swings en el WOD) y tobillo; control de CF5 bajo fatiga.
+- **D (Mixta):** énfasis en sentadilla profunda y cadera; la descarga se amplía.
+
+### Bloque postural (prehab — selección N3)
+
+| Sesión | Zona | Ejercicios | Dosis |
+|--------|------|------------|-------|
+| A | Hombro | `Scapular Push Up` + `Prone Y Raise` + `Face Pull` | 3×10 / 2×12 / 2×15 |
+| B | Muñeca | `Wrist Push-Up` + `Wrist Prayer` + `Wrist Extension Stretch` | 2×10 / 2×30 s / 2×45 s |
+| C | Lumbar/core | `Dead Bug` + `Bird Dog` + `Pallof Press` | 2×12/lado / 2×8/lado / 2×12/lado |
+| D | Trío suave | `Band Pull-Apart` + `Wrist Push-Up` + `Dead Bug` | 2×15 / 2×8 / 2×10/lado |
+
+Descanso entre ejercicios posturales: 45-60 s. El prehab N3 es la última capa densa del tramo de fundamentos: en N4-N6 se mantiene a estas dosis y crece el volumen principal.
+
+### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
+
+Igual estructura que N1-N2: respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+
+## Fases del ciclo (N3)
+
+| Fase | Intensidad | Nota |
+|------|-----------|------|
+| 1 — Base | 55% | Primer back squat y front squat con barra ligera; deadlift 50/35 técnico; WODs de 2 movimientos con barra/mancuernas |
+| 2 — Progresión | 80% | Subir barra +5 kg; primeras negativas de dominada; primer AMRAP de 12'; Cindy escalada como hito de sesión D |
+| 3 — Intensificación | 95% | Ensayo de test en A (deadlift 60/40 ×5, push press 30/20 ×8); Fran escalada como hito de sesión C |
+| 4 — Recuperación | 50% | Mitad de volumen; movilidad protagonista (CF1/CF4 a dosis F4); test de nivel al final |
+
+## Sesiones del Nivel 3
+
+16 sesiones = 4 fases × tipos A/B/C/D. 5 bloques en orden (`preparacion` → `fuerza_skill` → `wod` → `postural` → `descarga`), `restAfterBlock` 60 s.
+
+### Sesión A — Fuerza: squat y bisagra con barra (todas las fases)
+
+- Tipo: fuerza, series seguidas. Duración estimada: 55-65 min.
+- Bloque 0: variante A. Postural: tabla sesión A (hombro). Descarga: estándar.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas técnicas |
+|-----------|----|----|----|----|----------|----------------|
+| `Back Squat` | 3×5 (40/30 kg) | 4×5 (45/30 kg) | 5×5 (50/35 kg) | 2×5 suave (40/30 kg) | 120 s | Primera sentadilla trasera del programa; profundidad con talones pegados (CF1 decide si sube la carga); codos bajo la barra, pecho alto |
+| `Strict Press` | 3×5 (30/20 kg) | 3×5 (30/20 kg) | 4×5 (30/20 kg) | 2×5 suave | 90 s | Mantiene la línea de N2 con la barra de test |
+| `Deadlift` | 3×5 (50/35 kg) | 3×5 (55/40 kg) | 3×3 (60/45 kg, ensayo test) | 2×5 suave (50/35 kg) | 120 s | Carga de trabajo, nunca en fatiga alta (§10.2); CF5 visible en cada rep; F3 ensaya el test (60/40) |
+
+Ensayo de test en Fase 3: última serie de deadlift a 60/40 ×5 y series de press a ×8 en sesión B.
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | AMRAP 8' | 10 `Air Squat` + 8 `Push Up` | Ritmo conversacional tras la fuerza |
+| F2 | 21-15-9 | `Dumbbell Thruster` (ligero) + `Ring Row - Feet on Ground` | Semilla de Fran sin ser benchmark; descanso solo lo necesario |
+| F3 | 21-15-9 | `Dumbbell Thruster` (ligero) + `Jumping Pull Up` | Mismo esquema que Fran escalada; mide el tiempo por curiosidad |
+| F4 | AMRAP 6' suave | 8 `Air Squat` + 6 `Sit-up` | Movimiento; test al final del nivel |
+
+**Tips de sesión:** "Hoy la barra pesa lo que pesa: si CF1 no está (sentadilla profunda con talones pegados), el back squat se queda en goblet. La puerta manda sobre el ego."
+
+### Sesión B — Skill: push press, front squat y dominadas (todas las fases)
+
+- Tipo: técnica, series seguidas, barra primero. Duración estimada: 55-65 min.
+- Bloque 0: variante B. Postural: tabla sesión B (muñeca). Descarga: estándar.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas técnicas |
+|-----------|----|----|----|----|----------|----------------|
+| `Push Press` | 4×5 (30/20 kg) | 4×5 (30/20 kg) | 5×5 (30/20 kg) | 3×5 suave | 90 s | El gesto del test: piernas-brazos-barra recta; lumbar neutra siempre |
+| `Front Squat` | 3×5 (30/20 kg) | 3×5 (35/25 kg) | 4×5 (40/25 kg) | 2×5 suave | 120 s | Primera sentadilla frontal; codos altos; profundidad con CF1 validada |
+| `Jumping Pull Up` | 3×5 | 3×5 | 3×5 | 2×5 | 90 s | Tracción con salto controlado; pecho a la barra; baja lento |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | 4 rondas | 6 `Push Press` (20/15 kg) + 8 `Jumping Pull Up` | 60-90 s entre rondas |
+| F2 | 4 rondas | 6 `Push Press` (20/15 kg) + 6 `Negative Pull Up` (bajada 3 s) | Primeras negativas de dominada del programa |
+| F3 | 5 rondas | 8 `Push Press` (20/15 kg) + 8 `Jumping Pull Up` | Ritmo alto; si el press se vuelve press de piernas roto, baja la barra |
+| F4 | 2 rondas suaves | 5 `Push Press` (20/15 kg) + 5 `Jumping Pull Up` | Técnica relajada |
+
+**Tips de sesión:** "Las negativas de F2 son el primer peldaño hacia la dominada estricta de N4-N6: baja en 3 segundos sin desplomarte. Primero estricto, luego dinámico (§1.7-CrossFit §10.1)."
+
+### Sesión C — Metcon con barra ligera (todas las fases)
+
+- Tipo: WOD + core. Duración estimada: 50-60 min.
+- Bloque 0: variante C. Postural: tabla sesión C (lumbar). Descarga: estándar.
+
+**Bloque `fuerza_skill` (activación corta):**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas |
+|-----------|----|----|----|----|----------|-------|
+| `Deadlift` (técnico, barra vacía) | 2×5 | 2×5 | 3×3 | 2×5 suave | 60 s | Ritmo lento: 2 s de subida, 2 s de bajada |
+| `Kettlebell Swing Russian` | 2×10 | 2×10 | 3×10 | 2×8 | 60 s | 16/12 kg; calienta la bisagra para el WOD |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | AMRAP 10' | 8 `Dumbbell Thruster` (ligero) + 8 `Ring Row - Feet on Ground` | Dos movimientos, transiciones rápidas |
+| F2 | AMRAP 12' | 6 `Push Press` (20/15 kg) + 8 `Box Step Over` + 8 `Sit-up` | Primer AMRAP de 12' con barra |
+| F3 | Benchmark: Fran escalada (hito) | `Fran` en modalidad Scaled (ver nota de test N3) | Primera ejecución del benchmark: logro "Fran escalada registrada" cuando además se haga en test; aquí el tiempo es orientativo |
+| F4 | AMRAP 8' suave | 8 `Air Squat` + 6 `Sit-up` | Movimiento; test al final del nivel |
+
+**Tips de sesión:** "Fran escalada de F3 es el ensayo general del test: anota el tiempo y el escalado usado, y compáralo con las referencias del catálogo."
+
+### Sesión D — Mixta: sentadilla profunda y motor (todas las fases)
+
+- Tipo: mixta + movilidad CF1/CF4. Duración estimada: 50-60 min.
+- Bloque 0: variante D. Postural: tabla sesión D (trío). Descarga: ampliada en F4.
+
+**Bloque `fuerza_skill`:**
+
+| Ejercicio | F1 | F2 | F3 | F4 | Descanso | Notas |
+|-----------|----|----|----|----|----------|-------|
+| `Goblet Squat` | 3×12 (16/12 kg) | 3×15 (16/12 kg) | 4×15 (16/12 kg) | 2×10 suave | 90 s | Objetivo del test = ×20; profundidad CF1 |
+| `Farmer Carry` | 3×40 m | 4×40 m | 4×40 m (carga +) | 2×30 m | 60 s | Postura erguida; grip que reta sin deformar |
+| `Kettlebell Halo` | 2×10/lado | 2×10/lado | 3×10/lado | 2×8/lado | 45 s | KB ligero; hombro móvil para el overhead de N4+ |
+
+**Bloque `wod`:**
+
+| Fase | Formato | Contenido | Notas |
+|------|---------|-----------|-------|
+| F1 | 3 rondas | 10 `Box Step Over` + 10 `Kettlebell Swing Russian` (16/12) + 10 `Sit-up` | 60-90 s entre rondas |
+| F2 | Benchmark: Cindy escalada (hito) | `Cindy` AMRAP 20' en Scaled: 5 `Ring Row - Feet on Ground` + 10 `Push Up` (de rodillas si hace falta) + 15 `Air Squat` | Primer AMRAP con nombre propio del programa; logro de hito "Cindy escalada" |
+| F3 | AMRAP 12' | 8 `Kettlebell Swing Russian` (16/12) + 8 `Box Step Over` + 8 `Mountain Climber` | Ritmo alto; bisagra bajo fatiga = examen de CF5 |
+| F4 | 2 rondas suaves | 8 `Box Step Over` + 8 `Sit-up` | Movimiento; test al final del nivel |
+
+**Tips de sesión:** "Cindy escalada enseña lo que un AMRAP largo pide: repartir, no fundirse. Anota tus rondas; en N4-N6 volverá como test."
+
+---
+
+## Logros adicionales de hito añadidos con las sesiones
+
+- N2: "Cargador de hombro" — primer `Kettlebell Halo` de 10/lado sin dolor. `tier: comun`. (Se mantiene la lista anterior; este se suma.)
+- N3: "Cindy escalada" — primera ejecución completa de `Cindy` en modalidad Scaled en sesión D. `tier: raro`.
 
 ## Test de nivel N3 (resumen)
 
@@ -331,5 +629,7 @@ Notas del test:
 1. **Mapeo de cuándo se evalúa cada puerta:** CF5 en N2; CF1 y CF4 en N3; CF2/CF3 en N4; CF6/CF7 en N6 (con re-tests posteriores). El spec solo dice "en el nivel anterior al que exigen"; este calendario concreto es propuesta mía.
 2. **Benchmarks de test:** Helen escalada (N2) y Fran escalada (N3) — los dos existen en catálogo y son los clásicos de iniciación. Tiempos ajustados tras contrastar con las referencias `beginner/intermediate_time_*` de la BD (ver notas de cada test): Helen escalada 18:00/14:00; Fran escalada 13:00/10:00.
 3. **Pesos de los ítems de fuerza** (goblet 8→16 kg, KBDL 16 kg, deadlift 60/40, push press 30/20): progresión conservadora coherente con "mínimos conservadores" (§1.6).
-4. **Sessiones N2/N3 no redactadas** a propósito (brief Step 1); se redactan tras validar N1 y con el feedback (brief Step 3).
+4. **Sesiones N2/N3 redactadas en el Step 3** (commit posterior al N1) tras el fix round 1; el documento queda completo para validación de contenido.
 5. N1 usa `Standing Dumbbell Press` en sesión A y `Strict Press` con barra vacía en sesión B (redundancia deliberada: mancuerna primero por seguridad del hombro, barra después por técnica olímpica).
+6. **Hitos de benchmark en sesión (no test):** Helen escalada en sesión C F3 de N2, `Cindy` escalada en sesión D F2 de N3 y Fran escalada en sesión C F3 de N3 — los benchmarks del catálogo se usan embebidos en sesión como hitos antes de ser ítems de test (decisión D2); la marca que alimenta el test es la del intento registrado en el envío de test.
+7. **Posición de los ensayos de puerta:** CF5 se ensaya en Bloque 0 de sesión C (N2) y se re-examina bajo fatiga en WODs con swing; CF1 en Bloque 0 de todas las sesiones N3 (`Deep Squat Hold` creciente hasta 60 s en F3); CF4 en el bloque tobillo de Bloque 0, con dosis máximas en F3-F4.
