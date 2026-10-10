@@ -43,6 +43,22 @@ class TestResultRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * Último TestResult de un progreso para un ciclo concreto.
+     */
+    public function findLatestByProgressAndCycle(UserLevelProgress $progress, int $cycleNumber): ?TestResult
+    {
+        return $this->createQueryBuilder('tr')
+            ->andWhere('tr.userLevelProgress = :progress')
+            ->andWhere('tr.cycleNumber = :cycle')
+            ->setParameter('progress', $progress)
+            ->setParameter('cycle', $cycleNumber)
+            ->orderBy('tr.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(TestResult $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

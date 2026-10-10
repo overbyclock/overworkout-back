@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Benchmark;
 use App\Entity\TestResult;
 use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
 use App\Enum\TestItemType;
+use App\Repository\TestResultRepository;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use App\Repository\UserTrainingLogRepository;
@@ -22,6 +24,7 @@ class LevelProgressService
         private readonly TrainingLevelRepository $levelRepository,
         private readonly AchievementUnlockService $achievementUnlockService,
         private readonly UserTrainingLogRepository $trainingLogRepository,
+        private readonly TestResultRepository $testResultRepository,
     ) {
     }
 
@@ -154,6 +157,28 @@ class LevelProgressService
         $testResult->setResults($results);
         $testResult->setNotes($notes);
 
+        $this->entityManager->persist($testResult);
+
+        $this->evaluateAndApplyOutcome($progress, $testResult, $requirements, $mode);
+
+        $this->entityManager->flush();
+
+        return $testResult;
+    }
+
+    /**
+     * Evalúa un TestResult contra los requisitos del nivel y aplica el resultado:
+     * pasa de nivel, bloqueo por movilidad o repetición de ciclo.
+     * También desbloquea los logros por ítem de test.
+     *
+     * @param array<int, array{name: string, minimum?: int|float, target?: int|float|null, type?: string, gateCode?: string, direction?: string}> $requirements
+     */
+    private function evaluateAndApplyOutcome(
+        UserLevelProgress $progress,
+        TestResult $testResult,
+        array $requirements,
+        string $mode
+    ): void {
         $isGateRetest = TrainingProgram::TEST_EVAL_STRICT_GATES === $mode
             && UserLevelProgress::STATUS_MOBILITY_BLOCKED === $progress->getStatus();
 
@@ -166,8 +191,6 @@ class LevelProgressService
         } else {
             $testResult->evaluate($requirements, $mode);
         }
-
-        $this->entityManager->persist($testResult);
 
         // Logros por ítem: se desbloquean con cualquier test, se supere o no globalmente
         $this->achievementUnlockService->unlockTestItemAchievements(
@@ -188,6 +211,107 @@ class LevelProgressService
         } else {
             $this->handleLevelRepeat($progress);
         }
+    }
+
+    /**
+     * Busca, entre los progresos activos del usuario, el primer testRequirement de tipo
+     * benchmark que referencia al benchmark dado.
+     *
+     * @return array{name: string, minimum?: int|float, direction?: string, unit?: string, type?: string, benchmarkId?: int}|null
+     */
+    public function findBenchmarkRequirement(User $user, Benchmark $benchmark): ?array
+    {
+        return $this->findBenchmarkMatch($user, $benchmark)['requirement'] ?? null;
+    }
+
+    /**
+     * Primer progreso activo cuyo nivel referencia el benchmark en sus testRequirements,
+     * junto al requirement concreto.
+     *
+     * @return array{progress: UserLevelProgress, requirement: array{name: string, minimum?: int|float, direction?: string, unit?: string, type?: string, benchmarkId?: int}}|null
+     */
+    private function findBenchmarkMatch(User $user, Benchmark $benchmark): ?array
+    {
+        foreach ($this->progressRepository->findAllActiveByUser($user) as $progress) {
+            foreach ($progress->getTrainingLevel()?->getTestRequirements() ?? [] as $requirement) {
+                if (TestItemType::Benchmark->value === ($requirement['type'] ?? null)
+                    && ($requirement['benchmarkId'] ?? null) === $benchmark->getId()
+                ) {
+                    return ['progress' => $progress, 'requirement' => $requirement];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Registra la marca de un benchmark cerrado en el TestResult del nivel en curso
+     * que lo referencia como ítem de test, y re-evalúa el nivel.
+     *
+     * La marca cuenta aunque el scaling del attempt no sea RX: el mínimo es el mínimo.
+     * Si $value es null (formato de score no parseable), se registra el ítem con valor
+     * null y NO se re-evalúa el test.
+     *
+     * Sin match → null, sin ningún efecto colateral.
+     */
+    public function recordBenchmarkResult(
+        User $user,
+        Benchmark $benchmark,
+        int|float|null $value,
+        string $unit,
+        ?string $display = null
+    ): ?TestResult {
+        $match = $this->findBenchmarkMatch($user, $benchmark);
+
+        if (null === $match) {
+            return null;
+        }
+
+        $progress = $match['progress'];
+        $requirement = $match['requirement'];
+        $level = $progress->getTrainingLevel();
+        $requirements = $level->getTestRequirements() ?? [];
+
+        // Último TestResult del ciclo actual; si ya fue superado, se abre uno nuevo
+        $testResult = $this->testResultRepository
+            ->findLatestByProgressAndCycle($progress, $progress->getCyclesCompleted());
+
+        if (null !== $testResult && $testResult->isOverallPassed()) {
+            $testResult = null;
+        }
+
+        if (null === $testResult) {
+            $testResult = new TestResult();
+            $testResult->setUserLevelProgress($progress);
+            $testResult->setLevelNumber($level->getLevelNumber());
+            $testResult->setCycleNumber($progress->getCyclesCompleted());
+            $testResult->setResults([]);
+            $this->entityManager->persist($testResult);
+        }
+
+        // Añadir o actualizar el ítem (match por nombre del requirement)
+        $results = array_values(array_filter(
+            $testResult->getResults(),
+            static fn (array $r): bool => ($r['name'] ?? null) !== $requirement['name'],
+        ));
+        $item = ['name' => $requirement['name'], 'value' => $value, 'unit' => $unit];
+        if (null !== $display) {
+            $item['display'] = $display;
+        }
+        $results[] = $item;
+        $testResult->setResults($results);
+
+        if (null === $value) {
+            // Formato no parseable: se registra la marca pero no se auto-evalúa
+            $this->entityManager->flush();
+
+            return $testResult;
+        }
+
+        $mode = $level->getProgram()?->getTestEvaluationMode() ?? TrainingProgram::TEST_EVAL_LEGACY;
+
+        $this->evaluateAndApplyOutcome($progress, $testResult, $requirements, $mode);
 
         $this->entityManager->flush();
 

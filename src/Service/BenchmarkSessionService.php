@@ -17,7 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 readonly class BenchmarkSessionService
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private LevelProgressService $levelProgressService
     ) {
     }
 
@@ -115,7 +116,74 @@ readonly class BenchmarkSessionService
 
         $this->entityManager->flush();
 
+        // Auto-evaluación: si el benchmark alimenta el test de un nivel en curso, registrar la marca
+        if (UserBenchmarkAttempt::STATUS_COMPLETED === $dto->status) {
+            $this->recordBenchmarkInLevelTest($user, $attempt);
+        }
+
         return $attempt;
+    }
+
+    /**
+     * Registra la marca del attempt en el TestResult del nivel que referencia el benchmark.
+     * La marca cuenta aunque el scaling no sea RX.
+     */
+    private function recordBenchmarkInLevelTest(User $user, UserBenchmarkAttempt $attempt): void
+    {
+        $requirement = $this->levelProgressService->findBenchmarkRequirement($user, $attempt->getBenchmark());
+
+        if (null === $requirement) {
+            return;
+        }
+
+        $direction = $requirement['direction'] ?? 'gte';
+        $value = null;
+        $unit = $requirement['unit'] ?? 'reps';
+
+        if ('lte' === $direction) {
+            // Marcas de tiempo: el valor es el tiempo total en segundos
+            $value = $attempt->getTotalTimeSeconds();
+            $unit = $requirement['unit'] ?? 'segundos';
+        } else {
+            // Rondas/reps: el score se parsea desde scoreValue
+            $value = $this->parseScoreValue($attempt->getScoreValue());
+        }
+
+        $this->levelProgressService->recordBenchmarkResult(
+            $user,
+            $attempt->getBenchmark(),
+            $value,
+            $unit,
+            $attempt->getScoreDisplay()
+        );
+    }
+
+    /**
+     * Parsea el score de un benchmark a número.
+     *
+     * Formatos aceptados:
+     * - numérico puro ("240", "15.5") → tal cual;
+     * - rondas + reps ("5+30", "5 + 30") → suma aproximada (documentado).
+     *
+     * Cualquier otro formato → null (se registra la marca sin auto-evaluar).
+     */
+    private function parseScoreValue(?string $scoreValue): int|float|null
+    {
+        if (null === $scoreValue) {
+            return null;
+        }
+
+        $scoreValue = trim($scoreValue);
+
+        if (is_numeric($scoreValue)) {
+            return $scoreValue + 0;
+        }
+
+        if (1 === preg_match('/^(\d+)\s*\+\s*(\d+)$/', $scoreValue, $matches)) {
+            return (int) $matches[1] + (int) $matches[2];
+        }
+
+        return null;
     }
 
     public function deleteAttempt(int $attemptId, User $user): void

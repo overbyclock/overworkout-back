@@ -8,6 +8,7 @@ use App\Entity\TrainingLevel;
 use App\Entity\TrainingProgram;
 use App\Entity\User;
 use App\Entity\UserLevelProgress;
+use App\Repository\TestResultRepository;
 use App\Repository\TrainingLevelRepository;
 use App\Repository\UserLevelProgressRepository;
 use App\Repository\UserTrainingLogRepository;
@@ -43,6 +44,7 @@ final class LevelProgressServiceTest extends TestCase
             $this->createStub(TrainingLevelRepository::class),
             $this->createStub(AchievementUnlockService::class),
             $this->trainingLogRepository,
+            $this->createStub(TestResultRepository::class),
         );
     }
 
