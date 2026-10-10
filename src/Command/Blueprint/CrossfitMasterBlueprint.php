@@ -103,7 +103,6 @@ class CrossfitMasterBlueprint
 
         if (isset($wod['benchmark'])) {
             $data['benchmark'] = $wod['benchmark'];
-            $data['benchmarkNote'] = $wod['benchmarkNote'] ?? null;
         }
 
         return $data;
@@ -986,7 +985,7 @@ class CrossfitMasterBlueprint
                 'progression' => self::emomBlock(10, [
                     self::ex('Kettlebell Swing Russian', '10'),
                     self::ex('Box Step Over', '5'),
-                ], "EMOM 10': minutos impares 10 Kettlebell Swing Russian (16/12 kg); pares 5 Box Step Over. Si no llegas, reduce reps, no la técnica."),
+                ], 'Minutos impares 10 Kettlebell Swing Russian (16/12 kg); pares 5 Box Step Over. Si no llegas, reduce reps, no la técnica.'),
                 // Benchmark: Helen escalada (hito de sesión, no test aún)
                 'intensification' => [
                     'benchmark' => 'Helen',

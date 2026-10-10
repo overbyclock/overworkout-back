@@ -172,7 +172,7 @@ class CreateCrossfitMasterCommand extends Command
         $program->setEstimatedDurationWeeks(null);
         $program->setDifficulty('beginner');
         $program->setIsActive(true);
-        $program->setTestEvaluationMode(TrainingProgram::TEST_EVAL_LEGACY);
+        $program->setTestEvaluationMode(TrainingProgram::TEST_EVAL_STRICT_GATES);
 
         $this->em->flush();
 
@@ -311,7 +311,7 @@ class CreateCrossfitMasterCommand extends Command
 
         $roundCount = 0;
         foreach ($data['blocks'] as $blockData) {
-            $this->createTrainingRound($training, $blockData, $levelNum, $sessionKey, $data['goal'] ?? null, $data['benchmarkNote'] ?? null);
+            $this->createTrainingRound($training, $blockData, $levelNum, $sessionKey, $data['goal'] ?? null);
             ++$roundCount;
         }
 
@@ -324,7 +324,7 @@ class CreateCrossfitMasterCommand extends Command
         return $roundCount;
     }
 
-    private function createTrainingRound(Training $training, array $blockData, int $levelNum, string $sessionKey, ?string $sessionGoal, ?string $benchmarkNote): void
+    private function createTrainingRound(Training $training, array $blockData, int $levelNum, string $sessionKey, ?string $sessionGoal): void
     {
         $round = new TrainingRound();
         $round->setTraining($training);
@@ -354,7 +354,7 @@ class CreateCrossfitMasterCommand extends Command
             $this->embeddedBenchmarks[$benchmark->getId()] = $benchmark->getName();
             $description = ($blockData['benchmarkNote'] ?? $description);
         } elseif (isset($blockData['description'])) {
-            $description = $blockData['description'].($benchmarkNote && TrainingRound::BLOCK_WOD === $blockData['blockType'] ? ' '.$benchmarkNote : '');
+            $description = $blockData['description'];
         }
 
         $round->setDescription($description);
