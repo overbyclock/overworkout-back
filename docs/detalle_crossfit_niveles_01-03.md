@@ -20,6 +20,7 @@
 - **RIR:** en N1-N3 se trabaja con 2-4 RIR en fuerza; nunca al fallo. En WODs, el fallo técnico marca el escalado (regla §1.7-CrossFit §10.4).
 - **Equipamiento asumido N1-N3:** gimnasio con barras y bumpers (trabajo con barra vacía desde N1) + kettlebells/mancuernas ligeros + cajón + banda ligera + comba. Ver pregunta abierta §14 del spec.
 - **Grafía de ejercicios:** resuelta contra el catálogo real de la BD (consulta `SELECT name FROM exercises`). Nombres literales.
+- **Convención de nombres de ítems de test:** todo ítem que corresponda a un ejercicio de catálogo usa su grafía exacta (p. ej. `Plank`, `Goblet Squat (KB 8/6 kg)`), para que el test, los logros (`requirementKey`) y las referencias futuras casen exacto. Nombres literales en español solo para ítems que no son ejercicios de catálogo; los benchmarks se nombran como nombre propio ("Helen (benchmark escalado)").
 - **Duraciones estimadas:** incluyen los 5 bloques con descansos reales; salen de `TrainingTimeCalculator`, nunca se hardcodean. Si el tiempo aprieta, se recorta volumen, nunca descanso ni Bloque 0.
 
 ---
@@ -70,7 +71,7 @@ Aplicar en `tips` de niveles y sesiones:
 | # | Prueba (nombre literal del ítem) | Mínimo | Objetivo | Direction | Unit |
 |---|----------------------------------|--------|----------|-----------|------|
 | 1 | Air Squat | 20 reps | 30 reps | gte | reps |
-| 2 | Plancha frontal | 40 s | 60 s | gte | seconds |
+| 2 | `Plank` | 40 s | 60 s | gte | seconds |
 | 3 | Goblet Squat (KB 8/6 kg) | 10 reps | 15 reps | gte | reps |
 | 4 | Kettlebell Deadlift (16/12 kg, técnico) | 10 reps | 15 reps | gte | reps |
 
@@ -82,7 +83,7 @@ Notas del test:
 
 **De test (por ítem de test, se evalúan en cualquier envío de test):**
 - "20 sentadillas al aire" — `type: test`, `tier: comun`, `requirementType: test_item_min`, `requirementKey: Air Squat`.
-- "Plancha de 40 segundos" — `type: test`, `tier: comun`, `requirementType: test_item_min`, `requirementKey: Plancha frontal`.
+- "Plancha de 40 segundos" — `type: test`, `tier: comun`, `requirementType: test_item_min`, `requirementKey: Plank`.
 - "Primer Goblet Squat de test" — `type: test`, `tier: comun`, `requirementType: test_item_min`, `requirementKey: Goblet Squat (KB 8/6 kg)`.
 - "Bisagra impecable" — `type: test`, `tier: comun`, `requirementType: test_item_min`, `requirementKey: Kettlebell Deadlift (16/12 kg, técnico)`.
 
@@ -117,8 +118,10 @@ Variantes por tipo de sesión:
 
 | Sesión | Zona | Ejercicios | Dosis |
 |--------|------|------------|-------|
-| A | Hombro | `Scapular Push Up` + `Prone Y Raise` + `Face Pull` | 2×8-10 / 2×8 / 2×12 |
-| B | Muñeca | `Wrist Push-Up` (de rodillas si hace falta) + `Wrist Prayer` + `Wrist Extension Stretch` | 2×6-8 / 2×30 s / 2×30 s |
+| A | Hombro | `Scapular Push Up` + `Prone Y Raise` + `Face Pull` | 2×8 / 2×8 / 2×12 |
+| B | Muñeca | `Wrist Push-Up` (de rodillas si hace falta) + `Wrist Prayer` + `Wrist Extension Stretch` | 2×6 / 2×30 s / 2×30 s |
+
+Notas de progresión del prehab: el valor base es el mínimo; el rango superior va aquí, nunca en la dosis — `Scapular Push Up` sube a 2×10, `Wrist Push-Up` a 2×8 y las dosis en segundos a 45 s cuando la calidad (recorrido completo, sin dolor, lumbar quieta) se mantiene dos sesiones seguidas.
 | C | Lumbar/core | `Dead Bug` + `Bird Dog` + `Pallof Press` (banda ligera) | 2×8/lado / 2×6/lado / 2×10/lado |
 | D | Trío suave | `Band Pull-Apart` + `Wrist Push-Up` + `Dead Bug` | 2×12 / 2×6 / 2×6/lado |
 
@@ -178,7 +181,7 @@ Ensayo de test en Fase 3: última serie de cada ejercicio con la dosis del test 
 |-----------|----|----|----|----|----------|----------------|
 | `Strict Press` (barra vacía, 20/15 kg) | 4×5 | 5×5 | 5×5 | 3×5 suave | 90 s | Trayectoria vertical junto a la cara; glúteo y costillas abajo; extensión completa sin reclinar |
 | `Deadlift` (barra vacía o 30/20 kg) | 4×5 | 4×5 | 5×5 | 3×5 suave | 90 s | Técnico siempre: 3 puntos de contacto, cadera atrás, lumbares neutros; aquí se ensaya CF5 |
-| `Plank` | 3×20-30 s | 3×30-40 s | 3×40-50 s | 2×30 s | 60 s | Costillas abajo, glúteo apretado; respiración bajo tensión |
+| `Plank` | 3×20 s | 3×30 s | 3×40 s | 2×30 s | 60 s | Costillas abajo, glúteo apretado; respiración bajo tensión. Progresión: subir cada dosis en +10 s (20→30→40) cuando la postura no se deforma; el objetivo del test N1 es 60 s |
 
 **Bloque `wod` (gimnástico suave):**
 
@@ -244,7 +247,7 @@ Ensayo de test en Fase 3: última serie de cada ejercicio con la dosis del test 
 
 - **Título:** Primer Impulso — Metcons con estructura
 - **Objetivo:** primeros metcons con estructura (intervalos cortos y primer EMOM), primer benchmark escalado como hito de sesión (sin ser test aún), bisagra potente con `Kettlebell Swing` progresivo. Consolidar los patrones de N1 con carga ligera-moderada.
-- **Requisitos de entrada:** mínimos del test N1 (Air Squat ×20, Plancha 40 s, Goblet ×10, KBDL técnico ×10).
+- **Requisitos de entrada:** mínimos del test N1 (Air Squat ×20, `Plank` 40 s, Goblet ×10, KBDL técnico ×10).
 - **skillFocus:** `Bisagra potente con kettlebell, metcon estructurado y primer benchmark escalado`
 - **Puertas evaluadas:** **CF5** (cadera/bisagra) — requisito de entrada efectivo del N3 (deadlift con carga y swing progresivo). Re-test implícito en cada envío de test. Las sesiones N2 se redactarán con ensayo de CF5 integrado en Bloque 0 de la sesión C.
 - **SESIONES N2: PENDIENTES DE REDACTAR** (lote siguiente).
@@ -256,11 +259,12 @@ Ensayo de test en Fase 3: última serie de cada ejercicio con la dosis del test 
 | 1 | Goblet Squat (KB 12/8 kg) | 15 reps | 20 reps | gte | reps |
 | 2 | Kettlebell Swing Russian (24/16 kg) | 15 reps | 21 reps | gte | reps |
 | 3 | `Plank` | 60 s | 90 s | gte | seconds |
-| 4 | Helen (benchmark escalado) | 15:00 (900 s) | 12:00 (720 s) | lte | seconds |
+| 4 | Helen (benchmark escalado) | 18:00 (1080 s) | 14:00 (840 s) | lte | seconds |
 
 Notas del test:
 - Ítem 4: primer ítem `type: benchmark` del programa (spec §7). El usuario ejecuta Helen en modalidad **Scaled** (selección del player); el benchmark del catálogo es `Helen` (id 3, `for_time`: 400 m Run + KB Swing ×21 con 24/16 kg + Pull Up ×12 por ronda, 3 rondas). En escalado: KB permitido menor (16/12 kg) y `Pull Up` asistidos con banda o `Ring Row`. La marca se registra en `UserBenchmarkAttempt` con `scalingUsed = scaled` y alimenta el ítem del test (auto-evaluación).
-- Kettlebell Swing: criterio de validez = bisagra visible; el swing americano no se usa en test (§1.7-CrossFit §10.2).
+- Contraste con referencias de catálogo (consulta 2026-10-10, columnas `beginner/intermediate_time_*` de `benchmark`): Helen RX beginner = 17:00 M / 20:00 F; intermediate = 13:00 M / 15:30 F. Al ser versión escalada, el mínimo se fija **más laxo que beginner RX** (18:00) y el objetivo en torno a intermediate RX (14:00).
+- Kettlebell Swing: criterio de validez = bisagra visible; el swing americano no se usa en test (§1.7-CrossFit §10.2) — en este ítem y en adelante, "Kettlebell Swing" en contexto de test/dosis siempre significa `Kettlebell Swing Russian`.
 
 ## Logros del nivel N2
 
@@ -292,10 +296,11 @@ Notas del test:
 | 1 | Goblet Squat (KB 16/12 kg) | 20 reps | 25 reps | gte | reps |
 | 2 | Deadlift (60/40 kg) | 5 reps | 8 reps | gte | reps |
 | 3 | Push Press (30/20 kg) | 8 reps | 12 reps | gte | reps |
-| 4 | Fran (benchmark escalado) | 12:00 (720 s) | 8:00 (480 s) | lte | seconds |
+| 4 | Fran (benchmark escalado) | 13:00 (780 s) | 10:00 (600 s) | lte | seconds |
 
 Notas del test:
 - Ítem 4: `type: benchmark` sobre `Fran` (id 1, `for_time`, 21-15-9 de `Thruster` 43/29 kg + `Pull Up`). En escalado: thruster con 20-30/15-20 kg o mancuernas, `Pull Up` asistidos con banda o jumping pull-ups controlados. Marca en `UserBenchmarkAttempt` con `scalingUsed = scaled` (auto-evaluación del test, spec §7).
+- Contraste con referencias de catálogo (misma consulta): Fran RX beginner = 10:00 M / 13:00 F; intermediate = 6:30 M / 8:30 F. Escalada, el mínimo se fija en torno a beginner F / algo por encima de beginner M (13:00) y el objetivo en beginner M (10:00).
 - Ítem 2: deadlift a carga de trabajo moderada, nunca en fatiga alta (§1.7-CrossFit §10.2); criterio de validez = CF5 visible en cada rep.
 - Ítem 3: primer gesto dinámico de piernas-impulso del programa; si la lumbar se redondea al bajar la barra, se valida como estricto y se anota (la potencia llega completa en N4-N6).
 
@@ -324,7 +329,7 @@ Notas del test:
 ## Decisiones de contenido tomadas (para revisión del controller)
 
 1. **Mapeo de cuándo se evalúa cada puerta:** CF5 en N2; CF1 y CF4 en N3; CF2/CF3 en N4; CF6/CF7 en N6 (con re-tests posteriores). El spec solo dice "en el nivel anterior al que exigen"; este calendario concreto es propuesta mía.
-2. **Benchmarks de test:** Helen escalada (N2) y Fran escalada (N3) — los dos existen en catálogo y son los clásicos de iniciación; los tiempos mínimos/objetivo (Helen 15:00/12:00 scaled; Fran 12:00/8:00 scaled) son estimaciones de dominio a contrastar con las referencias beginner de la BD en el lote de N4-N6.
+2. **Benchmarks de test:** Helen escalada (N2) y Fran escalada (N3) — los dos existen en catálogo y son los clásicos de iniciación. Tiempos ajustados tras contrastar con las referencias `beginner/intermediate_time_*` de la BD (ver notas de cada test): Helen escalada 18:00/14:00; Fran escalada 13:00/10:00.
 3. **Pesos de los ítems de fuerza** (goblet 8→16 kg, KBDL 16 kg, deadlift 60/40, push press 30/20): progresión conservadora coherente con "mínimos conservadores" (§1.6).
 4. **Sessiones N2/N3 no redactadas** a propósito (brief Step 1); se redactan tras validar N1 y con el feedback (brief Step 3).
 5. N1 usa `Standing Dumbbell Press` en sesión A y `Strict Press` con barra vacía en sesión B (redundancia deliberada: mancuerna primero por seguridad del hombro, barra después por técnica olímpica).
