@@ -157,6 +157,16 @@
 - 0 ejercicios nuevos (variantes asistidas → ficha base + nota; `90 Degree Push Up` existe pero se usó `Planche Push Up` con nota). Duraciones: intensificación > progresión > base > deload en los 8 niveles (pico N8 ~127-139 min por fase completa). §1.7 muñeca/hombro en tips.
 - Verificación: 511 tests OK, PHPStan limpio, CS-Fixer 0 fix.
 
+## Bloque 18 — 4 especializaciones v4 + rebuild de legacy (oct 2026)
+
+- Fases ejecutadas por agentes en secuencia, todas con 8 niveles x 4 fases x 4 sesiones (128 trainings, ~32 semanas, advanced, legacy, sin calendario) y verificacion completa (0 omisiones, ordenacion de duraciones OK, 511 tests):
+  - **L-Sit & Press Mastery** (`app:create-l-sit-press-mastery`): compresion -> tuck L-sit -> L-sit -> V-sit -> straddle press -> press a pino. Bonus de catalogo: `V-Sit Hold`, `Straddle Press Handstand`, `L-Sit One Leg`, `Pike Press to Handstand`, `Wall Handstand Hold`.
+  - **Handstand Push-Up Mastery** (`app:create-handstand-push-up-mastery`): pike -> HSPU pared (1->3->5->8) -> despegues libres -> FS HSPU 1->3->5. Bonus: `HSPU Negative`, `One-Arm Handstand Push Up` (L8 asistida).
+  - **Pierna Mastery** (`app:create-pierna-mastery`): base unilateral -> pistol (asistido->1->3->5->8->10->12) -> **primer Nordic** (N13) -> Nordic 5-8 + dragon pistol. Bonus: `Assisted Pistol Squat`, `Nordic Curl with Band`, `Glute Ham Raise Negative`, `Jumping Pistol Squat`. Tibialis: omitido (sin ficha).
+  - **Rebuild legacy a v4** (mismos slugs, sin borrar programas; `removeTrainingLogs()` limpia logs residuales de dev antes de recrear niveles): **Front Lever Mastery v4** (`app:create-front-lever-mastery-v4`, slug `front-lever-mastery`): tuck -> adv tuck -> one-leg -> straddle -> full 5-10 s. **Handstand Balance Mastery v4** (`app:create-handstand-balance-mastery-v4`, slug `handstand-balance-mastery`): chest-to-wall -> pirueta -> FS HS 5->15->30->45-60 s. Bonus: `Handstand Bail Out`, `Kick-up to Handstand`, `Front Lever Raise`.
+- Catalogo de programas final: Calistenia Master v4 + 10 especializaciones (False Grip, Back Lever, Flag, OAP, Planche, L-Sit&Press, HSPU, Pierna, Front Lever v4, Handstand Balance v4).
+- Verificacion: 511 tests OK, PHPStan limpio, CS-Fixer 0 fix.
+
 ## Notas sueltas
 
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
