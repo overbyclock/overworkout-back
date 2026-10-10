@@ -100,7 +100,7 @@ Descanso entre ejercicios posturales: 45-60 s. Dosis mantenidas: el prehab ya no
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática tumbado (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática tumbado (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N7)
 
@@ -290,7 +290,7 @@ Descanso entre ejercicios posturales: 45-60 s. En sesiones con HSPU, el prehab d
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con snatch/HSPU, añadir `Lat Stretch`). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con snatch/HSPU, añadir `Lat Stretch`). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N8)
 
@@ -480,7 +480,7 @@ Descanso entre ejercicios posturales: 45-60 s. El trío suave de D sostiene homb
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con anillas, añadir `Lat Stretch` y extensión de muñeca). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con anillas, añadir `Lat Stretch` y extensión de muñeca). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N9)
 
@@ -587,7 +587,7 @@ Dosificación del volumen balístico: tope 60 reps/sesión entre kipping pull-up
 |------|---------|-----------|-------|
 | F1 | 3 rondas | 6 `Dumbbell Snatch` (alterno, moderado) + 8 `Toes to Bar` + 10 `Single Unders` | 60-90 s entre rondas |
 | F2 | 4 rondas | 6 `Chest to Bar Pull Up` (o kipping) + 8 `Box Jump Over` + 15 `Double Unders` | 60 s entre rondas; dobles con piernas ya cargadas |
-| F3 | Benchmark de comba (hito): **Aguja de Dobles** | `Aguja de Dobles` (id 59, AMRAP 16', timeCap 960 s): máximo de `Double Unders` en 16 min con las rotaciones permitidas del benchmark | Primer hito de comba del catálogo: logro "Aguja de Dobles registrada"; marca en `UserBenchmarkAttempt`; es el ensayo de los dobles en fatiga pura |
+| F3 | Benchmark de comba (hito): **Aguja de Dobles** | `Aguja de Dobles` (id 59, `interval_stations`, timeCap 960 s): 4 rondas × 45 s por estación (máx. reps) de `Devil Press` (2×15/10 kg), `Toes to Bar` y `Double Unders`, con 45 s de descanso entre rondas; puntuación = total de reps (dobles = 1) | Hito de comba del catálogo en formato de estaciones: los dobles entran como una de las 3 estaciones bajo fatiga real (tras Devil Press y T2B), no como comba pura. Logro "Aguja de Dobles registrada"; marca en `UserBenchmarkAttempt` |
 | F4 | 2 rondas suaves | 5 `Toes to Bar` + 10 `Single Unders` | Movimiento; test al final del nivel |
 
 **Tips de sesión:** "Los dobles bajo fatiga se entrenan con las piernas cansadas: box jumps y C2B antes, comba después. El que salta recto cuando está fresco no sabe combar; el que mantiene la técnica con el lactato alto, sí."
@@ -641,6 +641,7 @@ Notas del test:
 3. **Snatch técnico sin `Snatch` completo de suelo:** N8 introduce el snatch por posiciones (`Tall Snatch` → `Hang Snatch` → `Power Snatch`), dejando el `Snatch`/`Squat Snatch` completo de suelo para el tramo élite (N10+, donde también viven `Randy` y `Amanda`). El test N8 acepta `Power Snatch` desde hang o suelo. Razón: el snatch de suelo es el O-lift más técnico y no aporta al objetivo del nivel (overhead RX) tanto como el OHS y el HSPU.
 4. **HSPU sin kipping en todo el tramo:** la regla §1.7 §10.1 exige base estricta antes que dinámico; el HSPU estricto se estrena en N8 como progresión y el kipping HSPU queda para N10+. El `Kipping Handstand Push Up` existe en catálogo pero no se usa en este documento.
 5. **Benchmarks del tramo:** Fran RX (N7 — el icónico, mínimo 13:00/objetivo 10:00, contrastado con beginner F/M), Grace RX (N8 — coherente con la línea C&J de N6-N7, mínimo 10:00/objetivo 8:00, contrastado con beginner F/M) y Josh RX (N9 — Hero con OHS 43/29, que cierra el arco del overhead abierto en N8; mínimo 28:30/objetivo 23:30, beginner/intermediate del propio catálogo). Alternativas consideradas y descartadas: Diane (exige HSPU RX recién estrenados en N8 — injusto como test), Karen (150 wall balls: motor sí, pero no cierra el arco de overhead), Angie (100 pull-ups/push-ups: volumen extremo para cerrar tramo), Elizabeth (clean 60/43 con barra desde suelo: técnica aún no trabajada).
-6. **Hito "Aguja de Dobles" en N9:** se usa el benchmark de comba del propio catálogo (id 59, AMRAP 16' de dobles) como cierre de la progresión de dobles introducida en N5, en vez de inventar un WOD de comba ad hoc. Dobles consistentes en fatiga = el objetivo del tramo, y el benchmark da referencias y timeCap gratis.
+6. **Hito "Aguja de Dobles" en N9:** se usa el benchmark de comba del propio catálogo (id 59, `interval_stations`: 4 rondas × 45 s por estación de `Devil Press` 2×15/10, `Toes to Bar` y `Double Unders`, 45 s entre rondas) como cierre de la progresión de dobles introducida en N5, en vez de inventar un WOD de comba ad hoc. Dobles consistentes en fatiga = el objetivo del tramo, y el benchmark da referencias y timeCap gratis.
 7. **Muscle-up solo como progresión asistida en anillas (N9):** `False Grip Hang`, ring rows, soporte, `Ring Dip`, `Assisted Muscle Up Transition` y `Muscle Up Negative`; el `Muscle Up`/`Ring Muscle Up` completo es del tramo élite. El catálogo ofrece además `Muscle Up Progression` y `Ring Muscle Up Transition` (no usados para no duplicar grafías de transición — decisión reversible en el seeder).
 8. **Deadlift pesado solo en N9:** tras N6 el deadlift quedó en mantenimiento (RDL) durante N7-N8 para dar espacio a O-lifts y overhead; vuelve a 100/70 kg en N9 como cierre de fuerza del tramo, con CF7 re-chequeada informalmente la misma fase.
+9. **Josh RX en N9 validado por el controller (ruling):** defensible frente al arco §4 porque §4 es no rígido, el mínimo 28:30 = beginner del propio benchmark y OHS RX se consolida en N8.

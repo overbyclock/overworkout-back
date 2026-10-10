@@ -97,7 +97,7 @@ Descanso entre ejercicios posturales: 45-60 s. El prehab se mantiene denso: es e
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática tumbado (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática tumbado (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N4)
 
@@ -292,7 +292,7 @@ Descanso entre ejercicios posturales: 45-60 s. Progresión: subir una serie al e
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con comba, antebrazo y gemelos). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona; en sesiones con comba, antebrazo y gemelos). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N5)
 
@@ -479,7 +479,7 @@ Descanso entre ejercicios posturales: 45-60 s. CF6 se trabaja en doble vía (Blo
 
 ### Bloque final — Descarga (3-5 min; en Fase 4 sube a 6-8 min y es protagonista)
 
-Respiración diafragmática (90 s), `Child` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
+Respiración diafragmática (90 s), `Child's Pose` (45 s), estiramiento suave de la zona trabajada (30-45 s por zona). En Fase 4 se amplía con toda la movilidad del nivel a dosis F4.
 
 ## Fases del ciclo (N6)
 
