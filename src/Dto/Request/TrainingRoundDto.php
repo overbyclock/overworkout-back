@@ -23,7 +23,7 @@ readonly class TrainingRoundDto
         public array $exercises = [],
 
         #[Assert\Choice(
-            choices: [TrainingRound::BLOCK_PREPARACION, TrainingRound::BLOCK_PRINCIPAL, TrainingRound::BLOCK_POSTURAL, TrainingRound::BLOCK_CADENA_POSTERIOR, TrainingRound::BLOCK_DESCARGA],
+            choices: [TrainingRound::BLOCK_PREPARACION, TrainingRound::BLOCK_PRINCIPAL, TrainingRound::BLOCK_POSTURAL, TrainingRound::BLOCK_CADENA_POSTERIOR, TrainingRound::BLOCK_DESCARGA, TrainingRound::BLOCK_FUERZA_SKILL, TrainingRound::BLOCK_WOD],
             message: 'El tipo de bloque no es válido.',
         )]
         public ?string $blockType = null,
