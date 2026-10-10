@@ -292,7 +292,7 @@ Igual estructura que N1: respiración diafragmática (90 s), `Child's Pose` (45 
 | Fase | Intensidad | Nota |
 |------|-----------|------|
 | 1 — Base | 55% | Primer EMOM y primeros WODs de 2 movimientos; swings con KB de trabajo ligero (16/12 kg); técnica de bisagra bajo la puerta CF5 |
-| 2 — Progresión | 80% | Subir carga mínima (goblet 12/8, swing 20/14); primer AMRAP 10'; Helen escalada como hito de sesión C |
+| 2 — Progresión | 80% | Subir carga mínima (goblet 12/8, swing sigue en 16/12 y salta a 24/16 solo en F3); primer AMRAP 10'; Helen escalada como hito de sesión C |
 | 3 — Intensificación | 95% | Swings a 24/16 ensayando el test; WODs de 2 movimientos a ritmo alto; ensayo de test integrado en sesión A |
 | 4 — Recuperación | 50% | Mitad de volumen; movilidad protagonista; test de nivel al final |
 
@@ -407,7 +407,7 @@ Ensayo de test en Fase 3: última serie de goblet a ×15 y última de swings con
 | 4 | Helen (benchmark escalado) | 18:00 (1080 s) | 14:00 (840 s) | lte | seconds |
 
 Notas del test:
-- Ítem 4: primer ítem `type: benchmark` del programa (spec §7). El usuario ejecuta Helen en modalidad **Scaled** (selección del player); el benchmark del catálogo es `Helen` (id 3, `for_time`: 400 m Run + KB Swing ×21 con 24/16 kg + Pull Up ×12 por ronda, 3 rondas). En escalado: KB permitido menor (16/12 kg) y `Pull Up` asistidos con banda o `Ring Row`. La marca se registra en `UserBenchmarkAttempt` con `scalingUsed = scaled` y alimenta el ítem del test (auto-evaluación).
+- Ítem 4: primer ítem `type: benchmark` del programa (spec §7). El usuario ejecuta Helen en modalidad **Scaled** (selección del player); el benchmark del catálogo es `Helen` (id 3, `for_time`: 400 m Run + KB Swing ×21 con 24/16 kg + Pull Up ×12 por ronda, 3 rondas). En escalado: KB permitido menor (16/12 kg) y `Pull Up` asistidos con banda o `Ring Row - Feet on Ground`. La marca se registra en `UserBenchmarkAttempt` con `scalingUsed = scaled` y alimenta el ítem del test (auto-evaluación).
 - Contraste con referencias de catálogo (consulta 2026-10-10, columnas `beginner/intermediate_time_*` de `benchmark`): Helen RX beginner = 17:00 M / 20:00 F; intermediate = 13:00 M / 15:30 F. Al ser versión escalada, el mínimo se fija **más laxo que beginner RX** (18:00) y el objetivo en torno a intermediate RX (14:00).
 - Kettlebell Swing: criterio de validez = bisagra visible; el swing americano no se usa en test (§1.7-CrossFit §10.2) — en este ítem y en adelante, "Kettlebell Swing" en contexto de test/dosis siempre significa `Kettlebell Swing Russian`.
 
@@ -494,7 +494,7 @@ Igual estructura que N1-N2: respiración diafragmática (90 s), `Child's Pose` (
 |-----------|----|----|----|----|----------|----------------|
 | `Back Squat` | 3×5 (40/30 kg) | 4×5 (45/30 kg) | 5×5 (50/35 kg) | 2×5 suave (40/30 kg) | 120 s | Primera sentadilla trasera del programa; profundidad con talones pegados (CF1 decide si sube la carga); codos bajo la barra, pecho alto |
 | `Strict Press` | 3×5 (30/20 kg) | 3×5 (30/20 kg) | 4×5 (30/20 kg) | 2×5 suave | 90 s | Mantiene la línea de N2 con la barra de test |
-| `Deadlift` | 3×5 (50/35 kg) | 3×5 (55/40 kg) | 3×3 (60/45 kg, ensayo test) | 2×5 suave (50/35 kg) | 120 s | Carga de trabajo, nunca en fatiga alta (§10.2); CF5 visible en cada rep; F3 ensaya el test (60/40) |
+| `Deadlift` | 3×5 (50/35 kg) | 3×5 (55/40 kg) | 3×3 (60/45 kg, acercamiento al test) | 2×5 suave (50/35 kg) | 120 s | Carga de trabajo, nunca en fatiga alta (§10.2); CF5 visible en cada rep; el test se ejecuta en el envío de test a 60/40 kg ×5 (el F3 se queda cerca de la carga del test a triples para no acumular fatiga de bisagra) |
 
 Ensayo de test en Fase 3: última serie de deadlift a 60/40 ×5 y series de press a ×8 en sesión B.
 
@@ -600,7 +600,7 @@ Notas del test:
 - Ítem 4: `type: benchmark` sobre `Fran` (id 1, `for_time`, 21-15-9 de `Thruster` 43/29 kg + `Pull Up`). En escalado: thruster con 20-30/15-20 kg o mancuernas, `Pull Up` asistidos con banda o jumping pull-ups controlados. Marca en `UserBenchmarkAttempt` con `scalingUsed = scaled` (auto-evaluación del test, spec §7).
 - Contraste con referencias de catálogo (misma consulta): Fran RX beginner = 10:00 M / 13:00 F; intermediate = 6:30 M / 8:30 F. Escalada, el mínimo se fija en torno a beginner F / algo por encima de beginner M (13:00) y el objetivo en beginner M (10:00).
 - Ítem 2: deadlift a carga de trabajo moderada, nunca en fatiga alta (§1.7-CrossFit §10.2); criterio de validez = CF5 visible en cada rep.
-- Ítem 3: primer gesto dinámico de piernas-impulso del programa; si la lumbar se redondea al bajar la barra, se valida como estricto y se anota (la potencia llega completa en N4-N6).
+- Ítem 3: primer gesto dinámico de piernas-impulso **evaluado en test** (se introduce en la sesión B de N2); si la lumbar se redondea al bajar la barra, se valida como estricto y se anota (la potencia llega completa en N4-N6).
 
 ## Logros del nivel N3
 
