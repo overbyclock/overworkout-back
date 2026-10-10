@@ -172,3 +172,20 @@
 - Discrepancia pectoral en marco de puerta: resuelta a favor del detalle (entra en N3; N4 solo lo refuerza/dosifica).
 - Pendientes de §7 de la arquitectura (5 preguntas abiertas: calibración de mínimos, gamificación, estado mobility_blocked en la app, G7 straddle, estructura global).
 - Olimpo (bloque élite ∞) se deja para el final.
+
+## Bloque 19 — CrossFit Master v1: plataforma benchmarks embebidos + N1-N3 (oct 2026)
+
+- Spec: `docs/superpowers/specs/2026-10-10-crossfit-master-design.md` · plan de fase 1: `docs/superpowers/plans/2026-10-10-crossfit-master-fase1-plataforma.md` (en `docs/superpowers/`, git-ignorado). Rama `feature/crossfit-master-fase1` (sin merge a main aún).
+- **Plataforma back** (7 piezas, suite 536 tests/PHPStan 5/CS-Fixer verdes):
+  - `BenchmarkExercise.repsPattern` (VARCHAR 50, nullable; ladders/pirámides/21-15-9 como string; el parser es cosa del front).
+  - `blockType` nuevos: `fuerza_skill`, `wod` (los 5 bloques crossfit: preparacion → fuerza_skill → wod → postural → descarga).
+  - `TrainingRound.benchmark` (FK nullable a Benchmark): un round PUEDE ser un WOD embebido; DTO valida "benchmarkId O exercises" (`Assert\Callback`); el mapper lanza `InvalidArgumentException` si no existe.
+  - Expander: round con benchmark → UN paso `type: 'benchmark'` con payload expandido (timerConfig, timeCap, ejercicios con dosis y repsPattern, scalingOptions, rxWeights, metadatos de bloque). Ignora configs del round.
+  - Tests: `TestItemType::Benchmark` (no gate) + `direction: 'lte'|'gte'` en `TestResult::evaluate/evaluateStrict` (lte = marcas de tiempo: menor es mejor). Retrocompatible (default gte).
+  - Auto-evaluación: al cerrar un `UserBenchmarkAttempt` completado, `LevelProgressService::recordBenchmarkResult` alimenta el TestResult del nivel en curso si el benchmark es su test (lte→totalTimeSeconds, gte→scoreValue parseado; marca scaled CUENTA para el mínimo). Si no es test de ningún nivel activo: no-op.
+  - `TrainingTimeCalculator` estima rounds benchmark: min 60% del timeCap (null→720 s), max timeCap (null→1200 s).
+- **Programa generado** (`app:create-crossfit-master`, idempotente, réplica arquitectura v4): `crossfit-master` (strict_gates — ruling: las puertas CF son barreras vinculantes, spec §8; legacy las dejaría sin efecto —, totalLevels 16, sin calendario). N1-N3 en BD dev: 48 trainings, 240 rounds (5 bloques tipados), benchmarks embebidos Helen/Fran/Cindy, 7 puertas CF1-CF7, 24 logros, 0 omisiones. Duraciones N1 26-71 / N2 29-74 / N3 32-84 min (monótonas).
+- **Contenido**: `docs/detalle_crossfit_niveles_01-03.md` (aprobado por el usuario tras 2 revisiones). N1 On-Ramp (test suave sin benchmarks), N2 Primer Impulso (Helen escalada lte 18:00/14:00 + puerta CF5), N3 Consolidación (Fran escalada lte 13:00/10:00 + CF1/CF4). Mínimos escalados contrastados con referencias beginner/intermediate de la BD.
+- **Front**: imagen placeholder del programa (`public/programs/crossfit-master.png` GD + entrada en `programImages.js`), commit `28d9c8b` — **sustituir por arte final**. SIN cambios de player: el paso benchmark ya viaja en el payload de pasos pero el front aún no lo renderiza (lo renderiza como paso desconocido o lo ignora según el player actual — verificar antes de que un usuario lo use).
+- **Pendiente de esta línea de trabajo**: N4-N16 (comando ya admite `--levels`), player front del paso benchmark (timer según timerConfig + selector RX/Scaled + registro simple/detallado — decisión UX aplazada por el usuario), Hyrox Mastery y otras competiciones (specs separados), arte final de la imagen.
+- **Pendiente repo front (sin commit)**: thumbnails de imagen en la lista de programas del admin (`TrainingProgramsView.vue`, hecho en la sesión del 10 oct junto al inicio de esta fase).
