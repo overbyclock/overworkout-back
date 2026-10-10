@@ -46,6 +46,14 @@ class BenchmarkExercise
     #[Groups([Benchmark::GROUP_READ])]
     private ?int $calories = null;
 
+    /**
+     * Patrón de repeticiones no escalable (ej. "21-15-9", "1→10", "2-4-6-8-10-8-6-4-2").
+     * El back solo almacena y expone el valor; el parser corresponde al front.
+     */
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups([Benchmark::GROUP_READ])]
+    private ?string $repsPattern = null;
+
     #[ORM\Column(length: 50, nullable: true)]
     #[Groups([Benchmark::GROUP_READ])]
     private ?string $rxWeightMale = null;
@@ -143,6 +151,18 @@ class BenchmarkExercise
     public function setCalories(?int $calories): static
     {
         $this->calories = $calories;
+
+        return $this;
+    }
+
+    public function getRepsPattern(): ?string
+    {
+        return $this->repsPattern;
+    }
+
+    public function setRepsPattern(?string $repsPattern): static
+    {
+        $this->repsPattern = $repsPattern;
 
         return $this;
     }
