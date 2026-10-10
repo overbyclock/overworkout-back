@@ -20,6 +20,8 @@ class TrainingTimeCalculator
     private const SECONDS_PER_REP_MAX = 5;
     private const FALLBACK_EXERCISE_TIME_MIN = 30;
     private const FALLBACK_EXERCISE_TIME_MAX = 45;
+    private const BENCHMARK_MIN_PERCENT = 0.6;
+    private const BENCHMARK_FALLBACK_TIME_CAP = 1200;
 
     /**
      * @return array{min: int, max: int} Tiempo total en segundos
@@ -38,9 +40,11 @@ class TrainingTimeCalculator
 
         /** @var TrainingRound $round */
         foreach ($rounds as $roundIndex => $round) {
-            $roundResult = $isCircuit
-                ? $this->calculateCircuitRound($round)
-                : $this->calculateTraditionalRound($round);
+            $roundResult = null !== $round->getBenchmark()
+                ? $this->calculateBenchmarkRound($round)
+                : ($isCircuit
+                    ? $this->calculateCircuitRound($round)
+                    : $this->calculateTraditionalRound($round));
 
             $totalMin += $roundResult['min'];
             $totalMax += $roundResult['max'];
@@ -56,6 +60,25 @@ class TrainingTimeCalculator
         return [
             'min' => (int) $totalMin,
             'max' => (int) $totalMax,
+        ];
+    }
+
+    /**
+     * Estima la duración de un round asociado a un benchmark (WOD).
+     *
+     * Es una estimación deliberada: el tiempo real de un WOD no es determinista,
+     * así que se usa el timeCap como cota superior (max) y el 60% del timeCap
+     * como cota inferior (min). Si el benchmark no define timeCap se asume 1200 s.
+     *
+     * @return array{min: int, max: int}
+     */
+    private function calculateBenchmarkRound(TrainingRound $round): array
+    {
+        $timeCap = $round->getBenchmark()?->getTimeCapSeconds() ?? self::BENCHMARK_FALLBACK_TIME_CAP;
+
+        return [
+            'min' => (int) ($timeCap * self::BENCHMARK_MIN_PERCENT),
+            'max' => $timeCap,
         ];
     }
 

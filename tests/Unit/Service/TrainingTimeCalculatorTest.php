@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use App\Entity\Benchmark;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
@@ -205,6 +206,77 @@ class TrainingTimeCalculatorTest extends TestCase
         //   Max: 2*125 + 90 = 250 + 90 = 340s
         self::assertSame(300, $result['min']);
         self::assertSame(340, $result['max']);
+    }
+
+    public function testBenchmarkRoundUsesTimeCapEstimation(): void
+    {
+        $benchmark = new Benchmark();
+        $benchmark->setTimeCapSeconds(900);
+
+        $training = new Training();
+        $training->setDiscipline(Discipline::CROSSFIT);
+        $training->setIsCircuit(false);
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setBenchmark($benchmark);
+        $training->addTrainingRound($round);
+
+        $result = $this->calculator->calculate($training);
+
+        // min = 60% del timeCap = 540s; max = timeCap = 900s
+        self::assertSame(540, $result['min']);
+        self::assertSame(900, $result['max']);
+    }
+
+    public function testBenchmarkRoundWithoutTimeCapUsesFallback(): void
+    {
+        $training = new Training();
+        $training->setDiscipline(Discipline::CROSSFIT);
+        $training->setIsCircuit(false);
+
+        $round = new TrainingRound();
+        $round->setSetsForRound(1);
+        $round->setBenchmark(new Benchmark());
+        $training->addTrainingRound($round);
+
+        $result = $this->calculator->calculate($training);
+
+        // Sin timeCap: min = 720s (60% de 1200), max = 1200s
+        self::assertSame(720, $result['min']);
+        self::assertSame(1200, $result['max']);
+    }
+
+    public function testMixedTrainingSumsConfigAndBenchmarkRounds(): void
+    {
+        $benchmark = new Benchmark();
+        $benchmark->setTimeCapSeconds(900);
+
+        $training = new Training();
+        $training->setDiscipline(Discipline::CROSSFIT);
+        $training->setIsCircuit(false);
+
+        // Bloque normal: 10 reps = 30-50s
+        $round1 = new TrainingRound();
+        $round1->setSetsForRound(1);
+        $round1->setRestAfterBlock(60);
+        $round1->addTrainingExerciseConfiguration(
+            $this->createConfig(reps: 10, sets: 1, restBetweenSets: 1, restBetweenExercises: 1)
+        );
+        $training->addTrainingRound($round1);
+
+        // Bloque benchmark: min 540s, max 900s
+        $round2 = new TrainingRound();
+        $round2->setSetsForRound(1);
+        $round2->setBenchmark($benchmark);
+        $training->addTrainingRound($round2);
+
+        $result = $this->calculator->calculate($training);
+
+        // Total min: 30 + 60 (descanso entre bloques) + 540 = 630s
+        // Total max: 50 + 60 + 900 = 1010s
+        self::assertSame(630, $result['min']);
+        self::assertSame(1010, $result['max']);
     }
 
     private function createCircuitTraining(int $rounds, int $restBetweenRounds): Training
