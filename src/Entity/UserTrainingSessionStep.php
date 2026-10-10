@@ -16,6 +16,7 @@ class UserTrainingSessionStep
 
     public const TYPE_EXERCISE = 'exercise';
     public const TYPE_REST = 'rest';
+    public const TYPE_BENCHMARK = 'benchmark';
 
     public const STATUS_PENDING = 'pending';
     public const STATUS_COMPLETED = 'completed';

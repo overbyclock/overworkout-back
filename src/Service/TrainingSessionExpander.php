@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Benchmark;
+use App\Entity\BenchmarkExercise;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingRound;
@@ -32,6 +34,14 @@ readonly class TrainingSessionExpander
 
         foreach ($rounds as $blockIndex => $round) {
             $configs = $round->getTrainingExerciseConfigurations()->toArray();
+
+            // Un round con benchmark emite un único paso benchmark e ignora sus configs
+            if (null !== $round->getBenchmark()) {
+                $log->addSessionStep($this->createBenchmarkStep($position++, $round->getBenchmark(), $blockIndex + 1, $totalBlocks, $round->getBlockType(), $round->getName(), $round->getDescription()));
+                $position = $this->addRestAfterBlock($log, $position, $round, $rounds, $blockIndex, $totalBlocks);
+
+                continue;
+            }
 
             if ([] === $configs) {
                 continue;
@@ -62,27 +72,97 @@ readonly class TrainingSessionExpander
                 }
             }
 
-            $hasNextBlock = $blockIndex < $totalBlocks - 1;
-            if ($hasNextBlock && null !== $round->getRestAfterBlock()) {
-                $nextRound = $rounds[$blockIndex + 1];
-                $log->addSessionStep($this->createRestStep(
-                    $position++,
-                    $round->getRestAfterBlock(),
-                    'after_block',
-                    $this->firstExerciseName($nextRound),
-                    [
-                        'nextBlockNumber' => $blockIndex + 2,
-                        'nextBlockType' => $nextRound->getBlockType(),
-                        'nextBlockName' => $nextRound->getName(),
-                        'nextBlockDescription' => $nextRound->getDescription(),
-                    ],
-                ));
-            }
+            $position = $this->addRestAfterBlock($log, $position, $round, $rounds, $blockIndex, $totalBlocks);
         }
 
         if (0 === $position) {
             throw new \InvalidArgumentException('El entrenamiento no tiene contenido.');
         }
+    }
+
+    /**
+     * Emite el descanso after_block si el round lo define y no es el último bloque.
+     * Devuelve la posición siguiente (avanzada solo si se emitió el descanso).
+     *
+     * @param TrainingRound[] $rounds
+     */
+    private function addRestAfterBlock(UserTrainingLog $log, int $position, TrainingRound $round, array $rounds, int $blockIndex, int $totalBlocks): int
+    {
+        $hasNextBlock = $blockIndex < $totalBlocks - 1;
+        if (!$hasNextBlock || null === $round->getRestAfterBlock()) {
+            return $position;
+        }
+
+        $nextRound = $rounds[$blockIndex + 1];
+        $log->addSessionStep($this->createRestStep(
+            $position++,
+            $round->getRestAfterBlock(),
+            'after_block',
+            $this->firstExerciseName($nextRound),
+            [
+                'nextBlockNumber' => $blockIndex + 2,
+                'nextBlockType' => $nextRound->getBlockType(),
+                'nextBlockName' => $nextRound->getName(),
+                'nextBlockDescription' => $nextRound->getDescription(),
+            ],
+        ));
+
+        return $position;
+    }
+
+    /**
+     * Paso único de tipo benchmark con el WOD embebido expandido.
+     */
+    private function createBenchmarkStep(int $position, Benchmark $benchmark, int $block, int $totalBlocks, ?string $blockType = null, ?string $blockName = null, ?string $blockDescription = null): UserTrainingSessionStep
+    {
+        $exercises = $benchmark->getExercises()->toArray();
+        usort($exercises, static fn (BenchmarkExercise $a, BenchmarkExercise $b): int => $a->getPosition() <=> $b->getPosition());
+
+        $step = new UserTrainingSessionStep();
+        $step->setPosition($position);
+        $step->setType(UserTrainingSessionStep::TYPE_BENCHMARK);
+        $step->setPayload([
+            'benchmarkId' => $benchmark->getId(),
+            'name' => $benchmark->getName(),
+            'format' => $benchmark->getFormat(),
+            'timerConfig' => $benchmark->getTimerConfig(),
+            'timeCapSeconds' => $benchmark->getTimeCapSeconds(),
+            'rounds' => $benchmark->getRounds(),
+            'restBetweenRoundsSeconds' => $benchmark->getRestBetweenRoundsSeconds(),
+            'rxWeightMale' => $benchmark->getRxWeightMale(),
+            'rxWeightFemale' => $benchmark->getRxWeightFemale(),
+            'scalingOptions' => $benchmark->getScalingOptions(),
+            'partitioningAllowed' => $benchmark->isPartitioningAllowed(),
+            'exercises' => array_map($this->expandBenchmarkExercise(...), $exercises),
+            'blockNumber' => $block,
+            'totalBlocks' => $totalBlocks,
+            'blockType' => $blockType,
+            'blockName' => $blockName,
+            'blockDescription' => $blockDescription,
+        ]);
+
+        return $step;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function expandBenchmarkExercise(BenchmarkExercise $benchmarkExercise): array
+    {
+        $exercise = $benchmarkExercise->getExercise();
+
+        return [
+            'exerciseId' => $exercise->getId(),
+            'exerciseName' => $exercise->getName(),
+            'reps' => $benchmarkExercise->getReps(),
+            'repsPattern' => $benchmarkExercise->getRepsPattern(),
+            'distanceMeters' => $benchmarkExercise->getDistanceMeters(),
+            'durationSeconds' => $benchmarkExercise->getDurationSeconds(),
+            'calories' => $benchmarkExercise->getCalories(),
+            'rxWeightMale' => $benchmarkExercise->getRxWeightMale(),
+            'rxWeightFemale' => $benchmarkExercise->getRxWeightFemale(),
+            'restSeconds' => $benchmarkExercise->getRestSeconds(),
+        ];
     }
 
     private function createExerciseStep(int $position, TrainingExerciseConfiguration $config, int $set, int $sets, int $lap, int $laps, int $block, int $totalBlocks, ?string $blockType = null, ?string $blockName = null, ?string $blockDescription = null): UserTrainingSessionStep
@@ -139,6 +219,10 @@ readonly class TrainingSessionExpander
     {
         $configs = $round->getTrainingExerciseConfigurations()->toArray();
 
-        return [] === $configs ? null : $this->exerciseName($configs[0]);
+        if ([] !== $configs) {
+            return $this->exerciseName($configs[0]);
+        }
+
+        return $round->getBenchmark()?->getName();
     }
 }

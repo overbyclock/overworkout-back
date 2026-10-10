@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use App\Entity\Benchmark;
+use App\Entity\BenchmarkExercise;
 use App\Entity\Exercises;
 use App\Entity\Training;
 use App\Entity\TrainingExerciseConfiguration;
 use App\Entity\TrainingRound;
 use App\Entity\UserTrainingLog;
 use App\Entity\UserTrainingSessionStep;
+use App\Enum\BenchmarkFormat;
 use App\Service\TrainingSessionExpander;
 use PHPUnit\Framework\TestCase;
 
@@ -233,6 +236,137 @@ final class TrainingSessionExpanderTest extends TestCase
         $this->assertNull($payload['blockDescription']);
     }
 
+    public function testRoundConBenchmarkEmiteUnUnicoPasoBenchmark(): void
+    {
+        // 5 bloques: movilidad, fuerza, WOD benchmark (sin configs), postural, descarga
+        $benchmark = $this->createBenchmark();
+        $training = $this->createTraining([
+            $this->createRound(1, 1, null, [
+                $this->createConfig('Movilidad Hombro', maxTime: 40, sets: 1),
+            ]),
+            $this->createRound(1, 1, null, [
+                $this->createConfig('Flexiones', reps: 8, sets: 1),
+            ]),
+            (new TrainingRound())
+                ->setSetsForRound(1)
+                ->setRestBetweenRounds(1)
+                ->setRestAfterBlock(90)
+                ->setBlockType('principal')
+                ->setName('WOD')
+                ->setDescription('Test del día')
+                ->setBenchmark($benchmark),
+            $this->createRound(1, 1, null, [
+                $this->createConfig('Plancha', maxTime: 30, sets: 1),
+            ]),
+            $this->createRound(1, 1, null, [
+                $this->createConfig('Estiramiento', maxTime: 60, sets: 1),
+            ]),
+        ]);
+
+        $log = new UserTrainingLog();
+        $this->expander->expand($training, $log);
+
+        $steps = $log->getSessionSteps()->toArray();
+        // 4 pasos exercise (1 por bloque con configs) + 1 benchmark + 1 after_block
+        $this->assertCount(6, $steps);
+
+        $benchmarkSteps = array_values(array_filter(
+            $steps,
+            static fn (UserTrainingSessionStep $s): bool => UserTrainingSessionStep::TYPE_BENCHMARK === $s->getType(),
+        ));
+        $this->assertCount(1, $benchmarkSteps);
+
+        $payload = $benchmarkSteps[0]->getPayload();
+        $this->assertNull($payload['benchmarkId']); // entidad sin persistir
+        $this->assertSame('Fran', $payload['name']);
+        $this->assertSame(BenchmarkFormat::FOR_TIME, $payload['format']);
+        $this->assertSame(['mode' => 'countdown'], $payload['timerConfig']);
+        $this->assertSame(600, $payload['timeCapSeconds']);
+        $this->assertNull($payload['rounds']);
+        $this->assertSame(60, $payload['restBetweenRoundsSeconds']);
+        $this->assertSame('61 kg', $payload['rxWeightMale']);
+        $this->assertSame('43 kg', $payload['rxWeightFemale']);
+        $this->assertSame('Bajar carga si es necesario', $payload['scalingOptions']);
+        $this->assertFalse($payload['partitioningAllowed']);
+
+        $this->assertSame(3, $payload['blockNumber']);
+        $this->assertSame(5, $payload['totalBlocks']);
+        $this->assertSame('principal', $payload['blockType']);
+        $this->assertSame('WOD', $payload['blockName']);
+        $this->assertSame('Test del día', $payload['blockDescription']);
+
+        // Ejercicios expandidos ordenados por posición con repsPattern incluido
+        $this->assertCount(2, $payload['exercises']);
+        $this->assertSame('Thruster', $payload['exercises'][0]['exerciseName']);
+        $this->assertSame(21, $payload['exercises'][0]['reps']);
+        $this->assertSame('21-15-9', $payload['exercises'][0]['repsPattern']);
+        $this->assertSame('61 kg', $payload['exercises'][0]['rxWeightMale']);
+        $this->assertSame('Pull Up', $payload['exercises'][1]['exerciseName']);
+        $this->assertSame(21, $payload['exercises'][1]['reps']);
+        $this->assertNull($payload['exercises'][1]['rxWeightMale']);
+
+        // El descanso tras el WOD apunta al primer ejercicio del bloque siguiente
+        $this->assertSame(UserTrainingSessionStep::TYPE_REST, $steps[3]->getType());
+        $this->assertSame('after_block', $steps[3]->getPayload()['reason']);
+        $this->assertSame(90, $steps[3]->getPayload()['restSeconds']);
+        $this->assertSame('Plancha', $steps[3]->getPayload()['nextExerciseName']);
+    }
+
+    public function testBenchmarkLadderMantieneRepsPatternIntacto(): void
+    {
+        $benchmark = (new Benchmark())
+            ->setName('Ladder Test')
+            ->setType('wod')
+            ->setFormat(BenchmarkFormat::LADDER);
+        $movement = (new BenchmarkExercise())
+            ->setExercise((new Exercises())->setName('Wall Ball'))
+            ->setPosition(0)
+            ->setRepsPattern('1→10');
+        $benchmark->addExercise($movement);
+
+        $training = $this->createTraining([
+            (new TrainingRound())
+                ->setSetsForRound(1)
+                ->setRestBetweenRounds(1)
+                ->setBenchmark($benchmark),
+        ]);
+
+        $log = new UserTrainingLog();
+        $this->expander->expand($training, $log);
+
+        $steps = $log->getSessionSteps()->toArray();
+        $this->assertCount(1, $steps);
+        $this->assertSame(UserTrainingSessionStep::TYPE_BENCHMARK, $steps[0]->getType());
+        $payload = $steps[0]->getPayload();
+        $this->assertSame(BenchmarkFormat::LADDER, $payload['format']);
+        $this->assertSame('1→10', $payload['exercises'][0]['repsPattern']);
+        $this->assertNull($payload['exercises'][0]['reps']);
+    }
+
+    public function testDescansoAfterBlockAntesDeRoundBenchmarkUsaNombreDelBenchmark(): void
+    {
+        $benchmark = (new Benchmark())->setName('Grace')->setType('wod')->setFormat(BenchmarkFormat::FOR_TIME);
+        $training = $this->createTraining([
+            $this->createRound(1, 1, 120, [
+                $this->createConfig('Push Up', reps: 10, sets: 1),
+            ]),
+            (new TrainingRound())
+                ->setSetsForRound(1)
+                ->setRestBetweenRounds(1)
+                ->setBenchmark($benchmark),
+        ]);
+
+        $log = new UserTrainingLog();
+        $this->expander->expand($training, $log);
+
+        $steps = $log->getSessionSteps()->toArray();
+        $this->assertCount(3, $steps);
+        $this->assertSame('after_block', $steps[1]->getPayload()['reason']);
+        $this->assertSame(120, $steps[1]->getPayload()['restSeconds']);
+        $this->assertSame('Grace', $steps[1]->getPayload()['nextExerciseName']);
+        $this->assertSame(UserTrainingSessionStep::TYPE_BENCHMARK, $steps[2]->getType());
+    }
+
     /**
      * Entrenamiento v4 con dos bloques tipados (preparación + principal) y descanso after_block.
      */
@@ -274,6 +408,40 @@ final class TrainingSessionExpanderTest extends TestCase
         return $log;
     }
 
+    private function createBenchmark(): Benchmark
+    {
+        $benchmark = (new Benchmark())
+            ->setName('Fran')
+            ->setType('wod')
+            ->setFormat(BenchmarkFormat::FOR_TIME)
+            ->setTimerConfig(['mode' => 'countdown'])
+            ->setTimeCapSeconds(600)
+            ->setRestBetweenRoundsSeconds(60)
+            ->setRxWeightMale('61 kg')
+            ->setRxWeightFemale('43 kg')
+            ->setScalingOptions('Bajar carga si es necesario')
+            ->setPartitioningAllowed(false);
+
+        $benchmark->addExercise(
+            (new BenchmarkExercise())
+                ->setExercise((new Exercises())->setName('Thruster'))
+                ->setPosition(0)
+                ->setReps(21)
+                ->setRepsPattern('21-15-9')
+                ->setRxWeightMale('61 kg')
+                ->setRxWeightFemale('43 kg'),
+        );
+        $benchmark->addExercise(
+            (new BenchmarkExercise())
+                ->setExercise((new Exercises())->setName('Pull Up'))
+                ->setPosition(1)
+                ->setReps(21)
+                ->setRepsPattern('21-15-9'),
+        );
+
+        return $benchmark;
+    }
+
     /**
      * @param TrainingRound[] $rounds
      */
@@ -304,7 +472,7 @@ final class TrainingSessionExpanderTest extends TestCase
         return $round;
     }
 
-    private function createConfig(string $exerciseName, ?int $reps = null, ?int $maxTime = null, int $sets = 1, int $restSets = 60, ?int $restEx = 30): TrainingExerciseConfiguration
+    private function createConfig(string $exerciseName, ?int $reps = null, ?int $maxTime = null, int $sets = 1, ?int $restSets = 60, ?int $restEx = 30): TrainingExerciseConfiguration
     {
         $exercise = new Exercises();
         $exercise->setName($exerciseName);
