@@ -9,11 +9,11 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa CrossFit Master v1 (niveles 1-6).
+ * Contenido educativo del programa CrossFit Master v1 (niveles 1-9).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
- * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md y
- * docs/detalle_crossfit_niveles_04-06.md.
+ * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md,
+ * docs/detalle_crossfit_niveles_04-06.md y docs/detalle_crossfit_niveles_07-09.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -32,6 +32,9 @@ class CrossfitMasterContent
             4 => self::level4(),
             5 => self::level5(),
             6 => self::level6(),
+            7 => self::level7(),
+            8 => self::level8(),
+            9 => self::level9(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -48,6 +51,9 @@ class CrossfitMasterContent
             4 => self::achievementsL4(),
             5 => self::achievementsL5(),
             6 => self::achievementsL6(),
+            7 => self::achievementsL7(),
+            8 => self::achievementsL8(),
+            9 => self::achievementsL9(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -136,6 +142,24 @@ class CrossfitMasterContent
                 'session_b' => 'Clean y jerk en el mismo metcon es la letra pequeña de todos los WODs RX que vienen: hoy se practica la transición con cargas que perdonan.',
                 'session_c' => 'Helen RX de F2 es el hito del tramo entero: si las pull-ups se rompen técnicamente a mitad, la marca RX no cuenta — escala a banda y deja constancia. Primero estricto, luego dinámico, y siempre técnica (§1.7-CrossFit §10.1/§10.4).',
                 'session_d' => 'Cierra el tramo como empezaste: movilidad densa, carries honestos y un metcon que se disfruta. El test de N6 es una celebración del trabajo de N1 a N6, no un examen sorpresa.',
+            ],
+            7 => [
+                'session_a' => 'El thruster es donde se gana o se pierde Fran: rack que no ahoga, extensión de cadera completa y la barra vuela. Si el press se convierte en grind, la carga es del pectoral, no de Fran.',
+                'session_b' => 'Clean y jerk a 60/45 es exactamente la mitad de Grace: cada rep de hoy es una rep que Grace no te cobrará cara. Técnica primero, el reloj después (§1.7-CrossFit §10.4).',
+                'session_c' => 'Fran es corta y mentirosa: 21-15-9 suena a nada y pesa como ningún AMRAP. Divide 8-7-6 / 5-4-2 si es tu primera vez, y recuerda: la marca solo cuenta si la técnica aguanta (§1.7-CrossFit §10.4).',
+                'session_d' => 'Los dobles se ganan en la sesión D: sets cortos, cuerda corta, muñeca relajada. Cuando 10 salgan como 5, Fran deja de tener secretos.',
+            ],
+            8 => [
+                'session_a' => 'El OHS es el detector de mentiras del overhead: si la barra baila a 30 kg, no es fuerza lo que falta, es posición. PVC y paciencia antes que kilos (§1.7-CrossFit).',
+                'session_b' => 'El snatch es el gesto más técnico del programa: hoy es tall y hang, no suelo. La paciencia de hoy es el Randy del N12. Y en el HSPU manda la muñeca: dolor matinal >2/10 = HSPU fuera un ciclo (§1.7-CrossFit §10.3).',
+                'session_c' => 'Grace es 30 repeticiones del ejercicio más caro del mundo: singles rápidos desde el principio ganan a series heroicas que mueren a la 15. Y 60/43 kg es la carga de test del push jerk — cada uno cuenta doble (§1.7-CrossFit §10.4).',
+                'session_d' => 'El carry overhead es el OHS en movimiento: si la barra (o la mancuerna) no se sostiene en marcha, el OHS de mañana tampoco. Construye el overhead en todas las direcciones.',
+            ],
+            9 => [
+                'session_a' => 'El deadlift pesado es un visitante de honor, no un inquilino: entra, trabaja a 1-2 RIR y se va. Si la lumbar negocia con la barra en la serie 3, la serie terminó (§1.7-CrossFit §10.2).',
+                'session_b' => 'El muscle-up no se persigue: se siembra. False grip, transición lenta, negativa de 5 segundos — durante ciclos y ciclos. Cuando las piezas estén listas, la transición estará tan ensayada que será casi aburrida (§1.7-CrossFit §10.1).',
+                'session_c' => 'Josh es Fran con la barra overhead: mismas rondas, mismo dolor, una dificultad más. Divide las pull-ups desde el principio —30-12, 20-10, 12-6 son marcas honestas— y guarda los hombros para la barra.',
+                'session_d' => 'Los dobles bajo fatiga se entrenan con las piernas cansadas: box jumps y C2B antes, comba después. El que salta recto cuando está fresco no sabe combar; el que mantiene la técnica con el lactato alto, sí.',
             ],
             default => [],
         };
@@ -925,6 +949,387 @@ class CrossfitMasterContent
                 'specialCelebration' => false,
                 'requirementType' => null, 'requirementKey' => null,
                 'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 7 — CONSOLIDACIÓN RX
+    // ========================================================================
+
+    private static function level7(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): thruster 35/25 kg de técnica; power clean 55/40 kg; push jerk 50/35 kg; kipping pull-up en bloques de 5-8 (tope 40/sesión); Double Unders en sets sueltos dentro de WODs cortos; primer Thruster en metcon.',
+                'Fase 2 (Progresión): thruster 40/30 kg; power clean 60/45 kg; push jerk 55/40 kg; primer Fran parcial (thruster 40/30 + Kipping Pull Up 21-15-9); dobles en sets de 5-8 dentro de AMRAPs; tope de kipping 50/sesión.',
+                'Fase 3 (Intensificación): thruster RX 43/29 kg ensayando el gesto de Fran; cargas de test en PC/PJ; re-test informal CF2/CF3 a dosis máximas; Fran RX como hito de sesión C; últimos ensayos de dobles en fatiga.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista; test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (kipping): tope 50 reps/sesión en F2-F3, con una sesión completa entre exposiciones intensas; dolor de hombro matinal >2/10 = volver a Pull Up estricta un ciclo.',
+                'Re-test informal CF2/CF3 en Bloque 0 de F3 (Shoulder Dislocate ×15 + Overhead Squat PVC ×10; front rack con barra vacía 30 s/lado): es informativo; si falla, se baja la carga de trabajo y se repite el ensayo. No genera mobility_blocked.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Thruster 35/25 kg de técnica; primer thruster en metcon', 'note' => 'Power clean 55/40; push jerk 50/35; kipping en bloques (tope 40/sesión)', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Thruster 40/30; power clean 60/45; push jerk 55/40', 'note' => 'Primer Fran parcial; dobles en sets de 5-8; tope de kipping 50/sesión', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Thruster RX 43/29 ensayando Fran; cargas de test en PC/PJ', 'note' => 'Re-test informal CF2/CF3; Fran RX como hito de sesión C', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Power Clean (60/45 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción y front rack sin dolor y sin lumbar rota (CF3/CF7); rep con técnica rota no cuenta (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Push Jerk (55/40 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Impulso + caída bajo la barra; bloqueo overhead estable (CF2); si se convierte en press roto, la rep no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Back Squat (80/60 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Profundidad con talones pegados (CF1) en cada rep', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Fran (benchmark RX)', 'minimum' => 780, 'target' => 600, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Fran en modalidad RX (scalingUsed = rx): 21-15-9 de Thruster 43/29 kg + Pull Up; pull-ups admitidas estrictas o kipping controlado, sin banda; timeCap 600 s como techo duro', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Fran'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL7(): array
+    {
+        return [
+            [
+                'code' => 'cf-n7-primera-fran-rx',
+                'name' => 'Primera Fran RX',
+                'description' => 'Registra Fran en modalidad RX dentro de un envío de test del Nivel 7. El hito central del nivel: el WOD más icónico de CrossFit completado en RX.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Fran (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n7-power-clean-60-45',
+                'name' => 'Power clean de 60/45 kg',
+                'description' => 'Supera el mínimo de Power Clean a 60/45 kg (3 reps) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Power Clean (60/45 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n7-push-jerk-55-40',
+                'name' => 'Push jerk de 55/40 kg',
+                'description' => 'Supera el mínimo de Push Jerk a 55/40 kg (3 reps) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Push Jerk (55/40 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n7-sentadilla-80-60',
+                'name' => 'Sentadilla de 80/60 kg',
+                'description' => 'Supera el mínimo de Back Squat a 80/60 kg (3 reps) en el test de Nivel 7.',
+                'category' => 'progress', 'icon' => '🦵', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Back Squat (80/60 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n7-primer-thruster-rx',
+                'name' => 'Primer thruster RX',
+                'description' => 'Primer Thruster con 43/29 kg y técnica válida (rack CF3 + bloqueo CF2).',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n7-dobles-metcon-sin-tope',
+                'name' => 'Dobles en metcon sin tope',
+                'description' => 'Primer AMRAP completado con Double Unders oficiales (sets acotados dentro del WOD, sin volver a singles).',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n7-kipping-20',
+                'name' => 'Kipping de 20 seguidas',
+                'description' => 'Primer set de 20 Kipping Pull Up sin romper el hollow.',
+                'category' => 'skill', 'icon' => '🌀', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n7-clean-jerk-completo',
+                'name' => 'Clean & jerk completo',
+                'description' => 'Primer Clean and Jerk con clean recibido en power y jerk bloqueado en la misma unidad.',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n7-retest-cf2-cf3',
+                'name' => 'Re-test CF2/CF3 superado',
+                'description' => 'Re-test informal de overhead y front rack a dosis máximas en Fase 3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 8 — POTENCIA
+    // ========================================================================
+
+    private static function level8(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): snatch de posiciones (Tall Snatch → Hang Snatch) con 20/15 kg; OHS con barra vacía → 30/20 kg; HSPU progresión: Wall Walk y apoyo en pared; thruster RX 43/29 en metcons cortos; dobles en sets de 8-10.',
+                'Fase 2 (Progresión): Power Snatch 30/25 kg; OHS 35/25 kg; Wall Handstand Push Up (negativa lenta o parciales con colchoneta); primer metcon con OHS ligero; primer Power Snatch en EMOM.',
+                'Fase 3 (Intensificación): power snatch 40/30 kg ensayando el test; OHS 43/30 kg (carga de Nancy) en fuerza; primeros Strict HSPU parciales o Wall Handstand Push Up completos; Grace RX como hito de sesión C; push jerk 60/43 kg ensayando la carga del test.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (overhead y muñeca a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (HSPU): solo progresiones estrictas/negativas en este nivel — no hay kipping HSPU (exige base estricta consolidada: eso es N10+). Tope de volumen de pared: 30-40 reps/sesión entre Wall Walk, holds y HSPU parciales.',
+                'Regla §1.7-CrossFit §10.3 (muñeca): el overhead de N8 (OHS, HSPU, snatch) hereda CF6 superada, pero el dolor matinal >2/10 en extensión sigue congelando snatch y HSPU un ciclo. El Snatch completo de suelo queda para el tramo élite (N10+).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Snatch de posiciones (tall → hang) 20/15 kg; OHS barra vacía → 30/20 kg', 'note' => 'HSPU progresión (Wall Walk y apoyo en pared); thruster RX en metcons cortos', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Power Snatch 30/25 kg; OHS 35/25 kg', 'note' => 'Wall Handstand Push Up (negativas/parciales); primer metcon con OHS ligero', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Power snatch 40/30 ensayando el test; OHS 43/30 en fuerza', 'note' => 'Grace RX como hito de sesión C; push jerk 60/43', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (overhead y muñeca a dosis F4)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Power Snatch (40/30 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción overhead amplia y estable, sin press-out marcado y sin dolor (CF2/CF6); desde hang o suelo, indistinto en este nivel (el snatch completo de suelo es N10+); se acepta Power Snatch recibida en power', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Overhead Squat (43/30 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Profundidad con CF1+CF2 válidas; si la barra se tira hacia delante fuera del plano medio, la rep no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Push Jerk (60/43 kg)', 'minimum' => 1, 'target' => 3, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'La carga coincide con el peso RX de Grace: es la validación de que el benchmark es ejecutable rep a rep', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Grace (benchmark RX)', 'minimum' => 600, 'target' => 480, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Grace en modalidad RX (scalingUsed = rx): 30 Clean and Jerk a 60/43 kg por tiempo; se admite power clean + push jerk (ejecución RX estándar según el benchmark); timeCap 600 s como techo duro', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Grace'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL8(): array
+    {
+        return [
+            [
+                'code' => 'cf-n8-grace-rx',
+                'name' => 'Grace RX registrada',
+                'description' => 'Registra Grace en modalidad RX dentro de un envío de test del Nivel 8. Segundo Girl RX completo del programa.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Grace (benchmark RX)',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n8-power-snatch-40-30',
+                'name' => 'Power snatch de 40/30 kg',
+                'description' => 'Supera el mínimo de Power Snatch a 40/30 kg (3 reps) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Power Snatch (40/30 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n8-ohs-43-30',
+                'name' => 'Overhead squat de 43/30 kg',
+                'description' => 'Supera el mínimo de Overhead Squat a 43/30 kg (3 reps) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Overhead Squat (43/30 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n8-push-jerk-60-43',
+                'name' => 'Push jerk de 60/43 kg',
+                'description' => 'Supera el mínimo de Push Jerk a 60/43 kg (1 rep) en el test de Nivel 8.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Push Jerk (60/43 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n8-primer-snatch',
+                'name' => 'Primer snatch',
+                'description' => 'Primer Power Snatch recibido en power con bloqueo overhead estable.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n8-primer-hspu',
+                'name' => 'Primer HSPU',
+                'description' => 'Primer Wall Handstand Push Up completo (o Strict HSPU) con rango mínimo validado y muñeca sin dolor.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n8-dobles-de-20',
+                'name' => 'Dobles de 20',
+                'description' => 'Primer set de 20 Double Unders sin fallo.',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n8-ohs-43-30-sesion',
+                'name' => 'OHS de 43/30 en sesión',
+                'description' => 'Primer Overhead Squat con la carga RX de referencia (43/30 kg) fuera de test.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n8-hspu-negativa-5s',
+                'name' => 'HSPU negativa de 5 segundos',
+                'description' => 'Primera HSPU Negative (o Wall Handstand Push Up negativa) con bajada de 5 s controlada.',
+                'category' => 'skill', 'icon' => '⏳', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 9 — MOTOR ÉLITE
+    // ========================================================================
+
+    private static function level9(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): deadlift de trabajo 80/60 kg vuelve a la sesión A; C2B progresión (agarre amplio); anillas: false grip, soporte, Ring Row - Elevated Feet; Daniel escalado como primer Hero (hito de sesión C); dobles en sets de 10-15.',
+                'Fase 2 (Progresión): deadlift 90/65 kg; Chest to Bar Pull Up primeros reps; anillas: Ring Dip y Assisted Muscle Up Transition / Muscle Up Negative; primer WOD con OHS RX en metcon largo; Aguja de Dobles como hito de sesión D.',
+                'Fase 3 (Intensificación): deadlift 100/70 kg ensayando el test; re-test informal CF6/CF7 a dosis máximas; C2B en AMRAP con tope; Josh RX como hito de sesión C (segunda y última toma antes del test); volumen de anillas acotado.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (anillas y bisagra a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (volumen balístico): tope 60 reps/sesión entre kipping pull-up, C2B y T2B en F2-F3; la progresión a anillas sustituye, no suma: cuando entra C2B volumen, baja una serie de kipping pull-up. Dolor de hombro matinal >2/10 = volver a Pull Up estricta un ciclo.',
+                'Re-test informal CF6/CF7 en Bloque 0 de F3 (ensayo a dosis máximas): informativo; si falla CF7, el deadlift de trabajo baja 10 kg hasta re-superarla. No genera mobility_blocked (decisión 1).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Deadlift de trabajo 80/60 kg; C2B progresión (agarre amplio)', 'note' => 'Anillas: false grip, soporte, Ring Row - Elevated Feet; Daniel escalado como primer Hero', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Deadlift 90/65 kg; primeros Chest to Bar Pull Up', 'note' => 'Anillas: Ring Dip y transición asistida; Aguja de Dobles como hito de sesión D', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Deadlift 100/70 kg ensayando el test; C2B en AMRAP', 'note' => 'Re-test informal CF6/CF7; Josh RX como hito (última toma antes del test)', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (anillas y bisagra a dosis F4)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Deadlift (100/70 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'CF7 validada en el ensayo informal de F3; barra pegada, bloqueo sin hiperextensión; si la lumbar se va, la rep no cuenta (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Thruster (43/29 kg)', 'minimum' => 5, 'target' => 10, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Thruster RX con rack limpio (CF3) y bloqueo overhead (CF2)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Chest to Bar Pull Up', 'minimum' => 3, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Barbilla claramente sobre la barra (contacto pecho-barra o inmediatamente por encima); barbilla en la barra = kipping pull-up, no cuenta como C2B', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Josh (benchmark RX)', 'minimum' => 1710, 'target' => 1410, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Josh en modalidad RX (scalingUsed = rx): 21-15-9 de Overhead Squat 43/29 kg + pull-ups ×42-30-18; pull-ups admitidas estrictas o kipping controlado; el OHS exige CF1+CF2 válidas en profundidad; timeCap 1800 s', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Josh'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL9(): array
+    {
+        return [
+            [
+                'code' => 'cf-n9-josh-rx',
+                'name' => 'Josh RX registrada',
+                'description' => 'Registra Josh en modalidad RX dentro de un envío de test del Nivel 9. Cierra el tramo RX con un Hero WOD completo: el usuario es atleta RX.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Josh (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n9-deadlift-100-70',
+                'name' => 'Deadlift de 100/70 kg',
+                'description' => 'Supera el mínimo de Deadlift a 100/70 kg (3 reps) en el test de Nivel 9.',
+                'category' => 'progress', 'icon' => '🔩', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Deadlift (100/70 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n9-thruster-rx-10',
+                'name' => 'Thruster RX de 10',
+                'description' => 'Supera el mínimo de Thruster a 43/29 kg (5 reps) en el test de Nivel 9.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Thruster (43/29 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n9-primer-c2b-test',
+                'name' => 'Primer chest-to-bar de test',
+                'description' => 'Supera el mínimo de Chest to Bar Pull Up (3 reps) en el test de Nivel 9.',
+                'category' => 'progress', 'icon' => '🎯', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Chest to Bar Pull Up',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n9-primer-c2b',
+                'name' => 'Primer chest-to-bar',
+                'description' => 'Primer Chest to Bar Pull Up con la barbilla claramente sobre la barra.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n9-primer-hero-wod',
+                'name' => 'Primer Hero WOD',
+                'description' => 'Primera ejecución completa de un Hero WOD (Daniel escalado de sesión C F2).',
+                'category' => 'skill', 'icon' => '🎖️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n9-aguja-de-dobles',
+                'name' => 'Aguja de Dobles registrada',
+                'description' => 'Primera ejecución del benchmark Aguja de Dobles con dobles oficiales (3 estaciones: Devil Press, Toes to Bar y Double Unders).',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n9-false-grip-20s',
+                'name' => 'False grip de 20 segundos',
+                'description' => 'Primer False Grip Hang de 20 s sin dolor de muñeca/flexores.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n9-soporte-anillas-20s',
+                'name' => 'Primer soporte en anillas de 20 segundos',
+                'description' => 'Primer Ring Support Hold de 20 s con anillas quietas y hombros activos.',
+                'category' => 'skill', 'icon' => '💍', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n9-transicion-mu-asistida',
+                'name' => 'Primera transición de muscle-up asistida',
+                'description' => 'Primer Assisted Muscle Up Transition completo (pecho sobre las anillas, rotación de muñecas incluida).',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n9-dobles-50',
+                'name' => 'Dobles de 50 acumulados',
+                'description' => 'Primer WOD completado acumulando 50+ Double Unders sin fallo grave de técnica.',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
             ],
         ];
     }

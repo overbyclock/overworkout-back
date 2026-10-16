@@ -7,10 +7,11 @@ namespace App\Command\Blueprint;
 use App\Entity\TrainingRound;
 
 /**
- * Blueprint del programa CrossFit Master v1 (niveles 1-6 de 16).
+ * Blueprint del programa CrossFit Master v1 (niveles 1-9 de 16).
  *
  * Contenido transcrito literalmente de docs/detalle_crossfit_niveles_01-03.md
- * (niveles 1-3) y docs/detalle_crossfit_niveles_04-06.md (niveles 4-6).
+ * (niveles 1-3), docs/detalle_crossfit_niveles_04-06.md (niveles 4-6) y
+ * docs/detalle_crossfit_niveles_07-09.md (niveles 7-9).
  * Estructura: 4 sesiones por fase (A=Fuerza, B=Skill, C=Metcon/WOD, D=Mixta).
  * Fases: base (55%), progression (80%), intensification (95%), deload (50%).
  *
@@ -93,6 +94,36 @@ class CrossfitMasterBlueprint
                 'color' => '#ef4444',
                 'requirementsSummary' => 'Mínimos del test N5: Kipping Pull Up(10), Toes to Bar(12), Power Clean 40/25 kg(5), Annie escalada ≤16:00',
                 'skillFocus' => 'Push Jerk y power clean de trabajo, wall ball a diana y primer WOD RX completo',
+            ],
+            7 => [
+                'name' => 'Nivel 7: Consolidación RX',
+                'title' => 'Consolidación RX — Fran por primera vez',
+                'description' => 'Convertir el umbral RX de N6 en la nueva normalidad: estrenar el Thruster RX (43/29 kg) y ejecutar Fran RX, el WOD más icónico de CrossFit, como hito con celebración; subir el Power Clean a 60/45 kg y el Push Jerk a 55/40 kg como cargas de trabajo; llevar el kipping pull-up a volumen real y meter los Double Unders en metcons. Al superar N7, el usuario hace WODs RX de referencia sin escalado.',
+                'objective' => 'Fran RX, power clean/push jerk de 60/45 y kipping con volumen real',
+                'difficultyRating' => 7,
+                'color' => '#dc2626',
+                'requirementsSummary' => 'Mínimos del test N6 (incl. CF6 y CF7 superadas): Power Clean 50/35 kg(5), Push Jerk 45/30 kg(5), Wall Ball 9/6 kg(15), Helen RX ≤20:00',
+                'skillFocus' => 'Fran RX, power clean/push jerk de 60/45 y kipping con volumen real',
+            ],
+            8 => [
+                'name' => 'Nivel 8: Potencia',
+                'title' => 'Potencia — Snatch, Overhead Squat y primeros HSPU',
+                'description' => 'Abrir el overhead pesado del programa con criterio: introducir el snatch técnico (Tall Snatch → Hang Snatch → Power Snatch, dejando el Snatch completo de suelo para el tramo élite), el Overhead Squat con carga de trabajo, los primeros Handstand Push Up progresivos y el Thruster RX 43/29 como carga estándar de metcons. Benchmark: Grace RX (30 C&J a 60/43 kg). Al superar N8, el usuario empuja overhead con carga RX y domina el segundo O-lift.',
+                'objective' => 'Snatch técnico, Overhead Squat, primeros Handstand Push Up y Thruster RX como carga estándar',
+                'difficultyRating' => 8,
+                'color' => '#b91c1c',
+                'requirementsSummary' => 'Mínimos del test N7: Power Clean 60/45 kg(3), Push Jerk 55/40 kg(3), Back Squat 80/60 kg(3), Fran RX ≤13:00',
+                'skillFocus' => 'Snatch técnico, Overhead Squat, primeros Handstand Push Up y Thruster RX como carga estándar',
+            ],
+            9 => [
+                'name' => 'Nivel 9: Motor Élite',
+                'title' => 'Motor Élite — WODs épicos y camino a las anillas',
+                'description' => 'Cerrar el tramo RX con el motor más grande del programa hasta aquí: WODs épicos (Daniel escalado y Josh RX como test), volumen alto de tracción dinámica con introducción del chest-to-bar, dobles consistentes bajo fatiga (hito "Aguja de Dobles" del catálogo) y la progresión inicial al muscle-up en anillas (false grip, soporte, transiciones asistidas y negativas — nunca kipping). Al superar N9, el usuario es un atleta RX completo y entra en el tramo élite (N10+).',
+                'objective' => 'Motor élite: Hero WODs RX, chest-to-bar y progresión a muscle-up en anillas',
+                'difficultyRating' => 9,
+                'color' => '#7f1d1d',
+                'requirementsSummary' => 'Mínimos del test N8: Power Snatch 40/30 kg(3), Overhead Squat 43/30 kg(3), Push Jerk 60/43 kg(1), Grace RX ≤10:00',
+                'skillFocus' => 'Motor élite: Hero WODs RX, chest-to-bar y progresión a muscle-up en anillas',
             ],
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
@@ -191,6 +222,34 @@ class CrossfitMasterBlueprint
                 'session_d' => ['name' => 'Sesión D: Mixta — jerks, tracción y movilidad CF6/CF7', 'goal' => 'Volumen de jerk y T2B, carries honestos y cierre de tramo', 'sessionType' => 'skill'],
                 default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
             },
+            default => self::sessionMetaL789($level, $sessionKey),
+        };
+    }
+
+    private static function sessionMetaL789(int $level, string $sessionKey): array
+    {
+        return match ($level) {
+            7 => match ($sessionKey) {
+                'session_a' => ['name' => 'Sesión A: Fuerza — squat, thruster y bisagra', 'goal' => 'Back squat de trabajo, thruster progresivo hasta 43/29 kg y bisagra de mantenimiento', 'sessionType' => 'strength'],
+                'session_b' => ['name' => 'Sesión B: Skill — clean & jerk de carga y kipping', 'goal' => 'Power clean 60/45, push jerk 55/40 y kipping pull-up con volumen real', 'sessionType' => 'skill'],
+                'session_c' => ['name' => 'Sesión C: Metcon — Fran RX', 'goal' => 'Fran parcial, Fran RX como hito con celebración y re-ensayo', 'sessionType' => 'circuit'],
+                'session_d' => ['name' => 'Sesión D: Mixta — T2B, dobles y movilidad', 'goal' => 'Primer Clean and Jerk completo, dobles en sets cortos y T2B en volumen', 'sessionType' => 'skill'],
+                default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+            },
+            8 => match ($sessionKey) {
+                'session_a' => ['name' => 'Sesión A: Fuerza — squat, overhead squat y bisagra', 'goal' => 'Back squat, primer Overhead Squat con carga y RDL de mantenimiento', 'sessionType' => 'strength'],
+                'session_b' => ['name' => 'Sesión B: Skill — snatch, HSPU progresivos y dobles', 'goal' => 'Snatch técnico (tall → hang → power), primeros HSPU estrictos/negativos y dobles consistentes', 'sessionType' => 'skill'],
+                'session_c' => ['name' => 'Sesión C: Metcon — Grace RX y tripletes', 'goal' => 'C&J con carga de trabajo y Grace RX como hito', 'sessionType' => 'circuit'],
+                'session_d' => ['name' => 'Sesión D: Mixta — OHS volumen, carries overhead y movilidad', 'goal' => 'Segundo slot de OHS y HSPU, carries overhead y motor RX consolidado', 'sessionType' => 'skill'],
+                default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+            },
+            9 => match ($sessionKey) {
+                'session_a' => ['name' => 'Sesión A: Fuerza — deadlift, thruster y bisagra pesada', 'goal' => 'Deadlift de trabajo hasta 100/70 kg, thruster RX y RDL de mantenimiento', 'sessionType' => 'strength'],
+                'session_b' => ['name' => 'Sesión B: Skill — chest-to-bar y anillas', 'goal' => 'Primer chest-to-bar, fuerza en anillas con false grip y transición asistida al muscle-up', 'sessionType' => 'skill'],
+                'session_c' => ['name' => 'Sesión C: Metcon — Daniel escalado y Josh RX', 'goal' => 'Primer Hero WOD (Daniel escalado) y Josh RX como hito final del tramo', 'sessionType' => 'circuit'],
+                'session_d' => ['name' => 'Sesión D: Mixta — dobles en fatiga, anillas y movilidad', 'goal' => 'Dobles en volumen y bajo fatiga (Aguja de Dobles), empuje en anillas y T2B', 'sessionType' => 'skill'],
+                default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+            },
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -243,6 +302,9 @@ class CrossfitMasterBlueprint
             4 => self::block0L4($phase, $sessionKey),
             5 => self::block0L5($phase, $sessionKey),
             6 => self::block0L6($phase, $sessionKey),
+            7 => self::block0L7($phase, $sessionKey),
+            8 => self::block0L8($phase, $sessionKey),
+            9 => self::block0L9($phase, $sessionKey),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -724,6 +786,323 @@ class CrossfitMasterBlueprint
     }
 
     // ========================================================================
+    // BLOQUE 0 — NIVELES 7-9 (acumulativos, dosis de mantenimiento CF1-CF7;
+    // focos: comba (N7), overhead/HSPU (N8), anillas y bisagra pesada (N9))
+    // ========================================================================
+
+    private static function block0L7(string $phase, string $sessionKey): array
+    {
+        // Torácica
+        [$cat, $books, $foam] = match ($phase) {
+            'base' => ['10', '8/lado', '8'],
+            'progression', 'intensification' => ['12', '10/lado', '10'],
+            'deload' => ['10', '8/lado', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Sentadilla profunda (CF1, mantenido)
+        $deepSquat = '60s';
+        $cossack = match ($phase) {
+            'base', 'deload' => '6/lado',
+            'progression', 'intensification' => '8/lado',
+            default => throw new \InvalidArgumentException(),
+        };
+        // Tobillo (CF4, mantenido)
+        [$calf, $soleus] = match ($phase) {
+            'base' => ['30s/lado', '30s/lado'],
+            'progression' => ['40s/lado', '40s/lado'],
+            'intensification' => ['45s/lado', '45s/lado'],
+            'deload' => ['30s/lado', '30s/lado'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Hombro/overhead (CF2, re-test informal F3)
+        [$dislocate, $pullApart, $ohs] = match ($phase) {
+            'base' => ['15', '15', '8'],
+            'progression' => ['15', '15', '10'],
+            'intensification' => ['15', '15', '10'],
+            'deload' => ['12', '12', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Muñeca (CF6, mantenido)
+        [$wristPu, $wristMob] = match ($phase) {
+            'base' => ['10', '45s'],
+            'progression', 'intensification' => ['10', '60s'],
+            'deload' => ['8', '30s'],
+            default => throw new \InvalidArgumentException(),
+        };
+        $wristExtHold = match ($phase) {
+            'base' => '45s',
+            'progression', 'intensification' => '60s',
+            'deload' => '45s',
+            default => throw new \InvalidArgumentException(),
+        };
+        // Comba (foco nuevo)
+        [$singleUnders, $doublePractice] = match ($phase) {
+            'base' => ['30s', '5'],
+            'progression' => ['45s', '8'],
+            'intensification' => ['60s', '10'],
+            'deload' => ['45s', '5'],
+            default => throw new \InvalidArgumentException(),
+        };
+        $doublePracticeSets = match ($phase) {
+            'base', 'progression', 'intensification' => 3,
+            'deload' => 2,
+            default => throw new \InvalidArgumentException(),
+        };
+        // Hang (mantenido)
+        [$hang, $scap] = match ($phase) {
+            'base', 'progression' => ['30s', '6'],
+            'intensification' => ['40s', '8'],
+            'deload' => ['30s', '5'],
+            default => throw new \InvalidArgumentException(),
+        };
+
+        $exercises = [
+            self::ex('Jumping Jack', '60s'),
+            self::ex('Active March', '60s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            self::ex('Cat-Camel', $cat),
+            self::ex('Open Books', $books),
+            self::ex('Foam Roll Thoracic Extension', $foam),
+            self::ex('Deep Squat Hold', $deepSquat),
+            self::ex('Cossack Squat', $cossack),
+            self::ex('Calf Stretch Wall', $calf),
+            self::ex('Bent-Knee Soleus Stretch', $soleus),
+            self::ex('Shoulder Dislocate', $dislocate),
+            self::ex('Band Pull-Apart', $pullApart),
+            self::ex('Overhead Squat', $ohs),
+            self::ex('Wrist Push-Up', $wristPu, 2),
+            self::ex('Wrist Extension Stretch', $wristMob),
+            self::ex('Back-of-Hand Stretch', $wristExtHold),
+            self::ex('Single Unders', $singleUnders),
+            self::ex('Double Under Practice', $doublePractice, $doublePracticeSets),
+            self::ex('Dead Hang', $hang),
+            self::ex('Scapular Pull Up', $scap),
+        ];
+
+        // Variante B (skill): dislocates extra antes de la barra (ensayo CF3 en caliente) + respiración
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('Shoulder Dislocate', '5');
+            $exercises[] = self::ex('Diaphragmatic Breathing', '5');
+        }
+        // Variante C (metcon): dobles en caliente si ya salen (thruster en el WOD)
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Double Unders', '10');
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L8(string $phase, string $sessionKey): array
+    {
+        // Torácica
+        [$cat, $books, $foam] = match ($phase) {
+            'base', 'progression', 'intensification' => ['12', '10/lado', '10'],
+            'deload' => ['10', '8/lado', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Sentadilla profunda (CF1, mantenido)
+        $deepSquat = '60s';
+        $cossack = match ($phase) {
+            'base', 'deload' => '6/lado',
+            'progression', 'intensification' => '8/lado',
+            default => throw new \InvalidArgumentException(),
+        };
+        // Tobillo (CF4, mantenido)
+        [$calf, $soleus] = match ($phase) {
+            'base' => ['30s/lado', '30s/lado'],
+            'progression' => ['40s/lado', '40s/lado'],
+            'intensification' => ['45s/lado', '45s/lado'],
+            'deload' => ['30s/lado', '30s/lado'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Hombro/overhead (CF2, foco nuevo)
+        [$dislocate, $pullApart, $ohs] = match ($phase) {
+            'base', 'progression' => ['15', '15', '10'],
+            'intensification' => ['15', '15', '12'],
+            'deload' => ['12', '12', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Muñeca (CF6, foco nuevo)
+        [$wristPu, $wristMob, $wristExtHold] = match ($phase) {
+            'base', 'progression' => ['10', '60s', '60s'],
+            'intensification' => ['12', '60s', '60s'],
+            'deload' => ['8', '30s', '45s'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Handstand suave (semilla HSPU)
+        [$wallWalk, $chestToWall] = match ($phase) {
+            'base' => ['3', '20s'],
+            'progression' => ['3', '30s'],
+            'intensification' => ['4', '40s'],
+            'deload' => ['2', '20s'],
+            default => throw new \InvalidArgumentException(),
+        };
+        $wallWalkSets = match ($phase) {
+            'base', 'deload' => 2,
+            'progression', 'intensification' => 3,
+            default => throw new \InvalidArgumentException(),
+        };
+        // Comba (mantenido)
+        [$singleUnders, $doublePractice] = match ($phase) {
+            'base' => ['45s', '5'],
+            'progression' => ['45s', '8'],
+            'intensification' => ['60s', '10'],
+            'deload' => ['45s', '5'],
+            default => throw new \InvalidArgumentException(),
+        };
+
+        $exercises = [
+            self::ex('Jumping Jack', '60s'),
+            self::ex('Active March', '60s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            self::ex('Cat-Camel', $cat),
+            self::ex('Open Books', $books),
+            self::ex('Foam Roll Thoracic Extension', $foam),
+            self::ex('Deep Squat Hold', $deepSquat),
+            self::ex('Cossack Squat', $cossack),
+            self::ex('Calf Stretch Wall', $calf),
+            self::ex('Bent-Knee Soleus Stretch', $soleus),
+            self::ex('Shoulder Dislocate', $dislocate),
+            self::ex('Band Pull-Apart', $pullApart),
+            self::ex('Overhead Squat', $ohs),
+            self::ex('Wrist Push-Up', $wristPu, 2),
+            self::ex('Wrist Extension Stretch', $wristMob),
+            self::ex('Back-of-Hand Stretch', $wristExtHold),
+            self::ex('Wall Walk', $wallWalk, $wallWalkSets),
+            self::ex('Chest to Wall Handstand', $chestToWall),
+            self::ex('Single Unders', $singleUnders),
+            self::ex('Double Under Practice', $doublePractice, 2),
+        ];
+
+        // Variante B (skill): dislocates + wrist push-ups extra antes de snatch/HSPU
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('Shoulder Dislocate', '5');
+            $exercises[] = self::ex('Wrist Push-Up', '5');
+        }
+        // Variante C (metcon): dobles de calentamiento (thruster en el WOD)
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Double Unders', '10');
+        }
+        // Variante D (mixta): apoyo en extensión como cierre (preparación HSPU)
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('Back-of-Hand Stretch', '30s');
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    private static function block0L9(string $phase, string $sessionKey): array
+    {
+        // Torácica
+        [$cat, $books, $foam] = match ($phase) {
+            'base', 'progression', 'intensification' => ['12', '10/lado', '10'],
+            'deload' => ['10', '8/lado', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Sentadilla profunda (CF1, mantenido)
+        $deepSquat = '60s';
+        $cossack = match ($phase) {
+            'base', 'deload' => '6/lado',
+            'progression', 'intensification' => '8/lado',
+            default => throw new \InvalidArgumentException(),
+        };
+        // Tobillo (CF4, mantenido)
+        [$calf, $soleus] = match ($phase) {
+            'base' => ['30s/lado', '30s/lado'],
+            'progression' => ['40s/lado', '40s/lado'],
+            'intensification' => ['45s/lado', '45s/lado'],
+            'deload' => ['30s/lado', '30s/lado'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Hombro/overhead (CF2, mantenido)
+        [$dislocate, $pullApart] = match ($phase) {
+            'base', 'progression', 'intensification' => ['15', '15'],
+            'deload' => ['12', '12'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Muñeca (CF6, re-test informal F3)
+        [$wristPu, $wristMob, $wristExtHold] = match ($phase) {
+            'base', 'progression', 'intensification' => ['10', '60s', '60s'],
+            'deload' => ['8', '30s', '45s'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Bisagra (CF7, re-test informal F3)
+        [$deadBug, $birdDog, $swing] = match ($phase) {
+            'base', 'progression' => ['10/lado', '8/lado', '10'],
+            'intensification' => ['12/lado', '10/lado', '15'],
+            'deload' => ['8/lado', '8/lado', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Anillas (foco nuevo)
+        [$falseGrip, $ringSupport] = match ($phase) {
+            'base' => ['15s', '15s'],
+            'progression' => ['20s', '20s'],
+            'intensification' => ['20s', '20s'],
+            'deload' => ['15s', '15s'],
+            default => throw new \InvalidArgumentException(),
+        };
+        [$falseGripSets, $ringSupportSets] = match ($phase) {
+            'base' => [2, 2],
+            'progression' => [3, 2],
+            'intensification' => [3, 3],
+            'deload' => [2, 2],
+            default => throw new \InvalidArgumentException(),
+        };
+        // Comba (mantenido)
+        [$singleUnders, $doublePractice] = match ($phase) {
+            'base' => ['45s', '8'],
+            'progression' => ['60s', '10'],
+            'intensification' => ['60s', '12'],
+            'deload' => ['45s', '8'],
+            default => throw new \InvalidArgumentException(),
+        };
+
+        $exercises = [
+            self::ex('Jumping Jack', '60s'),
+            self::ex('Active March', '60s'),
+            self::ex('Arm Circles', '10'),
+            self::ex('Hip Circles', '10'),
+            self::ex('Cat-Camel', $cat),
+            self::ex('Open Books', $books),
+            self::ex('Foam Roll Thoracic Extension', $foam),
+            self::ex('Deep Squat Hold', $deepSquat),
+            self::ex('Cossack Squat', $cossack),
+            self::ex('Calf Stretch Wall', $calf),
+            self::ex('Bent-Knee Soleus Stretch', $soleus),
+            self::ex('Shoulder Dislocate', $dislocate),
+            self::ex('Band Pull-Apart', $pullApart),
+            self::ex('Wrist Push-Up', $wristPu, 2),
+            self::ex('Wrist Extension Stretch', $wristMob),
+            self::ex('Back-of-Hand Stretch', $wristExtHold),
+            self::ex('Dead Bug', $deadBug, 2),
+            self::ex('Bird Dog', $birdDog, 2),
+            self::ex('Kettlebell Swing Russian', $swing, 2),
+            self::ex('False Grip Hang', $falseGrip, $falseGripSets),
+            self::ex('Ring Support Hold', $ringSupport, $ringSupportSets),
+            self::ex('Single Unders', $singleUnders),
+            self::ex('Double Under Practice', $doublePractice, 2),
+        ];
+
+        // Variante B (skill): false grip extra y scapular pulls antes de la tracción
+        if ('session_b' === $sessionKey) {
+            $exercises[] = self::ex('False Grip Hang', '10s');
+            $exercises[] = self::ex('Scapular Pull Up', '5');
+        }
+        // Variante C (metcon): dobles de calentamiento (OHS/thruster en el WOD)
+        if ('session_c' === $sessionKey) {
+            $exercises[] = self::ex('Double Unders', '10');
+        }
+        // Variante D (mixta): movilidad de anillas (false grip) como cierre
+        if ('session_d' === $sessionKey) {
+            $exercises[] = self::ex('False Grip Hang', '10s');
+        }
+
+        return self::block(TrainingRound::BLOCK_PREPARACION, 1, 1, 5, $exercises, 5);
+    }
+
+    // ========================================================================
     // BLOQUE POSTURAL (prehab rotado por sesión: A hombro, B muñeca,
     // C lumbar/core, D trío suave)
     // ========================================================================
@@ -806,7 +1185,7 @@ class CrossfitMasterBlueprint
                 default => throw new \InvalidArgumentException(),
             },
             4 => self::posturalExercises(3, $sessionKey),
-            5, 6 => match ($sessionKey) {
+            5, 6, 7, 8, 9 => match ($sessionKey) {
                 'session_a' => [
                     self::ex('Scapular Push Up', '10', 3),
                     self::ex('Prone Y Raise', '12', 2),
@@ -875,6 +1254,9 @@ class CrossfitMasterBlueprint
             4 => self::fuerzaSkillL4($sessionKey, $phase),
             5 => self::fuerzaSkillL5($sessionKey, $phase),
             6 => self::fuerzaSkillL6($sessionKey, $phase),
+            7 => self::fuerzaSkillL7($sessionKey, $phase),
+            8 => self::fuerzaSkillL8($sessionKey, $phase),
+            9 => self::fuerzaSkillL9($sessionKey, $phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -1457,6 +1839,298 @@ class CrossfitMasterBlueprint
     }
 
     // ========================================================================
+    // BLOQUE FUERZA_SKILL — NIVELES 7-9
+    // ========================================================================
+
+    private static function fuerzaSkillL7(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 4),
+                    self::ex('Thruster', '5', 4),
+                    self::ex('Romanian Deadlift', '8', 3),
+                ], 150),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 4),
+                    self::ex('Thruster', '5', 4),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '3', 5),
+                    self::ex('Thruster', '3', 5),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 2),
+                    self::ex('Thruster', '3', 3),
+                    self::ex('Romanian Deadlift', '6', 2),
+                ], 150),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Clean', '2', 5),
+                    self::ex('Push Jerk', '3', 4),
+                    self::ex('Kipping Pull Up', '8', 4),
+                ], 120),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Clean', '2', 5),
+                    self::ex('Push Jerk', '3', 4),
+                    self::ex('Kipping Pull Up', '8', 5),
+                ], 120),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Clean', '1', 6),
+                    self::ex('Push Jerk', '2', 5),
+                    self::ex('Kipping Pull Up', '10', 5),
+                ], 120),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Clean', '2', 3),
+                    self::ex('Push Jerk', '3', 3),
+                    self::ex('Kipping Pull Up', '5', 3),
+                ], 120),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Thruster', '5', 2),
+                    self::ex('Hollow Body Hold', '30s', 3),
+                ], 60),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Thruster', '3', 2),
+                    self::ex('Hollow Body Hold', '40s', 3),
+                ], 60),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Thruster', '3', 2),
+                    self::ex('Hollow Body Hold', '40s', 3),
+                ], 60),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Thruster', '5', 2),
+                    self::ex('Hollow Body Hold', '20s', 2),
+                ], 60),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Toes to Bar', '10', 4),
+                    self::ex('Clean and Jerk', '2', 3),
+                    self::ex('Double Unders', '5', 5),
+                ], 90),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Toes to Bar', '12', 4),
+                    self::ex('Clean and Jerk', '2', 3),
+                    self::ex('Double Unders', '8', 5),
+                ], 90),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Toes to Bar', '12', 5),
+                    self::ex('Clean and Jerk', '1', 4),
+                    self::ex('Double Unders', '10', 6),
+                ], 90),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Toes to Bar', '6', 3),
+                    self::ex('Clean and Jerk', '2', 2),
+                    self::ex('Double Unders', '5', 3),
+                ], 90),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    private static function fuerzaSkillL8(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 4),
+                    self::ex('Overhead Squat', '5', 4),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 4),
+                    self::ex('Overhead Squat', '5', 4),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '3', 5),
+                    self::ex('Overhead Squat', '3', 5),
+                    self::ex('Romanian Deadlift', '5', 3),
+                ], 150),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Back Squat', '5', 2),
+                    self::ex('Overhead Squat', '3', 3),
+                    self::ex('Romanian Deadlift', '5', 2),
+                ], 150),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Snatch', '3', 5),
+                    self::ex('Wall Handstand Push Up', '3', 4),
+                    self::ex('Double Unders', '8', 5),
+                ], 120),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Snatch', '3', 5),
+                    self::ex('Wall Handstand Push Up', '3', 4),
+                    self::ex('Double Unders', '10', 5),
+                ], 120),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Snatch', '2', 6),
+                    self::ex('Wall Handstand Push Up', '2', 5),
+                    self::ex('Double Unders', '12', 6),
+                ], 120),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Power Snatch', '3', 3),
+                    self::ex('Wall Handstand Push Up', '2', 3),
+                    self::ex('Double Unders', '6', 3),
+                ], 120),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Push Jerk', '3', 2),
+                    self::ex('Hollow Body Hold', '40s', 3),
+                ], 60),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Push Jerk', '3', 2),
+                    self::ex('Hollow Body Hold', '40s', 3),
+                ], 60),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Push Jerk', '2', 2),
+                    self::ex('Hollow Body Hold', '40s', 3),
+                ], 60),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Push Jerk', '3', 2),
+                    self::ex('Hollow Body Hold', '20s', 2),
+                ], 60),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '5', 3),
+                    self::ex('Wall Handstand Push Up', '4', 3),
+                    self::ex('Overhead Carry', '30m', 3),
+                ], 120),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '5', 4),
+                    self::ex('Wall Handstand Push Up', '3', 4),
+                    self::ex('Overhead Carry', '40m', 3),
+                ], 120),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '3', 4),
+                    self::ex('Wall Handstand Push Up', '3', 4),
+                    self::ex('Overhead Carry', '30m', 4),
+                ], 120),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '3', 3),
+                    self::ex('Wall Handstand Push Up', '3', 2),
+                    self::ex('Overhead Carry', '30m', 2),
+                ], 120),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    private static function fuerzaSkillL9(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Deadlift', '5', 4),
+                    self::ex('Thruster', '5', 4),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Deadlift', '3', 4),
+                    self::ex('Thruster', '5', 4),
+                    self::ex('Romanian Deadlift', '6', 3),
+                ], 150),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Deadlift', '1-3', 5),
+                    self::ex('Thruster', '3', 5),
+                    self::ex('Romanian Deadlift', '5', 3),
+                ], 150),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Deadlift', '3', 2),
+                    self::ex('Thruster', '3', 3),
+                    self::ex('Romanian Deadlift', '5', 2),
+                ], 150),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Chest to Bar Pull Up', '3', 4),
+                    self::ex('Ring Row - Elevated Feet', '8', 3),
+                    self::ex('False Grip Ring Row', '6', 3),
+                    self::ex('Assisted Muscle Up Transition', '3', 3),
+                ], 90),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Chest to Bar Pull Up', '3', 5),
+                    self::ex('Ring Row - Elevated Feet', '8', 4),
+                    self::ex('False Grip Ring Row', '8', 3),
+                    self::ex('Assisted Muscle Up Transition', '4', 3),
+                ], 90),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Chest to Bar Pull Up', '4', 5),
+                    self::ex('Ring Row - Elevated Feet', '8', 4),
+                    self::ex('False Grip Ring Row', '8', 4),
+                    self::ex('Assisted Muscle Up Transition', '3', 4),
+                ], 90),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Chest to Bar Pull Up', '2', 3),
+                    self::ex('Ring Row - Elevated Feet', '6', 3),
+                    self::ex('Assisted Muscle Up Transition', '2', 2),
+                ], 90),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '5', 2),
+                    self::ex('Kipping Pull Up', '5', 2),
+                ], 60),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '3', 2),
+                    self::ex('Kipping Pull Up', '6', 2),
+                ], 60),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '3', 2),
+                    self::ex('Kipping Pull Up', '8', 2),
+                ], 60),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Overhead Squat', '5', 2),
+                    self::ex('Kipping Pull Up', '4', 2),
+                ], 60),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Double Unders', '12', 5),
+                    self::ex('Ring Dip', '5', 3),
+                    self::ex('Toes to Bar', '10', 4),
+                ], 90),
+                'progression' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Double Unders', '15', 6),
+                    self::ex('Ring Dip', '5', 4),
+                    self::ex('Toes to Bar', '12', 4),
+                ], 90),
+                'intensification' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Double Unders', '20', 6),
+                    self::ex('Ring Dip', '6', 4),
+                    self::ex('Toes to Bar', '12', 5),
+                ], 90),
+                'deload' => self::block(TrainingRound::BLOCK_FUERZA_SKILL, 1, 1, 45, [
+                    self::ex('Double Unders', '8', 3),
+                    self::ex('Ring Dip', '4', 2),
+                    self::ex('Toes to Bar', '6', 3),
+                ], 90),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    // ========================================================================
     // BLOQUE WOD
     //
     // AMRAP: rondas estimadas para llenar la ventana (4-5 s/rep según el
@@ -1474,6 +2148,9 @@ class CrossfitMasterBlueprint
             4 => self::wodL4($sessionKey, $phase),
             5 => self::wodL5($sessionKey, $phase),
             6 => self::wodL6($sessionKey, $phase),
+            7 => self::wodL7($sessionKey, $phase),
+            8 => self::wodL8($sessionKey, $phase),
+            9 => self::wodL9($sessionKey, $phase),
             default => throw new \InvalidArgumentException("Nivel {$level} no definido"),
         };
     }
@@ -2042,6 +2719,310 @@ class CrossfitMasterBlueprint
                 'deload' => self::roundsBlock(2, 75, [
                     self::ex('Toes to Bar', '5'),
                     self::ex('Sit-up', '8'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    // ========================================================================
+    // BLOQUE WOD — NIVELES 7-9
+    // ========================================================================
+
+    private static function wodL7(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::amrapBlock(10, [
+                    self::ex('Thruster', '8'),
+                    self::ex('Box Jump', '8'),
+                    self::ex('Sit-up', '8'),
+                ], 'Primer thruster en metcon; ritmo conversacional.'),
+                'progression' => self::amrapBlock(12, [
+                    self::ex('Wall Ball', '10'),
+                    self::ex('Kipping Pull Up', '6'),
+                    self::ex('Double Unders', '10'),
+                ], 'Primer WOD con dobles "reales"; si fallan, 10 Single Unders sin parar.'),
+                // Fran parcial: ensayo del formato antes de cargar RX
+                'intensification' => self::forTimeBlock([
+                    self::ex('Thruster', '21'),
+                    self::ex('Kipping Pull Up', '21'),
+                    self::ex('Thruster', '15'),
+                    self::ex('Kipping Pull Up', '15'),
+                    self::ex('Thruster', '9'),
+                    self::ex('Kipping Pull Up', '9'),
+                ], '21-15-9 de Thruster (40/30 kg) + Kipping Pull Up. Ensayo del formato Fran antes de cargar RX; anota tiempo y sensaciones.'),
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Air Squat', '8'),
+                    self::ex('Sit-up', '6'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::roundsBlock(4, 75, [
+                    self::ex('Power Clean', '3'),
+                    self::ex('Push Jerk', '5'),
+                    self::ex('Air Squat', '10'),
+                ], '4 rondas: 3 Power Clean (55/40 kg) + 5 Push Jerk (50/35 kg) + 10 Air Squat. C&J en metcon con carga que perdona.'),
+                'progression' => self::emomBlock(12, [
+                    self::ex('Power Clean', '2'),
+                    self::ex('Kipping Pull Up', '10'),
+                ], 'Minutos impares 2 Power Clean (60/45 kg); pares 10 Kipping Pull Up. Descansa el tiempo que sobre; ritmo sostenible.'),
+                'intensification' => self::emomBlock(14, [
+                    self::ex('Power Clean', '1'),
+                    self::ex('Push Jerk', '2'),
+                    self::ex('Double Unders', '12'),
+                ], 'Minutos impares 1 Power Clean + 2 Push Jerk (60/45 kg); pares 12 Double Unders. Primer EMOM con dobles oficiales; si fallan, 12 Single Unders.'),
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Power Clean', '4'),
+                    self::ex('Toes to Bar', '6'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::amrapBlock(12, [
+                    self::ex('Wall Ball', '10'),
+                    self::ex('Toes to Bar', '8'),
+                    self::ex('Box Jump Over', '8'),
+                ], 'Triple RX sin barra; ritmo alto.'),
+                // Benchmark: Fran RX (hito del nivel)
+                'progression' => [
+                    'benchmark' => 'Fran',
+                    'benchmarkNote' => 'Fran en modalidad RX: 21-15-9 de Thruster (43/29 kg) + Pull Up. Primera ejecución RX del WOD más icónico de CrossFit (logro "Primera Fran RX" con celebración especial). Pull-ups admitidas estrictas o kipping controlado; si el thruster se corta o la pull-up muere, escala carga y deja constancia (§10.4).',
+                ],
+                // Fran RX re-ensayo (segunda toma para mejorar marca)
+                'intensification' => [
+                    'benchmark' => 'Fran',
+                    'benchmarkNote' => 'Fran en modalidad RX (re-ensayo): segunda toma para mejorar marca antes del test; solo si la ejecución de F2 salió RX válida.',
+                ],
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Kettlebell Swing Russian', '8'),
+                    self::ex('Sit-up', '8'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::roundsBlock(3, 75, [
+                    self::ex('Dumbbell Thruster', '6'),
+                    self::ex('Toes to Bar', '8'),
+                    self::ex('Single Unders', '10'),
+                ]),
+                'progression' => self::amrapBlock(14, [
+                    self::ex('Kettlebell Swing Russian', '8'),
+                    self::ex('Kipping Pull Up', '6'),
+                    self::ex('Double Unders', '12'),
+                ], 'Primer AMRAP largo con dobles; bisagra bajo fatiga (CF7).'),
+                'intensification' => self::forTimeBlock([
+                    self::ex('Dumbbell Clean', '21'),
+                    self::ex('Toes to Bar', '21'),
+                    self::ex('Double Unders', '15'),
+                    self::ex('Dumbbell Clean', '15'),
+                    self::ex('Toes to Bar', '15'),
+                    self::ex('Double Unders', '10'),
+                    self::ex('Dumbbell Clean', '9'),
+                    self::ex('Toes to Bar', '9'),
+                    self::ex('Double Unders', '5'),
+                ], '21-15-9: Dumbbell Clean (moderado) + Toes to Bar + Double Unders ×15-10-5. Formato Fran con variedad; los dobles descuentan en cada ronda.'),
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Toes to Bar', '5'),
+                    self::ex('Single Unders', '10'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    private static function wodL8(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::amrapBlock(10, [
+                    self::ex('Thruster', '8'),
+                    self::ex('Box Jump', '8'),
+                    self::ex('Sit-up', '8'),
+                ], 'Thruster RX como carga estándar; ritmo conversacional.'),
+                'progression' => self::amrapBlock(12, [
+                    self::ex('Overhead Squat', '6'),
+                    self::ex('Toes to Bar', '8'),
+                    self::ex('Single Unders', '10'),
+                ], 'Primer metcon con OHS; carga técnica, agarre ancho estable.'),
+                'intensification' => self::amrapBlock(14, [
+                    self::ex('Thruster', '6'),
+                    self::ex('Kipping Pull Up', '6'),
+                    self::ex('Double Unders', '12'),
+                ], 'Triple RX; dobles en fatiga real.'),
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Air Squat', '8'),
+                    self::ex('Sit-up', '6'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::roundsBlock(4, 75, [
+                    self::ex('Hang Snatch', '4'),
+                    self::ex('Wall Walk', '6'),
+                    self::ex('Air Squat', '10'),
+                ], '4 rondas: 4 Hang Snatch (20/15 kg) + 6 Wall Walk + 10 Air Squat. Snatch ligero en metcon.'),
+                'progression' => self::emomBlock(12, [
+                    self::ex('Power Snatch', '2'),
+                    self::ex('Wall Walk', '4'),
+                    self::ex('Double Unders', '8'),
+                ], 'Minutos impares 2 Power Snatch (30/25 kg); pares 4 Wall Walk + 8 Double Unders. Primer EMOM con snatch; descansa el tiempo que sobre.'),
+                'intensification' => self::forTimeBlock([
+                    self::ex('Dumbbell Snatch', '21'),
+                    self::ex('Push Up', '21'),
+                    self::ex('Double Unders', '15'),
+                    self::ex('Dumbbell Snatch', '15'),
+                    self::ex('Push Up', '15'),
+                    self::ex('Double Unders', '10'),
+                    self::ex('Dumbbell Snatch', '9'),
+                    self::ex('Push Up', '9'),
+                    self::ex('Double Unders', '5'),
+                ], '21-15-9: Dumbbell Snatch (alterno, moderado) + Push Up + Double Unders ×15-10-5. Semilla de Amanda escalada; un brazo descansa mientras el otro trabaja.'),
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Hang Snatch', '4'),
+                    self::ex('Single Unders', '6'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::amrapBlock(12, [
+                    self::ex('Wall Ball', '10'),
+                    self::ex('Thruster', '6'),
+                    self::ex('Box Jump Over', '8'),
+                ], 'El "clean" de Grace practicado como thruster; ritmo alto.'),
+                'progression' => self::roundsBlock(5, 75, [
+                    self::ex('Power Clean', '3'),
+                    self::ex('Push Jerk', '3'),
+                    self::ex('Double Unders', '12'),
+                ], '5 rondas: 3 Power Clean + 3 Push Jerk (55/40 kg) + 12 Double Unders. C&J con carga de trabajo.'),
+                // Benchmark: Grace RX (hito del nivel)
+                'intensification' => [
+                    'benchmark' => 'Grace',
+                    'benchmarkNote' => 'Grace en modalidad RX: 30 Clean and Jerk (60/43 kg) por tiempo. Primera ejecución RX (logro "Grace RX registrada"). Según el propio benchmark, se admite power clean + push jerk; el clean se recibe en power (no hace falta Squat Clean).',
+                ],
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Kettlebell Swing Russian', '6'),
+                    self::ex('Sit-up', '8'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::roundsBlock(3, 75, [
+                    self::ex('Dumbbell Thruster', '5'),
+                    self::ex('Toes to Bar', '6'),
+                    self::ex('Single Unders', '8'),
+                ]),
+                'progression' => self::roundsBlock(4, 60, [
+                    self::ex('Kipping Pull Up', '6'),
+                    self::ex('Thruster', '8'),
+                    self::ex('Double Unders', '10'),
+                ], '4 rondas: 6 Kipping Pull Up + 8 Thruster (40/30 kg) + 10 Double Unders. Dobles en fatiga.'),
+                'intensification' => self::amrapBlock(15, [
+                    self::ex('Kettlebell Swing Russian', '8'),
+                    self::ex('Wall Ball', '6'),
+                    self::ex('Double Unders', '12'),
+                ], 'Motor RX consolidado; bisagra CF7 en el swing.'),
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Toes to Bar', '5'),
+                    self::ex('Single Unders', '10'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            default => throw new \InvalidArgumentException("Sesión {$sessionKey} no válida"),
+        };
+    }
+
+    private static function wodL9(string $sessionKey, string $phase): array
+    {
+        return match ($sessionKey) {
+            'session_a' => match ($phase) {
+                'base' => self::amrapBlock(12, [
+                    self::ex('Kettlebell Swing Russian', '8'),
+                    self::ex('Thruster', '6'),
+                    self::ex('Box Jump', '8'),
+                ], 'Bisagra + overhead; ritmo alto.'),
+                'progression' => self::amrapBlock(14, [
+                    self::ex('Wall Ball', '8'),
+                    self::ex('Chest to Bar Pull Up', '6'),
+                    self::ex('Double Unders', '10'),
+                ], 'Primer metcon con C2B oficial (o Kipping Pull Up si C2B aún no).'),
+                'intensification' => self::amrapBlock(15, [
+                    self::ex('Kettlebell Swing Russian', '9'),
+                    self::ex('Kipping Pull Up', '7'),
+                    self::ex('Double Unders', '15'),
+                ], 'El motor del test; bisagra bajo fatiga (CF7 en vivo).'),
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Air Squat', '8'),
+                    self::ex('Sit-up', '8'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_b' => match ($phase) {
+                'base' => self::roundsBlock(4, 75, [
+                    self::ex('Kipping Pull Up', '5'),
+                    self::ex('Ring Row - Feet on Ground', '8'),
+                    self::ex('Air Squat', '10'),
+                ], '4 rondas: 5 Kipping Pull Up + 8 Ring Row - Feet on Ground + 10 Air Squat. Volumen de tracción mixto.'),
+                'progression' => self::emomBlock(12, [
+                    self::ex('Chest to Bar Pull Up', '4'),
+                    self::ex('Ring Support Hold', '5s'),
+                    self::ex('Double Unders', '8'),
+                ], 'Minutos impares 3-4 Chest to Bar Pull Up; pares 5 s Ring Support Hold + 8 Double Unders. Descansa el tiempo que sobre; soporte en anillas bajo el reloj.'),
+                'intensification' => self::emomBlock(14, [
+                    self::ex('Assisted Muscle Up Transition', '2'),
+                    self::ex('Kipping Pull Up', '4'),
+                    self::ex('Double Unders', '12'),
+                ], 'Minutos impares 2 Assisted Muscle Up Transition + 4 Kipping Pull Up; pares 12 Double Unders. Si los hombros se van, baja a ring rows.'),
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Kipping Pull Up', '4'),
+                    self::ex('Ring Row - Feet on Ground', '6'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_c' => match ($phase) {
+                'base' => self::amrapBlock(14, [
+                    self::ex('Wall Ball', '10'),
+                    self::ex('Thruster', '6'),
+                    self::ex('Double Unders', '10'),
+                ], 'El motor del OHS RX bajo fatiga.'),
+                // Hero escalado: Daniel (primer Hero WOD del programa)
+                'progression' => [
+                    'benchmark' => 'Daniel',
+                    'benchmarkNote' => 'Daniel escalado según el benchmark (FOR_TIME, timeCap 1200 s: carrera + Pull Up + Thruster 43/29 kg): pull-ups con banda o volumen reducido y thruster 35/25 kg. Primer Hero WOD del programa: logro "Primer Hero WOD"; la distancia de carrera se corre completa.',
+                ],
+                // Benchmark: Josh RX (hito final del tramo)
+                'intensification' => [
+                    'benchmark' => 'Josh',
+                    'benchmarkNote' => 'Josh en modalidad RX (FOR_TIME, timeCap 1800 s): 21-15-9 de Overhead Squat 43/29 kg + pull-ups ×42-30-18. Hito del nivel: logro "Josh RX registrada". Segunda y última toma antes del test; pull-ups admitidas kipping controlado.',
+                ],
+                'deload' => self::amrapBlock(8, [
+                    self::ex('Kettlebell Swing Russian', '8'),
+                    self::ex('Sit-up', '8'),
+                ]),
+                default => throw new \InvalidArgumentException(),
+            },
+            'session_d' => match ($phase) {
+                'base' => self::roundsBlock(3, 75, [
+                    self::ex('Dumbbell Snatch', '6'),
+                    self::ex('Toes to Bar', '8'),
+                    self::ex('Single Unders', '10'),
+                ]),
+                'progression' => self::roundsBlock(4, 60, [
+                    self::ex('Chest to Bar Pull Up', '6'),
+                    self::ex('Box Jump Over', '8'),
+                    self::ex('Double Unders', '15'),
+                ], '4 rondas: 6 Chest to Bar Pull Up (o kipping) + 8 Box Jump Over + 15 Double Unders. Dobles con piernas ya cargadas.'),
+                // Benchmark de comba (hito): Aguja de Dobles
+                'intensification' => [
+                    'benchmark' => 'Aguja de Dobles',
+                    'benchmarkNote' => 'Aguja de Dobles (interval_stations, timeCap 960 s): 4 rondas × 45 s por estación (máx. reps) de Devil Press (2×15/10 kg), Toes to Bar y Double Unders, con 45 s de descanso entre rondas; puntuación = total de reps (dobles = 1). Hito de comba del catálogo: los dobles entran como una de las 3 estaciones bajo fatiga real. Logro "Aguja de Dobles registrada".',
+                ],
+                'deload' => self::roundsBlock(2, 75, [
+                    self::ex('Toes to Bar', '5'),
+                    self::ex('Single Unders', '10'),
                 ]),
                 default => throw new \InvalidArgumentException(),
             },
