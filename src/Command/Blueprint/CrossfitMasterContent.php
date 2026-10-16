@@ -9,12 +9,12 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa CrossFit Master v1 (niveles 1-12).
+ * Contenido educativo del programa CrossFit Master v1 (niveles 1-15).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md,
- * docs/detalle_crossfit_niveles_04-06.md, docs/detalle_crossfit_niveles_07-09.md
- * y docs/detalle_crossfit_niveles_10-12.md.
+ * docs/detalle_crossfit_niveles_04-06.md, docs/detalle_crossfit_niveles_07-09.md,
+ * docs/detalle_crossfit_niveles_10-12.md y docs/detalle_crossfit_niveles_13-15.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -39,6 +39,9 @@ class CrossfitMasterContent
             10 => self::level10(),
             11 => self::level11(),
             12 => self::level12(),
+            13 => self::level13(),
+            14 => self::level14(),
+            15 => self::level15(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -61,6 +64,9 @@ class CrossfitMasterContent
             10 => self::achievementsL10(),
             11 => self::achievementsL11(),
             12 => self::achievementsL12(),
+            13 => self::achievementsL13(),
+            14 => self::achievementsL14(),
+            15 => self::achievementsL15(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -185,6 +191,24 @@ class CrossfitMasterContent
                 'session_b' => 'El Nate se gana en sesiones como esta: 2 muscle-ups frescos, un push invertido, 8 swings — repetido hasta que el cuerpo lo haga sin pensar. El WOD del test no será más difícil que la suma de sus piezas; por eso las piezas se entrenan por separado (§1.7-CrossFit).',
                 'session_c' => 'Whitten es el Hero que separa a los impacientes de los atletas: 110 reps de cada cosa y una milla escondida en el medio. Nadie hace Whitten rápido; todo el mundo hace Whitten entero — esa es la victoria. Y en el Nate, las rondas se ganan en los swings: muñeca relajada, bisagra que no negocia (§1.7-CrossFit §10.2).',
                 'session_d' => 'El volumen se acumula en sesiones aburridas: C2B de 8 en 8, T2B de 10 en 10, un snatch ligero que no se rompe nunca. Los Heroes se ganan aquí, no el día del WOD.',
+            ],
+            13 => [
+                'session_a' => 'El deadlift de 170/120 kg no se levanta el día del test: se levanta hoy, con 155 y la espalda impecable. La barra pesada premia la paciencia y castiga la prisa: cada rep de hoy es un voto a favor del single del test (§1.7-CrossFit §10.4).',
+                'session_b' => '80/60 en el snatch no es un número: es la prueba de que el overhead (CF2), la sentadilla (CF1) y la bisagra (CF7) llevan once niveles trabajando juntos. Si hoy la barra se siente ligera en el tirón y pesada solo en la mente, estás listo; si al revés, baja 5 kg y reconstruye (§1.7-CrossFit).',
+                'session_c' => 'Amanda es el benchmark más desigual de los Girls: 21 reps totales, y cada una puede romperse. Divide los muscle-ups 5-4 / 4-3 / 3-2 desde el minuto cero y trata el snatch como un ritual: tirón, recepción, arriba. Los que hacen 9 MU seguidos terminan el snatch de 5 agarrando la rodilla (§1.7-CrossFit §10.4).',
+                'session_d' => 'El HSPU en deficit es honestidad pura: las placas quitan el colchón del suelo y cualquier recorte de rango se paga al momento. Entra solo cuando el kipping plano sea aburrido de lo sólido — y mantén el estricto semanal: es el seguro de vida (§1.7-CrossFit §10.1).',
+            ],
+            14 => [
+                'session_a' => 'El motor no se entrena con héroes: se entrena con AMRAPs de 25 minutos que nadie aplaude. El día del Hero solo se recoge lo sembrado en sesiones como esta — tres modalidades seguidas sin parar, a un ritmo que puedas defender en el minuto 20 (§1.7-CrossFit).',
+                'session_b' => 'El Bar Muscle Up es la recompensa de cuatro niveles de anillas: la transición ya la tienes, solo cambia el apoyo. No la fuerces el primer día: la barra no perdona la prisa. Y cuando las MU de anillas entren en fatiga, piensa en series de 2-3 desde el principio — la serie de 5 que mueres en la 4 te la cobra el minuto siguiente (§1.7-CrossFit §10.4).',
+                'session_c' => 'Los Heroes no se ganan con el primer 50%: se ganan con lo que te queda para el segundo. En Gunny, corre la primera milla como si aún te faltara todo — porque te falta. En Daniel, los pull-ups de salida son un depósito: quita series pequeñas y deja el crédito para los de la cola. El Hero RX se completa entero, no rápido: esa es la marca (§1.7-CrossFit).',
+                'session_d' => 'El WOD largo de hoy es la caja negra del nivel: 30 minutos sin nadie que te diga si vas bien. Aprende a escuchar el ritmo, no el reloj: si en el minuto 20 puedes hablar en frases cortas, vas bien; si no, ya lo sabes. El motor se construye exactamente ahí, en el silencio entre el minuto 15 y el 25.',
+            ],
+            15 => [
+                'session_a' => 'El C&J de 100/65 no se negocia con la barra: tiras, recibes en sentadilla y empujas con todo, o no cuenta. En el evento combinado, el primer evento (la barra) se gana en la cabeza: un single limpio y a descansar. El que celebra el C&J pierde el WOD que viene detrás (§1.7-CrossFit §10.4).',
+                'session_b' => 'La muscle-up de competición es una administración: sets pequeños, descanso corto, cero héroes. Doce MU acumuladas son 4 series de 3 o 6 de 2 — elige antes de empezar y cumple. El día que necesites una serie de 5 para salvar el test, el test ya se perdió (§1.7-CrossFit §10.4).',
+                'session_c' => 'Un evento combinado no es un WOD duro: es tres WODs con la misma cabeza. Entra al E1 sin recordar el E3, y al E3 sin recordar el E1 — cada evento se juega solo. Esa es la habilidad que se entrena hoy y la que el torneo de verdad exigirá: borrar y empezar de cero tres veces en una mañana (§1.7-CrossFit).',
+                'session_d' => 'El OHS de 80/60 kg es la prueba de fuego invisible del nivel: si la barra vuela sobre la cabeza con las sentadillas vacías, todo el overhead del test está asegurado. La posición es el rendimiento — el día que dejes de trabajarla, dejará de trabajar para ti.',
             ],
             default => [],
         };
@@ -1757,6 +1781,422 @@ class CrossfitMasterContent
             ],
             [
                 'code' => 'cf-n12-retest-cf6-cf7',
+                'name' => 'Re-test CF6/CF7 superado',
+                'description' => 'Re-test informal de muñeca y bisagra a dosis máximas en F3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 13 — FUERZA COMPETICIÓN
+    // ========================================================================
+
+    private static function level13(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): deadlift 140/100 kg; squat snatch 60/45 kg; C&J 70/50 kg; Deficit Deadlift técnico 100/70 kg; HSPU deficit ligero (placa fina) ×3; MU en mantenimiento (3×2/sesión en B); Amanda descompuesta (MU sueltos + snatch 50/35 kg).',
+                'Fase 2 (Progresión): deadlift 155/110 kg; squat snatch 70/52 kg; C&J 80/55 kg; Deficit Deadlift 120/85 kg; HSPU deficit ×5 con tope 20; primer Amanda escalado (snatch 55/40, MU asistidas) en sesión C; Deficit Handstand Push Up entra en WODs.',
+                'Fase 3 (Intensificación): deadlift 170/120 kg ensayando el test; squat snatch 80/60 kg ensayo; C&J 90/60 kg ensayo; re-test informal CF2/CF6; Amanda RX como hito de sesión C (segunda y última toma antes del test).',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (bisagra y overhead a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.2 (lumbar): el deadlift vuelve al test en N13 (170/120 kg) tras dos niveles de mantenimiento, construido por Deficit Deadlift y RDL de fuerza. En metcon, bisagra solo a cargas técnicas (swings, deadlifts ≤ 100/70 en fatiga) con CF7 vigente.',
+                'Dosificación: 1-2 RIR en todo el trabajo pesado; singles de squat snatch y C&J con descanso completo (150-180 s en F3). Una sesión completa entre bisagras pesadas (deadlift A / Deficit Deadlift D) y entre overheads pesados (snatch B / C&J C) — §10.5.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Deadlift 140/100; squat snatch 60/45; C&J 70/50', 'note' => 'Deficit Deadlift técnico 100/70; HSPU deficit ligero; Amanda descompuesta', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Deadlift 155/110; squat snatch 70/52; C&J 80/55', 'note' => 'HSPU deficit tope 20; primer Amanda escalado en sesión C', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Deadlift 170/120 ensayando el test; snatch 80/60; C&J 90/60', 'note' => 'Re-test informal CF2/CF6; Amanda RX como hito', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (bisagra y overhead)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Deadlift (170/120 kg)', 'minimum' => 1, 'target' => 3, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Bloqueo completo, barra pegada, sin rebote (CF5+CF7); agarre libre; el objetivo de 3 reps acumuladas en series de 1 con 60 s entre singles', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Squat Snatch (80/60 kg)', 'minimum' => 1, 'target' => 3, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción en Overhead Squat profundo (CF1+CF2), sin press-out marcado (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Clean and Jerk (90/60 kg)', 'minimum' => 1, 'target' => 2, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción del clean en squat (CF1+CF3) + jerk bloqueado (CF2); la unidad completa en un solo gesto encadenado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Amanda (benchmark RX)', 'minimum' => 570, 'target' => 450, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Amanda en modalidad RX (scalingUsed = rx): 9-7-5 de Ring Muscle Up + Squat Snatch 60/43 kg; MU con transición completa (pez sin rotación no cuenta, §10.4); umbrales bajo el timeCap 600 s del benchmark', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Amanda'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL13(): array
+    {
+        return [
+            [
+                'code' => 'cf-n13-amanda-rx',
+                'name' => 'Amanda RX registrada',
+                'description' => 'Registra Amanda en modalidad RX (mínimo 9:30) dentro de un envío de test del Nivel 13. El primer benchmark del tramo de competición: habilidad gimnástica + potencia olímpica bajo cronómetro.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Amanda (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-deadlift-170-120',
+                'name' => 'Deadlift de 170/120 kg',
+                'description' => 'Supera el mínimo de Deadlift a 170/120 kg (1 rep) en el test de Nivel 13. La carga absoluta más alta del programa.',
+                'category' => 'progress', 'icon' => '🔩', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Deadlift (170/120 kg)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-snatch-80-60',
+                'name' => 'Snatch de 80/60 kg',
+                'description' => 'Supera el mínimo de Squat Snatch a 80/60 kg (1 rep) en el test de Nivel 13. La marca élite de snatch del programa.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Squat Snatch (80/60 kg)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-cj-90-60',
+                'name' => 'Clean & jerk de 90/60 kg',
+                'description' => 'Supera el mínimo de Clean and Jerk a 90/60 kg (1 rep) en el test de Nivel 13.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Clean and Jerk (90/60 kg)',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n13-primer-snatch-80-60',
+                'name' => 'Primer snatch de 80/60 kg',
+                'description' => 'Primer Squat Snatch completo con la carga élite fuera de test.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-primer-cj-90-60',
+                'name' => 'Primer C&J de 90/60 kg',
+                'description' => 'Primer Clean and Jerk unificado con la carga élite fuera de test.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-primer-deadlift-170-120',
+                'name' => 'Primer deadlift de 170/120 kg',
+                'description' => 'Primer single del deadlift de test en sesión (A F3).',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n13-primer-hspu-deficit',
+                'name' => 'Primer HSPU en deficit',
+                'description' => 'Primer Deficit Handstand Push Up con rango completo y hollow controlado.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n13-primera-amanda-escalada',
+                'name' => 'Primera Amanda escalada',
+                'description' => 'Primer Amanda completo a carga de trabajo (sesión C F2).',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n13-primera-amanda-rx',
+                'name' => 'Primera Amanda RX',
+                'description' => 'Primera ejecución de Amanda en RX (sesión C F3, antes del test).',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n13-mu-triple',
+                'name' => 'Muscle-up triple',
+                'description' => 'Primer set de 3 Ring Muscle Up sin bajar de las anillas.',
+                'category' => 'skill', 'icon' => '💍', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n13-retest-cf2-cf6',
+                'name' => 'Re-test CF2/CF6 superado',
+                'description' => 'Re-test informal de overhead y muñeca a dosis máximas en F3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 14 — MOTOR COMPETICIÓN
+    // ========================================================================
+
+    private static function level14(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): volumen gimnástico con tope: Ring Muscle Up 3×2 + Bar Muscle Up técnica (primer contacto), C2B ×10 en fatiga, T2B ×12; primer WOD largo de 25\'; Gunny escalado (chaleco 10/7.5 kg o sin chaleco) como hito intermedio.',
+                'Fase 2 (Progresión): MU en sets de 2-3 en WODs largos (tope 12/sesión); Bar Muscle Up en volumen (sets de 2-3); C2B ×12 en AMRAPs; Gunny RX como hito de sesión C (chaleco 20/15 kg, timeCap 2400 s); primeros dobles/triples de Hang Power Clean en fatiga (§10.2).',
+                'Fase 3 (Intensificación): toques de test: C2B ×25 acumuladas, T2B ×30, MU ×8 en sets de 2; re-test informal CF1/CF3; Daniel RX como hito de sesión C (segunda y última toma antes del test); Jerry RX como WOD de mantenimiento de motor.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista; test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (volumen balístico): tope 100 reps/sesión entre MU, kipping HSPU, C2B y T2B en F2-F3; una sesión completa entre exposiciones intensas de hombro. Dolor matinal >2/10 → vuelta a variantes estrictas/asistidas un ciclo.',
+                'Dosificación de los WODs largos (30-40\'): ritmo de competición 80-85% del ritmo de carrera, negativas solo en la última tercera parte. Los O-lifts en metcon nunca superan 60/43 kg (§10.2).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Volumen gimnástico con tope (MU 3×2 + BMU técnica)', 'note' => 'C2B ×10 en fatiga; primer WOD largo de 25\'; Gunny escalado como hito intermedio', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'MU en sets de 2-3 en WODs largos; BMU en volumen', 'note' => 'Gunny RX como hito de sesión C (chaleco 20/15 kg)', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Toques de test: C2B ×25, T2B ×30, MU ×8', 'note' => 'Re-test informal CF1/CF3; Daniel RX como hito; Jerry RX de mantenimiento', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Chest to Bar Pull Up', 'minimum' => 25, 'target' => 35, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Acumuladas en series de 5-8 con descanso breve; pecho sobre la barra en cada rep (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Toes to Bar', 'minimum' => 30, 'target' => 40, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Acumuladas en series de 8-10; los pies tocan la barra, no la carga de impulso', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Ring Muscle Up', 'minimum' => 8, 'target' => 12, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Acumuladas en series de 2-3 con descanso completo entre series; transición completa con bloqueo en soporte (pez sin rotación no cuenta, §10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Daniel (benchmark RX)', 'minimum' => 1140, 'target' => 930, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Daniel en modalidad RX (scalingUsed = rx): 50 Pull Up + 400 m Run + 21 Thruster (43/29 kg) + 800 m Run + 21 Thruster (43/29 kg) + 400 m Run + 50 Pull Up; thrusters con bloqueo overhead (CF2); umbrales bajo el timeCap 1200 s del benchmark', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Daniel'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL14(): array
+    {
+        return [
+            [
+                'code' => 'cf-n14-daniel-rx',
+                'name' => 'Daniel RX registrado',
+                'description' => 'Registra Daniel en modalidad RX (mínimo 19:00) dentro de un envío de test del Nivel 14. El Hero grande del tramo de motor: 50 pull-ups + barra + carrera en formato piramidal.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Daniel (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n14-c2b-25',
+                'name' => 'C2B de 25 en test',
+                'description' => 'Supera el mínimo de Chest to Bar Pull Up (25 reps) en el test de Nivel 14.',
+                'category' => 'progress', 'icon' => '🎯', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Chest to Bar Pull Up',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n14-t2b-30',
+                'name' => 'T2B de 30 en test',
+                'description' => 'Supera el mínimo de Toes to Bar (30 reps) en el test de Nivel 14.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Toes to Bar',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n14-mu-8-fatiga',
+                'name' => 'Muscle-up de 8 en fatiga',
+                'description' => 'Supera el mínimo de Ring Muscle Up (8 reps) en el test de Nivel 14.',
+                'category' => 'progress', 'icon' => '💍', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Ring Muscle Up',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n14-primer-hero-chaleco',
+                'name' => 'Primer Hero con chaleco RX',
+                'description' => 'Primera ejecución completa de Gunny en RX (sesión C F2): dos millas con chaleco 20/15 kg.',
+                'category' => 'skill', 'icon' => '🎖️', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n14-primer-daniel-rx',
+                'name' => 'Primer Daniel RX',
+                'description' => 'Primera ejecución de Daniel en RX (sesión C F3, antes del test).',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n14-primer-jerry-rx',
+                'name' => 'Primer Jerry RX',
+                'description' => 'Primera ejecución de Jerry en RX (sesión D F3): 1 milla + 2K remo (Rowing Machine) + 1 milla.',
+                'category' => 'skill', 'icon' => '🚣', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n14-primer-hero-sub-intermediate',
+                'name' => 'Primer Hero sub-intermediate',
+                'description' => 'Primer Hero RX por debajo de la referencia intermediate del catálogo (Gunny < 32:30, Daniel < 18:00 o Jerry < 27:00).',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n14-primera-bmu',
+                'name' => 'Primera Bar Muscle Up',
+                'description' => 'Primer Bar Muscle Up completo con throw-over limpio.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n14-dobles-mu-wod',
+                'name' => 'Dobles de muscle-up en WOD',
+                'description' => 'Primer set de 2 Ring Muscle Up dentro de un WOD de más de 15 minutos.',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n14-dobles-100',
+                'name' => 'Dobles de 100',
+                'description' => 'Primer set continuo de 100 Double Unders sin fallo.',
+                'category' => 'skill', 'icon' => '🪢', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n14-retest-cf1-cf3',
+                'name' => 'Re-test CF1/CF3 superado',
+                'description' => 'Re-test informal de sentadilla profunda y front rack a dosis máximas en F3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 15 — PICO
+    // ========================================================================
+
+    private static function level15(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): primer evento combinado simulado (formato Games): C&J moderado (70/50 kg, primer evento) + WOD gimnástico (segundo) + DT escalado (tercero); MU en sets de 2-3 (tope 12/sesión); C&J 80/55 kg en fuerza.',
+                'Fase 2 (Progresión): C&J 90/60 kg; MU en sets de 3-4 (tope 15); segundo evento combinado con C&J 80/55 + MU + DT a 60/43 kg; HSPU deficit en metcons (tope 40/sesión).',
+                'Fase 3 (Intensificación): C&J 100/65 kg ensayando el test; re-test informal CF6/CF7; tercer evento combinado de competición (formato exacto del test: C&J pesado + MU volumen + DT RX) como hito de sesión C.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista; test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (volumen balístico): tope 120 reps/sesión en F2-F3; una sesión completa entre exposiciones intensas de hombro. Dolor matinal >2/10 → vuelta a variantes estrictas/asistidas un ciclo.',
+                'Test en formato evento combinado (orden de competición): el C&J se ejecuta primero; tras 5-8 min de transición, las MU acumuladas; tras otros 5-8 min, el DT RX. Es el mismo formato de la sesión C F3 — el usuario ya lo ha competido dos veces en el nivel. Los ensayos del F3 se separan del test del F4 por al menos 48 h reales de recuperación activa (§10.5).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Primer evento combinado simulado (C&J + gimnástico + DT escalado)', 'note' => 'MU en sets de 2-3 (tope 12/sesión); C&J 80/55 en fuerza', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'C&J 90/60; segundo evento combinado (C&J 80/55 + MU + DT 60/43)', 'note' => 'MU en sets de 3-4 (tope 15); HSPU deficit en metcons', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'C&J 100/65 ensayando el test; tercer evento combinado (formato exacto)', 'note' => 'Re-test informal CF6/CF7; DT RX como cierre del torneo simulado', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista', 'note' => 'Test de nivel al final (evento combinado)', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Clean and Jerk (100/65 kg)', 'minimum' => 1, 'target' => 2, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción del clean en squat (CF1+CF3) + jerk bloqueado (CF2); el objetivo de 2 reps acumuladas en series de 1 con 60-90 s entre singles; PRIMER EVENTO del test combinado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Ring Muscle Up', 'minimum' => 12, 'target' => 18, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Acumuladas en series de 2-4 con descanso completo entre series; transición completa con bloqueo en soporte (pez sin rotación no cuenta, §10.4); SEGUNDO EVENTO del test combinado (5-8 min de transición)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'DT (benchmark RX)', 'minimum' => 960, 'target' => 750, 'unit' => 'time', 'direction' => 'lte', 'form' => 'DT en modalidad RX (scalingUsed = rx): 5 rondas de 12 Deadlift + 9 Hang Power Clean + 6 Push Jerk a 70/52 kg (sin timeCap en catálogo); deadlift táctil-and-go sin rebote (CF7), hang clean en power, jerk en bloqueo; TERCER EVENTO del test combinado — la marca se hace con el C&J y las MU ya en el cuerpo', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'DT'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL15(): array
+    {
+        return [
+            [
+                'code' => 'cf-n15-dt-rx-a-fondo',
+                'name' => 'DT RX a fondo',
+                'description' => 'Registra DT en modalidad RX (mínimo 16:00) dentro de un envío de test del Nivel 15. El DT RX por debajo de 16:00 tras un C&J de 100/65 y 12 muscle-ups: la marca del atleta de competición.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'DT (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n15-cj-100-65',
+                'name' => 'Clean & jerk de 100/65 kg',
+                'description' => 'Supera el mínimo de Clean and Jerk a 100/65 kg (1 rep) en el test de Nivel 15. La barra más pesada del programa.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Clean and Jerk (100/65 kg)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n15-mu-12',
+                'name' => 'Muscle-up de 12 en volumen',
+                'description' => 'Supera el mínimo de Ring Muscle Up (12 reps) en el test de Nivel 15.',
+                'category' => 'progress', 'icon' => '💍', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Ring Muscle Up',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n15-primer-cj-100-65',
+                'name' => 'Primer C&J de 100/65 kg',
+                'description' => 'Primer Clean and Jerk completo con la carga élite fuera de test.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n15-primer-evento-combinado',
+                'name' => 'Primer evento combinado completado',
+                'description' => 'Primer formato de tres eventos en una sesión (sesión C F1) con los tres resultados anotados.',
+                'category' => 'skill', 'icon' => '🏟️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n15-primer-dt-rx-tras-cj',
+                'name' => 'Primer DT RX tras C&J pesado',
+                'description' => 'Primer DT RX ejecutado como tercer evento de un combinado (sesión C F3).',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n15-mu-15',
+                'name' => 'Muscle-up de 15 acumuladas',
+                'description' => 'Primer entrenamiento con 15+ Ring Muscle Up acumuladas en sesión (tope superado).',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n15-ohs-80-60',
+                'name' => 'OHS de 80/60 kg',
+                'description' => 'Primer Overhead Squat completo con la carga del nivel.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n15-retest-cf6-cf7',
                 'name' => 'Re-test CF6/CF7 superado',
                 'description' => 'Re-test informal de muñeca y bisagra a dosis máximas en F3, sin síntomas.',
                 'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
