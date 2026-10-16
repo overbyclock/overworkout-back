@@ -248,7 +248,8 @@ class CreateCrossfitMasterCommand extends Command
         $level->setRequirementsSummary($meta['requirementsSummary']);
         $level->setSkillFocus($meta['skillFocus'] ?? null);
         $level->setProgramVersion('v1');
-        $level->setIsInfinite(false);
+        // N16 es el nivel infinito (tipo Olimpo): no se supera, se habita
+        $level->setIsInfinite(16 === $levelNum);
         $level->setCyclesCompleted(0);
 
         // Aplicar contenido educativo (tips, weekInfos, test requirements)
@@ -506,7 +507,7 @@ class CreateCrossfitMasterCommand extends Command
             $achievement->setSpecialCelebration($data['specialCelebration']);
             $achievement->setRequirementType($data['requirementType']);
             $achievement->setRequirementKey($data['requirementKey']);
-            $achievement->setRequirementValue(null);
+            $achievement->setRequirementValue($data['requirementValue'] ?? null);
         }
 
         $this->io->text(\sprintf('  Achievements: %d created, %d updated', $created, $updated));

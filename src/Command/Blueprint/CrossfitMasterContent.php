@@ -9,12 +9,13 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa CrossFit Master v1 (niveles 1-15).
+ * Contenido educativo del programa CrossFit Master v1 (niveles 1-16, incl. Élite ∞).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md,
  * docs/detalle_crossfit_niveles_04-06.md, docs/detalle_crossfit_niveles_07-09.md,
- * docs/detalle_crossfit_niveles_10-12.md y docs/detalle_crossfit_niveles_13-15.md.
+ * docs/detalle_crossfit_niveles_10-12.md, docs/detalle_crossfit_niveles_13-15.md
+ * y docs/detalle_crossfit_niveles_16_elite.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -42,6 +43,7 @@ class CrossfitMasterContent
             13 => self::level13(),
             14 => self::level14(),
             15 => self::level15(),
+            16 => self::level16(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -67,6 +69,7 @@ class CrossfitMasterContent
             13 => self::achievementsL13(),
             14 => self::achievementsL14(),
             15 => self::achievementsL15(),
+            16 => self::achievementsL16(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -209,6 +212,12 @@ class CrossfitMasterContent
                 'session_b' => 'La muscle-up de competición es una administración: sets pequeños, descanso corto, cero héroes. Doce MU acumuladas son 4 series de 3 o 6 de 2 — elige antes de empezar y cumple. El día que necesites una serie de 5 para salvar el test, el test ya se perdió (§1.7-CrossFit §10.4).',
                 'session_c' => 'Un evento combinado no es un WOD duro: es tres WODs con la misma cabeza. Entra al E1 sin recordar el E3, y al E3 sin recordar el E1 — cada evento se juega solo. Esa es la habilidad que se entrena hoy y la que el torneo de verdad exigirá: borrar y empezar de cero tres veces en una mañana (§1.7-CrossFit).',
                 'session_d' => 'El OHS de 80/60 kg es la prueba de fuego invisible del nivel: si la barra vuela sobre la cabeza con las sentadillas vacías, todo el overhead del test está asegurado. La posición es el rendimiento — el día que dejes de trabajarla, dejará de trabajar para ti.',
+            ],
+            16 => [
+                'session_a' => 'La barra de hoy no se discute con el ego: el RPE 9 es un contrato — si la de calentamiento mintió, la del día baja. El histórico de singles honestos es lo único que envejece bien; el single forzado es una deuda que el tendón cobra con intereses (§1.7-CrossFit §10.3).',
+                'session_b' => 'El benchmark no se entrena hoy: se mide. Llegas con el trabajo de las sesiones A y D hecho, y lo que sale es lo que hay — esa honestidad es lo que hace comparable tu histórico ciclo a ciclo. Y recuerda: la marca RX con técnica rota no existe. Recepción cortada, pez sin rotación, rango muerto: se escala, se anota y se vuelve (§1.7-CrossFit §10.4). El rango que importa es el que sobrevive a la revisión de la cámara.',
+                'session_c' => 'Los Games no se ganan en el primer evento: se ganan en la capacidad de olvidarlo. Entra al E2 sin recordar el E1 y al E3 sin recordar nada. Tres veces en una mañana tienes que ser otra persona nueva — esa es la habilidad de competición, y se entrena aquí, ciclo a ciclo, con el mismo formato (§1.7-CrossFit).',
+                'session_d' => 'El gimnástico de élite es administración, no heroísmo: sets de 3 con 2 en recámara rinden más que sets de 6 con 3 buenas. Y el monoestructural largo es la cuenta bancaria del atleta: nadie lo ve, todos lo notan en el minuto 20 del Hero (§1.7-CrossFit).',
             ],
             default => [],
         };
@@ -2205,5 +2214,200 @@ class CrossfitMasterContent
                 'xpReward' => 50,
             ],
         ];
+    }
+
+    // ========================================================================
+    // LEVEL 16 — ÉLITE ∞ (OLIMPO)
+    // ========================================================================
+
+    private static function level16(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): barra a 70-80% de las marcas N15 (C&J 80/55, snatch 65/45, deadlift 145/105, squat 110/80); benchmarks a ritmo de "vuelta a casa" (un punto por encima del rango actual); volumen gimnástico con topes (MU 15/sesión); evento combinado simulado suave; primer monoestructural largo del ciclo.',
+                'Fase 2 (Progresión): barra al 85-92% (C&J 90/60, snatch 75/55, deadlift 160/115); benchmarks del rango actual (intento de marca controlado, uno por sesión B); MU en sets de 3-4 (tope 18); segundo evento combinado con carga de competición moderada.',
+                'Fase 3 (Intensificación): barra a marca: single pesado del ciclo (C&J 100/65+, snatch 80/60+, deadlift 170/120+) a RPE 9; sesión B = intentos serios de rango (el benchmark del día se ejecuta como en torneo: fresco, una toma); evento combinado de competición completo; tope de volumen balístico 120 reps/sesión.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista; cierre de ciclo: revisión del histórico de marcas, elección del benchmark prioritario del próximo ciclo, descanso activo. Sin intentos de marca — un ciclo sin su fase de recuperación es un ciclo incompleto.',
+                'Autoregulación RPE en la barra: en F3 el single pesado se trabaja a RPE 9 (una rep en recámara, sin grinder). Si el RPE previsto se supera en el calentamiento, el single del día baja 2.5-5 kg y se anota: el histórico de "singles honestos" vale más que cualquier número forzado. Una exposición pesada por línea (bisagra/overhead) por microciclo, con 48-72 h reales entre ellas (§10.5).',
+                'El test vacío no es ausencia de evaluación: cada benchmark RX registrado en sesión B es una medición real con referencias de catálogo, y los singles RPE 9 de la sesión A F3 cierran el ciclo con marcas de barra. El nivel no se "pasa": se mide, ciclo a ciclo, contra uno mismo y contra los rangos Bronce→Diamante.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Barra a 70-80% (C&J 80/55, snatch 65/45, deadlift 145/105)', 'note' => 'Benchmarks a ritmo "vuelta a casa"; evento combinado suave; primer monoestructural largo', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Barra al 85-92% (C&J 90/60, snatch 75/55, deadlift 160/115)', 'note' => 'Un intento de marca controlado por sesión B; segundo evento combinado', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Singles pesados del ciclo a RPE 9 (C&J 100/65+, snatch 80/60+, deadlift 170/120+)', 'note' => 'Sesión B en formato torneo (una toma); evento combinado de competición completo', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Cierre de ciclo: revisión de histórico y benchmark prioritario del próximo ciclo', 'note' => 'Mitad de volumen; movilidad protagonista; sin intentos de marca', 'intensity' => '50%'],
+            ],
+            // Nivel infinito (tipo Olimpo): sin test de salida, testRequirements vacío
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Logros de N16: 50 de rangos (10 benchmarks × Bronce→Diamante, umbrales
+     * contrastados contra beginner/intermediate/advanced/elite de la BD y
+     * siempre bajo el timeCap del benchmark) + récords/hitos.
+     *
+     * Los rangos son type hito con requirementKey = '<Benchmark> (benchmark RX)'
+     * y requirementValue = umbral (segundos lte, o rondas gte en AMRAP): el
+     * desbloqueo se dispara al registrar la marca RX en UserBenchmarkAttempt
+     * (desbloqueo manual/registrado, decisión 7 del documento).
+     */
+    private static function achievementsL16(): array
+    {
+        // benchmark => [rangos en orden Bronce, Plata, Oro, Platino, Diamante]
+        $rangos = [
+            'Fran' => ['570', '450', '360', '270', '210'],
+            'Helen' => ['960', '780', '660', '540', '450'],
+            'Grace' => ['570', '390', '300', '210', '135'],
+            'DT' => ['1080', '900', '720', '570', '390'],
+            'Amanda' => ['600', '510', '390', '270', '210'],
+            'Elizabeth' => ['900', '660', '480', '330', '210'],
+            'Nate' => ['6', '10', '15', '20', '25'],
+            'Cindy' => ['8', '12', '15', '18', '20'],
+            'Daniel' => ['1140', '990', '840', '720', '630'],
+            'Murph' => ['3900', '3300', '2700', '2160', '1920'],
+        ];
+        $nombresRango = ['Bronce', 'Plata', 'Oro', 'Platino', 'Diamante'];
+        $tiersRango = [Achievement::TIER_COMUN, Achievement::TIER_POCO_COMUN, Achievement::TIER_RARO, Achievement::TIER_EPICO, Achievement::TIER_LEGENDARIO];
+        $iconsRango = ['🥉', '🥈', '🥇', '🏆', '💎'];
+
+        $logros = [];
+        foreach ($rangos as $benchmark => $umbrales) {
+            $esRondas = \in_array($benchmark, ['Nate', 'Cindy'], true);
+            foreach ($umbrales as $i => $umbral) {
+                $rango = $nombresRango[$i];
+                $umbralTxt = $esRondas ? $umbral.' rondas' : self::formatoTiempo((int) $umbral);
+                $logros[] = [
+                    'code' => 'cf-n16-'.strtolower($benchmark).'-'.strtolower($rango),
+                    'name' => "{$benchmark} RX — {$rango} ({$umbralTxt})",
+                    'description' => "Registra {$benchmark} en modalidad RX en {$umbralTxt} o menos".($esRondas ? '.' : ' (menor es mejor).')." Rango {$rango} de la cadena Bronce→Diamante del nivel Élite ∞.",
+                    'category' => 'skill', 'icon' => $iconsRango[$i], 'tier' => $tiersRango[$i], 'type' => Achievement::TYPE_HITO,
+                    'specialCelebration' => Achievement::TIER_LEGENDARIO === $tiersRango[$i],
+                    'requirementType' => null, 'requirementKey' => "{$benchmark} (benchmark RX)",
+                    'requirementValue' => (int) $umbral,
+                    'xpReward' => 50 + 50 * $i,
+                ];
+            }
+        }
+
+        return array_merge($logros, [
+            [
+                'code' => 'cf-n16-primer-2rm-cj-100-65',
+                'name' => 'Primer 2RM de C&J 100/65 kg',
+                'description' => 'Primer doble de Clean and Jerk con la carga élite (acumulado o unificado) fuera de test.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-primer-cj-105-70',
+                'name' => 'Primer C&J de 105/70 kg',
+                'description' => 'Primer single de Clean and Jerk por encima de la marca N15.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-primer-snatch-85-60',
+                'name' => 'Primer snatch de 85/60 kg',
+                'description' => 'Primer Snatch completo por encima de la marca N15.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-primer-deadlift-180-125',
+                'name' => 'Primer deadlift de 180/125 kg',
+                'description' => 'Primer single por encima de la marca N13.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-primer-evento-games',
+                'name' => 'Primer evento Games completado',
+                'description' => 'Primer evento combinado de tres estaciones en una sesión con los tres resultados anotados.',
+                'category' => 'skill', 'icon' => '🏟️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n16-primer-hero-olimpo',
+                'name' => 'Primer Hero RX del Olimpo',
+                'description' => 'Primer Murph/Gunny/Jerry/Filthy 50 RX completado dentro de un evento de sesión C.',
+                'category' => 'skill', 'icon' => '🎖️', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-primer-fight-gone-bad',
+                'name' => 'Primer Fight Gone Bad completo',
+                'description' => 'Primer registro de Fight Gone Bad (interval_stations, puntuación total) en sesión B/C.',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n16-rango-oro',
+                'name' => 'Rango Oro en cualquier benchmark',
+                'description' => 'Primer rango Oro desbloqueado en la cadena Bronce→Diamante.',
+                'category' => 'skill', 'icon' => '🥇', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n16-rango-platino',
+                'name' => 'Rango Platino en cualquier benchmark',
+                'description' => 'Primer rango Platino desbloqueado en la cadena Bronce→Diamante.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n16-rango-diamante',
+                'name' => 'Rango Diamante en cualquier benchmark',
+                'description' => 'Primer rango Diamante desbloqueado en la cadena Bronce→Diamante: la marca que casi nadie tiene.',
+                'category' => 'skill', 'icon' => '💎', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n16-nuevo-record-personal',
+                'name' => 'Nuevo récord personal',
+                'description' => 'Cada marca propia batida en cualquier benchmark registrado (histórico en UserBenchmarkAttempt con contexto de ciclo, fase y modalidad). Repetible infinitamente.',
+                'category' => 'skill', 'icon' => '📈', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n16-ciclo-completo',
+                'name' => 'Ciclo completo',
+                'description' => 'Primer ciclo de 16 sesiones terminado con su Fase 4. Repetible (Ciclo 5, 10, 25… con tiers crecientes).',
+                'category' => 'progress', 'icon' => '🔄', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ]);
+    }
+
+    private static function formatoTiempo(int $segundos): string
+    {
+        return \sprintf('%d:%02d', intdiv($segundos, 60), $segundos % 60);
     }
 }
