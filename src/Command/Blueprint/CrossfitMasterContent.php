@@ -9,11 +9,12 @@ use App\Entity\TrainingRound;
 use App\Enum\TestItemType;
 
 /**
- * Contenido educativo del programa CrossFit Master v1 (niveles 1-9).
+ * Contenido educativo del programa CrossFit Master v1 (niveles 1-12).
  *
  * Tips, fases del ciclo, tests de nivel, logros y puertas de movilidad,
  * transcritos literalmente de docs/detalle_crossfit_niveles_01-03.md,
- * docs/detalle_crossfit_niveles_04-06.md y docs/detalle_crossfit_niveles_07-09.md.
+ * docs/detalle_crossfit_niveles_04-06.md, docs/detalle_crossfit_niveles_07-09.md
+ * y docs/detalle_crossfit_niveles_10-12.md.
  *
  * Los nombres de los ítems de testRequirements se usan como requirementKey
  * de los logros desbloqueados por ítem (deben coincidir EXACTAMENTE).
@@ -35,6 +36,9 @@ class CrossfitMasterContent
             7 => self::level7(),
             8 => self::level8(),
             9 => self::level9(),
+            10 => self::level10(),
+            11 => self::level11(),
+            12 => self::level12(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -54,6 +58,9 @@ class CrossfitMasterContent
             7 => self::achievementsL7(),
             8 => self::achievementsL8(),
             9 => self::achievementsL9(),
+            10 => self::achievementsL10(),
+            11 => self::achievementsL11(),
+            12 => self::achievementsL12(),
             default => throw new \InvalidArgumentException("Nivel {$levelNumber} no definido"),
         };
     }
@@ -160,6 +167,24 @@ class CrossfitMasterContent
                 'session_b' => 'El muscle-up no se persigue: se siembra. False grip, transición lenta, negativa de 5 segundos — durante ciclos y ciclos. Cuando las piezas estén listas, la transición estará tan ensayada que será casi aburrida (§1.7-CrossFit §10.1).',
                 'session_c' => 'Josh es Fran con la barra overhead: mismas rondas, mismo dolor, una dificultad más. Divide las pull-ups desde el principio —30-12, 20-10, 12-6 son marcas honestas— y guarda los hombros para la barra.',
                 'session_d' => 'Los dobles bajo fatiga se entrenan con las piernas cansadas: box jumps y C2B antes, comba después. El que salta recto cuando está fresco no sabe combar; el que mantiene la técnica con el lactato alto, sí.',
+            ],
+            10 => [
+                'session_a' => 'El squat clean no es un power clean con prisa: es un tirón, una recepción y UNA sentadilla, todo en el mismo latido. Si separas las partes en la F1, la F3 las unirá sola. Y recuerda: la recepción que se corta es power clean, no squat clean (§1.7-CrossFit §10.4).',
+                'session_b' => 'La muscle-up no se fuerza: se ensaya hasta que sale sola. Transición asistida, negativa lenta, un intento fresco con descanso completo — ese es el camino. El día que salga, nadie en el box lo sabrá antes que tú (§1.7-CrossFit §10.1).',
+                'session_c' => 'Elizabeth castiga dos cosas a la vez: la recepción del clean y el empuje en anillas. Divide los ring dips desde el principio (7-7-7 / 5-5-5 / 4-3-2) y deja que el squat clean respire. Los que queman los ring dips en la ronda de 21 pagan la de 9 el triple.',
+                'session_d' => 'El kipping HSPU es un préstamo que se paga con intereses: hoy suma reps, mañana cobra hombros. Por eso el estricto sigue en el programa aunque el kipping entre — es lo que permite que esto sea sostenible (§1.7-CrossFit §10.1).',
+            ],
+            11 => [
+                'session_a' => 'El C&J es la verdad de la barra: si el clean llega al rack limpio y el jerk bloquea arriba, da igual lo que pese — es válido. Si hay que pelear la recepción o press-out el jerk, la carga miente (§1.7-CrossFit §10.4).',
+                'session_b' => 'El snatch de suelo premia la paciencia acumulada desde N8: tall, hang, power, squat — cada peldaño de los últimos tres niveles está en la barra de hoy. Si la primera fase se desordena, vuelve a Snatch Balance y reconstruye (§1.7-CrossFit).',
+                'session_c' => 'DT es cinco rondas de un trato con la barra: 12 muertes suaves, 9 recepciones limpias, 6 bloqueos decisivos. Los que hacen singles rápidos de jerk ganan a los que hacen triples heroicos que mueren en la ronda 3. Y 70/52 kg es la carga del test — cada ronda de hoy es un ensayo (§1.7-CrossFit §10.4).',
+                'session_d' => 'El front squat es el detector del clean: si 75 kg en el rack delantero se siente como casa, el clean de 70/47.5 no tendrá secretos. Construye la posición y la carga llegará sola.',
+            ],
+            12 => [
+                'session_a' => 'El C&J a 70/47.5 ya no es un evento: es la carga de trabajo. Hoy se hace cansado, con la zancada corta y el bloqueo seco — porque así llegará el día del test. Lo que no se hace cansado hoy, no existe cuando cuenta (§1.7-CrossFit §10.4).',
+                'session_b' => 'El Nate se gana en sesiones como esta: 2 muscle-ups frescos, un push invertido, 8 swings — repetido hasta que el cuerpo lo haga sin pensar. El WOD del test no será más difícil que la suma de sus piezas; por eso las piezas se entrenan por separado (§1.7-CrossFit).',
+                'session_c' => 'Whitten es el Hero que separa a los impacientes de los atletas: 110 reps de cada cosa y una milla escondida en el medio. Nadie hace Whitten rápido; todo el mundo hace Whitten entero — esa es la victoria. Y en el Nate, las rondas se ganan en los swings: muñeca relajada, bisagra que no negocia (§1.7-CrossFit §10.2).',
+                'session_d' => 'El volumen se acumula en sesiones aburridas: C2B de 8 en 8, T2B de 10 en 10, un snatch ligero que no se rompe nunca. Los Heroes se ganan aquí, no el día del WOD.',
             ],
             default => [],
         };
@@ -1330,6 +1355,414 @@ class CrossfitMasterContent
                 'specialCelebration' => false,
                 'requirementType' => null, 'requirementKey' => null,
                 'xpReward' => 100,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 10 — PRIMERA MUSCLE-UP
+    // ========================================================================
+
+    private static function level10(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): squat clean técnico con 50/35 kg (desde Power Clean + Front Squat combinados); anillas: Assisted Muscle Up Transition y Muscle Up Negative a dosis altas; HSPU estricto con tope (sin kipping); primer Hang Power Clean de 65/45 kg en fuerza.',
+                'Fase 2 (Progresión): squat clean 55/40 kg; Muscle Up Negative 5 s + primeros intentos de Ring Muscle Up (estricta, pies asistidos si hace falta); re-test informal CF6 antes del primer kipping HSPU; Kipping Handstand Push Up con tope 20/sesión; hang power clean 70/50 kg.',
+                'Fase 3 (Intensificación): squat clean 60/43 kg ensayando el test y la carga de Elizabeth; re-test informal CF3; primera Ring Muscle Up completa como hito de sesión B; kipping HSPU con tope 30/sesión; Elizabeth RX como hito de sesión C.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (anillas y muñeca a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (primero estricto): la primera muscle-up se estrena estricta (transición completa controlada) antes de permitir el kipping en volumen; el kipping HSPU llega en N10 solo tras tres niveles de HSPU estricto/negativo, con tope de volumen de 30-40 reps/sesión.',
+                'Dosificación del volumen invertido (HSPU + MU): tope 40-50 reps/sesión en F2-F3; una sesión completa entre exposiciones intensas de hombro. Dolor matinal de hombro/muñeca/flexores >2/10 → vuelta a estricto (HSPU) y transición asistida (MU) un ciclo.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Squat clean técnico 50/35; anillas: transición asistida y negativas', 'note' => 'HSPU estricto con tope (sin kipping); primer Hang Power Clean 65/45', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Squat clean 55/40; primeros intentos de Ring Muscle Up', 'note' => 'Re-test informal CF6; kipping HSPU tope 20/sesión; HPC 70/50', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Squat clean 60/43 ensayando el test; primera MU como hito', 'note' => 'Re-test informal CF3; kipping HSPU tope 30; Elizabeth RX como hito', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (anillas y muñeca)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Ring Muscle Up', 'minimum' => 1, 'target' => 3, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Transición completa (pecho sobre las anillas, rotación de muñecas) con bloqueo en soporte; saltar la transición ("pez" sin rotación) no cuenta (§10.4); se acepta la primera MU estricta o kipping controlada', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Squat Clean (60/43 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción en sentadilla profunda (CF1+CF3); recepción cortada = Power Clean, no cuenta (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Strict HSPU', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Rango mínimo validado (cabeza al suelo/colchoneta del nivel de trabajo N8-N9); sin kipping en este ítem: es el ancla estricta (§10.1)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Elizabeth (benchmark RX)', 'minimum' => 840, 'target' => 660, 'unit' => 'time', 'direction' => 'lte', 'form' => 'Elizabeth en modalidad RX (scalingUsed = rx): 21-15-9 de Squat Clean 60/43 kg + Ring Dip; umbrales bajo el timeCap 900 s del benchmark', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Elizabeth'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL10(): array
+    {
+        return [
+            [
+                'code' => 'cf-n10-primera-muscle-up',
+                'name' => 'Primera muscle-up',
+                'description' => 'Supera el mínimo de Ring Muscle Up (1 rep) en el test de Nivel 10. El hito central del nivel y del gimnástico del programa: la primera Ring Muscle Up completa.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Ring Muscle Up',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n10-squat-clean-60-43',
+                'name' => 'Squat clean de 60/43 kg',
+                'description' => 'Supera el mínimo de Squat Clean a 60/43 kg (3 reps) en el test de Nivel 10.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Squat Clean (60/43 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n10-hspu-estricto-test',
+                'name' => 'HSPU estricto de test',
+                'description' => 'Supera el mínimo de Strict HSPU (3 reps) en el test de Nivel 10.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Strict HSPU',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n10-elizabeth-rx',
+                'name' => 'Elizabeth RX registrada',
+                'description' => 'Registra Elizabeth en modalidad RX (mínimo 14:00) dentro de un envío de test del Nivel 10.',
+                'category' => 'progress', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Elizabeth (benchmark RX)',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n10-primera-rmu-sesion',
+                'name' => 'Primera Ring Muscle Up (fuera de test)',
+                'description' => 'Primer Ring Muscle Up completo en sesión (hito de sesión B F3).',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n10-primera-mu-estricta',
+                'name' => 'Primera muscle-up estricta',
+                'description' => 'Primer Ring Muscle Up sin kipping, con transición controlada de principio a fin.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n10-primer-kipping-hspu',
+                'name' => 'Primer kipping HSPU',
+                'description' => 'Primer Kipping Handstand Push Up con rango mínimo y hollow controlado, tras la base estricta.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n10-primera-elizabeth-rx',
+                'name' => 'Primera Elizabeth RX',
+                'description' => 'Primera ejecución completa de Elizabeth en RX (sesión C F3).',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n10-ring-dip-10',
+                'name' => 'Ring dip de 10',
+                'description' => 'Primer set de 10 Ring Dip sin romper el rango.',
+                'category' => 'skill', 'icon' => '💍', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n10-transicion-asistida-5s',
+                'name' => 'Transición asistida de 5 segundos',
+                'description' => 'Primer Assisted Muscle Up Transition con 5 s de pausa con el pecho sobre las anillas.',
+                'category' => 'skill', 'icon' => '⏳', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+            [
+                'code' => 'cf-n10-negativa-mu-8s',
+                'name' => 'Negativa de muscle-up de 8 segundos',
+                'description' => 'Primera Muscle Up Negative con bajada de 8 s controlada.',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 11 — PESADO
+    // ========================================================================
+
+    private static function level11(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): snatch de suelo técnico: Snatch Balance + Squat Snatch con 40/30 kg; C&J 60/43 kg; back squat 90/70 kg; anillas a mantenimiento (1 MU suelto por sesión en B); DT descompuesto en piezas.',
+                'Fase 2 (Progresión): squat snatch 45/35 kg; C&J 65/45 kg; back squat 95/70 kg; primer DT completo a 60/43 kg (escalado) en sesión C; Ring Muscle Up kipping admitida en volumen bajo.',
+                'Fase 3 (Intensificación): squat snatch 55/40 kg ensayando el test; C&J 70/47.5 kg ensayando el test; re-test informal CF2/CF6; back squat 100/70 kg ensayo; DT RX como hito de sesión C.',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista (overhead y enganche a dosis F4); test de nivel al final.',
+                'Regla §1.7-CrossFit §10.2 (lumbar): el pesado pasa a los O-lifts recibidos en squat y el DT RX (deadlift 70/52 kg en metcon — carga técnica moderada en fatiga, con CF7 vigente). Nunca O-lift pesado en metcon: en WODs entran a carga de trabajo o Power Snatch/Hang Power Clean ligeros.',
+                'Dosificación: 1-2 RIR en todo el trabajo pesado; singles de squat snatch y C&J con descanso completo (150-180 s en F3). Una sesión completa entre bisagras pesadas (back squat A / snatch B) y entre overheads pesados (C&J C / snatch B) — §10.5.',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Snatch de suelo técnico (Snatch Balance + Squat Snatch 40/30)', 'note' => 'C&J 60/43; back squat 90/70; anillas a mantenimiento; DT descompuesto', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'Squat snatch 45/35; C&J 65/45; back squat 95/70', 'note' => 'Primer DT completo escalado en sesión C; MU kipping en volumen bajo', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Squat snatch 55/40 y C&J 70/47.5 ensayando el test', 'note' => 'Re-test informal CF2/CF6; back squat 100/70; DT RX como hito', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista (overhead y enganche)', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Squat Snatch (55/40 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción en Overhead Squat profundo (CF1+CF2), sin press-out marcado; recepción cortada = Power Snatch, no cuenta (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Clean and Jerk (70/47.5 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción del clean en squat (CF1+CF3) + jerk bloqueado (CF2); la unidad completa en un solo gesto encadenado', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Back Squat (100/70 kg)', 'minimum' => 3, 'target' => 5, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'CF1 en cada rep; si la profundidad se pierde en la serie, la serie termina', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'DT (benchmark RX)', 'minimum' => 1320, 'target' => 1080, 'unit' => 'time', 'direction' => 'lte', 'form' => 'DT en modalidad RX (scalingUsed = rx): 5 rondas de 12 Deadlift + 9 Hang Power Clean + 6 Push Jerk a 70/52 kg (sin timeCap en catálogo); el deadlift táctil-and-go sin rebote (CF7), hang clean en power, jerk en bloqueo', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'DT'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL11(): array
+    {
+        return [
+            [
+                'code' => 'cf-n11-dt-rx',
+                'name' => 'DT RX registrada',
+                'description' => 'Registra DT en modalidad RX dentro de un envío de test del Nivel 11. El primer Hero con barra pesada RX: el hito del nivel "Pesado".',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'DT (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n11-squat-snatch-55-40',
+                'name' => 'Snatch de suelo de 55/40 kg',
+                'description' => 'Supera el mínimo de Squat Snatch a 55/40 kg (3 reps) en el test de Nivel 11.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Squat Snatch (55/40 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n11-cj-70-475',
+                'name' => 'Clean & jerk de 70/47.5 kg',
+                'description' => 'Supera el mínimo de Clean and Jerk a 70/47.5 kg (3 reps) en el test de Nivel 11.',
+                'category' => 'progress', 'icon' => '💪', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Clean and Jerk (70/47.5 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n11-sentadilla-100-70',
+                'name' => 'Sentadilla de 100/70 kg',
+                'description' => 'Supera el mínimo de Back Squat a 100/70 kg (3 reps) en el test de Nivel 11.',
+                'category' => 'progress', 'icon' => '🦵', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Back Squat (100/70 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n11-primer-squat-snatch',
+                'name' => 'Primer Squat Snatch completo',
+                'description' => 'Primer Squat Snatch desde el suelo con recepción en profundidad y bloqueo overhead.',
+                'category' => 'skill', 'icon' => '🏆', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n11-primer-cj-rx',
+                'name' => 'Primer Clean & Jerk RX completo',
+                'description' => 'Primer Clean and Jerk unificado (squat clean + jerk) con la carga RX 70/47.5 fuera de test.',
+                'category' => 'skill', 'icon' => '🏋️', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n11-primer-dt-escalado',
+                'name' => 'Primer DT escalado completo',
+                'description' => 'Primer DT completo a carga de trabajo (sesión C F2).',
+                'category' => 'skill', 'icon' => '⏱️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n11-primer-dt-rx',
+                'name' => 'Primer DT RX',
+                'description' => 'Primera ejecución de DT en RX (sesión C F3, antes del test).',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n11-mu-doble',
+                'name' => 'Muscle-up doble',
+                'description' => 'Primer set de 2 Ring Muscle Up sin bajar de las anillas entre rep y rep.',
+                'category' => 'skill', 'icon' => '💍', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n11-retest-cf2-cf6',
+                'name' => 'Re-test CF2/CF6 superado',
+                'description' => 'Re-test informal de overhead y muñeca a dosis máximas en F3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
+            ],
+        ];
+    }
+
+    // ========================================================================
+    // LEVEL 12 — HEROES
+    // ========================================================================
+
+    private static function level12(): array
+    {
+        return [
+            'tips' => [
+                'Fase 1 (Base): volumen gimnástico con tope: Ring Muscle Up en EMOMs (tope 8/sesión), Kipping Handstand Push Up en metcons (tope 30/sesión), C2B en fatiga; O-lifts en metcon a 50/35 kg máx. (§10.2); primer Hero de volumen moderado.',
+                'Fase 2 (Progresión): MU en WODs con tope 10-12/sesión; kipping HSPU con tope 40; C2B ×10+ en AMRAPs; Whitten RX como hito de sesión C; primeros WODs con C&J ligero en fatiga.',
+                'Fase 3 (Intensificación): toques de test: 5 MU acumuladas, 8 HSPU kipping, C&J 70/47.5; re-test informal CF6/CF7; Nate RX como hito de sesión C (segunda y última toma antes del test).',
+                'Fase 4 (Recuperación): mitad de volumen; movilidad protagonista; test de nivel al final.',
+                'Regla §1.7-CrossFit §10.1 (volumen balístico): tope 80 reps/sesión entre MU, kipping HSPU, C2B y T2B en F2-F3; una sesión completa entre exposiciones intensas de hombro. Dolor matinal >2/10 → vuelta a variantes estrictas/asistidas un ciclo.',
+                'Regla §1.7-CrossFit §10.2 (O-lifts en metcon): nunca superan 60/43 kg (carga de trabajo técnica). Excepción deliberada: los Heroes oficiales del catálogo (Whitten, Nate) según su definición; la regla de seguridad es "técnica rota = se para y se descansa" (§10.4).',
+            ],
+            'trainingWeeks' => [
+                ['week' => 0, 'name' => 'Fase 1: Base', 'focus' => 'Volumen gimnástico con tope (MU en EMOMs, kipping HSPU en metcons)', 'note' => 'O-lifts en metcon a 50/35 máx. (§10.2); primer Hero de volumen moderado', 'intensity' => '55%'],
+                ['week' => 1, 'name' => 'Fase 2: Progresión', 'focus' => 'MU en WODs (tope 10-12); kipping HSPU (tope 40)', 'note' => 'Whitten RX como hito de sesión C; C&J ligero en fatiga', 'intensity' => '80%'],
+                ['week' => 2, 'name' => 'Fase 3: Intensificación', 'focus' => 'Toques de test: 5 MU, 8 HSPU kipping, C&J 70/47.5', 'note' => 'Re-test informal CF6/CF7; Nate RX como hito (última toma)', 'intensity' => '95%'],
+                ['week' => 3, 'name' => 'Fase 4: Recuperación', 'focus' => 'Mitad de volumen; movilidad protagonista', 'note' => 'Test de nivel al final', 'intensity' => '50%'],
+            ],
+            'testWeek' => [
+                'tests' => [
+                    'requirements' => [
+                        ['name' => 'Ring Muscle Up', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Acumuladas en series de 1-2 con descanso entre series; transición completa con bloqueo en soporte (§10.4)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Kipping Handstand Push Up', 'minimum' => 8, 'target' => 12, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Rango mínimo validado con hollow/kipping controlado; si el cuerpo se arquea o la cabeza no llega, la rep no cuenta', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Clean and Jerk (70/47.5 kg)', 'minimum' => 5, 'target' => 8, 'unit' => 'reps', 'direction' => 'gte', 'form' => 'Recepción en squat + jerk bloqueado; reps acumuladas en series de 1-2 (línea S2OH: Grace → Push Jerk 60/43 → C&J 70/47.5)', 'type' => TestItemType::Fuerza->value],
+                        ['name' => 'Nate (benchmark RX)', 'minimum' => 5, 'target' => 8, 'unit' => 'rounds', 'direction' => 'gte', 'form' => 'Nate en modalidad RX (scalingUsed = rx): AMRAP 20 min de 2 Ring Muscle Up + 4 Handstand Push Up + 8 Kettlebell Swing American (32/24 kg); HSPU con kipping controlado; MU con transición completa (pez sin rotación no cuenta, §10.4); swings con bisagra CF7', 'type' => TestItemType::Benchmark->value, 'benchmarkName' => 'Nate'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private static function achievementsL12(): array
+    {
+        return [
+            [
+                'code' => 'cf-n12-nate-rx',
+                'name' => 'Nate RX registrada',
+                'description' => 'Registra Nate en modalidad RX (mínimo 5 rondas) dentro de un envío de test del Nivel 12. El cierre del arco del muscle-up: el benchmark oficial de MU + HSPU + potencia, completado en RX.',
+                'category' => 'skill', 'icon' => '👑', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => true,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Nate (benchmark RX)',
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n12-mu-de-5',
+                'name' => 'Muscle-up de 5',
+                'description' => 'Supera el mínimo de Ring Muscle Up (5 reps) en el test de Nivel 12.',
+                'category' => 'progress', 'icon' => '💍', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Ring Muscle Up',
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n12-hspu-kipping-8',
+                'name' => 'HSPU kipping de 8',
+                'description' => 'Supera el mínimo de Kipping Handstand Push Up (8 reps) en el test de Nivel 12.',
+                'category' => 'progress', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Kipping Handstand Push Up',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n12-cj-70-475-de-5',
+                'name' => 'Clean & jerk de 70/47.5 kg de 5',
+                'description' => 'Supera el mínimo de Clean and Jerk a 70/47.5 kg (5 reps) en el test de Nivel 12.',
+                'category' => 'progress', 'icon' => '🏋️', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_TEST,
+                'specialCelebration' => false,
+                'requirementType' => Achievement::REQ_TEST_ITEM_MIN, 'requirementKey' => 'Clean and Jerk (70/47.5 kg)',
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n12-primer-hero-5-rondas',
+                'name' => 'Primer Hero de 5 rondas',
+                'description' => 'Primera ejecución completa de Whitten en RX (sesión C F2): 5 rondas densas de 22 reps × 4 + 400 m run.',
+                'category' => 'skill', 'icon' => '🎖️', 'tier' => Achievement::TIER_LEGENDARIO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => true,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 200,
+            ],
+            [
+                'code' => 'cf-n12-primera-nate-rx',
+                'name' => 'Primera Nate RX',
+                'description' => 'Primera ejecución del benchmark Nate en RX (sesión C F3, antes del test).',
+                'category' => 'skill', 'icon' => '🔥', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n12-mu-en-wod',
+                'name' => 'Muscle-up en WOD',
+                'description' => 'Primer metcon completado con Ring Muscle Up oficiales (tope respetado, transición limpia).',
+                'category' => 'skill', 'icon' => '💪', 'tier' => Achievement::TIER_EPICO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 150,
+            ],
+            [
+                'code' => 'cf-n12-doble-mu',
+                'name' => 'Doble de muscle-ups',
+                'description' => 'Primer set de 2 Ring Muscle Up sin bajar de las anillas (repetible).',
+                'category' => 'skill', 'icon' => '💍', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n12-hspu-kipping-10',
+                'name' => 'HSPU kipping de 10',
+                'description' => 'Primer set de 10 Kipping Handstand Push Up con rango y hollow controlados.',
+                'category' => 'skill', 'icon' => '🤸', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n12-c2b-10-fatiga',
+                'name' => 'C2B de 10 en fatiga',
+                'description' => 'Primer set de 10 Chest to Bar Pull Up dentro de un WOD, no en fuerza.',
+                'category' => 'skill', 'icon' => '🎯', 'tier' => Achievement::TIER_RARO, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 100,
+            ],
+            [
+                'code' => 'cf-n12-retest-cf6-cf7',
+                'name' => 'Re-test CF6/CF7 superado',
+                'description' => 'Re-test informal de muñeca y bisagra a dosis máximas en F3, sin síntomas.',
+                'category' => 'progress', 'icon' => '🚪', 'tier' => Achievement::TIER_COMUN, 'type' => Achievement::TYPE_HITO,
+                'specialCelebration' => false,
+                'requirementType' => null, 'requirementKey' => null,
+                'xpReward' => 50,
             ],
         ];
     }
