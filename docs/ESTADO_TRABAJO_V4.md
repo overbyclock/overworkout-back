@@ -189,3 +189,18 @@
 - **Front**: imagen placeholder del programa (`public/programs/crossfit-master.png` GD + entrada en `programImages.js`), commit `28d9c8b` — **sustituir por arte final**. SIN cambios de player: el paso benchmark ya viaja en el payload de pasos pero el front aún no lo renderiza (lo renderiza como paso desconocido o lo ignora según el player actual — verificar antes de que un usuario lo use).
 - **Pendiente de esta línea de trabajo**: N4-N16 (comando ya admite `--levels`), player front del paso benchmark (timer según timerConfig + selector RX/Scaled + registro simple/detallado — decisión UX aplazada por el usuario), Hyrox Mastery y otras competiciones (specs separados), arte final de la imagen.
 - **Pendiente repo front (sin commit)**: thumbnails de imagen en la lista de programas del admin (`TrainingProgramsView.vue`, hecho en la sesión del 10 oct junto al inicio de esta fase).
+
+## Bloque 20 — CrossFit Master v1: N4-N16 completos (oct 2026)
+
+- Continuación del Bloque 19 (mismo spec/plan). Programa completo en BD dev: **16 niveles, 256 trainings (16×16), 210 logros, 7 puertas CF1-CF7**, `strict_gates`, 0 omisiones en todos los lotes. Suite 538 tests/PHPStan 5/CS-Fixer verdes.
+- **Lotes** (cada uno: documento de detalle aprobado por revisión → transcripción a blueprint → generación → revisión de transcripción):
+  - N4-N6 "RX escalado": Primera Tracción (CF2+CF3) / Motor y Gimnásticos / Umbral RX (Helen RX + CF6+CF7).
+  - N7-N9 "RX": Consolidación RX (Fran RX 13:00/10:00) / Potencia (snatch progresiones, HSPU estrictos, Grace RX) / Motor Élite (Josh RX 28:30/23:30).
+  - N10-N12 "Avanzado": Primera Muscle-Up (Elizabeth 14:00/11:00 — umbrales bajo timeCap tras fix) / Pesado (DT RX 22:00/18:00) / Heroes (Nate RX 5/8 rondas).
+  - N13-N15 "Competición": Fuerza (Amanda RX 9:30/7:30 bajo cap 600) / Motor (Daniel RX + Gunny/Jerry hitos) / Pico (evento combinado tipo Games: C&J 100/65 → RMU ×12 → DT RX).
+  - N16 "Élite ∞" (tipo Olimpo): `is_infinite=1`, test vacío, 16 sesiones rotativas (fuerza/benchmarks/eventos/gimnásticos), 50 logros de rangos Bronce→Diamante en 10 benchmarks (umbrales anclados a referencias M de la BD, todos bajo timeCap) + 12 récords.
+- **Documentos fuente**: `docs/detalle_crossfit_niveles_{01-03,04-06,07-09,10-12,13-15,16_elite}.md` (todos aprobados por revisión de contenido; umbrales de test contrastados contra referencias y timeCaps de la BD — el precedente "mínimo por encima del timeCap" de la fase 1 quedó marcado como defectuoso y no se repite).
+- **Regla de diseño aprendida (fix F-Elizabeth)**: ningún mínimo `lte` puede superar el `timeCapSeconds` del benchmark: a los `timeCap` el intent registra rondas, no tiempo.
+- **Rulings de contenio de la fase**: Josh RX aceptado en N9 (defensible: mínimo = beginner propio, OHS RX en N8); "apoyo en extensión" mapeado a `Back-of-Hand Stretch` (equivalencia aceptada); eventos combinados tipo Games modelados como 1 WOD con nota (limitación de plataforma); desbloqueo automático de logros de rango por marca = trabajo futuro de plataforma (hoy manual).
+- **Nota de entorno**: generar más de 3 niveles de golpe requiere `php -d memory_limit=1G` (OOM con 128M en CLI). Las tablas SINGULARES (`training_program`, `training_level`) son LEGACY vacías; las REALES son las PLURALES (`training_programs`, `training_levels`, `achievements` con columna `level_id`, `mobility_gate` singular).
+- **Pendiente de esta línea**: player front del paso benchmark (timer según timerConfig + RX/Scaled + registro — decisión UX aplazada), desbloqueo automático de rangos, Hyrox Mastery y otras competiciones (specs separados).
