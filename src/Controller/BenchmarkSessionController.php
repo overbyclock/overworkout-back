@@ -14,6 +14,7 @@ use App\Service\BenchmarkSessionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -117,8 +118,14 @@ class BenchmarkSessionController extends AbstractController
         $this->denyAccessUnlessGranted(BenchmarkAttemptVoter::LIST_OWN);
 
         $benchmarkId = $request->query->getInt('benchmark_id', 0) ?: null;
+        $status = $request->query->get('status');
+        $status = \is_string($status) && '' !== $status ? $status : null;
 
-        $attempts = $this->sessionService->listUserAttempts($user, $benchmarkId);
+        if (null !== $status && !\in_array($status, [UserBenchmarkAttempt::STATUS_IN_PROGRESS, UserBenchmarkAttempt::STATUS_COMPLETED, UserBenchmarkAttempt::STATUS_DNF], true)) {
+            throw new BadRequestHttpException('Estado de intento no válido');
+        }
+
+        $attempts = $this->sessionService->listUserAttempts($user, $benchmarkId, $status);
 
         return $this->json(
             $this->normalizer->normalize($attempts, null, ['groups' => [UserBenchmarkAttempt::GROUP_READ]])

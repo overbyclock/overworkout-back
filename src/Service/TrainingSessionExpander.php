@@ -152,6 +152,7 @@ readonly class TrainingSessionExpander
         $exercise = $benchmarkExercise->getExercise();
 
         return [
+            'benchmarkExerciseId' => $benchmarkExercise->getId(),
             'exerciseId' => $exercise->getId(),
             'exerciseName' => $exercise->getName(),
             'reps' => $benchmarkExercise->getReps(),

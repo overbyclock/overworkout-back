@@ -297,6 +297,7 @@ final class TrainingSessionExpanderTest extends TestCase
 
         // Ejercicios expandidos ordenados por posición con repsPattern incluido
         $this->assertCount(2, $payload['exercises']);
+        $this->assertArrayHasKey('benchmarkExerciseId', $payload['exercises'][0]); // null: entidad sin persistir
         $this->assertSame('Thruster', $payload['exercises'][0]['exerciseName']);
         $this->assertSame(21, $payload['exercises'][0]['reps']);
         $this->assertSame('21-15-9', $payload['exercises'][0]['repsPattern']);

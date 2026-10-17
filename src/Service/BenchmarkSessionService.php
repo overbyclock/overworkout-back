@@ -211,7 +211,7 @@ readonly class BenchmarkSessionService
     /**
      * @return array<int, UserBenchmarkAttempt>
      */
-    public function listUserAttempts(User $user, ?int $benchmarkId = null): array
+    public function listUserAttempts(User $user, ?int $benchmarkId = null, ?string $status = null): array
     {
         $qb = $this->entityManager->getRepository(UserBenchmarkAttempt::class)
             ->createQueryBuilder('a')
@@ -222,6 +222,15 @@ readonly class BenchmarkSessionService
         if (null !== $benchmarkId) {
             $qb->andWhere('a.benchmark = :benchmark')
                 ->setParameter('benchmark', $benchmarkId);
+        }
+
+        if (null !== $status) {
+            if (!\in_array($status, [UserBenchmarkAttempt::STATUS_IN_PROGRESS, UserBenchmarkAttempt::STATUS_COMPLETED, UserBenchmarkAttempt::STATUS_DNF], true)) {
+                throw new \InvalidArgumentException('Estado de intento no válido');
+            }
+
+            $qb->andWhere('a.status = :status')
+                ->setParameter('status', $status);
         }
 
         return $qb->getQuery()->getResult();
