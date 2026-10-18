@@ -25,6 +25,8 @@ $exerciseNames = [
     'Sprint', 'Reverse Lunge', 'Rowing Machine Sprint', 'Box Jump',
     'Farmers Walk', 'Burpee', 'Dumbbell Lunge', 'Sit-up', 'SkiErg Sprint',
     'Assault Bike Sprint', 'Medicine Ball Slam', 'Sled Push', 'Sled Pull',
+    'Thruster', 'Burpee Over Bar', 'Dumbbell Thruster', 'Bear Crawl',
+    'Standing Dumbbell Press', 'Jump Rope', 'Farmer Walk',
 ];
 
 $exercises = [];
@@ -240,7 +242,186 @@ $wods[] = [
 ];
 
 // ------------------------------------------------------------------
-// 4. Persistir los benchmarks (idempotente por nombre)
+// 4. Fichas DEKA ATLAS (DEKA Rules of Competition v20260210, fuente verificada)
+// ------------------------------------------------------------------
+
+// Array ZONAS ATLAS compartido: las 10 zonas del test de fuerza (sin correr).
+// $pesos = 'foundation' (oficial) o 'peak' (+20-25% aprox sobre Foundation —
+// los pesos Peak exactos no están en las fuentes textuales: aproximados,
+// confirmar en el evento).
+$atlasZones = static function (string $division) use ($exercises): array {
+    $p = 'peak' === $division
+        ? ['thruster' => '52 kg', 'thruster_f' => '34 kg',
+           'lunge' => '2×28 kg', 'lunge_f' => '2×20 kg',
+           'g2oh' => '28 kg', 'g2oh_f' => '20 kg',
+           'crawl' => '2×28 kg', 'crawl_f' => '2×18 kg',
+           'situp' => '20 kg', 'situp_f' => '14 kg',
+           'farmers' => '2×28 kg', 'farmers_f' => '2×18 kg',
+           'press' => '2×22,5 kg', 'press_f' => '2×14 kg',
+           'shoulder' => '57 kg', 'shoulder_f' => '40 kg', ]
+        : ['thruster' => '43 kg', 'thruster_f' => '29,5 kg',
+           'lunge' => '2×23 kg', 'lunge_f' => '2×16 kg',
+           'g2oh' => '22,5 kg', 'g2oh_f' => '15 kg',
+           'crawl' => '2×22,5 kg', 'crawl_f' => '2×15 kg',
+           'situp' => '16 kg', 'situp_f' => '11 kg',
+           'farmers' => '2×22,5 kg', 'farmers_f' => '2×15 kg',
+           'press' => '2×17,5 kg', 'press_f' => '2×11 kg',
+           'shoulder' => '45 kg', 'shoulder_f' => '32 kg', ];
+
+    return [
+        ['exercise' => $exercises['Thruster'], 'position' => 1, 'reps' => 20, 'rx_weight_male' => $p['thruster'], 'rx_weight_female' => $p['thruster_f']],
+        ['exercise' => $exercises['Burpee Over Bar'], 'position' => 2, 'reps' => 20],
+        ['exercise' => $exercises['Dumbbell Lunge'], 'position' => 3, 'reps' => 20, 'rx_weight_male' => $p['lunge'], 'rx_weight_female' => $p['lunge_f']],
+        ['exercise' => $exercises['Dumbbell Thruster'], 'position' => 4, 'reps' => 20, 'rx_weight_male' => $p['g2oh'], 'rx_weight_female' => $p['g2oh_f']],
+        ['exercise' => $exercises['Bear Crawl'], 'position' => 5, 'distance' => 40, 'rx_weight_male' => $p['crawl'], 'rx_weight_female' => $p['crawl_f']],
+        ['exercise' => $exercises['Sit-up'], 'position' => 6, 'reps' => 20, 'rx_weight_male' => $p['situp'], 'rx_weight_female' => $p['situp_f']],
+        ['exercise' => $exercises['Farmers Walk'], 'position' => 7, 'distance' => 100, 'rx_weight_male' => $p['farmers'], 'rx_weight_female' => $p['farmers_f']],
+        ['exercise' => $exercises['Standing Dumbbell Press'], 'position' => 8, 'reps' => 20, 'rx_weight_male' => $p['press'], 'rx_weight_female' => $p['press_f']],
+        ['exercise' => $exercises['Jump Rope'], 'position' => 9, 'reps' => 100],
+        ['exercise' => $exercises['Farmer Walk'], 'position' => 10, 'distance' => 100, 'rx_weight_male' => $p['shoulder'], 'rx_weight_female' => $p['shoulder_f']],
+    ];
+};
+
+$scalingAtlas = "Scaled: thruster con KB/mancuernas menores, G2OH sin carga (peso corporal), bear crawl sin mancuernas, sit-up sin disco, farmers/shoulder carry al 50-60%. "
+    . "Notas de pesos (Standards Chart, confirmar en el evento): farmer's carry rulebook = '100 lb total' (mapeado a 2×22,5/2×15 kg); shoulder-to-press ~35/25 lb; single unders = 100 (cantidad del Standards Chart). "
+    . "PEAK: pesos aproximados +20-25% sobre Foundation (no publicados en las fuentes textuales — confirmar en el evento).";
+
+// Ficha — DEKA ATLAS Foundation (pesos base, cap 30:00)
+$wods[] = [
+    'name' => 'DEKA ATLAS Foundation',
+    'type' => 'benchmark',
+    'description' => "Por tiempo · DEKA ATLAS (test de fuerza de 10 zonas, SIN correr), división Foundation (pesos base). timeCap 30:00.\n\n"
+        . "Las 10 zonas en orden (el jugador registra cada zona como 'ronda'):\n"
+        . "1. Barbell Thruster ×20 (43/29,5 kg — 95/65 lb)\n"
+        . "2. Burpee Over Bar ×20 (barra olímpica)\n"
+        . "3. Surrender Lunge ×20 (2×23/2×16 kg — 50/35 lb)\n"
+        . "4. DB Ground-to-Overhead ×20 (alternando brazos, 10+10; 22,5/15 kg — 50/35 lb)\n"
+        . "5. DB Bear Crawl 40 m (2×22,5/2×15 kg)\n"
+        . "6. Weighted Sit-Up ×20 (disco 16/11 kg — 35/25 lb)\n"
+        . "7. Farmer's Carry 100 m (2×22,5/2×15 kg; rulebook '100 lb total')\n"
+        . "8. DB Shoulder-to-Press ×20 strict (2×17,5/2×11 kg — ~35/25 lb, Standards Chart)\n"
+        . "9. Jump Rope Single Under ×100 (cantidad del Standards Chart)\n"
+        . "10. ATLAS Shoulder Carry 100 m (45/32 kg — 100/70 lb)\n\n"
+        . "timeCap 30:00. Test de los niveles N5/N7/N8 del programa DEKA ATLAS.",
+    'scaling' => $scalingAtlas,
+    'elite_male' => '12:00',
+    'elite_female' => '14:00',
+    'advanced_male' => '16:00',
+    'advanced_female' => '18:30',
+    'intermediate_male' => '20:00',
+    'intermediate_female' => '23:00',
+    'beginner_male' => '25:00',
+    'beginner_female' => '28:00',
+    'format' => BenchmarkFormat::FOR_TIME,
+    'rounds' => 10,
+    'time_cap' => 1800,
+    'timer' => null,
+    'partitioning' => false,
+    'rx_weight_male' => 'thruster 43 kg, lunge 2×23 kg, G2OH 22,5 kg, farmers 2×22,5 kg, press 2×17,5 kg, shoulder 45 kg',
+    'rx_weight_female' => 'thruster 29,5 kg, lunge 2×16 kg, G2OH 15 kg, farmers 2×15 kg, press 2×11 kg, shoulder 32 kg',
+    'movements' => ['thruster', 'burpee-over-bar', 'lunge', 'g2oh', 'bear-crawl', 'sit-up', 'farmers-carry', 'press', 'jump-rope', 'shoulder-carry'],
+    'exercises' => $atlasZones('foundation'),
+];
+
+// Ficha — DEKA ATLAS Peak (pesos aproximados +20-25%, cap 30:00)
+$wods[] = [
+    'name' => 'DEKA ATLAS Peak',
+    'type' => 'benchmark',
+    'description' => "Por tiempo · DEKA ATLAS (test de fuerza de 10 zonas, SIN correr), división Peak (pesos más pesados, MISMO cap de 30:00). "
+        . "Mismas zonas y dosis que Foundation con pesos aproximados +20-25% (no publicados en las fuentes textuales — confirmar en el evento). "
+        . "timeCap 30:00. Test de los niveles N7/N8 del programa DEKA ATLAS.",
+    'scaling' => $scalingAtlas,
+    'elite_male' => '14:00',
+    'elite_female' => '16:00',
+    'advanced_male' => '18:30',
+    'advanced_female' => '21:00',
+    'intermediate_male' => '23:00',
+    'intermediate_female' => '26:00',
+    'beginner_male' => '28:00',
+    'beginner_female' => '30:00',
+    'format' => BenchmarkFormat::FOR_TIME,
+    'rounds' => 10,
+    'time_cap' => 1800,
+    'timer' => null,
+    'partitioning' => false,
+    'rx_weight_male' => 'thruster 52 kg, lunge 2×28 kg, G2OH 28 kg, farmers 2×28 kg, press 2×22,5 kg, shoulder 57 kg (aprox, confirmar)',
+    'rx_weight_female' => 'thruster 34 kg, lunge 2×20 kg, G2OH 20 kg, farmers 2×18 kg, press 2×14 kg, shoulder 40 kg (aprox, confirmar)',
+    'movements' => ['thruster', 'burpee-over-bar', 'lunge', 'g2oh', 'bear-crawl', 'sit-up', 'farmers-carry', 'press', 'jump-rope', 'shoulder-carry'],
+    'exercises' => $atlasZones('peak'),
+];
+
+// Ficha — DEKA Fit Doble (2× DEKA Fit = 20 zonas; runs de 500 m embebidos
+// en la transición entre zonas, nota del finish — criterio PFT de Hyrox)
+$dobleZones = $zonesRx();
+foreach ($zonesRx() as $row) {
+    $row['position'] += 10;
+    $dobleZones[] = $row;
+}
+
+$wods[] = [
+    'name' => 'DEKA Fit Doble',
+    'type' => 'benchmark',
+    'description' => "Por tiempo · 2× DEKA Fit completado: 20 zonas + 10 km (2 rondas de 10 zonas del array ZONAS RX). "
+        . "Cada zona va precedida de un run de 500 m embebido en la transición (el jugador lo anota en el finish). "
+        . "timeCap 3:00:00.",
+    'scaling' => "Scaled: 1× DEKA Fit (ficha DEKA Fit) o zonas al 50%; la modalidad se registra en el intento.",
+    'elite_male' => '1:50',
+    'elite_female' => '2:05',
+    'advanced_male' => '2:20',
+    'advanced_female' => '2:40',
+    'intermediate_male' => '2:50',
+    'intermediate_female' => '3:15',
+    'beginner_male' => '3:20',
+    'beginner_female' => '3:45',
+    'format' => BenchmarkFormat::FOR_TIME,
+    'rounds' => 2,
+    'time_cap' => 10800,
+    'timer' => null,
+    'partitioning' => false,
+    'rx_weight_male' => $rxWeightMale,
+    'rx_weight_female' => $rxWeightFemale,
+    'movements' => ['run', 'lunge', 'row', 'box-jump', 'sit-up', 'ski-erg', 'farmers-carry', 'bike', 'ball-slam', 'sled', 'burpee'],
+    'exercises' => $dobleZones,
+];
+
+// Ficha — DEKA Fit Ultra (5× DEKA Fit = 50 zonas + 25 km; runs embebidos en notas)
+$ultraZones = $zonesRx();
+for ($round = 2; $round <= 5; ++$round) {
+    foreach ($zonesRx() as $row) {
+        $row['position'] += 10 * ($round - 1);
+        $ultraZones[] = $row;
+    }
+}
+
+$wods[] = [
+    'name' => 'DEKA Fit Ultra',
+    'type' => 'benchmark',
+    'description' => "Por tiempo · DEKA FIT ULTRA: el circuito DEKA Fit completado ×5 = 50 zonas + 25 km de carrera (5 rondas de 10 zonas del array ZONAS RX). "
+        . "Cada zona va precedida de un run de 500 m embebido en la transición (50 runs × 500 m = 25 km; el jugador los anota en el finish). "
+        . "Pit Stop Zone: solo en el pit se puede comer/beber (pit crew, comida e hidratación). Cutoffs oficiales: élite 3:45 M / 4:15 F; age group 9:00. "
+        . "Tiempos típicos: finisher 6-8 h, élite ~3:45-4:15. timeCap 8:00:00. En el player se usa el paso benchmark con pausas de pit stop (notas).",
+    'scaling' => "Scaled: 'Media Ultra' 3× DEKA Fit (se resuelve en este programa) o zonas al 50%/75%; la modalidad se registra en el intento.",
+    'elite_male' => '3:45',
+    'elite_female' => '4:15',
+    'advanced_male' => '5:00',
+    'advanced_female' => '5:30',
+    'intermediate_male' => '6:15',
+    'intermediate_female' => '7:00',
+    'beginner_male' => '7:30',
+    'beginner_female' => '8:00',
+    'format' => BenchmarkFormat::FOR_TIME,
+    'rounds' => 5,
+    'time_cap' => 28800,
+    'timer' => null,
+    'partitioning' => false,
+    'rx_weight_male' => $rxWeightMale,
+    'rx_weight_female' => $rxWeightFemale,
+    'movements' => ['run', 'lunge', 'row', 'box-jump', 'sit-up', 'ski-erg', 'farmers-carry', 'bike', 'ball-slam', 'sled', 'burpee'],
+    'exercises' => $ultraZones,
+];
+
+// ------------------------------------------------------------------
+// 5. Persistir los benchmarks (idempotente por nombre)
 // ------------------------------------------------------------------
 
 echo '=== Sembrando '.count($wods)." benchmarks ===\n\n";

@@ -251,4 +251,19 @@
 - **Mapeos con nota (0 fichas nuevas)**: RAM lunge → `Dumbbell Lunge`/`Kettlebell Goblet Lunge` pesada (nota back rack); RAM burpee → `Burpee` + carga en nota; dead ball → `Medicine Ball Slam` pesada; sled magnético → `Sled Push`/`Sled Pull` + nota Torque/Xebex; zona 9 como fila única `Sled Push` 50 m con el pull en descripción (1 ejercicio por fila en la plataforma); calorías del bike como reps.
 - **Front**: placeholder `public/programs/deka-mastery.png` + `programImages.js`. Build OK, 520 tests verdes. ~~Sustituir por arte final.~~ **Arte final aplicado el 18-oct** (box jump over, paleta teal, commit `4967967` del front).
 - **Verificación**: suite 541/541, PHPStan 5, CS-Fixer limpios. E2E real: sesión `8186` (N8 C-F3) → paso benchmark DEKA Fit (20 filas, cap 5400) → intent RX → finish 3500 s → 200 OK.
-- **Pendiente**: commits del Bloque 25 (back y front), arte final, desbloqueo automático de rangos, otras competiciones.
+- **Pendiente**: desbloqueo automático de rangos, otras competiciones.
+
+## Bloque 26 — Línea CrossFit ampliada: 4 mastery + Open Prep + ATLAS + Ultra (18 oct 2026)
+
+- Decisión del usuario: ampliar la línea CrossFit con programas de skill y más competiciones. Todo réplica de arquitecturas existentes; **0 fichas nuevas de ejercicios** (catálogo ya tenía `Double Unders` 336, `Jump Rope` 335, `Toes to Bar` 307, `Kipping Pull Up` 516 y la familia snatch completa 377/456/457/458/459/467/469/471).
+- **Programas creados (todos 8 niveles × 4 fases × 4 sesiones = 128 trainings/640 rounds, verificados en dev)**:
+  - #46 `double-under-mastery` (Double Under Mastery, intermediate, legacy): arco salto base → primeras dobles → series → volumen → velocidad → fatiga → dominio (test N8: 100/150 DU seguidas). Prehab de pantorrilla/tibialis como pilar (sesión C).
+  - #47 `kipping-t2b-mastery` (Kipping & T2B Mastery, advanced, legacy): arco swing → rodillas → primer T2B → series → combos con kipping PU → volumen → dominio (N8: T2B 30/40 + Kipping PU 10/15).
+  - #48 `snatch-mastery` (Snatch Mastery, advanced, legacy): arco técnico posiciones → tirón → power → hang → squat → consistencia → carga → dominio (N8: snatch 75/85 kg ≈100% BW); cargas en kg en `form`/notas.
+  - #51 `crossfit-open-prep` (CrossFit Open Prep, advanced, legacy, **nivel = 1 semana**, programa 8 semanas): 8 semanas temáticas (Engine → Gymnastics → Barbell cycling → Chipper → AMRAP carga → Ladder → Redo → Peak) con test semanal tipo Open (métricas de rondas/reps) y estrategia en tips.
+- **Competiciones DEKA ampliadas** (datos del rulebook v20260210, fuente oficial):
+  - #52 `deka-atlas` (DEKA ATLAS, strict_gates sin puertas): test de fuerza 10 zonas cap 30:00, divisiones Foundation/Peak. Fichas #81 Foundation y #82 Peak (pesos Peak aproximados +20-25% con nota "confirmar en evento"). 31 logros. E2E: 10 zonas Peak en el player (thruster 52 kg → farmer walk 57 kg), finish 25:00.
+  - #53 `deka-fit-ultra` (DEKA FIT Ultra, strict_gates): DEKA Fit ×5 = 50 zonas/25 km, cutoffs élite 3:45 M/4:15 F. Fichas #83 Fit Doble (cap 3 h) y #84 Fit Ultra (**50 filas** de zonas, cap 8 h; runs de 500 m en descripción). Tips de ultra: nutrición 60-90 g carb/h, pit stops ≤2 min, ritmo negativo. C-F3 de N6-8: 312-508 min calculados (regla 60 %-cap). E2E verde (50 filas, cap 28800).
+- **Verificación**: suite 541/541, PHPStan 5 y CS-Fixer limpios tras los 6 programas. E2E de cada benchmark embebido. Nota de e2e: `/start` reutiliza sesiones abiertas persistidas — abandonar antes de re-probar tras reseeds.
+- **[SIN FICHA] acumulados para siembra futura**: `Tibialis Raise` (cubierto con pogo+calf raises), `Hanging Knee Raise` (existe `Knee Raise` 300), `Pendlay Row`/`Bent Over Row` (cubierto con `T-Bar Row` 620), swing en barra (cubierto con Dead/Active Hang + nota).
+- **Pendiente**: Spartan/OCR Prep (necesita investigación + fichas de obstáculos nuevas — rope climb, walls, carries; aplazado por límite de cuota de agentes), imágenes placeholder de los 6 programas nuevos en el front, desbloqueo automático de rangos.
